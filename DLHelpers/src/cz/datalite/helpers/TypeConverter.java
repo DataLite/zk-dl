@@ -1,7 +1,6 @@
 package cz.datalite.helpers;
 
 import java.text.ParseException;
-import org.zkoss.lang.Classes;
 
 /**
  * Třída usnadňuje konvertování hodnot typu String na různé datové typy.
@@ -56,7 +55,7 @@ final public class TypeConverter {
             }
             return null;
         } else {
-            return ( T ) Classes.coerce( type, value );
+            return ( T ) type;
         }
     }
 
