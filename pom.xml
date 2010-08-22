@@ -1,0 +1,97 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cz.datalite</groupId>
+  <artifactId>zk-dl</artifactId>
+  <version>0.9-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>DataLite ZKoss framework extension library</name>
+  <description>
+
+Multiple loosely coupled modules which extend ZK framework, originally created by DataLite company.
+
+ZKComposer - controll the MVC design with annotations @ZkEvent?, @ZkComponent?, @ZkBinding?, ... (similar to zkspring or zkcdi projects, however without any framework dependencies).
+
+ZKDLComponents – splits ZK data driven components (listbox, combobox) to MVC design, adds support for easy large data manipulation and contains many pre-built user controls (filter manager, sort manager, visible listbox columns manager, export to excel, etc.)
+
+HibernateDAO &amp; ZKDLComponentsHibernateExtensions - Hibernate generic DAO design with extensions for ZKDLComponents to replace all your plumbing code (filter, sort, lazy loading, CRUD).
+
+SpringService? - service layer with spring - generic service which speaks to generic DAO. This is the way we use our components at DataLite?, but you can use any integration or DAO at your will.
+</description>
+  <issueManagement>
+  	<system>Jira</system>
+  	<url>http://panda:8012/browse/ZK</url>
+  </issueManagement>
+  <ciManagement>
+  	<system>Hudson</system>
+  	<url>http://hudson</url>
+  </ciManagement>
+  <scm>
+  	<developerConnection>jiri.bubnik@gmail.com</developerConnection>
+  	<url>https://zk-dl.googlecode.com/svn</url>
+  </scm>
+  <organization>
+  	<name>DataLite</name>
+  	<url>http://www.datalite.cz</url>
+  </organization>
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.15</version>
+  		<type>jar</type>
+		  <scope>provided</scope>
+		  <exclusions>
+		    <exclusion>
+		      <groupId>javax.mail</groupId>
+		      <artifactId>mail</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>javax.jms</groupId>
+		      <artifactId>jms</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>com.sun.jdmk</groupId>
+		      <artifactId>jmxtools</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>com.sun.jmx</groupId>
+		      <artifactId>jmxri</artifactId>
+		    </exclusion>
+		  </exclusions>
+
+  	</dependency>
+  </dependencies>
+  <modules>
+  	<module>HibernateDAO</module>
+  	<module>ZKComposer</module>
+  	<module>ZKComponents</module>
+  	<module>SpringService</module>
+  	<module>ZKDLComponents</module>
+  	<module>ZKDLComponentsHibernateExt</module>
+  	<module>DLHelpers</module>
+  </modules>
+  <repositories>
+  	<repository>
+  		<id>jboss</id>
+  		<name>JBoss</name>
+  		<url>https://repository.jboss.org/nexus/content/groups/public</url>
+  	</repository>
+  	<repository>
+  		<id>zkoss</id>
+  		<name>ZK Repository</name>
+  		<url>http://mavensync.zkoss.org/maven2</url>
+  	</repository> 
+  </repositories>  
+</project>

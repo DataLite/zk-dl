@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>zk-dl</artifactId>
+    <groupId>cz.datalite</groupId>
+    <version>0.9-SNAPSHOT</version>
+  </parent>
+  <groupId>cz.datalite</groupId>
+  <artifactId>ZKDLComponentsHibernateExt</artifactId>
+  <version>0.9-SNAPSHOT</version>
+  <name>ZKDLComponentsHibernateExt</name>
+  <dependencies>
+  	<dependency>
+  		<groupId>cz.datalite</groupId>
+  		<artifactId>DLHelpers</artifactId>
+  		<version>0.9-SNAPSHOT</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>cz.datalite</groupId>
+  		<artifactId>HibernateDAO</artifactId>
+  		<version>0.9-SNAPSHOT</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>cz.datalite</groupId>
+  		<artifactId>ZKDLComponents</artifactId>
+  		<version>0.9-SNAPSHOT</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  </dependencies>
+</project>
