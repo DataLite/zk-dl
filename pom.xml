@@ -27,7 +27,6 @@ SpringService? - service layer with spring - generic service which speaks to gen
   </ciManagement>
   <scm>
   	<connection>scm:svn:https://zk-dl.googlecode.com/svn</connection>
-  	<developerConnection>jiri.bubnik@gmail.com</developerConnection>
   	<url>https://zk-dl.googlecode.com/svn</url>
   </scm>
   <organization>
