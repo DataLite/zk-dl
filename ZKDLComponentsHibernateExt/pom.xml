@@ -2,30 +2,30 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>zk-dl</artifactId>
-    <groupId>cz.datalite</groupId>
+    <groupId>cz.datalite.zk-dl</groupId>
     <version>0.9-SNAPSHOT</version>
   </parent>
-  <groupId>cz.datalite</groupId>
+  <groupId>cz.datalite.zk-dl</groupId>
   <artifactId>ZKDLComponentsHibernateExt</artifactId>
   <version>0.9-SNAPSHOT</version>
   <name>ZKDLComponentsHibernateExt</name>
   <dependencies>
   	<dependency>
-  		<groupId>cz.datalite</groupId>
+  		<groupId>cz.datalite.zk-dl</groupId>
   		<artifactId>DLHelpers</artifactId>
   		<version>0.9-SNAPSHOT</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
-  		<groupId>cz.datalite</groupId>
+  		<groupId>cz.datalite.zk-dl</groupId>
   		<artifactId>HibernateDAO</artifactId>
   		<version>0.9-SNAPSHOT</version>
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
   	<dependency>
-  		<groupId>cz.datalite</groupId>
+  		<groupId>cz.datalite.zk-dl</groupId>
   		<artifactId>ZKDLComponents</artifactId>
   		<version>0.9-SNAPSHOT</version>
   		<type>jar</type>

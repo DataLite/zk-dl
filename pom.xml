@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>cz.datalite</groupId>
+  <groupId>cz.datalite.zk-dl</groupId>
   <artifactId>zk-dl</artifactId>
   <version>0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -11,7 +11,7 @@ Multiple loosely coupled modules which extend ZK framework, originally created b
 
 ZKComposer - controll the MVC design with annotations @ZkEvent?, @ZkComponent?, @ZkBinding?, ... (similar to zkspring or zkcdi projects, however without any framework dependencies).
 
-ZKDLComponents â€“ splits ZK data driven components (listbox, combobox) to MVC design, adds support for easy large data manipulation and contains many pre-built user controls (filter manager, sort manager, visible listbox columns manager, export to excel, etc.)
+ZKDLComponents – splits ZK data driven components (listbox, combobox) to MVC design, adds support for easy large data manipulation and contains many pre-built user controls (filter manager, sort manager, visible listbox columns manager, export to excel, etc.)
 
 HibernateDAO &amp; ZKDLComponentsHibernateExtensions - Hibernate generic DAO design with extensions for ZKDLComponents to replace all your plumbing code (filter, sort, lazy loading, CRUD).
 
