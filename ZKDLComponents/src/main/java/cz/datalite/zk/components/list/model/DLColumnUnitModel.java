@@ -343,6 +343,14 @@ public class DLColumnUnitModel {
         return filterOperators;
     }
 
+    public boolean isFilterOperators() {
+        try {
+            return !getFilterOperators().isEmpty();
+        } catch ( UnsupportedOperationException ex ) {
+            return false;
+        }
+    }
+
     public DLFilterOperator getQuickFilterOperator() {
         if ( quickFilterOperator == null ) {
             if ( columnType == null ) { // Is this type defined?
@@ -372,6 +380,10 @@ public class DLColumnUnitModel {
         } else {
             return filterComponent;
         }
+    }
+
+    public boolean isFilterComponent() {
+        return filterComponent != null || (columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ));
     }
 
     public void setFilterComponent( final FilterComponent filterComponent ) {

@@ -6,6 +6,7 @@ import cz.datalite.zk.components.list.controller.DLManagerController;
 import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
+import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
 import java.util.Date;
@@ -13,8 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.event.Event;
@@ -29,6 +29,7 @@ import org.zkoss.zul.Messagebox;
  */
 public class DLManagerControllerImpl<T> implements DLManagerController {
 
+    protected static final Logger LOGGER = Logger.getLogger( DLManagerControllerImpl.class );
     // master controller
     protected final DLListboxExtController<T> masterController;
     // view
@@ -47,11 +48,11 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      * @param listener on close listner
      */
     protected void showPage( final String page, final Map<String, Object> args, final EventListener listener ) {
-    	args.put( "master", masterController );
-    	final String uri = "~./dlzklib/resource/" + page;
-    	final org.zkoss.zul.Window win = (org.zkoss.zul.Window) org.zkoss.zk.ui.Executions.createComponents(uri, null, args);
-    	win.addEventListener( "onSave", listener );
-    	win.doHighlighted();
+        args.put( "master", masterController );
+        final String uri = "~./dlzklib/resource/" + page;
+        final org.zkoss.zul.Window win = ( org.zkoss.zul.Window ) org.zkoss.zk.ui.Executions.createComponents( uri, null, args );
+        win.addEventListener( "onSave", listener );
+        win.doHighlighted();
     }
 
     public void onColumnManager() {
@@ -79,7 +80,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
             @SuppressWarnings( "unchecked" )
             public void onEvent( final Event event ) {
-            	masterController.onColumnManagerOk( (List<Map<String, Object>>) event.getData() );
+                masterController.onColumnManagerOk( ( List<Map<String, Object>> ) event.getData() );
             }
         };
         showPage( "listboxColumnManagerWindow.zul", args, listener );
@@ -114,7 +115,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         final EventListener listener = new EventListener() {
 
             public void onEvent( final Event event ) {
-            	masterController.onSortManagerOk( (List<Map<String, Object>>) event.getData() );
+                masterController.onSortManagerOk( ( List<Map<String, Object>> ) event.getData() );
             }
         };
         showPage( "listboxSortManagerWindow.zul", args, listener );
@@ -133,9 +134,14 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             final DLColumnUnitModel unit = masterController.getColumnModel().getColumnModels().get( index );
             if ( !unit.isColumn() || unit.getLabel() == null || unit.getLabel().length() == 0 || !unit.isFilter() ) {
                 continue;
-        }
+            }
+            if ( (unit.getColumnType() == null || !FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( unit.getColumnType() ))
+                    && !unit.isFilterComponent() && !unit.isFilterOperators() ) {
+                LOGGER.debug( "Column '" + unit.getColumn() + "' was ignored in filter due to not have the filter component or filter operators." );
+                continue;
+            }
             templateModels.add( new NormalFilterUnitModel( unit ) );
-                }
+        }
 
 //        final NormalFilterModel bindingModels = new NormalFilterModel();
 //        for ( final Iterator<NormalFilterUnitModel> it = masterController.getNormalFilterModel().iterator(); it.hasNext(); ) {
@@ -156,7 +162,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         final EventListener listener = new EventListener() {
 
             public void onEvent( final Event event ) {
-            	masterController.onFilterManagerOk( (NormalFilterModel) event.getData() );
+                masterController.onFilterManagerOk( ( NormalFilterModel ) event.getData() );
             }
         };
         showPage( "listboxFilterManagerWindow.zul", args, listener );
@@ -206,7 +212,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         final EventListener listener = new EventListener() {
 
             public void onEvent( final Event event ) {
-            	masterController.onExportManagerOk( (AMedia) event.getData() );
+                masterController.onExportManagerOk( ( AMedia ) event.getData() );
             }
         };
         showPage( "listboxExportManagerWindow.zul", args, listener );
@@ -222,7 +228,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
                     masterController.clearFilterModel();
-            }
+                }
             }
         } );
     }
@@ -237,7 +243,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
                     masterController.clearAllModel();
-            }
+                }
             }
         } );
     }
@@ -251,7 +257,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             try {
                 Messagebox.show( "Listbox is locked.", "Locked", Messagebox.OK, Messagebox.INFORMATION );
             } catch ( InterruptedException ex ) {
-                Logger.getLogger( DLManagerControllerImpl.class.getName() ).log( Level.SEVERE, null, ex );
+                LOGGER.debug( "Messagebox failed.", ex );
             }
             return true;
         } else {
