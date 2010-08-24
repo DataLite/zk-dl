@@ -1,5 +1,23 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Bandbox;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.util.GenericAutowireComposer;
+
 import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.combo.DLCombobox;
@@ -9,19 +27,6 @@ import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import org.apache.log4j.Logger;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zk.ui.util.GenericAutowireComposer;
-import org.zkoss.zul.Bandbox;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Row;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -65,6 +70,8 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
                 return unit1.getLabel().compareTo( unit2.getLabel() );
             }
         } );
+
+        this.rows = (( Grid ) this.self.getChildren().get( 1 )).getRows();
     }
 
     public NormalFilterModel getModelFilter() {
@@ -256,15 +263,23 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         ZKBinderHelper.loadComponent( self );
     }
 
+    @SuppressWarnings( "unchecked" )
     public void onAdd() {
         final NormalFilterUnitModel unit = new NormalFilterUnitModel();
-        unit.setTemplate( modelTemplates.get( 0 ) );
+        unit.setTemplate(  modelTemplates.get( 0 ) );
+//        unit.update( modelTemplates.get( 0 ) );
         modelFilter.add( unit );
         ZKBinderHelper.loadComponent( self );
+
+        // init the first item in the columnBox
+        Row row = ( Row ) this.rows.getLastChild();
+        row.getGrid().renderRow( row );
+        DLCombobox columnBox = ( DLCombobox ) row.getChildren().get( 0 );
+        Events.echoEvent( Events.ON_SELECT, columnBox, null ); // is        there a better solution<
     }
 
-    public void onSelectColumn( final DLCombobox combobox ) {
-        // get data type
+    @SuppressWarnings( "unchecked" )
+    public void onSelectColumn( final DLCombobox combobox ) {        // get data type
         final NormalFilterUnitModel rowModel = getModelFromComponent( combobox );
         final NormalFilterUnitModel templateModel = ( NormalFilterUnitModel ) combobox.getSelectedItem().getValue();
         if ( EqualsHelper.isEquals( templateModel.getColumn(), rowModel.getColumn() ) ) { // nothing changed
@@ -276,19 +291,26 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         final DLCombobox operatorBox = ( DLCombobox ) combobox.getNextSibling();
         ZKBinderHelper.loadComponent( operatorBox );
 
+        // init the first item in the operatorBox
+        Events.echoEvent( Events.ON_SELECT, operatorBox, null ); // is there a better solution?
     }
 
     @SuppressWarnings( "unchecked" )
     public void onSelectOperator( final DLCombobox combobox ) {
         final NormalFilterUnitModel unitModel = getModelFromComponent( combobox );
         final DLFilterOperator operator = unitModel.getOperator();
-        final Class type = unitModel.getType();
-
-        if ( operator == null || type == null ) {
+//        final Class type = unitModel.getType();
+//
+//      Commented on 23.8.2010 on Ondrej Medek's request
+//      This condition probably restricts usage of the component
+//
+//      Condition on type has been removed
+//
+        if ( operator == null) {// || type == null
             return;
             // removes all components
         }
-        while ( !(combobox.getNextSibling() instanceof Image) ) {
+         while ( !(combobox.getNextSibling() instanceof Image) ) {
             combobox.getParent().removeChild( combobox.getNextSibling() );
         }
 

@@ -149,7 +149,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             model.setSortType( model.getSortType().nextZK() );
         } else {
             masterController.onSortChange();
-    }
+        }
     }
 
     public void onCreate() {
@@ -189,8 +189,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             header.setController( this );
             if ( autoinit ) {
                 header.initModel();
+            }
         }
-    }
     }
 
     public void refreshBindingAll() {
@@ -244,6 +244,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             listbox.getListhead().appendChild( listheader );
         }
 
+        listbox.getItems().clear();
+        listbox.invalidate();
+
         fireChanges();
         fireDataChanges();
     }
@@ -285,7 +288,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
             {
-                columnMap.get( header ).setConverter( converter, cell );
+                columnMap.get( header ).setConverter( converter, header );
             }
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
             {

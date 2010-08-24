@@ -118,7 +118,7 @@ public class DLColumnUnitModel {
     public void setColumn( final String column ) {
         if ( this.column == null || this.column.length() == 0 ) {
             this.column = column;
-    }
+        }
     }
 
     public boolean isColumn() {
@@ -132,7 +132,7 @@ public class DLColumnUnitModel {
     public void setColumnType( final Class columnType ) {
         if ( this.columnType == null ) {
             this.columnType = columnType;
-    }
+        }
     }
 
     public boolean isVisible() {
@@ -146,7 +146,7 @@ public class DLColumnUnitModel {
         if ( visible ) { // if it is setted on visible true move it to the end
             if ( order == 0 ) {
                 order = columnModel.autoIncOrder();
-        }
+            }
         } else { // if invisible is setting we have to remove a change order index of all other columns
             columnModel.autoDecOrder();
             for ( DLColumnUnitModel unit : columnModel.getColumnModels() ) {
@@ -200,7 +200,7 @@ public class DLColumnUnitModel {
     }
 
     public boolean isSortable() {
-        return sortable && existSortColumn() && ( isSortZk() || isDBSortable() );
+        return sortable && existSortColumn() && (isSortZk() || isDBSortable());
     }
 
     public void setSortable( final boolean sortable ) {
@@ -226,7 +226,7 @@ public class DLColumnUnitModel {
     public void autodecrementSortOrder( final Integer greaterThan ) {
         if ( sortOrder > greaterThan ) {
             sortOrder = sortOrder - 1;
-    }
+        }
     }
 
     /**
@@ -236,7 +236,7 @@ public class DLColumnUnitModel {
     public void autodecrementOrder( final Integer greaterThan ) {
         if ( order > greaterThan ) {
             order = order - 1;
-    }
+        }
     }
 
     /**
@@ -246,7 +246,7 @@ public class DLColumnUnitModel {
     public void autoincrementOrder( final Integer greaterEqual ) {
         if ( order >= greaterEqual ) {
             order = order + 1;
-    }
+        }
     }
 
     public boolean isSorted() {
@@ -276,11 +276,11 @@ public class DLColumnUnitModel {
                 setConverter( Class.forName( converter ).getMethod( "coerceToUi", Object.class, Component.class ) );
                 return;
             } catch ( Exception ex ) {
-                if (converter.contains(".")) {
-                    final String controller = converter.split("\\.")[0];
-                    final String methodName = converter.split("\\.")[1];
+                if ( converter.contains( "." ) ) {
+                    final String controller = converter.split( "\\." )[0];
+                    final String methodName = converter.split( "\\." )[1];
 
-                    final Composer ctl = (Composer) comp.getVariable( controller, true );
+                    final Composer ctl = ( Composer ) comp.getVariable( controller, true );
 
                     if ( ctl != null ) {
                         for ( Method method : ctl.getClass().getDeclaredMethods() ) {
@@ -324,7 +324,7 @@ public class DLColumnUnitModel {
          * if operators aren't empty then was redefined
          */
         this.filter &= operators == null ? true : !operators.isEmpty();
-}
+    }
 
     public List<DLFilterOperator> getFilterOperators() {
         if ( filterOperators == null ) { // No
@@ -366,7 +366,8 @@ public class DLColumnUnitModel {
             if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
                 return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).createDefaultFilterComponent();
             } else {
-                throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type " + columnType.getCanonicalName() + " have to be defined special filter component." );
+                throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type "
+                        + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );
             }
         } else {
             return filterComponent;

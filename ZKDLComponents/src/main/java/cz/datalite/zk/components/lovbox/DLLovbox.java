@@ -100,6 +100,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws IOException
      */
     public void afterCompose() {
+        setClass( "z-lovbox" );
         popup = getDropdown();
         if ( popup == null ) { // if popup isn't defined in zul
             popup = new Bandpopup();
