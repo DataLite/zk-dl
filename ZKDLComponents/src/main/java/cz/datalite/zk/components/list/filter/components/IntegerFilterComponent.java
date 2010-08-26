@@ -1,7 +1,7 @@
 package cz.datalite.zk.components.list.filter.components;
 
-import org.zkoss.zul.Intbox;
 import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zul.Intbox;
 
 /**
  * Standard implementation of the filter component for intboxes. There are
@@ -27,5 +27,9 @@ public class IntegerFilterComponent extends AbstractFilterComponent<Intbox> {
         if ( number > maxValue || number < minValue ) {
             throw new WrongValueException( component, "Value is out of bounds." );
         }
+    }
+
+    public FilterComponent cloneComponent() {
+        return new IntegerFilterComponent( minValue, maxValue );
     }
 }

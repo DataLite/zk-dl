@@ -11,7 +11,7 @@ import org.zkoss.zul.impl.InputElement;
  * a specific implementation.
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public abstract class AbstractFilterComponent<T extends InputElement> implements FilterComponent {
+public abstract class AbstractFilterComponent<T extends InputElement> implements CloneableFilterComponent {
 
     protected T component;
 

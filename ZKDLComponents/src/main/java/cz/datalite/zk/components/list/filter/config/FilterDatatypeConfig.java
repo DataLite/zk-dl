@@ -47,6 +47,8 @@ public abstract class FilterDatatypeConfig {
      */
     public abstract FilterComponent createDefaultFilterComponent();
 
+    public abstract Class<? extends FilterComponent> getTypeOfFilterComponent();
+
     private static List<DLFilterOperator> createStringOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
@@ -77,6 +79,11 @@ public abstract class FilterDatatypeConfig {
             public FilterComponent createDefaultFilterComponent() {
                 return new CharFilterComponent();
             }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return CharFilterComponent.class;
+            }
         };
         return config;
     }
@@ -88,6 +95,11 @@ public abstract class FilterDatatypeConfig {
             @Override
             public FilterComponent createDefaultFilterComponent() {
                 return new StringFilterComponent();
+            }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return StringFilterComponent.class;
             }
         };
         return config;
@@ -115,6 +127,11 @@ public abstract class FilterDatatypeConfig {
             public FilterComponent createDefaultFilterComponent() {
                 return new IntegerFilterComponent( minValue, maxValue );
             }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return IntegerFilterComponent.class;
+            }
         };
         return config;
     }
@@ -126,6 +143,11 @@ public abstract class FilterDatatypeConfig {
             @Override
             public FilterComponent createDefaultFilterComponent() {
                 return new DoubleFilterComponent();
+            }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return DoubleFilterComponent.class;
             }
         };
         return config;
@@ -139,6 +161,11 @@ public abstract class FilterDatatypeConfig {
             public FilterComponent createDefaultFilterComponent() {
                 return new DecimalFilterComponent();
             }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return DecimalFilterComponent.class;
+            }
         };
         return config;
     }
@@ -150,6 +177,11 @@ public abstract class FilterDatatypeConfig {
             @Override
             public FilterComponent createDefaultFilterComponent() {
                 return new LongFilterComponent();
+            }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return LongFilterComponent.class;
             }
         };
         return config;
@@ -177,6 +209,11 @@ public abstract class FilterDatatypeConfig {
             public FilterComponent createDefaultFilterComponent() {
                 return new DateFilterComponent();
             }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return DateFilterComponent.class;
+            }
         };
         return config;
     }
@@ -195,6 +232,11 @@ public abstract class FilterDatatypeConfig {
             @Override
             public FilterComponent createDefaultFilterComponent() {
                 return new BooleanFilterComponent();
+            }
+
+            @Override
+            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+                return BooleanFilterComponent.class;
             }
         };
         return config;

@@ -5,7 +5,10 @@ import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
-import cz.datalite.zk.components.list.filter.components.FilterComponent;
+import cz.datalite.zk.components.list.filter.components.CloneFilterComponentFactory;
+import cz.datalite.zk.components.list.filter.components.CloneableFilterComponent;
+import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
+import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,7 @@ public class DLListheader extends Listheader {
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
     /** defines class which generates default component for filter value in normal filter */
-    protected FilterComponent filterComponent;
+    protected FilterComponentFactory filterComponentFactory;
     /** defines own filter compiler for this column */
     protected FilterCompiler filterCompiler;
     // is enabled for all filters
@@ -64,7 +67,7 @@ public class DLListheader extends Listheader {
         model.setQuickFilter( quickFilter );
         model.setFilter( filter );
         model.setFilterOperators( operators );
-        model.setFilterComponent( filterComponent );
+        model.setFilterComponentFactory( filterComponentFactory );
         model.setFilterCompiler( filterCompiler );
     }
 
@@ -130,7 +133,7 @@ public class DLListheader extends Listheader {
      */
     @Override
     public String getTooltiptext() {
-        String tooltip = super.getTooltiptext();
+        final String tooltip = super.getTooltiptext();
 
         return StringHelper.isNull( tooltip ) ? getLabel() : tooltip;
     }
@@ -268,22 +271,16 @@ public class DLListheader extends Listheader {
         }
     }
 
-    public void setFilterComponent( final FilterComponent filterComponent ) {
-        if ( this.filterComponent == null ) {
-            this.filterComponent = filterComponent;
+    public void setFilterComponent( final CloneableFilterComponent filterComponent ) {
+        if ( this.filterComponentFactory == null ) {
+            this.filterComponentFactory = new CloneFilterComponentFactory( filterComponent );
         }
     }
 
     public void setFilterComponent( final String filterComponentClass ) {
-        if ( this.filterComponent == null ) {
+        if ( this.filterComponentFactory == null ) {
             try {
-                filterComponent = ( FilterComponent ) Class.forName( filterComponentClass ).newInstance();
-            } catch ( InstantiationException ex ) {
-                throw new IllegalArgumentException( "FilterComponent wasn't created. For class '"
-                        + filterComponentClass + "' couldn't be created an instance.", ex );
-            } catch ( IllegalAccessException ex ) {
-                throw new IllegalArgumentException( "FilterComponent wasn't created. Class '"
-                        + filterComponentClass + "' has no public constructor.", ex );
+                filterComponentFactory = new InstanceFilterComponentFactory( filterComponentClass );
             } catch ( ClassNotFoundException ex ) {
                 throw new IllegalArgumentException( "FilterComponent wasn't created. Class '"
                         + filterComponentClass + "' wasn't found.", ex );
@@ -315,9 +312,9 @@ public class DLListheader extends Listheader {
     }
 
     public void setFilterGeneralComponent( final String className ) {
-        if ( this.filterCompiler == null && this.filterComponent == null ) {
+        if ( this.filterCompiler == null && this.filterComponentFactory == null ) {
             try {
-                final Object component = ( FilterCompiler ) Class.forName( className ).newInstance();
+                final Object component = Class.forName( className ).newInstance();
                 setFilterGeneralComponent( component );
             } catch ( InstantiationException ex ) {
                 throw new IllegalArgumentException( "GeneralFilterComponent wasn't created. For class '"
@@ -337,12 +334,12 @@ public class DLListheader extends Listheader {
             throw new IllegalArgumentException( "FilterGeneralComponent requires to implement " + FilterCompiler.class.getCanonicalName()
                     + ". To define own FilterComponent serves attribute \"filterComponent\"." );
         }
-        if ( !FilterComponent.class.isAssignableFrom( component.getClass() ) ) {
-            throw new IllegalArgumentException( "FilterGeneralComponent requires to implement " + FilterComponent.class.getCanonicalName()
+        if ( !CloneableFilterComponent.class.isAssignableFrom( component.getClass() ) ) {
+            throw new IllegalArgumentException( "FilterGeneralComponent requires to implement " + CloneableFilterComponent.class.getCanonicalName()
                     + ". To define own FilterCompiler serves attribute \"filterCompiler\"." );
         }
 
-        setFilterComponent( ( FilterComponent ) component );
+        setFilterComponent( ( CloneableFilterComponent ) component );
         setFilterCompiler( ( FilterCompiler ) component );
     }
 }

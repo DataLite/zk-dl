@@ -110,6 +110,10 @@ public class NormalFilterUnitModel implements Cloneable {
         return columnModel == null ? null : columnModel.getFilterComponent();
     }
 
+    public Class getTypeOfFilterComponent() {
+        return columnModel == null ? null : columnModel.getTypeOfFilterComponent();
+    }
+
     public FilterCompiler getFilterCompiler() {
         return columnModel == null ? null : columnModel.getFilterCompiler();
     }
@@ -144,12 +148,13 @@ public class NormalFilterUnitModel implements Cloneable {
     }
 
     public void update( final NormalFilterUnitModel templateModel ) {
-        if ( columnModel == null || !EqualsHelper.isSameClass( columnModel.getFilterComponent(), templateModel.getFilterComponent() ) ) {
-            value1 = value2 = null;
+        if ( columnModel == null || !EqualsHelper.isEquals( columnModel.getTypeOfFilterComponent(), templateModel.getTypeOfFilterComponent() ) ) {
+            value1 = null;
+            value2 = null;
         }
         this.columnModel = templateModel.columnModel;
         this.property = templateModel.property;
-        if ( !templateModel.getOperators().contains( operator )|| (value1 == null && value2 == null) ) {
+        if ( !templateModel.getOperators().contains( operator ) || (value1 == null && value2 == null) ) {
             // if is selected unsupported operator
             // or if values are null then switch to default
             setDefaultOperator();
@@ -162,7 +167,7 @@ public class NormalFilterUnitModel implements Cloneable {
         if ( obj == null ) {
             return false;
         }
-        if ( !(obj instanceof NormalFilterUnitModel) ) {
+        if ( !EqualsHelper.isSameClass( this, obj ) ) {
             return false;
         }
         final NormalFilterUnitModel unit = ( NormalFilterUnitModel ) obj;

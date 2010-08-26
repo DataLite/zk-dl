@@ -12,4 +12,8 @@ public class LongFilterComponent extends AbstractFilterComponent<Longbox> {
     public LongFilterComponent() {
         super( new Longbox() );
     }
+
+    public FilterComponent cloneComponent() {
+        return new LongFilterComponent();
+    }
 }

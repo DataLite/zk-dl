@@ -21,7 +21,7 @@
                 <column label="" width="30px" style="text-align: center;" />
             </columns>
             <rows>
-                <row self="@{each=expression}" value="@{expression}">
+                <row self="@{each=expression}" value="@{expression}" >
                     <combobox constraint="strict" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" width="90%">
                         <comboitem self="@{each=template}" label="@{template.label}" value="@{template}"/>
                     </combobox>

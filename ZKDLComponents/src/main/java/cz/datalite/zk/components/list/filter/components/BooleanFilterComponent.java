@@ -2,6 +2,7 @@ package cz.datalite.zk.components.list.filter.components;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Checkbox;
@@ -33,6 +34,7 @@ public class BooleanFilterComponent implements FilterComponent {
 
     public void addOnChangeEventListener( final EventListener listener ) {
         component.addEventListener( Events.ON_CHECK, listener );
+        Events.postEvent( new Event( Events.ON_CHECK, component ) );
     }
 
     public void validate() throws WrongValueException {

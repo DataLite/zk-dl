@@ -4,6 +4,7 @@ import cz.datalite.dao.DLSortType;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
+import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -54,7 +55,7 @@ public class DLColumnUnitModel {
     /** redefines filter operators for this column */
     protected List<DLFilterOperator> filterOperators;
     /** redefines filter component which is used in normal filter for this column */
-    protected FilterComponent filterComponent;
+    protected FilterComponentFactory filterComponentFactory;
     /** redefines filter compiler which is used to compile filter operators */
     private FilterCompiler filterCompiler;
     /** logger */
@@ -369,7 +370,7 @@ public class DLColumnUnitModel {
     }
 
     public FilterComponent getFilterComponent() {
-        if ( filterComponent == null ) {
+        if ( filterComponentFactory == null ) {
             // Is the default configuration known for this type?
             if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
                 return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).createDefaultFilterComponent();
@@ -378,16 +379,30 @@ public class DLColumnUnitModel {
                         + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );
             }
         } else {
-            return filterComponent;
+            return filterComponentFactory.createFilterComponent();
         }
     }
 
     public boolean isFilterComponent() {
-        return filterComponent != null || (columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ));
+        return filterComponentFactory != null || (columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ));
     }
 
-    public void setFilterComponent( final FilterComponent filterComponent ) {
-        this.filterComponent = filterComponent;
+    public Class getTypeOfFilterComponent() {
+        if ( filterComponentFactory == null ) {
+            // Is the default configuration known for this type?
+            if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
+                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getTypeOfFilterComponent();
+            } else {
+                throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type "
+                        + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );
+            }
+        } else {
+            return filterComponentFactory.getComponentClass();
+        }
+    }
+
+    public void setFilterComponentFactory( final FilterComponentFactory filterComponentFactory ) {
+        this.filterComponentFactory = filterComponentFactory;
     }
 
     public void setFilterCompiler( final FilterCompiler filterCompiler ) {

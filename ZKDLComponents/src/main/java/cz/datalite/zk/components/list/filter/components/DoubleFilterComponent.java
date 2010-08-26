@@ -12,4 +12,8 @@ public class DoubleFilterComponent extends AbstractFilterComponent<Doublebox> {
     public DoubleFilterComponent() {
         super( new Doublebox() );
     }
+
+    public FilterComponent cloneComponent() {
+        return new DoubleFilterComponent();
+    }
 }

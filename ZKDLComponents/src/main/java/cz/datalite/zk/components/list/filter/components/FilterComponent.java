@@ -45,6 +45,7 @@ public interface FilterComponent {
      */
     void addOnChangeEventListener( EventListener listener );
 
+
     /**
      * This method validates the value of the component. If the value is valid
      * then nothing happends else the exception is thrown. This exception is

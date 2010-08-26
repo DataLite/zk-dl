@@ -13,4 +13,8 @@ public class CharFilterComponent extends AbstractFilterComponent<Textbox> {
         super( new Textbox() );
         component.setMaxlength( 1 );
     }
+
+    public FilterComponent cloneComponent() {
+        return new CharFilterComponent();
+    }
 }

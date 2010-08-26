@@ -12,4 +12,8 @@ public class DateFilterComponent extends AbstractFilterComponent<Datebox> {
     public DateFilterComponent() {
         super( new Datebox() );
     }
+
+    public FilterComponent cloneComponent() {
+        return new DateFilterComponent();
+    }
 }

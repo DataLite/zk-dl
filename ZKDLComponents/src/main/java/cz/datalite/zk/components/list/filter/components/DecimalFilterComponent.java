@@ -12,4 +12,8 @@ public class DecimalFilterComponent extends AbstractFilterComponent<Decimalbox> 
     public DecimalFilterComponent() {
         super( new Decimalbox() );
     }
+
+    public FilterComponent cloneComponent() {
+        return new DecimalFilterComponent();
+    }
 }
