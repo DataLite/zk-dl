@@ -148,7 +148,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      */
     protected void initQuickFilter( final DLQuickFilter comp ) {
         quickFilterController = new DLQuickFilterControllerImpl( this, model.getFilterModel().getQuick(), comp );
-        comp.setVariable( comp.getId() + "_model", quickFilterController, true );
     }
 
     public void onCreate() {

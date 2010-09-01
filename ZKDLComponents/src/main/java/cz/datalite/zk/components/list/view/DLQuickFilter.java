@@ -74,7 +74,6 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         textbox = new Textbox();
         textbox.setSclass( "datalite-listbox-qfiltr-textbox" );
-        ZKBinderHelper.registerAnnotation( textbox, "value", "value", getId() + "_model.bindingModel.value" );
         textbox.addEventListener( Events.ON_OK, new org.zkoss.zk.ui.event.EventListener() {
 
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
@@ -100,6 +99,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
     public void setController( final DLQuickFilterController controller ) {
         this.controller = controller;
+        setVariable( getUuid() + "_model", controller, true );
+        ZKBinderHelper.registerAnnotation( textbox, "value", "value", getUuid() + "_model.bindingModel.value" );
     }
 
     public void fireChanges() {
