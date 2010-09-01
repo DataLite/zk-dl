@@ -204,9 +204,13 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @param controller controller for this component
      * @throws Exception
      */
-    public void setController( final DLLovboxExtController<T> controller ) throws Exception {
-        if ( this.controller == null ) {
-            controller.doAfterCompose( this );
+    public void setController( final DLLovboxExtController<T> controller ) {
+        try {
+            if ( this.controller == null ) {
+                controller.doAfterCompose( this );
+            }
+        } catch ( Exception ex ) {
+            throw new RuntimeException( ex );
         }
     }
 
