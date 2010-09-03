@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.list;
 
 import cz.datalite.dao.DLResponse;
+import cz.datalite.dao.DLSort;
 import cz.datalite.zk.components.list.controller.impl.*;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.ReflectionHelper;
@@ -355,24 +356,38 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /**
      * Returns distinct values in this column. Rows have to corespond to
      * filter criterias.
+     * @deprecated since 2.9.2010 - for distinct components there are {@link cz.datalite.zk.components.list.filter.components.DataLoader}
      * @param column column name with distinct
      * @param filter criterias
      * @return coresponding model
      */
-    protected abstract List loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter );
+    protected abstract DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts );
 
-    public List loadDistinctValues( final String column, final NormalFilterModel normalFilter ) {
-        final DLFilterModel filterModel = new DLFilterModel() {
+    public DLResponse<String> loadDistinctValues( final String column, final String qFilterValue, final int firstRow, final int rowCount ) {
+//        final DLFilterModel filterModel = new DLFilterModel() {
+//
+//            {
+//                _easy.putAll( model.getFilterModel().getEasy() );
+//                _quick.setKey( model.getFilterModel().getQuick().getKey() );
+//                _quick.setValue( model.getFilterModel().getQuick().getValue() );
+//                _default.addAll( model.getFilterModel().getDefault() );
+//                _normal.addAll( normalFilter );
+//            }
+//        };
 
-            {
-                _easy.putAll( model.getFilterModel().getEasy() );
-                _quick.setKey( model.getFilterModel().getQuick().getKey() );
-                _quick.setValue( model.getFilterModel().getQuick().getValue() );
-                _default.addAll( model.getFilterModel().getDefault() );
-                _normal.addAll( normalFilter );
-            }
-        };
-        return loadDistinctColumnValues( column, filterModel.toNormal( model.getColumnModel() ) );
+        List<NormalFilterUnitModel> filterModel;
+        if ( qFilterValue == null ) {
+            filterModel = Collections.emptyList();
+        } else {
+            final NormalFilterUnitModel filterUnit = new NormalFilterUnitModel( model.getColumnModel().getByName( column ) );
+            filterUnit.setValue( 1, qFilterValue );
+            filterUnit.setOperator( filterUnit.getQuickFilterOperator() );
+            filterModel = Collections.singletonList( filterUnit );
+        }
+
+        final DLSort sort = new DLSort( column, DLSortType.ASCENDING );
+
+        return loadDistinctColumnValues( column, filterModel, firstRow, rowCount, Collections.singletonList( sort ) );
     }
 
     public Class getEntityClass() {

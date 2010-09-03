@@ -26,6 +26,8 @@ import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
+import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
+import cz.datalite.zk.components.list.filter.components.RequireController;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -38,7 +40,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     // model
     /** model for active filters */
     protected NormalFilterModel modelFilter;
-    protected Set<Bandbox> loadedBoxes = new HashSet<Bandbox>();
     // column models for sorting
     /** model for the columns, their configuration etc. */
     protected NormalFilterModel modelTemplates;
@@ -110,19 +111,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     }
 
     /**
-     * Load distinct values for coresponding row
-     * @param unitModel row model
-     * @return distinct hodnot distinct
-     */
-    @SuppressWarnings( "unchecked" )
-    public List<String> getModelValues( final NormalFilterUnitModel unitModel ) {
-        final NormalFilterModel normalFilterModel = modelFilter.clone();
-        normalFilterModel.remove( unitModel );
-
-        return masterController.loadDistinctValues( unitModel.getColumn(), clearFilterModel( normalFilterModel ) );
-    }
-
-    /**
      * Removes invalid units from the model
      * @param model filter model
      * @return model valid filter model
@@ -191,7 +179,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
      * @return
      */
     protected <T> org.zkoss.zk.ui.Component createComponent( final NormalFilterUnitModel unitModel, final int valueIndex, final Component parent ) {
-        final FilterComponent filterComponent = unitModel.getFilterComponent();
+        final FilterComponent filterComponent = unitModel.createFilterComponent();
         final org.zkoss.zk.ui.Component component = filterComponent.getComponent();
         filterComponent.setValue( unitModel.getValue( valueIndex ) );
         filterComponent.addOnChangeEventListener( new EventListener() {
@@ -200,9 +188,17 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
                 filterComponent.validate();
                 final NormalFilterUnitModel unitModel = getModelFromComponent( component );
                 unitModel.setValue( valueIndex, filterComponent.getValue() );
-                loadedBoxes.clear();
             }
         } );
+
+        if (filterComponent instanceof RequireColumnModel) {
+            ((RequireColumnModel)filterComponent).setColumnModel( unitModel.getTemplate().getColumnModel());
+        }
+
+        if (filterComponent instanceof RequireController) {
+            ((RequireController)filterComponent).setController( masterController );
+        }
+
         return component;
     }
 
@@ -306,7 +302,5 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         for ( int i = unitModel.getOperator().getArity(); i < DLFilterOperator.MAX_ARITY; ++i ) {
             operatorbox.getParent().insertBefore( new org.zkoss.zul.Space(), lastComponent );
         }
-
-        loadedBoxes.clear();
     }
 }

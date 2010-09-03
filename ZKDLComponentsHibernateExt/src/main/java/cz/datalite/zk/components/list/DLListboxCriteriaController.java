@@ -76,18 +76,18 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
      * @param search search criterias.
      * @return distinct data list 
      */
-    protected List<T> loadDistinctColumnValues( final DLSearch<T> search ) {
-        return loadData( search ).getData();
+    protected DLResponse<T> loadDistinctColumnValues( final DLSearch<T> search ) {
+        return loadData( search );
     }
 
     @Override
-    protected List loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter ) {
-        final DLSearch<T> search = getDefaultSearchObject( filter, 0, 100, new ArrayList<DLSort>() );
+    protected DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts ) {
+        final DLSearch<T> search = getDefaultSearchObject( filter, firstRow, rowCount, sorts );
 
         search.addAlias( column );
         search.addProjection( Projections.distinct( Projections.property( search.getAliasForPath( column ) ) ) );
 
-        return loadDistinctColumnValues( search );
+        return ( DLResponse<String> ) loadDistinctColumnValues( search );
     }
 
     protected DLSearch<T> getDefaultSearchObject( final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts ) {
@@ -121,19 +121,19 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
      * @return disjnction
      */
     protected Criterion compileKeyAll( final String value, final DLSearch search ) {
-            final Disjunction disjunction = Restrictions.disjunction();
-            for ( DLColumnUnitModel unit : model.getColumnModel().getColumnModels() ) {
-                if ( unit.isColumn() && unit.isQuickFilter() ) {
+        final Disjunction disjunction = Restrictions.disjunction();
+        for ( DLColumnUnitModel unit : model.getColumnModel().getColumnModels() ) {
+            if ( unit.isColumn() && unit.isQuickFilter() ) {
                 final Criterion criterion = compileCriteria( new NormalFilterUnitModel( unit ), value, search, Criteria.LEFT_JOIN );
                 if ( criterion == null ) {
-                        disjunction.add( Restrictions.sqlRestriction( "0=1" ) );
+                    disjunction.add( Restrictions.sqlRestriction( "0=1" ) );
                 } else {
-                        disjunction.add( criterion );
+                    disjunction.add( criterion );
                 }
             }
         }
-            return disjunction;
-        }
+        return disjunction;
+    }
 
     /**
      * Compiles criteria with type conversion
@@ -152,7 +152,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
             unit.setValue( 1, value );
             return compileCriteria( unit, search, joinType );
         } else if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( type ) ) {
-        try {
+            try {
                 unit.setOperator( FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( type ).getQuickOperator() );
                 unit.setValue( 1, TypeConverter.convertTo( value, type ) );
                 return compileCriteria( unit, search, joinType );
@@ -173,7 +173,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
             return null;
             //  throw new UnsupportedOperationException( "Unknown data-type was used in listbox filter. For type " + (type == null ? "unknown" : type.getCanonicalName()) + " have to be defined special filter component." );
             // Thow was commented due to back compatibility in the projects which have not used attribute filter="false".
-    }
+        }
     }
 
     /**
@@ -190,10 +190,10 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
         if ( unit.getColumn() == null || unit.getColumn().length() == 0 ) {
             assert false;
             return null;
-    }
+        }
 
         search.addAliases( unit.getColumn(), joinType );
         final FilterCompiler localCompiler = unit.getFilterCompiler() == null ? compiler : unit.getFilterCompiler();
         return ( Criterion ) localCompiler.compile( unit.getOperator(), search.getAliasForPath( unit.getColumn() ), unit.getValue( 1 ), unit.getValue( 2 ) );
-}
+    }
 }

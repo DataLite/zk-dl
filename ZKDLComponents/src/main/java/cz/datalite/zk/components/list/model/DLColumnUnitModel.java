@@ -369,7 +369,7 @@ public class DLColumnUnitModel {
 
     }
 
-    public FilterComponent getFilterComponent() {
+    public FilterComponent createFilterComponent() {
         if ( filterComponentFactory == null ) {
             // Is the default configuration known for this type?
             if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {

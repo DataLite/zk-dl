@@ -214,6 +214,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
     }
 
+    public DLLovboxExtController<T> getController() {
+        return controller;
+    }
+
     /**
      * Sets width of the listbox in this popup
      * @param listWidth listbox width

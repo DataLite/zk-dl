@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list;
 
+import cz.datalite.dao.DLResponse;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public abstract class DLListboxSimpleController<T> extends DLListboxGeneralContr
     }
 
     @Override
-    protected List loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter ) {
+    protected DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts ) {
         throw new UnsupportedOperationException( "Distinct column values are not implemented." );
     }
 }

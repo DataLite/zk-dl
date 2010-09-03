@@ -106,8 +106,8 @@ public class NormalFilterUnitModel implements Cloneable {
         }
     }
 
-    public FilterComponent getFilterComponent() {
-        return columnModel == null ? null : columnModel.getFilterComponent();
+    public FilterComponent createFilterComponent() {
+        return columnModel == null ? null : columnModel.createFilterComponent();
     }
 
     public Class getTypeOfFilterComponent() {
@@ -140,6 +140,10 @@ public class NormalFilterUnitModel implements Cloneable {
 
     public void setTemplate( final NormalFilterUnitModel template ) {
         this.template = template;
+    }
+
+    public DLColumnUnitModel getColumnModel() {
+        return columnModel;
     }
 
     @Override

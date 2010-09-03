@@ -3,7 +3,6 @@ package cz.datalite.zk.components.list.controller;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.zk.components.list.DLListboxController;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
-import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLMasterModel;
 import java.util.List;
@@ -26,7 +25,7 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
     /**
      * Reacts on filter model change.
      */
-    void onFilterChange( final String filterType );
+    void onFilterChange( String filterType );
 
     /**
      * Reacts on sorting model change.
@@ -86,7 +85,7 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * @param normalFilter normal filter model
      * @return data list
      */
-    List loadDistinctValues( String column, NormalFilterModel normalFilter );
+    DLResponse<String> loadDistinctValues( String column, String qFilterValue, int firstRow, int rowCount );
 
     /**
      * Refreshes binding.
