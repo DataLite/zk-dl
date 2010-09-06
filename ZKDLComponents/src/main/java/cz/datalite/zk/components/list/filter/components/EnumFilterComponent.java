@@ -1,17 +1,21 @@
 package cz.datalite.zk.components.list.filter.components;
 
 import java.util.Collections;
+import org.zkoss.lang.Objects;
+import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 
 /**
  * Component for normal filter when the model is enumeration type.
  * This component displays a combobox with appropriate values.
- * 
+ *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class EnumFilterComponent extends AbstractFilterComponent<Combobox> {
@@ -24,6 +28,23 @@ public class EnumFilterComponent extends AbstractFilterComponent<Combobox> {
         component.setModel( new ListModelList( enums ) );
         component.setConstraint( "strict" );
         setValue( enums[0] );
+    }
+
+    public EnumFilterComponent( final Object[] enums, final String fieldPath ) {
+        this( enums );
+        final ComboitemRenderer renderer = new ComboitemRenderer() {
+
+            public void render( final Comboitem item, final Object object ) throws NoSuchMethodException  {
+                item.setLabel( Fields.getByCompound( object, fieldPath ).toString() );
+                item.setValue( object );
+            }
+        };
+        component.setItemRenderer( renderer );
+    }
+
+    public EnumFilterComponent( final Object[] enums, final ComboitemRenderer renderer ) {
+        this( enums );
+        component.setItemRenderer( renderer );
     }
 
     @Override
@@ -54,6 +75,8 @@ public class EnumFilterComponent extends AbstractFilterComponent<Combobox> {
     }
 
     public FilterComponent cloneComponent() {
-        return new EnumFilterComponent( enums );
+        final EnumFilterComponent clone = new EnumFilterComponent( enums );
+        clone.component.setItemRenderer( component.getItemRenderer() );
+        return clone;
     }
 }
