@@ -89,4 +89,8 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
     public QuickFilterModel getBindingModel() {
         return this.bindingModel;
     }
+
+    public String getUuid() {
+        return quickFilter.getUuid();
+    }
 }

@@ -8,7 +8,7 @@ import cz.datalite.zk.components.list.filter.QuickFilterModel;
  * back compatibility.
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterController{
+public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterController {
 
     public void onQuickFilter() {
         throw new UnsupportedOperationException( "Not supported yet." );
@@ -21,4 +21,7 @@ public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterControll
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
+    public String getUuid() {
+        return "";
+    }
 }

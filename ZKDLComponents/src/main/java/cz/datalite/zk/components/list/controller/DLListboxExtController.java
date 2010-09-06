@@ -134,4 +134,22 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * @param index selected index
      */
     void setSelectedIndex( int index );
+
+    /**
+     * Returns component's uuid
+     * @return uuid
+     */
+    String getPagingUuid();
+
+    /**
+     * Returns component's uuid
+     * @return uuid
+     */
+    String getQuickFilterUuid();
+
+    /**
+     * Returns component's uuid
+     * @return uuid
+     */
+    String getListboxUuid();
 }

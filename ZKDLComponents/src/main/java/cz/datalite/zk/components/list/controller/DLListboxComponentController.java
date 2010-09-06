@@ -136,4 +136,12 @@ public interface DLListboxComponentController<T> {
      * @return UI component
      */
     DLListbox getListbox();
+
+    /**
+     * Returns uuid of listbox, paging and quick filter.
+     * This method is used in selenium test for building
+     * component's mirror
+     * @return listbox uuid, paging uuid, qf uuid
+     */
+    String getUuidsForTest();
 }

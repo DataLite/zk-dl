@@ -23,4 +23,10 @@ public interface DLQuickFilterController {
      * @return binding model
      */
     QuickFilterModel getBindingModel();
+
+    /**
+     * Returns component's uuid
+     * @return uuid
+     */
+    String getUuid();
 }

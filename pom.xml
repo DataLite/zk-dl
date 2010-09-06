@@ -97,17 +97,29 @@ SpringService? - service layer with spring - generic service which speaks to gen
     </modules>
 
     <repositories>
-        <repository>
-            <id>jboss</id>
-            <name>JBoss</name>
-            <url>http://repository.jboss.com/maven2</url>
-        </repository>
-        <repository>
-            <id>zkoss</id>
-            <name>ZK Repository</name>
-            <url>http://mavensync.zkoss.org/maven2</url>
-        </repository>
-    </repositories>
+       <repository>
+           <releases>
+               <enabled>false</enabled>
+           </releases>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+           <id>jboss</id>
+           <name>JBoss</name>
+           <url>http://repository.jboss.com/maven2</url>
+       </repository>
+       <repository>
+           <releases>
+               <enabled>false</enabled>
+           </releases>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+           <id>zkoss</id>
+           <name>ZK Repository</name>
+           <url>http://mavensync.zkoss.org/maven2</url>
+       </repository>
+   </repositories>
 
     <distributionManagement>
         <repository>

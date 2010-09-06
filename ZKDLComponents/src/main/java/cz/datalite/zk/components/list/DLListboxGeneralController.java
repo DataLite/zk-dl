@@ -581,6 +581,20 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         }
     }
 
+    public String getListboxUuid() {
+        return listboxController.getListbox().getUuid();
+    }
+
+    public String getPagingUuid() {
+        return pagingController.getPaging() == null ? "" : pagingController.getPaging().getUuid();
+    }
+
+    public String getQuickFilterUuid() {
+        return quickFilterController.getUuid();
+    }
+
+
+
     public static class EventListeners extends LinkedList<EventListener> {
     }
 }

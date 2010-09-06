@@ -375,4 +375,12 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     public DLListbox getListbox() {
         return listbox;
     }
+
+    public String getUuidsForTest() {
+        final StringBuilder builder = new StringBuilder( 40 );
+        builder.append( listbox.getUuid() ).append( ',' );
+        builder.append( masterController.getPagingUuid() ).append( ',' );
+        builder.append( masterController.getQuickFilterUuid() );
+        return builder.toString();
+    }
 }
