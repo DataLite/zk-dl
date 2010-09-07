@@ -94,7 +94,7 @@ public class InitListener implements org.zkoss.zk.ui.util.DesktopInit {
                 if ( listbox == null ) {
                     throw new IllegalArgumentException( "Component with uuid " + uuid + " is not instance of DLListbox." );
                 }
-                return listbox.getController() == null ? listbox.getUuid() + ",,, " : listbox.getController().getUuidsForTest()+", ";
+                return listbox.getController() == null ? listbox.getUuid() + ",," : listbox.getController().getUuidsForTest();
             }
         } );
     }

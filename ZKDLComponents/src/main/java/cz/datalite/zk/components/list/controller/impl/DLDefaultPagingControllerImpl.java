@@ -22,6 +22,10 @@ public class DLDefaultPagingControllerImpl implements DLPagingController {
     }
 
     public DLPaging getPaging() {
-        throw new UnsupportedOperationException("Not supported yet.");
-}
+        throw new UnsupportedOperationException( "Not supported yet." );
+    }
+
+    public String getUuid() {
+        return "";
+    }
 }

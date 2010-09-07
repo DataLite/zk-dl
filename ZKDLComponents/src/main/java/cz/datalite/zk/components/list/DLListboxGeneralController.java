@@ -586,14 +586,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public String getPagingUuid() {
-        return pagingController.getPaging() == null ? "" : pagingController.getPaging().getUuid();
+        return pagingController.getUuid();
     }
 
     public String getQuickFilterUuid() {
         return quickFilterController.getUuid();
     }
-
-
 
     public static class EventListeners extends LinkedList<EventListener> {
     }

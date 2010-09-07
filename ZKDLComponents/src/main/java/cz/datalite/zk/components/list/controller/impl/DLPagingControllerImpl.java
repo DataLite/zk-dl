@@ -29,24 +29,24 @@ public class DLPagingControllerImpl implements DLPagingController {
     }
 
     public void onPaging( final Integer page ) {
-        if (masterController.isLocked()) {
+        if ( masterController.isLocked() ) {
             return;
         }
 
-        if (model.isKnownPageCount()) {
-            model.setActualPage( Math.min( page, model.getPageCount() - 1) );
+        if ( model.isKnownPageCount() ) {
+            model.setActualPage( Math.min( page, model.getPageCount() - 1 ) );
         } else {
             model.setActualPage( page );
         }
 
-        if (model.getActualPage() < 0) {
-            model.setActualPage(0);
+        if ( model.getActualPage() < 0 ) {
+            model.setActualPage( 0 );
         }
         masterController.onPagingModelChange();
     }
 
     public void onPageSize( final Integer pageSize ) {
-        if (masterController.isLocked()) {
+        if ( masterController.isLocked() ) {
             return;
         }
         model.setPageSize( pageSize );
@@ -59,5 +59,9 @@ public class DLPagingControllerImpl implements DLPagingController {
 
     public DLPaging getPaging() {
         return paging;
-}
+    }
+
+    public String getUuid() {
+        return paging.getUuid();
+    }
 }

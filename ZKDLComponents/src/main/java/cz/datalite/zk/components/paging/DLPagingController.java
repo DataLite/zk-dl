@@ -30,4 +30,6 @@ public interface DLPagingController {
      * @return UI component
      */
     DLPaging getPaging();
+
+    String getUuid();
 }
