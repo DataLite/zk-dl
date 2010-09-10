@@ -146,7 +146,22 @@ public class DLListbox extends Listbox {
     }
 
     /**
-     * Should be selected first row automatically after insertion new model
+     * <p>Should be selected first row automatically after insertion new model</p>
+     *
+     * <p>In the classical M-V-C architecture this component is the View.
+     * if user want to select something then he clicks on this component
+     * and it emits the event.</p>
+     *
+     * <p>So if the model and controller thinks that there is selected
+     * different value than which is in real then the event should be
+     * emitted to update model.</p>
+     *
+     * <p>If there is no selectedItem and new model is set
+     * then the first row is automaticly selected if it is enabled.
+     * Because model and ctl expect that here is null which is not
+     * then the onSelectEvent is emitted. Doesn't matter who did the
+     * change if user or view component itself.</p>
+     *
      * @param selectFirstRow the selectFirstRow to set
      */
     public void setSelectFirstRow( final boolean selectFirstRow ) {
