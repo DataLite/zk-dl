@@ -2,10 +2,8 @@ package cz.datalite.zk.components.list.view;
 
 import cz.datalite.zk.components.paging.DLPaging;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Separator;
-import org.zkoss.zul.impl.XulElement;
 
 /**
  * Component for managing listbox. There can be defined

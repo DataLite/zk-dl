@@ -31,6 +31,7 @@ public class InitListener implements org.zkoss.zk.ui.util.DesktopInit {
                         label.setPage( page );
                         label.setId( "seleniumResponse" );
                         label.setSclass( "selenium-response" );
+                        label.setStyle( "position: absolute; top: 0; left: 0; height: 0; width: 0; display: block; overflow: hidden;" );
                     }
                     label.setValue( execute( request ) );
 

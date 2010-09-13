@@ -18,6 +18,7 @@ import org.zkoss.lang.Objects;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.Locales;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
@@ -425,7 +426,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected Button createClearButton() throws UiException {
         final Button button = new Button();
 
-        button.setLabel( "Vymazat" );
+        button.setLabel( Labels.getLabel( "lovbox.clear" ) );
         button.setImage( LOVBOX_CLEAR_IMAGE );
         button.setStyle( "position: absolute; top: 0px; right: 0px;" );
         button.addEventListener( Events.ON_CLICK, new EventListener() {

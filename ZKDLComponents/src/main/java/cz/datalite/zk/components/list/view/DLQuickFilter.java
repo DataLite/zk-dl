@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import org.zkoss.lang.Strings;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -46,7 +47,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         selector = new Label();
         selector.setSclass( "datalite-listbox-qfiltr-selector" );
-        selector.setTooltiptext( "Rozsah filtrování" );
+        selector.setTooltiptext( Labels.getLabel( "quickFilter.tooltip.filterRange" ) );
         selector.addEventListener( Events.ON_CLICK, new EventListener() {
 
             public void onEvent( final Event event ) {
@@ -62,7 +63,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         final Image open = new Image();
         open.setSclass( "datalite-listbox-qfiltr-open" );
-        open.setTooltiptext( "Otevřít filtr" );
+        open.setTooltiptext( Labels.getLabel( "quickFilter.tooltip.openFilter" ) );
         open.setSrc( CONST_DEFAULT_ICON_PATH + "open.png" );
         open.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener() {
 
@@ -111,7 +112,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         // znovu vytvoříme položky, podle modelu
         if ( quickFilterAll ) {
-            popup.appendChild( new Menuitem( "Vše" ) {
+            popup.appendChild( new Menuitem( Labels.getLabel( "quickFilter.menu.all" ) ) {
 
                 {
                     setValue( cz.datalite.zk.components.list.filter.QuickFilterModel.CONST_ALL );

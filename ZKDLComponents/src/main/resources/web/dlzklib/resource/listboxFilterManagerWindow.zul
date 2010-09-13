@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?init class="cz.datalite.zk.databinder.DLDataBinderInit" arg0="winListboxManager"?>
-
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 
 <?page title="Listbox manager"?>
 
@@ -10,14 +10,14 @@
 
         <hbox style="margin: 10px;">
             <image src="~./dlzklib/img/filter_big.png" />
-            <label style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="Správce filtrování" />
+            <label style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.filterManager.title')}" />
         </hbox>
         <grid width="970px" model="@{ctl.modelFilter}" style="margin-top: 10px;">
             <columns sizable="false">
-                <column label="Sloupec" width="220px"/>
-                <column label="Operátor" width="220px"/>
-                <column label="Hodnota" width="220px"/>
-                <column label="Hodnota" width="220px"/>
+                <column label="${c:l('listbox.filterManager.column')}Sloupec" width="220px"/>
+                <column label="${c:l('listbox.filterManager.operator')}Operátor" width="220px"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="220px"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="220px"/>
                 <column label="" width="30px" style="text-align: center;" />
             </columns>
             <rows>
@@ -30,16 +30,16 @@
                     </combobox>
                     <space />
                     <space />
-                    <image style="cursor: pointer; margin-left: 4px;" tooltiptext="Odstranit filtr" src="~./dlzklib/img/remove16x16.png" onClick="ctl.onRemove(self.parent)"/>
+                    <image style="cursor: pointer; margin-left: 4px;" tooltiptext="${c:l('listbox.filterManager.removeOne')}" src="~./dlzklib/img/remove16x16.png" onClick="ctl.onRemove(self.parent)"/>
                 </row>
             </rows>
         </grid>
         <hbox style="margin: 10px; margin-left: auto;">
-            <button label="Přidat" forward="onAdd" />
-            <button label="Odebrat vše" forward="onRemoveAll"/>
+            <button label="${c:l('listbox.filterManager.add')}Přidat" forward="onAdd" />
+            <button label="${c:l('listbox.filterManager.removeAll')}" forward="onRemoveAll"/>
             <space width="50px"/>
-            <button label="OK" forward="onOk" />
-            <button label="Storno" forward="onStorno"/>
+            <button label="${c:l('listbox.ok')}" forward="onOk" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </hbox>
     </window>
 </zk>

@@ -1,5 +1,7 @@
 package cz.datalite.zk.components.list.enums;
 
+import org.zkoss.util.resource.Labels;
+
 /**
  * Enumeration defines available filter operators, defines their name, shortcut
  * and arity. This class serves as a parameter in a few switches where are
@@ -15,19 +17,19 @@ package cz.datalite.zk.components.list.enums;
  */
 public enum DLFilterOperator {
 
-    EQUAL( "Rovná se", 1, "eq" ),
-    NOT_EQUAL( "Nerovná se", 1, "neq" ),
-    LIKE( "Obsahuje", 1, "like" ),
-    NOT_LIKE( "Neobsahuje", 1, "nlike" ),
-    START_WITH( "Začíná na", 1, "start" ),
-    END_WITH( "Končí na", 1, "end" ),
-    GREATER_THAN( "Větší než", 1, "gt" ),
-    GREATER_EQUAL( "Větší nebo rovno", 1, "ge" ),
-    LESSER_THAN( "Menší než", 1, "lt" ),
-    LESSER_EQUAL( "Menší nebo rovno", 1, "le" ),
-    EMPTY( "Prázdný", 0, "empty" ),
-    NOT_EMPTY( "Neprázdný", 0, "nempty" ),
-    BETWEEN( "Je mezi", 2, "between" );
+    EQUAL( Labels.getLabel( "filter.operators.equals" ), 1, "eq" ),
+    NOT_EQUAL( Labels.getLabel( "filter.operators.nequals" ), 1, "neq" ),
+    LIKE( Labels.getLabel( "filter.operators.like" ), 1, "like" ),
+    NOT_LIKE( Labels.getLabel( "filter.operators.nlike" ), 1, "nlike" ),
+    START_WITH( Labels.getLabel( "filter.operators.starts" ), 1, "start" ),
+    END_WITH( Labels.getLabel( "filter.operators.ends" ), 1, "end" ),
+    GREATER_THAN( Labels.getLabel( "filter.operators.greaterThan" ), 1, "gt" ),
+    GREATER_EQUAL( Labels.getLabel( "filter.operators.greaterEqual" ), 1, "ge" ),
+    LESSER_THAN( Labels.getLabel( "filter.operators.lesserThan" ), 1, "lt" ),
+    LESSER_EQUAL( Labels.getLabel( "filter.operators.lesserEqual" ), 1, "le" ),
+    EMPTY( Labels.getLabel( "filter.operators.empty" ), 0, "empty" ),
+    NOT_EMPTY( Labels.getLabel( "filter.operators.nempty" ), 0, "nempty" ),
+    BETWEEN( Labels.getLabel( "filter.operators.between" ), 2, "between" );
     /** maximum of the supported operator arity */
     public static final int MAX_ARITY = 2;
     protected final String label;
@@ -55,7 +57,7 @@ public enum DLFilterOperator {
         for ( DLFilterOperator op : values() ) {
             if ( op.shortName.equals( key ) ) {
                 return op;
-        }
+            }
         }
         throw new UnsupportedOperationException( "Unknown filter operator." );
     }

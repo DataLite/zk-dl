@@ -81,8 +81,6 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
         } );
 
         selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox );
-
-        (( Window ) self).setTitle( Labels.getLabel( "muj.test" ) );
     }
 
     protected DataSource prepareSource() {

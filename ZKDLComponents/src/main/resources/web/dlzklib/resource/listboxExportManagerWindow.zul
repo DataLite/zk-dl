@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?init class="cz.datalite.zk.databinder.DLDataBinderInit" arg0="winListboxManager"?>
-
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 
 <?page title="Listbox manager"?>
 
@@ -10,12 +10,12 @@
 
         <hbox style="margin: 10px;">
             <image src="~./dlzklib/img/excel_big.png" />
-            <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="Správce exportování" />
+            <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.exportManager.title')}" />
         </hbox>
 
         <hbox style="margin: 10px 5px;">
             <vbox>
-                <label value="Nezobrazené položky" style="font-weight: bold; margin-bottom: 10px;" />
+                <label value="${c:l('listbox.exportManager.hidden')}" style="font-weight: bold; margin-bottom: 10px;" />
                 <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" >
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" />
@@ -31,7 +31,7 @@
             </vbox>
 
             <vbox>
-                <label value="Zobrazené položky" style="font-weight: bold; margin-bottom: 10px;" />
+                <label value="${c:l('listbox.exportManager.displayed')}" style="font-weight: bold; margin-bottom: 10px;" />
                 <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" >
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" />
@@ -54,23 +54,23 @@
             </columns>
             <rows>
                 <row>
-                    <label value="Počet záznamů k exportu (0 = vše, max. 36000)" />
+                    <label value="${c:l('listbox.exportManager.recordCount')}" />
                     <intbox value="@{ctl.rows}" width="90%" />
                 </row>
                 <row>
-                    <label value="Název listu" />
+                    <label value="${c:l('listbox.exportManager.sheetName')}" />
                     <textbox value="@{ctl.sheetName}" width="90%" />
                 </row>
                 <row>
-                    <label value="Název souboru" />
+                    <label value="${c:l('listbox.exportManager.fileName')}Název souboru" />
                     <textbox value="@{ctl.fileName}" width="90%" />
                 </row>
             </rows>
         </grid>
 
         <hbox style="margin: 10px; margin-left: auto;">
-            <button label="OK" forward="onOk" />
-            <button label="Storno" forward="onStorno"/>
+            <button label="${c:l('listbox.ok')}" forward="onOk" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </hbox>
     </window>
 </zk>

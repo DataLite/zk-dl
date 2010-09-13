@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?init class="cz.datalite.zk.databinder.DLDataBinderInit" arg0="winListboxManager"?>
-
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 
 <?page title="Listbox manager"?>
 
@@ -10,13 +10,13 @@
 
         <hbox style="margin: 10px;">
             <image src="~./dlzklib/img/sort_big.png" />
-            <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="Správce řazení" />
+            <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.sortingManager.title')}" />
         </hbox>
         <grid width="500px" model="@{ctl.model}" style="margin-top: 10px;">
             <columns sizable="false">
-                <column label="#N" width="30px"/>
-                <column label="Sloupec" width="220px"/>
-                <column label="Řadit" width="220px"/>
+                <column label="${c:l('listbox.sortingManager.number')}" width="30px"/>
+                <column label="${c:l('listbox.sortingManager.column')}" width="220px"/>
+                <column label="${c:l('listbox.sortingManager.sort')}" width="220px"/>
             </columns>
             <rows>
                 <row self="@{each=sort}">
@@ -31,8 +31,8 @@
             </rows>
         </grid>
         <hbox style="margin: 10px; margin-left: auto;">
-            <button label="OK" forward="onOk" />
-            <button label="Storno" forward="onStorno"/>
+            <button label="${c:l('listbox.ok')}" forward="onOk" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </hbox>
     </window>
 </zk>
