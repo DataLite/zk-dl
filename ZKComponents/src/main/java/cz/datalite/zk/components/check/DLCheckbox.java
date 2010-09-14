@@ -56,7 +56,7 @@ public class DLCheckbox extends Checkbox
      *
      * @param value the value
      */
-    public void setValue(Object value)
+    public void setObjectValue(Object value)
     {
         if (value == null)
         {
@@ -109,7 +109,7 @@ public class DLCheckbox extends Checkbox
      *
      * @return checkedValue or unchecked value.
      */
-    public Object getValue()
+    public Object getObjectValue()
     {
         return ( isChecked() ) ? getCheckedValue() : getUncheckedValue() ;
     }

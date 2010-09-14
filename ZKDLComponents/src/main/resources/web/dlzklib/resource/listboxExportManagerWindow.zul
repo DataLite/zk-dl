@@ -5,7 +5,7 @@
 <?page title="Listbox manager"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
-    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()"  width="660px" id="winListboxManager" closable="true" border="normal" title="Správce exportování"  self="@{define(content)}"
+    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()"  width="680px" id="winListboxManager" closable="true" border="normal" title="Správce exportování"  self="@{define(content)}"
         apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController">
 
         <hbox style="margin: 10px;">
@@ -13,7 +13,7 @@
             <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.exportManager.title')}" />
         </hbox>
 
-        <hbox style="margin: 10px 5px;">
+        <hbox style="margin: 10px;">
             <vbox>
                 <label value="${c:l('listbox.exportManager.hidden')}" style="font-weight: bold; margin-bottom: 10px;" />
                 <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" >
@@ -47,7 +47,7 @@
             </vbox>
         </hbox>
 
-        <grid style="margin: auto; width: 95%;">
+        <grid style="margin: 10px; width: 640px;">
             <columns>
                 <column />
                 <column />

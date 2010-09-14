@@ -5,27 +5,27 @@
 <?page title="Listbox manager"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
-    <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="1000px" id="winListboxManager" closable="true" border="normal" self="@{define(content)}"
+    <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="740px" id="winListboxManager" closable="true" border="normal" self="@{define(content)}"
         apply="cz.datalite.zk.components.list.window.controller.ListboxFilterManagerController" >
 
         <hbox style="margin: 10px;">
             <image src="~./dlzklib/img/filter_big.png" />
             <label style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.filterManager.title')}" />
         </hbox>
-        <grid width="970px" model="@{ctl.modelFilter}" style="margin-top: 10px;">
+        <grid width="700px" model="@{ctl.modelFilter}" style="margin: 10px 10px 0;">
             <columns sizable="false">
-                <column label="${c:l('listbox.filterManager.column')}Sloupec" width="220px"/>
-                <column label="${c:l('listbox.filterManager.operator')}Operátor" width="220px"/>
-                <column label="${c:l('listbox.filterManager.value')}" width="220px"/>
-                <column label="${c:l('listbox.filterManager.value')}" width="220px"/>
+                <column label="${c:l('listbox.filterManager.column')}"/>
+                <column label="${c:l('listbox.filterManager.operator')}" width="20%"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="20%"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="20%"/>
                 <column label="" width="30px" style="text-align: center;" />
             </columns>
             <rows>
                 <row self="@{each=expression}" value="@{expression}" >
-                    <combobox constraint="strict" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" width="90%">
+                    <combobox constraint="strict" onAfterRender="ctl.onSelectColumn(self)" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" width="100%">
                         <comboitem self="@{each=template}" label="@{template.label}" value="@{template}"/>
                     </combobox>
-                    <combobox constraint="strict" onSelect="ctl.onSelectOperator(self)" selectedItem="@{expression.operator}" model="@{expression.operators}" width="90%">
+                    <combobox constraint="strict" onSelect="ctl.onSelectOperator(self)" selectedItem="@{expression.operator}" model="@{expression.operators}" width="100%">
                         <comboitem self="@{each=operator}" label="@{operator.label}" value="@{operator}"/>
                     </combobox>
                     <space />
@@ -34,8 +34,8 @@
                 </row>
             </rows>
         </grid>
-        <hbox style="margin: 10px; margin-left: auto;">
-            <button label="${c:l('listbox.filterManager.add')}Přidat" forward="onAdd" />
+        <hbox style="margin: 10px 10px 10px auto;">
+            <button label="${c:l('listbox.filterManager.add')}" forward="onAdd" />
             <button label="${c:l('listbox.filterManager.removeAll')}" forward="onRemoveAll"/>
             <space width="50px"/>
             <button label="${c:l('listbox.ok')}" forward="onOk" />

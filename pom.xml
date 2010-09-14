@@ -138,7 +138,7 @@ SpringService? - service layer with spring - generic service which speaks to gen
      <!-- Shared version number properties -->
     <properties>
         <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
-        <org.zkframework.version>5.0.3</org.zkframework.version>
+        <org.zkframework.version>5.0.4</org.zkframework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

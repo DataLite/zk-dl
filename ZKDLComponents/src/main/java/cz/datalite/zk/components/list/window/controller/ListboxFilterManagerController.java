@@ -1,16 +1,12 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import org.zkoss.zul.Row;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Image;
-import org.zkoss.zul.Bandbox;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -46,7 +42,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     // master controller
     protected DLListboxExtController masterController;
     // view
-    protected org.zkoss.zul.Rows rows; // řídící komponenta modelu, zde jsou v jednotlivých potomcích všechny záznamy
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -71,7 +66,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
             }
         } );
 
-        this.rows = (( Grid ) this.self.getChildren().get( 1 )).getRows();
 
 //        for ( Object obj : rows.getChildren() ) {
 //            final Row row = ( Row ) obj;
@@ -98,7 +92,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
 //            } );
 //
 //        }
-
 
     }
 
@@ -191,12 +184,12 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
             }
         } );
 
-        if (filterComponent instanceof RequireColumnModel) {
-            ((RequireColumnModel)filterComponent).setColumnModel( unitModel.getTemplate().getColumnModel());
+        if ( filterComponent instanceof RequireColumnModel ) {
+            (( RequireColumnModel ) filterComponent).setColumnModel( unitModel.getTemplate().getColumnModel() );
         }
 
-        if (filterComponent instanceof RequireController) {
-            ((RequireController)filterComponent).setController( masterController );
+        if ( filterComponent instanceof RequireController ) {
+            (( RequireController ) filterComponent).setController( masterController );
         }
 
         return component;
@@ -231,12 +224,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         unit.setTemplate( modelTemplates.get( 0 ) );
         modelFilter.add( unit );
         ZKBinderHelper.loadComponent( self );
-
-        // init the first item in the columnBox
-        final Row row = ( Row ) this.rows.getLastChild();
-        row.getGrid().renderRow( row );
-        final DLCombobox columnBox = ( DLCombobox ) row.getChildren().get( 0 );
-        Events.echoEvent( Events.ON_SELECT, columnBox, null ); // is        there a better solution<
+//        Events.echoEvent( Events.ON_SELECT, columnBox, null ); // is        there a better solution<
     }
 
     public void onSelectColumn( final Row row ) {
@@ -247,17 +235,15 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     public void onSelectColumn( final DLCombobox columnbox ) {        // get data type
         final NormalFilterUnitModel rowModel = getModelFromComponent( columnbox );
         final NormalFilterUnitModel templateModel = ( NormalFilterUnitModel ) columnbox.getSelectedItem().getValue();
-        if ( EqualsHelper.isEquals( templateModel.getColumn(), rowModel.getColumn() ) ) { // nothing changed
-            return;
-        }
+//        if ( EqualsHelper.isEquals( templateModel.getColumn(), rowModel.getColumn() ) ) { // nothing changed
+//            return;
+//        }
         rowModel.update( templateModel );
 
         LOGGER.debug( "Refresh operator box ." );
         final DLCombobox operatorBox = ( DLCombobox ) columnbox.getNextSibling();
         ZKBinderHelper.loadComponent( operatorBox );
-
-        // init the first item in the operatorBox
-        Events.echoEvent( Events.ON_SELECT, operatorBox, null ); // is there a better solution?
+        Events.postEvent( Events.ON_SELECT, operatorBox, null );
     }
 
     @SuppressWarnings( "unchecked" )
