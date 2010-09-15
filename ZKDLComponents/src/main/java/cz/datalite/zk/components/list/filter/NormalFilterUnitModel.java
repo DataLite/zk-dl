@@ -6,6 +6,7 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.List;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
+import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import java.util.Collections;
 
 /**
@@ -152,10 +153,7 @@ public class NormalFilterUnitModel implements Cloneable {
     }
 
     public void update( final NormalFilterUnitModel templateModel ) {
-        if ( columnModel == null || !EqualsHelper.isEquals( columnModel.getTypeOfFilterComponent(), templateModel.getTypeOfFilterComponent() ) ) {
-            value1 = null;
-            value2 = null;
-        }
+        setTemplate( templateModel );
         this.columnModel = templateModel.columnModel;
         this.property = templateModel.property;
         if ( !templateModel.getOperators().contains( operator ) || (value1 == null && value2 == null) ) {
@@ -164,6 +162,23 @@ public class NormalFilterUnitModel implements Cloneable {
             setDefaultOperator();
         }
         setOperator( operator );
+    }
+
+    public FilterComponentFactory getFilterComponentFactory() {
+        return columnModel == null ? null : columnModel.getFilterComponentFactory();
+    }
+
+    /**
+     * Tries to set the default operator for this type of value
+     */
+    public void setDefaultOperator() {
+        if ( getQuickFilterOperator() != null ) { // prefer default
+            if ( getOperators().contains( getQuickFilterOperator() ) ) {
+                this.operator = getQuickFilterOperator();
+            } else {
+                this.operator = getOperators().get( 0 );
+            }
+        }
     }
 
     @Override
@@ -190,18 +205,5 @@ public class NormalFilterUnitModel implements Cloneable {
                 + (property == null ? 11 : property.hashCode())
                 + (value1 == null ? 5 : value1.hashCode())
                 + (value2 == null ? 7 : value2.hashCode());
-    }
-
-    /**
-     * Tries to set the default operator for this type of value
-     */
-    public void setDefaultOperator() {
-        if ( getQuickFilterOperator() != null ) { // prefer default
-            if ( getOperators().contains( getQuickFilterOperator() ) ) {
-                this.operator = getQuickFilterOperator();
-            } else {
-                this.operator = getOperators().get( 0 );
-            }
-        }
     }
 }

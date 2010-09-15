@@ -1,29 +1,30 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import java.util.List;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
 import org.zkoss.zul.Row;
-import org.zkoss.zul.Grid;
-import org.zkoss.zul.Image;
+import org.zkoss.zul.Space;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
 
-import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ZKBinderHelper;
-import cz.datalite.zk.components.combo.DLCombobox;
-import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.list.model.RowModel;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
+import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
-import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
+import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.filter.components.RequireController;
+import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -34,14 +35,13 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
 
     protected final static Logger LOGGER = Logger.getLogger( ListboxFilterManagerController.class );
     // model
-    /** model for active filters */
-    protected NormalFilterModel modelFilter;
     // column models for sorting
     /** model for the columns, their configuration etc. */
     protected NormalFilterModel modelTemplates;
     // master controller
     protected DLListboxExtController masterController;
     // view
+    protected List<RowModel> rows = new LinkedList<RowModel>();
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -53,7 +53,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         masterController = ( DLListboxExtController ) arg.get( "master" );
 
         // save model, which is setted in the main model
-        modelFilter = ( NormalFilterModel ) arg.get( DLNormalFilterKeys.FILTERS.toString() );
+        final NormalFilterModel modelFilter = ( NormalFilterModel ) arg.get( DLNormalFilterKeys.FILTERS.toString() );
 
         // load informations about columns and data types
         modelTemplates = ( NormalFilterModel ) arg.get( DLNormalFilterKeys.TEMPLATES.toString() );
@@ -66,37 +66,13 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
             }
         } );
 
-
-//        for ( Object obj : rows.getChildren() ) {
-//            final Row row = ( Row ) obj;
-////
-//            row.getFirstChild().addEventListener( Events.ON_CREATE, new EventListener() {
-//
-//                public void onEvent( final Event event ) throws Exception {
-//                    drawValueComponents( row );
-//                }
-//            } );
-//
-//            row.getFirstChild().addEventListener( Events.ON_RENDER, new EventListener() {
-//
-//                public void onEvent( final Event event ) throws Exception {
-//                    drawValueComponents( row );
-//                }
-//            } );
-//
-//            row.getFirstChild().addEventListener( "onInitRenderLater", new EventListener() {
-//
-//                public void onEvent( final Event event ) throws Exception {
-//                    Events.echoEvent( Events.ON_SELECT, row.getFirstChild(), null );
-//                }
-//            } );
-//
-//        }
-
+        for ( NormalFilterUnitModel unit : modelFilter ) {
+            rows.add( new RowModel( unit ) );
+        }
     }
 
-    public NormalFilterModel getModelFilter() {
-        return modelFilter;
+    public List<RowModel> getRows() {
+        return rows;
     }
 
     public NormalFilterModel getModelTemplates() {
@@ -142,8 +118,8 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
      * @param component child component
      * @return model value
      */
-    protected NormalFilterUnitModel getModelFromComponent( final Component component ) {
-        return ( NormalFilterUnitModel ) (getParentComponent( component, Row.class )).getValue();
+    protected RowModel getModelFromComponent( final Component component ) {
+        return ( RowModel ) (getParentComponent( component, Row.class )).getValue();
     }
 
     /**
@@ -161,41 +137,11 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         return comp == null ? null : type.cast( comp );
     }
 
-    /**
-     * Returns a new instance of a component for the specific unitModel. The component
-     * is depended on the entity datatype and ZUL settings. There are added eventListeners
-     * with validation calls etc.
-     * @param <T>
-     * @param unitModel
-     * @param valueIndex
-     * @param parent
-     * @return
-     */
-    protected <T> org.zkoss.zk.ui.Component createComponent( final NormalFilterUnitModel unitModel, final int valueIndex, final Component parent ) {
-        final FilterComponent filterComponent = unitModel.createFilterComponent();
-        final org.zkoss.zk.ui.Component component = filterComponent.getComponent();
-        filterComponent.setValue( unitModel.getValue( valueIndex ) );
-        filterComponent.addOnChangeEventListener( new EventListener() {
-
-            public void onEvent( final Event event ) {
-                filterComponent.validate();
-                final NormalFilterUnitModel unitModel = getModelFromComponent( component );
-                unitModel.setValue( valueIndex, filterComponent.getValue() );
-            }
-        } );
-
-        if ( filterComponent instanceof RequireColumnModel ) {
-            (( RequireColumnModel ) filterComponent).setColumnModel( unitModel.getTemplate().getColumnModel() );
-        }
-
-        if ( filterComponent instanceof RequireController ) {
-            (( RequireController ) filterComponent).setController( masterController );
-        }
-
-        return component;
-    }
-
     public void onOk() {
+        final NormalFilterModel modelFilter = new NormalFilterModel();
+        for ( RowModel row : rows ) {
+            modelFilter.add( row.getModel() );
+        }
         org.zkoss.zk.ui.event.Events.postEvent( new Event( "onSave", self, clearFilterModel( modelFilter ) ) );
         self.detach();
     }
@@ -209,84 +155,112 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
 
     public void onRemove( final Row row ) {
         // removes actual row
-        modelFilter.remove( getModelFromComponent( row ) );
+        final RowModel model = getModelFromComponent( row );
+        rows.remove( model );
         ZKBinderHelper.loadComponent( self );
     }
 
     public void onRemoveAll() {
-        modelFilter.clear();
+        rows.clear();
         ZKBinderHelper.loadComponent( self );
     }
 
     @SuppressWarnings( "unchecked" )
     public void onAdd() {
         final NormalFilterUnitModel unit = new NormalFilterUnitModel();
-        unit.setTemplate( modelTemplates.get( 0 ) );
-        modelFilter.add( unit );
+        unit.update( modelTemplates.get( 0 ) );
+        rows.add( new RowModel( unit ) );
         ZKBinderHelper.loadComponent( self );
-//        Events.echoEvent( Events.ON_SELECT, columnBox, null ); // is        there a better solution<
     }
 
-    public void onSelectColumn( final Row row ) {
-        onSelectColumn( ( DLCombobox ) row.getFirstChild() );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public void onSelectColumn( final DLCombobox columnbox ) {        // get data type
-        final NormalFilterUnitModel rowModel = getModelFromComponent( columnbox );
-        final NormalFilterUnitModel templateModel = ( NormalFilterUnitModel ) columnbox.getSelectedItem().getValue();
-//        if ( EqualsHelper.isEquals( templateModel.getColumn(), rowModel.getColumn() ) ) { // nothing changed
-//            return;
-//        }
-        rowModel.update( templateModel );
-
-        LOGGER.debug( "Refresh operator box ." );
-        final DLCombobox operatorBox = ( DLCombobox ) columnbox.getNextSibling();
+    public void onSelectColumn( final Combobox columnbox ) {
+        final Combobox operatorBox = ( Combobox ) columnbox.getNextSibling();
         ZKBinderHelper.loadComponent( operatorBox );
-        Events.postEvent( Events.ON_SELECT, operatorBox, null );
+        refreshComponents( ( Row ) columnbox.getParent() );
     }
 
-    @SuppressWarnings( "unchecked" )
-    public void onSelectOperator( final DLCombobox operatorbox ) {
-        final NormalFilterUnitModel unitModel = getModelFromComponent( operatorbox );
-        final DLFilterOperator operator = unitModel.getOperator();
-//        final Class type = unitModel.getType();
-//
-//      Commented on 23.8.2010 on Ondrej Medek's request
-//      This condition probably restricts usage of the component
-//
-//      Condition on type has been removed
-//
-        if ( operator == null ) {// || type == null
-            return;
-            // removes all components
-        }
-
-        drawValueComponents( ( Row ) operatorbox.getParent() );
+    public void onSelectOperator( final Combobox combobox ) {
+        refreshComponents( ( Row ) combobox.getParent() );
     }
 
-    protected void drawValueComponents( final Row row ) {
+    public void onRenderComponents( final Combobox combobox ) {
+        onSelectColumn( combobox );
+        onRenderComponents( ( Row ) combobox.getParent() );
+    }
 
-        final Component operatorbox = row.getFirstChild().getNextSibling();
+    public void onRenderComponents( final Row row ) {
+        final Component lastChild = row.getLastChild(); // image button remove
+        final RowModel model = getModelFromComponent( row );
+        for ( int i = 0; i < DLFilterOperator.MAX_ARITY; ++i ) { // remove all
+            lastChild.getPreviousSibling().setParent( null );
+        }
+        for ( int i = 0; i < DLFilterOperator.MAX_ARITY; ++i ) { // insert all
+            row.insertBefore( model.getPosition( i + 1 ), lastChild );
+        }
+        LOGGER.debug( "Components have been rendered." );
+    }
 
-        Component lastComponent;  // last component in the row
+    public void refreshComponents( final Row row ) {
+        final RowModel model = getModelFromComponent( row );
+        final int oldArity = model.getRenderedArity();
+        final int newArity = model.getModel().getOperator().getArity();
+        if ( model.isRerender() ) {
+            for ( int i = 1; i <= newArity; ++i ) {
+                model.setPosition( i, createComponent( model.getModel(), i ) );
+            }
+            for ( int i = newArity + 1; i <= DLFilterOperator.MAX_ARITY; ++i ) {
+                model.setPosition( i, new Space() );
+            }
+            model.rendered( newArity );
+            Events.postEvent( "onRenderComponents", row, null );
+            LOGGER.debug( "Components have been regenerated due to factory changed." );
+        } else if ( oldArity != newArity ) {
+            for ( int i = oldArity + 1; i <= newArity; ++i ) {
+                model.setPosition( i, createComponent( model.getModel(), i ) );
+            }
+            for ( int i = newArity + 1; i <= oldArity; ++i ) {
+                model.setPosition( i, new Space() );
+                model.getModel().setValue( i, null ); // uncomment of this row
+                // causes that the value will be reset after the component is hidden
+                // now the value persists till the factory is not changed
+            }
+            model.rendered( newArity );
+            Events.postEvent( "onRenderComponents", row, null );
+            LOGGER.debug( "Components have been modified due to arity changed." );
+        }
+    }
 
-        for ( lastComponent = operatorbox; !(lastComponent instanceof Image); lastComponent = lastComponent.getNextSibling() ) {
+    /**
+     * Returns a new instance of a component for the specific unitModel. The component
+     * is depended on the entity datatype and ZUL settings. There are added eventListeners
+     * with validation calls etc.
+     * @param <T>
+     * @param unitModel
+     * @param valueIndex
+     * @param parent
+     * @return
+     */
+    protected <T> org.zkoss.zk.ui.Component createComponent( final NormalFilterUnitModel unitModel, final int valueIndex ) {
+        final FilterComponent filterComponent = unitModel.createFilterComponent();
+        final org.zkoss.zk.ui.Component component = filterComponent.getComponent();
+        filterComponent.setValue( unitModel.getValue( valueIndex ) );
+        filterComponent.addOnChangeEventListener( new EventListener() {
+
+            public void onEvent( final Event event ) {
+                filterComponent.validate();
+                final RowModel unitModel = getModelFromComponent( component );
+                unitModel.getModel().setValue( valueIndex, filterComponent.getValue() );
+            }
+        } );
+
+        if ( filterComponent instanceof RequireColumnModel ) {
+            (( RequireColumnModel ) filterComponent).setColumnModel( unitModel.getTemplate().getColumnModel() );
         }
 
-        while ( operatorbox.getNextSibling() != lastComponent ) { // removes all components except last one
-            operatorbox.getParent().removeChild( operatorbox.getNextSibling() );
+        if ( filterComponent instanceof RequireController ) {
+            (( RequireController ) filterComponent).setController( masterController );
         }
 
-        final NormalFilterUnitModel unitModel = getModelFromComponent( operatorbox );
-
-        for ( int i = 1; i <= unitModel.getOperator().getArity(); ++i ) {
-            final org.zkoss.zk.ui.Component component = createComponent( unitModel, i, operatorbox.getParent() );
-            operatorbox.getParent().insertBefore( component, lastComponent );
-        }
-
-        for ( int i = unitModel.getOperator().getArity(); i < DLFilterOperator.MAX_ARITY; ++i ) {
-            operatorbox.getParent().insertBefore( new org.zkoss.zul.Space(), lastComponent );
-        }
+        return component;
     }
 }

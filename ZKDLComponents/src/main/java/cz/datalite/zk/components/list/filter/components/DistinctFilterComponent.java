@@ -2,19 +2,15 @@ package cz.datalite.zk.components.list.filter.components;
 
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
-import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.DataLoader;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.lovbox.Box;
 import cz.datalite.zk.components.lovbox.DLDistinctLovbox;
-import java.util.Collections;
 import java.util.List;
-import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.SelectEvent;
 
 /**
  * This filter component servers to provide user the list of values which are

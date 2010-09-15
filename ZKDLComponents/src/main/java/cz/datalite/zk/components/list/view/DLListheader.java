@@ -281,7 +281,7 @@ public class DLListheader extends Listheader {
         if ( this.filterComponentFactory == null ) {
             try {
                 filterComponentFactory = new InstanceFilterComponentFactory( filterComponentClass );
-            } catch ( ClassNotFoundException ex ) {
+            } catch ( RuntimeException ex ) {
                 throw new IllegalArgumentException( "FilterComponent wasn't created. Class '"
                         + filterComponentClass + "' wasn't found.", ex );
             }

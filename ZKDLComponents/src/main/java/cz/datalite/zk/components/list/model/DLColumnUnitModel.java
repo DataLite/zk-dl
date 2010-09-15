@@ -370,17 +370,7 @@ public class DLColumnUnitModel {
     }
 
     public FilterComponent createFilterComponent() {
-        if ( filterComponentFactory == null ) {
-            // Is the default configuration known for this type?
-            if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
-                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).createDefaultFilterComponent();
-            } else {
-                throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type "
-                        + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );
-            }
-        } else {
-            return filterComponentFactory.createFilterComponent();
-        }
+        return getFilterComponentFactory().createFilterComponent();
     }
 
     public boolean isFilterComponent() {
@@ -388,21 +378,25 @@ public class DLColumnUnitModel {
     }
 
     public Class getTypeOfFilterComponent() {
+        return getFilterComponentFactory().getComponentClass();
+    }
+
+    public void setFilterComponentFactory( final FilterComponentFactory filterComponentFactory ) {
+        this.filterComponentFactory = filterComponentFactory;
+    }
+
+    public FilterComponentFactory getFilterComponentFactory() {
         if ( filterComponentFactory == null ) {
             // Is the default configuration known for this type?
             if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
-                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getTypeOfFilterComponent();
+                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType );
             } else {
                 throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type "
                         + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );
             }
         } else {
-            return filterComponentFactory.getComponentClass();
+            return filterComponentFactory;
         }
-    }
-
-    public void setFilterComponentFactory( final FilterComponentFactory filterComponentFactory ) {
-        this.filterComponentFactory = filterComponentFactory;
     }
 
     public void setFilterCompiler( final FilterCompiler filterCompiler ) {

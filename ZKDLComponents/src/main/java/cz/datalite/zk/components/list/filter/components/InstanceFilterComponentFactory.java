@@ -1,5 +1,8 @@
 package cz.datalite.zk.components.list.filter.components;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * This implementation of FilterComponentFactory is used when the component
  * is defined by class name. This class is reproduced by its constructor without
@@ -11,8 +14,12 @@ public class InstanceFilterComponentFactory implements FilterComponentFactory {
 
     protected final Class<? extends FilterComponent> componentClass;
 
-    public InstanceFilterComponentFactory( final String className ) throws ClassNotFoundException {
-        componentClass = ( Class<? extends FilterComponent> ) Class.forName( className );
+    public InstanceFilterComponentFactory( final String className ) {
+        try {
+            componentClass = ( Class<? extends FilterComponent> ) Class.forName( className );
+        } catch ( ClassNotFoundException ex ) {
+            throw new RuntimeException( ex );
+        }
     }
 
     public FilterComponent createFilterComponent() {

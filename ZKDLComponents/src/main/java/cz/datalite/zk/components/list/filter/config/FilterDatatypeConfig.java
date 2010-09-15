@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public abstract class FilterDatatypeConfig {
+public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactory {
 
     /** Map of supported datatypes */
     public static final Map<Class, FilterDatatypeConfig> DEFAULT_CONFIGURATION = init();
@@ -27,6 +27,7 @@ public abstract class FilterDatatypeConfig {
     protected final DLFilterOperator quickOperator;
 
     protected FilterDatatypeConfig( final List<DLFilterOperator> operators, final DLFilterOperator quickOperator ) {
+        super( "java.lang.Object" );
         this.operators = new ArrayList<DLFilterOperator>( operators );
         this.quickOperator = quickOperator;
     }
@@ -38,16 +39,6 @@ public abstract class FilterDatatypeConfig {
     public DLFilterOperator getQuickOperator() {
         return quickOperator;
     }
-
-    /**
-     * This method creates new instance of component which is used
-     * in normal filter to input values. There can be defined validation
-     * conditions, component type etc.
-     * @return new instance of filter component wrapping ZK component
-     */
-    public abstract FilterComponent createDefaultFilterComponent();
-
-    public abstract Class<? extends FilterComponent> getTypeOfFilterComponent();
 
     private static List<DLFilterOperator> createStringOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
@@ -76,12 +67,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new CharFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return CharFilterComponent.class;
             }
         };
@@ -93,12 +84,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.LIKE ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new StringFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return StringFilterComponent.class;
             }
         };
@@ -124,12 +115,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new IntegerFilterComponent( minValue, maxValue );
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return IntegerFilterComponent.class;
             }
         };
@@ -141,12 +132,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new DoubleFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return DoubleFilterComponent.class;
             }
         };
@@ -158,12 +149,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new DecimalFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return DecimalFilterComponent.class;
             }
         };
@@ -175,12 +166,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new LongFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return LongFilterComponent.class;
             }
         };
@@ -206,12 +197,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new DateFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return DateFilterComponent.class;
             }
         };
@@ -230,12 +221,12 @@ public abstract class FilterDatatypeConfig {
         final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
 
             @Override
-            public FilterComponent createDefaultFilterComponent() {
+            public FilterComponent createFilterComponent() {
                 return new BooleanFilterComponent();
             }
 
             @Override
-            public Class<? extends FilterComponent> getTypeOfFilterComponent() {
+            public Class<? extends FilterComponent> getComponentClass() {
                 return BooleanFilterComponent.class;
             }
         };
