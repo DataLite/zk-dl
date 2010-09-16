@@ -70,7 +70,7 @@
             <property-name>selectedItem</property-name>
             <attribute>
                 <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onSelect, self.onChange</attribute-value>
+                <attribute-value>self.onSelect</attribute-value>
                 <!--
                   There is a problem when using stict - value cannot be deleted
 
