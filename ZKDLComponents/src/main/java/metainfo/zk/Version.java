@@ -6,7 +6,7 @@ package metainfo.zk;
  * @author Jiri Bubnik
  */
 public class Version {
-	/** Returns the version UID.
-	 */
+    /** Returns the version UID.
+     */
 	public static final String UID = "5.0.0";
 }
