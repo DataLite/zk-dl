@@ -1,5 +1,6 @@
 package cz.datalite.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class DLResponse<T> {
     private final List<T> data;
     /** total length */
     private final Integer rows;
+
+    /** Empty response for a request. */
+    @SuppressWarnings("unchecked")
+    public static DLResponse EMPTY_RESPONSE = new DLResponse(Collections.EMPTY_LIST, 0);
 
     /**
      * Create filled container
