@@ -122,7 +122,14 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
             for ( Map<String, Object> unit : usedModel ) {
                 try {
                     final String columnName = ( String ) unit.get( "column" );
-                    Object value = (Strings.isEmpty( columnName )) ? entity : Fields.getByCompound( entity, columnName );
+
+                    Object value;
+
+                    if (entity instanceof Map)
+                        value = ((Map)entity).get(columnName);
+                    else
+                        value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
+
                     if ( ( Boolean ) unit.get( "isConverter" ) ) {
                         value = convert( value, ( Method ) unit.get( "converter" ) );
                     }

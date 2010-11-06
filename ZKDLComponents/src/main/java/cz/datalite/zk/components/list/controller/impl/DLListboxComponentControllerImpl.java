@@ -19,6 +19,7 @@ import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listitem;
 
 /**
@@ -199,56 +200,34 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     @SuppressWarnings( "unchecked" )
     public void fireOrderChanges() {
-        final List<Listcell> listcells = new ArrayList<Listcell>();
-        final List<DLListheader> listheaders = new ArrayList<DLListheader>();
+
+        final Listhead listhead = listbox.getListhead();
 
         if ( renderTemplate == null ) {
             throw new UiException( "Template is not set. Is there data binding set on the component correctly?" );
         }
 
         // remove all children
-        while ( renderTemplate.getFirstChild() != null ) {
-            renderTemplate.removeChild( renderTemplate.getFirstChild() );
-        }
+        renderTemplate.getChildren().clear();
 
         // remove all children
-        while ( listbox.getListhead().getFirstChild() != null ) {
-            listbox.getListhead().removeChild( listbox.getListhead().getFirstChild() );
-        }
+        listhead.getChildren().clear();
 
-        // initialize array on the correct element count
-        for ( int i = 0; i < columnModel.getOrderMaxIndex(); i++ ) {
-            listcells.add( null );
-            listheaders.add( null );
-        }
-
+        // add children to template and listhead according the model
         for ( DLColumnUnitModel unit : columnModel.getColumnModels() ) {
             if ( unit.isVisible() ) {
-                listcells.set( unit.getOrder() - 1, rendererCellTemplates.get( unit ) );
-                listheaders.set( unit.getOrder() - 1, listheaderTemplates.get( unit ) );
-            } else {
-                listcells.add( rendererCellTemplates.get( unit ) );
-                listheaders.add( listheaderTemplates.get( unit ) );
+                renderTemplate.appendChild( rendererCellTemplates.get( unit ) );
+                listhead.appendChild( listheaderTemplates.get( unit ) );
             }
         }
 
-        for ( Listcell listcell : listcells ) {
-            if ( listcell == null ) {
-                throw new UiException( "Number of visible listheader doesn't match number of listitems. Please check your template. "
-                        + "This can also happen if you change number of items and column model is already saved in session (application restart will help in this case)." );
-            }
-            renderTemplate.appendChild( listcell );
-        }
-
-        for ( DLListheader listheader : listheaders ) {
-            listbox.getListhead().appendChild( listheader );
-        }
-
+        // clear rendered items
         listbox.getItems().clear();
-        listbox.invalidate();
+        listbox.invalidate(); // FIXME check if really required
 
         fireChanges();
-        fireDataChanges();
+
+        masterController.refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)
     }
 
     public void setListboxModel( final List<T> model ) {

@@ -75,6 +75,13 @@ public class NormalFilterUnitModel implements Cloneable {
         }
     }
 
+
+    /**
+     * 1-based index of operand (1 for unary and 1 and 2 for binary operators).
+     *
+     * @param index 1-based index
+     * @return actual value
+     */
     public Object getValue( final int index ) {
         switch ( index ) {
             case 1:
