@@ -39,8 +39,24 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     private final Class<T> persistentClass;
     private EntityManager entityManager;
 
+
+    /**
+     * Default Constructor - resolves persistent class from generics.
+     * 
+     * @throws IllegalStateException if no generics is found
+     */
     public GenericDAOImpl() {
-        this.persistentClass = ( Class<T> ) (( ParameterizedType ) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        ParameterizedType parametrizedType;
+
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) // class
+            parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
+        else if (getClass().getGenericSuperclass() instanceof Class) // in case of CGLIB proxy
+            parametrizedType = (ParameterizedType) ((Class)getClass().getGenericSuperclass()).getGenericSuperclass();
+        else
+            throw new IllegalStateException("GenericDAOImpl - class " + getClass() + " is not subtype of ParametrizedType.");
+
+
+        this.persistentClass = ( Class<T> ) parametrizedType.getActualTypeArguments()[0];
     }
 
     public GenericDAOImpl( final Class<T> persistentClass ) {
