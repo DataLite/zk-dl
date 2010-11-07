@@ -98,9 +98,6 @@ SpringService? - service layer with spring - generic service which speaks to gen
 
     <repositories>
        <repository>
-           <releases>
-               <enabled>false</enabled>
-           </releases>
            <snapshots>
                <enabled>false</enabled>
            </snapshots>
@@ -109,9 +106,6 @@ SpringService? - service layer with spring - generic service which speaks to gen
            <url>http://repository.jboss.com/maven2</url>
        </repository>
        <repository>
-           <releases>
-               <enabled>false</enabled>
-           </releases>
            <snapshots>
                <enabled>false</enabled>
            </snapshots>
@@ -123,15 +117,15 @@ SpringService? - service layer with spring - generic service which speaks to gen
 
     <distributionManagement>
         <repository>
-            <id>DTLArtifactory</id>
-            <name>DTLArtifactory-releases</name>
-            <url>http://192.168.32.17:8081/artifactory/libs-releases-local</url>
+            <id>DataLite</id>
+            <name>DataLite-releases</name>
+            <url>http://panda:8081/artifactory/libs-releases-local</url>
         </repository>
 
         <snapshotRepository>
-            <id>DTLArtifactory</id>
-            <name>DTLArtifactory-snapshots</name>
-            <url>http://192.168.32.17:8081/artifactory/libs-snapshots-local</url>
+            <id>DataLite</id>
+            <name>DataLite-snapshots</name>
+            <url>http://panda:8081/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
 
