@@ -85,11 +85,11 @@ public class DLConstraint extends SimpleConstraint
             {
                 return;
             }
-            
-            if ((_flags & NO_EMPTY) != 0)
-            {
-                return;
-            }
+//            JB - don't know the reason behind this
+//            if ((_flags & NO_EMPTY) != 0)
+//            {
+//                return;
+//            }
         }
 
         super.validate(comp, value);

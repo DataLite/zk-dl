@@ -32,15 +32,28 @@ public class FilterCriterionCompiler extends AbstractFilterCompiler {
         return ( Criterion ) super.compile( operator, key, values[0], values[1] );
     }
 
-    @Override
-    protected Criterion compileOperatorEqual( final String key, final Object... values ) {
-        return Restrictions.eq( key, values[0] );
-    }
+	@Override
+	protected Criterion compileOperatorEqual(final String key, final Object... values) {
+		final Object value = values[0];
+		// single value
+		if (!(value instanceof Object[])) {
+			return Restrictions.eq(key, value);
+		}
+		// array of values
+		return Restrictions.in(key, (Object[])value);
+	}
 
-    @Override
-    protected Criterion compileOperatorNotEqual( final String key, final Object... values ) {
-        return Restrictions.ne( key, values[0] );
-    }
+	@Override
+	protected Criterion compileOperatorNotEqual(final String key, final Object... values) {
+		final Object value = values[0];
+		// single value
+		if (!(value instanceof Object[])) {
+			return Restrictions.ne(key, value);
+		}
+		// array of values
+		return Restrictions.not(Restrictions.in(key, (Object[])value));
+	}
+
 
     @Override
     protected Criterion compileOperatorEmpty( final String key, final Object... values ) {

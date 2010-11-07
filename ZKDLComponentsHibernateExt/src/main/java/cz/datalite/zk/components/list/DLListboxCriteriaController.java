@@ -148,7 +148,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     protected Criterion compileCriteria( final NormalFilterUnitModel unit, final String value, final DLSearch search, final int joinType ) {
         final Class type = unit.getType();
         if ( unit.getFilterCompiler() != null ) { // compiler is defined
-            unit.setOperator( DLFilterOperator.EQUAL );
+            unit.setOperator( unit.getQuickFilterOperator() );
             unit.setValue( 1, value );
             return compileCriteria( unit, search, joinType );
         } else if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( type ) ) {
