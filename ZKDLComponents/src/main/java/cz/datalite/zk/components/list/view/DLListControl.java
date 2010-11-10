@@ -12,10 +12,11 @@ import org.zkoss.zul.Separator;
  *
  * @author Michal Pavlusek
  */
-public class DLListControl extends Hbox {
-
+public class DLListControl extends Hbox
+{
     // constants
     private static final int CONST_PAGE_SIZE = 100;
+    
     // basic display settings
     private boolean paging = false;
     private boolean qfilter = true;
@@ -25,26 +26,33 @@ public class DLListControl extends Hbox {
     private boolean autohide = false;
     private boolean quickFilterAll = true;
     private String quickFilterDefault;
+
     // style settings
     private String qFilterStyle;
     private String qFilterClass;
     private String managerStyle;
     private String managerClass;
+
     // variables with components
     private final DLQuickFilter qFilterComponent;
     private final DLListboxManager managerComponent;
     private final DLPaging pagingComponent;
 
-    // everyting added by ZUL page goes here (see appendChild)
+    /** Everyting added by ZUL page goes here (see appendChild). */
     private final Hbox additionalContent;
 
-    // just constructing the component (to recognize own child components and user added components)
+    /** First separator of content. */
+    private final Separator separator1;
+
+    /** Just constructing the component
+     * (to recognize own child components and user added components). */
     private boolean inConstruct = true;
 
     /**
-     * Constructor creates all components
+     * Constructor creates all components.
      */
-    public DLListControl() {
+    public DLListControl()
+    {
         super();
         setClass("z-paging"); // TODO - own class
         setWidth("100%");
@@ -53,14 +61,14 @@ public class DLListControl extends Hbox {
         qFilterComponent = new DLQuickFilter();
         qFilterComponent.setParent( this );
 
-        Separator separator = new Separator();
-        separator.setHflex("1");
-        separator.setParent(this);
+        separator1 = new Separator();
+        separator1.setHflex("1");
+        separator1.setParent(this);
 
         additionalContent = new Hbox();
         additionalContent.setParent(this);
 
-        separator = new Separator();
+        Separator separator = new Separator();
         separator.setWidth("5px");
         separator.setParent(this);
 
@@ -80,17 +88,20 @@ public class DLListControl extends Hbox {
         inConstruct = false;
     }
 
-    public void init() {
+    public void init()
+    {
         initPaging();
         initQuickFilter();
     }
 
-    private void initQuickFilter() {
+    private void initQuickFilter()
+    {
         qFilterComponent.setQuickFilterAll( quickFilterAll );
         qFilterComponent.setQuickFilterDefault( quickFilterDefault );
     }
 
-    private void initPaging() {
+    private void initPaging()
+    {
         pagingComponent.setPageSize( pageSize );
         pagingComponent.setAutohide( autohide );
         pagingComponent.setCountPages( countPages );
@@ -98,8 +109,8 @@ public class DLListControl extends Hbox {
 
     /**
      * Append child to additionalContent hbox in the center.
-     * @param child child to add
-     * @return additionalContent.appendChild(child)
+     * @param child child to add.
+     * @return additionalContent.appendChild(child).
      */
     @Override
     public boolean appendChild(Component child)
@@ -114,16 +125,20 @@ public class DLListControl extends Hbox {
     public boolean insertBefore(Component newChild, Component refChild)
     {
         if (inConstruct)
+        {
             return super.insertBefore(newChild, refChild);
+        }
         else
+        {
+            additionalContent.setHflex("1");
+            separator1.setHflex("0");
             return additionalContent.insertBefore(newChild, refChild);
+        }
     }
 
 
+    /************************** SETTERS & GETTERS *****************************/
 
-
-
-    /* ********************** SETTERY & GETTERY **************************** */
     public boolean isPaging() {
         return paging;
     }
@@ -215,4 +230,5 @@ public class DLListControl extends Hbox {
     public void setQuickFilterDefault( final String quickFilterDefault ) {
         this.quickFilterDefault = quickFilterDefault;
     }
+    
 }

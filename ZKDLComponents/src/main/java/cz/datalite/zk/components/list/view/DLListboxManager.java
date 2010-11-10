@@ -112,6 +112,7 @@ public class DLListboxManager extends Hbox {
      */
     private Image createImage() {
         final Image image = new Image();
+        image.setStyle("cursor: pointer;");
         image.setWidth( CONST_IMAGE_SIZE );
         image.setHeight( CONST_IMAGE_SIZE );
         image.setClass( "datalite-listbox-manager-image" );

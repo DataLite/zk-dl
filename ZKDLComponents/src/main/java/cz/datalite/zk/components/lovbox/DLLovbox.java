@@ -121,6 +121,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
+            listbox.setVflex("1");
             final Listhead head = new Listhead(); // create lishead and listitem
             listbox.appendChild( head );
 
