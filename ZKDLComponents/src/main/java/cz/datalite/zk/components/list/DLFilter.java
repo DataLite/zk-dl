@@ -228,7 +228,6 @@ public final class DLFilter {
 	public static <T> List<T> sort(final List<DLSort> sorts, final List<T> list) {
 		final Comparator<T> comparator = new Comparator<T>() {
 
-			@Override
 			public int compare(final T o1, final T o2) {
 				if (o1 == o2) {
 					return 0;
