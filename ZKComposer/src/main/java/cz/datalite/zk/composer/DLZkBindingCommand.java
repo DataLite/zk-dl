@@ -57,6 +57,6 @@ public class DLZkBindingCommand {
      * @return odkaz na binder
      */
     private static DataBinder getBinder( final Component comp ) {
-        return ( DataBinder ) comp.getVariable( "binder", false );
+        return ( DataBinder ) comp.getAttribute( "binder");
     }
 }
