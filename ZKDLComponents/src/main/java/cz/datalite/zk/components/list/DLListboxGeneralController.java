@@ -264,7 +264,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
         // set visible value on true where user wanted
         for ( Map<String, Object> map : data ) {
-            model.getColumnModel().getColumnModels().get( ( Integer ) map.get( "index" ) ).setVisible( true );
+            DLColumnUnitModel column = model.getColumnModel().getColumnModels().get( ( Integer ) map.get( "index" ) );
+            column.setVisible( true );
+            column.setOrder( ( Integer ) map.get("order"));
         }
 
         getListboxController().fireOrderChanges();

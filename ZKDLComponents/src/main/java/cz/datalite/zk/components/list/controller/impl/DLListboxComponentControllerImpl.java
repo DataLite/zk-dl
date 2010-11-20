@@ -9,6 +9,8 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,7 +216,10 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         listhead.getChildren().clear();
 
         // add children to template and listhead according the model
-        for ( DLColumnUnitModel unit : columnModel.getColumnModels() ) {
+        List<DLColumnUnitModel> orderedModel = new LinkedList(columnModel.getColumnModels());
+        Collections.sort(orderedModel);
+
+        for ( DLColumnUnitModel unit : orderedModel ) {
             if ( unit.isVisible() ) {
                 renderTemplate.appendChild( rendererCellTemplates.get( unit ) );
                 listhead.appendChild( listheaderTemplates.get( unit ) );

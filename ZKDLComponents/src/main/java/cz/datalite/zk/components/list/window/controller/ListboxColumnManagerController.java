@@ -55,6 +55,11 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     }
 
     public void onOk() {
+        // setup ordering
+        int i = 1;
+        for (Map<String, Object> row : usedModel)
+            row.put("order", i++);
+        
         org.zkoss.zk.ui.event.Events.postEvent( new org.zkoss.zk.ui.event.Event( "onSave", self, usedModel ) );
         self.detach();
     }

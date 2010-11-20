@@ -18,7 +18,7 @@ import org.zkoss.zk.ui.util.Composer;
  * is used like a model for whole col.
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public class DLColumnUnitModel {
+public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
     // ************* MAIN ************* //
     // column name in the database - loaded throw data binding or attribute
@@ -405,5 +405,17 @@ public class DLColumnUnitModel {
 
     public FilterCompiler getFilterCompiler() {
         return filterCompiler;
+    }
+
+    /**
+     * Unit Model is comperable by order.
+     * @param o order
+     * @return -1 if first less then other, 0 if same, 1 otherwise.
+     */
+    public int compareTo(DLColumnUnitModel o)
+    {
+        if (o == null)
+            return 0;
+        return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
     }
 }
