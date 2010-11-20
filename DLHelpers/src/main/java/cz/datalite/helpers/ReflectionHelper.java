@@ -1,6 +1,6 @@
 package cz.datalite.helpers;
 
-
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -11,8 +11,10 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -73,54 +75,37 @@ public abstract class ReflectionHelper
     {
         String fieldName = destinationField.getName();
 
-        if ((value == null) || (destinationField.getType().isAssignableFrom(value.getClass())))
-        {
-            if (destinationField.isAccessible())
-            {
+        if ((value == null) || (destinationField.getType().isAssignableFrom(value.getClass()))) {
+            if (destinationField.isAccessible()) {
                 destinationField.set(destination, value);
-            }
-            else
-            {
+            } else {
 
                 String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
                 Method setter = destination.getClass().getMethod("set" + methodName, destinationField.getType());
 
                 setter.invoke(destination, value);
             }
-        }
-        else
-        {
+        } else {
             Method convertMethod = getConvertMethod(value, destinationField.getType().getSimpleName());
 
-            if (convertMethod != null)
-            {
-                try
-                {
+            if (convertMethod != null) {
+                try {
                     value = convertMethod.invoke(null, value);
-                }
-                catch (InvocationTargetException e)
-                {
+                } catch (InvocationTargetException e) {
                     value = null;
-                }
-                catch (IllegalAccessException e)
-                {
+                } catch (IllegalAccessException e) {
                     value = null;
                 }
 
                 setFieldValue(fieldName, destination, value);
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Object result = destinationField.getType().newInstance();
 
                     convertFields(value, result);
 
                     setFieldValue(fieldName, destination, result);
-                }
-                catch (InstantiationException e)
-                {
+                } catch (InstantiationException e) {
                     /* empty */
                 }
             }
@@ -135,22 +120,15 @@ public abstract class ReflectionHelper
      */
     public static Iterator getIterator(Object value)
     {
-        try
-        {
+        try {
             Method m = value.getClass().getMethod("iterator");
 
             return (Iterator) m.invoke(value);
-        }
-        catch (NoSuchMethodException e)
-        {
+        } catch (NoSuchMethodException e) {
             /* empty */
-        }
-        catch (InvocationTargetException e)
-        {
+        } catch (InvocationTargetException e) {
             /* empty */
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             /* empty */
         }
         return null;
@@ -167,18 +145,14 @@ public abstract class ReflectionHelper
     {
         String methodName = "convert" + original.getClass().getSimpleName() + "To" + destinationType;
 
-        try
-        {
+        try {
             return ReflectionHelper.class.getMethod(methodName, original.getClass());
-        }
-        catch (NoSuchMethodException e)
-        {
+        } catch (NoSuchMethodException e) {
             /* empty */
         }
 
         return null;
     }
-
 
     /**
      * Prevod typu
@@ -191,22 +165,15 @@ public abstract class ReflectionHelper
     {
         String methodName = "convert" + original.getClass().getSimpleName() + "To" + destinationType;
 
-        try
-        {
+        try {
             Method m = ReflectionHelper.class.getMethod(methodName, original.getClass());
 
             return m.invoke(null, original);
-        }
-        catch (NoSuchMethodException e)
-        {
+        } catch (NoSuchMethodException e) {
             /* empty */
-        }
-        catch (InvocationTargetException e)
-        {
+        } catch (InvocationTargetException e) {
             /* emtpy */
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             /* empty */
         }
 
@@ -226,21 +193,16 @@ public abstract class ReflectionHelper
      */
     public static Object getFieldValue(Field destinationField, Object source) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        if (source == null)
-        {
+        if (source == null) {
             return null;
         }
 
-        if (destinationField.isAccessible())
-        {
+        if (destinationField.isAccessible()) {
             return destinationField.get(source);
-        }
-        else
-        {
+        } else {
             Method getter = getFieldGetter(source.getClass(), destinationField);
 
-            if (getter != null)
-            {
+            if (getter != null) {
                 return getter.invoke(source);
             }
         }
@@ -257,25 +219,16 @@ public abstract class ReflectionHelper
      */
     public static Object getFieldByType(Object source, Class type)
     {
-        for (Method method : source.getClass().getMethods())
-        {
+        for (Method method : source.getClass().getMethods()) {
             if ((method.getReturnType() == type)
                     && (method.getParameterTypes().length == 0)
                     && ((method.getName().startsWith("get"))
-                    || (method.getName().startsWith("is"))
-            )
-                    )
-            {
-                try
-                {
+                    || (method.getName().startsWith("is")))) {
+                try {
                     return method.invoke(source);
-                }
-                catch (IllegalAccessException e)
-                {
+                } catch (IllegalAccessException e) {
                     /* empty */
-                }
-                catch (InvocationTargetException e)
-                {
+                } catch (InvocationTargetException e) {
                     /* empty */
                 }
             }
@@ -292,30 +245,18 @@ public abstract class ReflectionHelper
      */
     public static void convertFields(Object source, Object destination)
     {
-        if ((source != null) && (destination != null))
-        {
-            for (Field sourceField : source.getClass().getDeclaredFields())
-            {
-                if ((!sourceField.getType().isArray()) && (sourceField.getType() != List.class))
-                {
-                    try
-                    {
+        if ((source != null) && (destination != null)) {
+            for (Field sourceField : source.getClass().getDeclaredFields()) {
+                if ((!sourceField.getType().isArray()) && (sourceField.getType() != List.class)) {
+                    try {
                         setFieldValue(sourceField.getName(), destination, getFieldValue(sourceField.getName(), source));
-                    }
-                    catch (NoSuchFieldException e)
-                    {
+                    } catch (NoSuchFieldException e) {
                         /* empty */
-                    }
-                    catch (NoSuchMethodException e)
-                    {
+                    } catch (NoSuchMethodException e) {
                         /* empty */
-                    }
-                    catch (InvocationTargetException e)
-                    {
+                    } catch (InvocationTargetException e) {
                         /* empty */
-                    }
-                    catch (IllegalAccessException e)
-                    {
+                    } catch (IllegalAccessException e) {
                         /* empty */
                     }
                 }
@@ -332,33 +273,20 @@ public abstract class ReflectionHelper
      */
     public static void convertFields(Object source, Object destination, boolean onlyNull)
     {
-        if ((source != null) && (destination != null))
-        {
-            for (Field sourceField : source.getClass().getDeclaredFields())
-            {
-                if ((!sourceField.getType().isArray()) && (sourceField.getType() != List.class))
-                {
-                    try
-                    {
-                        if ((!onlyNull) || (getFieldValue(sourceField.getName(), destination) == null))
-                        {
+        if ((source != null) && (destination != null)) {
+            for (Field sourceField : source.getClass().getDeclaredFields()) {
+                if ((!sourceField.getType().isArray()) && (sourceField.getType() != List.class)) {
+                    try {
+                        if ((!onlyNull) || (getFieldValue(sourceField.getName(), destination) == null)) {
                             setFieldValue(sourceField.getName(), destination, getFieldValue(sourceField.getName(), source));
                         }
-                    }
-                    catch (NoSuchFieldException e)
-                    {
+                    } catch (NoSuchFieldException e) {
                         /* empty */
-                    }
-                    catch (NoSuchMethodException e)
-                    {
+                    } catch (NoSuchMethodException e) {
                         /* empty */
-                    }
-                    catch (InvocationTargetException e)
-                    {
+                    } catch (InvocationTargetException e) {
                         /* empty */
-                    }
-                    catch (IllegalAccessException e)
-                    {
+                    } catch (IllegalAccessException e) {
                         /* empty */
                     }
                 }
@@ -397,20 +325,16 @@ public abstract class ReflectionHelper
      */
     public static boolean isEquals(Object valueOne, Object valueTwo)
     {
-        if ((valueOne instanceof String) && (valueTwo instanceof Character))
-        {
+        if ((valueOne instanceof String) && (valueTwo instanceof Character)) {
             return isEquals((Character) valueTwo, (String) valueOne);
         }
 
-        if ((valueTwo instanceof String) && (valueOne instanceof Character))
-        {
+        if ((valueTwo instanceof String) && (valueOne instanceof Character)) {
             return isEquals((String) valueTwo, (Character) valueOne);
         }
 
-        return (
-                ((valueOne == null) && (valueTwo == null)) ||
-                        ((valueOne != null) && (valueOne.equals(valueTwo)))
-        );
+        return (((valueOne == null) && (valueTwo == null))
+                || ((valueOne != null) && (valueOne.equals(valueTwo))));
     }
 
     /**
@@ -422,10 +346,8 @@ public abstract class ReflectionHelper
      */
     public static boolean isEquals(Character valueOne, String valueTwo)
     {
-        return (
-                ((valueOne == null) && (valueTwo == null)) ||
-                        ((valueOne != null) && (valueOne.equals(valueTwo.charAt(0))))
-        );
+        return (((valueOne == null) && (valueTwo == null))
+                || ((valueOne != null) && (valueOne.equals(valueTwo.charAt(0)))));
     }
 
     /**
@@ -487,13 +409,11 @@ public abstract class ReflectionHelper
      */
     public static void callSetter(String fieldName, Object instance, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        if (instance != null)
-        {
+        if (instance != null) {
             String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             Method setter = instance.getClass().getMethod("set" + methodName, value.getClass());
 
-            if (setter != null)
-            {
+            if (setter != null) {
                 setter.invoke(instance, value);
             }
         }
@@ -512,12 +432,10 @@ public abstract class ReflectionHelper
      */
     public static void invokeMethod(String methodName, Object instance, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        if (instance != null)
-        {
+        if (instance != null) {
             Method setter = instance.getClass().getMethod(methodName, value.getClass());
 
-            if (setter != null)
-            {
+            if (setter != null) {
                 setter.invoke(instance, value);
             }
         }
@@ -538,8 +456,7 @@ public abstract class ReflectionHelper
     {
         int dot = fieldName.indexOf('.');
 
-        while (dot > 0)
-        {
+        while (dot > 0) {
             String field = fieldName.substring(0, dot);
 
             source = getFieldValue(field, source);
@@ -549,8 +466,7 @@ public abstract class ReflectionHelper
             dot = fieldName.indexOf('.');
         }
 
-        if (source == null)
-        {
+        if (source == null) {
             throw new NoSuchFieldException(fieldName);
         }
 
@@ -593,8 +509,7 @@ public abstract class ReflectionHelper
     {
         int dot = name.indexOf('.');
 
-        while (dot > 0)
-        {
+        while (dot > 0) {
             String field = name.substring(0, dot);
 
             clazz = clazz.getDeclaredField(field).getType();
@@ -604,8 +519,7 @@ public abstract class ReflectionHelper
             dot = name.indexOf('.');
         }
 
-        if (clazz == null)
-        {
+        if (clazz == null) {
             throw new NoSuchFieldException(name);
         }
 
@@ -621,126 +535,149 @@ public abstract class ReflectionHelper
      */
     public static Method getFieldGetter(Class aClass, Field field)
     {
-        if (aClass == null)
-        {
+        if (aClass == null) {
             throw new IllegalArgumentException("Class aClass is null");
         }
 
-        if (field == null)
-        {
+        if (field == null) {
             throw new IllegalArgumentException("field argument is null");
         }
 
         String fieldName = field.getName();
         String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 
-        try
-        {
+        try {
             return aClass.getMethod("get" + methodName);
-        }
-        catch (NoSuchMethodException e)
-        {
-            try
-            {
+        } catch (NoSuchMethodException e) {
+            try {
                 return aClass.getMethod("is" + methodName, field.getType());
-            }
-            catch (NoSuchMethodException e1)
-            {
-                if (aClass.getSuperclass() != Object.class)
-                {
+            } catch (NoSuchMethodException e1) {
+                if (aClass.getSuperclass() != Object.class) {
                     return getFieldGetter(aClass.getSuperclass(), field);
                 }
             }
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        return null ;
-    }
-
-   /**
-   * Get the underlying class for a type, or null if the type is a variable type.
-    *
-   * @param type the type
-   * @return the underlying class
-    *
-    * @author http://www.artima.com/weblogs/viewpost.jsp?thread=208860
-   */
-  private static Class<?> getClass(Type type) {
-    if (type instanceof Class) {
-      return (Class) type;
-    }
-    else if (type instanceof ParameterizedType) {
-      return getClass(((ParameterizedType) type).getRawType());
-    }
-    else if (type instanceof GenericArrayType) {
-      Type componentType = ((GenericArrayType) type).getGenericComponentType();
-      Class<?> componentClass = getClass(componentType);
-      if (componentClass != null ) {
-        return Array.newInstance(componentClass, 0).getClass();
-      }
-      else {
         return null;
-      }
     }
-    else {
-      return null;
+
+    /**
+     * Get the underlying class for a type, or null if the type is a variable type.
+     *
+     * @param type the type
+     * @return the underlying class
+     *
+     * @author http://www.artima.com/weblogs/viewpost.jsp?thread=208860
+     */
+    private static Class<?> getClass(Type type)
+    {
+        if (type instanceof Class) {
+            return (Class) type;
+        } else if (type instanceof ParameterizedType) {
+            return getClass(((ParameterizedType) type).getRawType());
+        } else if (type instanceof GenericArrayType) {
+            Type componentType = ((GenericArrayType) type).getGenericComponentType();
+            Class<?> componentClass = getClass(componentType);
+            if (componentClass != null) {
+                return Array.newInstance(componentClass, 0).getClass();
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
-  }
 
-  /**
-   * Get the actual type arguments a child class has used to extend a generic base class.
-   *
-   * @param baseClass the base class
-   * @param childClass the child class
-   * @return a list of the raw classes for the actual type arguments.
-   *
-   * @author http://www.artima.com/weblogs/viewpost.jsp?thread=208860
-   */
-  public static <T> List<Class<?>> getTypeArguments(
-    Class<T> baseClass, Class<? extends T> childClass) {
-    Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
-    Type type = childClass;
-    // start walking up the inheritance hierarchy until we hit baseClass
-    while (! getClass(type).equals(baseClass)) {
-      if (type instanceof Class) {
-        // there is no useful information for us in raw types, so just keep going.
-        type = ((Class) type).getGenericSuperclass();
-      }
-      else {
-        ParameterizedType parameterizedType = (ParameterizedType) type;
-        Class<?> rawType = (Class) parameterizedType.getRawType();
+    /**
+     * Get the actual type arguments a child class has used to extend a generic base class.
+     *
+     * @param baseClass the base class
+     * @param childClass the child class
+     * @return a list of the raw classes for the actual type arguments.
+     *
+     * @author http://www.artima.com/weblogs/viewpost.jsp?thread=208860
+     */
+    public static <T> List<Class<?>> getTypeArguments(
+            Class<T> baseClass, Class<? extends T> childClass)
+    {
+        Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
+        Type type = childClass;
+        // start walking up the inheritance hierarchy until we hit baseClass
+        while (!getClass(type).equals(baseClass)) {
+            if (type instanceof Class) {
+                // there is no useful information for us in raw types, so just keep going.
+                type = ((Class) type).getGenericSuperclass();
+            } else {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                Class<?> rawType = (Class) parameterizedType.getRawType();
 
-        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        TypeVariable<?>[] typeParameters = rawType.getTypeParameters();
-        for (int i = 0; i < actualTypeArguments.length; i++) {
-          resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                TypeVariable<?>[] typeParameters = rawType.getTypeParameters();
+                for (int i = 0; i < actualTypeArguments.length; i++) {
+                    resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
+                }
+
+                if (!rawType.equals(baseClass)) {
+                    type = rawType.getGenericSuperclass();
+                }
+            }
         }
 
-        if (!rawType.equals(baseClass)) {
-          type = rawType.getGenericSuperclass();
+        // finally, for each actual type argument provided to baseClass, determine (if possible)
+        // the raw class for that type argument.
+        Type[] actualTypeArguments;
+        if (type instanceof Class) {
+            actualTypeArguments = ((Class) type).getTypeParameters();
+        } else {
+            actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
         }
-      }
+        List<Class<?>> typeArgumentsAsClasses = new ArrayList<Class<?>>();
+        // resolve types by chasing down type variables.
+        for (Type baseType : actualTypeArguments) {
+            while (resolvedTypes.containsKey(baseType)) {
+                baseType = resolvedTypes.get(baseType);
+            }
+            typeArgumentsAsClasses.add(getClass(baseType));
+        }
+        return typeArgumentsAsClasses;
     }
 
-    // finally, for each actual type argument provided to baseClass, determine (if possible)
-    // the raw class for that type argument.
-    Type[] actualTypeArguments;
-    if (type instanceof Class) {
-      actualTypeArguments = ((Class) type).getTypeParameters();
+    /**
+     * Gets public/private/protected fields from clazz and all superclasses.
+     *
+     * @param clazz class to inspect
+     * @return list of all fields
+     */
+    public static List<Field> getAllFields(Class clazz)
+    {
+        List<Field> fields = new LinkedList<Field>();
+
+        Class objOrSuper = clazz;
+        do {
+            fields.addAll(Arrays.asList(objOrSuper.getDeclaredFields()));
+            objOrSuper = objOrSuper.getSuperclass();
+        } while (objOrSuper != null);
+
+        return fields;
     }
-    else {
-      actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
-    }
-    List<Class<?>> typeArgumentsAsClasses = new ArrayList<Class<?>>();
-    // resolve types by chasing down type variables.
-    for (Type baseType: actualTypeArguments) {
-      while (resolvedTypes.containsKey(baseType)) {
-        baseType = resolvedTypes.get(baseType);
-      }
-      typeArgumentsAsClasses.add(getClass(baseType));
-    }
-    return typeArgumentsAsClasses;
-  }
+
+    /**
+     * Gets public/private/protected fields from clazz and all superclasses.
+     *
+     * @param clazz class to inspect
+     * @return list of all fields
+     */
+    public static List<Method> getAllMethods(Class clazz)
+    {
+        List<Method> methods = new LinkedList<Method>();
+
+        Class objOrSuper = clazz;
+        do {
+            methods.addAll(Arrays.asList(objOrSuper.getDeclaredMethods()));
+            objOrSuper = objOrSuper.getSuperclass();
+        } while (objOrSuper != null);
+
+        return methods;
+    }    
 }

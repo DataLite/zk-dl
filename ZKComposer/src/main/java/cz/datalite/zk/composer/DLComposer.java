@@ -1,5 +1,6 @@
 package cz.datalite.zk.composer;
 
+import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMasterController;
@@ -391,7 +392,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * Traverse all fields and set up parameters according o @ZkParameters annotation.
      */
     protected void setupZkParameters() {
-        for ( Field field : this.getClass().getDeclaredFields() ) {
+        for ( Field field : ReflectionHelper.getAllFields(this.getClass())) {
             for ( Annotation annotation : field.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkParameter ) {
                     setupZkParameter( ( ZkParameter ) annotation, getName( ( ZkParameter ) annotation, field ), field.getType(), field, null );
@@ -399,7 +400,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
             }
         }
 
-        for ( Method method : this.getClass().getDeclaredMethods() ) {
+        for ( Method method : ReflectionHelper.getAllMethods(this.getClass())) {
             for ( Annotation annotation : method.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkParameter ) {
                     if ( !method.getName().startsWith( "set" ) ) {
@@ -514,7 +515,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
     private static Map<String, Field> loadModelFields( final Class cls ) {
         final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Field field : cls.getDeclaredFields() ) {
+        for ( Field field : ReflectionHelper.getAllFields(cls)) {
             for ( Annotation annotation : field.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkModel ) {
                     fields.put( getId( ( ZkModel ) annotation, field ), field );
@@ -536,7 +537,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
     private static Map<String, Field> loadModelMethod( final Class cls ) {
         final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Method method : cls.getDeclaredMethods() ) {
+        for ( Method method : ReflectionHelper.getAllMethods(cls)) {
             for ( Annotation annotation : method.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkModel ) {
                     fields.put( getId( ( ZkModel ) annotation, method ), null );
@@ -549,7 +550,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
     private static Map<String, Field> loadControllerFields( final Class cls ) {
         final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Field field : cls.getDeclaredFields() ) {
+        for ( Field field : ReflectionHelper.getAllFields(cls)) {
             for ( Annotation annotation : field.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkController ) {
                     fields.put( getId( ( ZkController ) annotation, field ), field );
@@ -571,7 +572,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
     private static Map<String, Field> loadControllerMethod( final Class cls ) {
         final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Method method : cls.getDeclaredMethods() ) {
+        for ( Method method : ReflectionHelper.getAllMethods(cls)) {
             for ( Annotation annotation : method.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkController ) {
                     fields.put( getId( ( ZkController ) annotation, method ), null );
@@ -628,7 +629,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * @param component master component
      */
     public static void registerZkEvents( final DLComposer ctl, final Component component ) {
-        for ( final Method method : ctl.getClass().getDeclaredMethods() ) {
+        for ( final Method method : ReflectionHelper.getAllMethods(ctl.getClass())) {
             DLZkEvent.registerEvents( method, component, ctl );
         }
     }
@@ -642,7 +643,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * @param component master component to find fellow components in
      */
     public static void registerZkComponents( final DLComposer ctl, final Component component ) {
-        for ( final Field field : ctl.getClass().getDeclaredFields() ) {
+        for ( final Field field : ReflectionHelper.getAllFields(ctl.getClass())) {
             for ( Annotation annot : field.getDeclaredAnnotations() ) {
                 if ( annot instanceof ZkComponent ) {
                     String id = getId( ( ZkComponent ) annot, field );
@@ -678,7 +679,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * @param clazz class to check.
      */
     public static void validMethodAnnotations( final Class clazz ) {
-        for ( Method method : clazz.getDeclaredMethods() ) {
+        for ( Method method : ReflectionHelper.getAllMethods(clazz)) {
             boolean zkEvent = false;
             boolean zkConfirm = false;
             boolean zkBinding = false;
