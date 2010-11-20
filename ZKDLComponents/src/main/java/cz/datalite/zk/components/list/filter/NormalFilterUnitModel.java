@@ -68,11 +68,12 @@ public class NormalFilterUnitModel implements Cloneable {
 
     public void setOperator( final DLFilterOperator operator ) {
         final List<DLFilterOperator> operators = getOperators();
-        if ( operators.contains( operator ) ) {
+        if ( operators.contains( operator ) )
             this.operator = operator;
-        } else {
+        else if (!operators.isEmpty())
             this.operator = operators.get( 0 );
-        }
+        else
+            this.operator = null;
     }
 
 
