@@ -124,6 +124,11 @@ public class DLButton extends Button implements DLI18n {
      */
     public void setDisabledOnReadonly( boolean disabledOnReadonly ) {
         this.disabledOnReadonly = disabledOnReadonly;
+
+        if (disabledOnReadonly)
+            setAttribute("DISABLED_ON_READONLY", Boolean.TRUE);
+        else
+            removeAttribute("DISABLED_ON_READONLY");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

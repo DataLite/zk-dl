@@ -28,7 +28,7 @@ public abstract class ZKBinderHelper {
      * @return odkaz na binder
      */
     public static DataBinder getBinder( Component comp ) {
-        return ( DataBinder ) comp.getAttribute( "binder");
+        return ( DataBinder ) comp.getAttributeOrFellow( "binder", true);
     }
 
     /**
@@ -37,7 +37,7 @@ public abstract class ZKBinderHelper {
      * @return odkaz na binder
      */
     public static DataBinder getBinder( Page page ) {
-        return ( DataBinder ) page.getAttribute( "binder" );
+        return ( DataBinder ) page.getAttributeOrFellow( "binder", true );
     }
 
     /**
