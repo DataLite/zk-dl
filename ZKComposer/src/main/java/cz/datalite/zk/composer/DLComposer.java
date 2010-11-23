@@ -1,5 +1,6 @@
 package cz.datalite.zk.composer;
 
+import cz.datalite.helpers.ZKHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.composer.listener.DLDetailController;
