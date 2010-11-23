@@ -238,7 +238,12 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
             return 0;
         }
         // converts row count number from long to int
-        return (( Long ) cnt.get( 0 )).intValue();
+        Object result = cnt.get( 0 );
+        // result type of count depends on Hibernate version
+        if (result instanceof Long)
+            return (( Long ) cnt.get( 0 )).intValue();
+        else
+            return (( Integer ) cnt.get( 0 )).intValue();
     }
 
     /**
