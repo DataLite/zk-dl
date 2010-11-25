@@ -121,7 +121,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
-            listbox.setVflex("1");
             final Listhead head = new Listhead(); // create lishead and listitem
             listbox.appendChild( head );
 
@@ -148,6 +147,16 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             Events.postEvent( new Event( Events.ON_CREATE, listbox ) );
 
             listbox.setParent( popup );
+        }
+
+        if(popupHeight == null)
+        {
+            listbox.setVflex("1");
+        }
+        else
+        {
+            Long popupHgt = new Long( popupHeight.substring(0, popupHeight.length()-2) ) - 55;
+            listbox.setHeight( popupHgt.toString() + "px" );
         }
 
         if ( filter == null ) {
@@ -177,11 +186,15 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws Exception
      */
     public void init() throws Exception {
-        if ( pageSize != null ) {
-            paging.setPageSize( pageSize );
-        }
         if ( listWidth != null ) {
             listbox.setWidth( listWidth );
+            Long popupWidth = new Long( listWidth.substring(0, listWidth.length()-2) ) + 5;
+            popup.setWidth( popupWidth.toString() + "px" );
+        }
+        if ( pageSize != null ) {
+            paging.setPageSize( pageSize );
+            paging.setHflex("1");
+            paging.setStyle("background: none; border: 0;");
         }
         if ( rows != null && listbox.getRows() == 0 ) {
             listbox.setRows( rows );
