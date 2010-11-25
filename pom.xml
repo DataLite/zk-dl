@@ -35,6 +35,30 @@ SpringService? - service layer with spring - generic service which speaks to gen
         <url>http://www.datalite.cz</url>
     </organization>
 
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.1.2</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+
     <build>
         <plugins>
             <plugin>
@@ -55,6 +79,7 @@ SpringService? - service layer with spring - generic service which speaks to gen
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
     <dependencies>
