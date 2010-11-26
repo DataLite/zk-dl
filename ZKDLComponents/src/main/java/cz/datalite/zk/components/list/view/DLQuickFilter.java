@@ -10,6 +10,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
@@ -18,7 +19,7 @@ import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.Textbox;
 
 /**
- * Compnent for tool which allows user to quickly filter in the listbox
+ * Component for tool which allows user to quickly filter in the listbox
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class DLQuickFilter extends org.zkoss.zul.Hbox {
@@ -37,16 +38,22 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     protected static final String CONST_DEFAULT_ICON_PATH = "~./dlzklib/img/";
     protected static final String CONST_IMAGE_SIZE = "20px";
     protected static final String CONST_IMAGE_STYLE = "";
+    private static final String CONST_POINTER_STYLE = "cursor: pointer;";
+
+    // Variables
+    private Hbox parent;
+    private Image activateFilter;
 
     public DLQuickFilter() {
         super();
 
-        final Hbox hbox = new Hbox();
-        hbox.setSclass( "datalite-listbox-qfiltr" );
-        appendChild( hbox );
+        parent = new Hbox();
+        parent.setSclass( "datalite-listbox-qfiltr" );
+        appendChild( parent );
 
         selector = new Label();
         selector.setSclass( "datalite-listbox-qfiltr-selector" );
+        selector.setStyle(CONST_POINTER_STYLE);
         selector.setTooltiptext( Labels.getLabel( "quickFilter.tooltip.filterRange" ) );
         selector.addEventListener( Events.ON_CLICK, new EventListener() {
 
@@ -54,24 +61,25 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
                 popup.open( selector );
             }
         } );
-        hbox.appendChild( selector );
+        parent.appendChild( selector );
 
         popup = new Menupopup();
         popup.setSclass( "datalite-listbox-qfiltr-popup" );
         popup.setStyle( "z-index: 100000 !important;" );
-        hbox.appendChild( popup );
+        parent.appendChild( popup );
 
         final Image open = new Image();
         open.setSclass( "datalite-listbox-qfiltr-open" );
         open.setTooltiptext( Labels.getLabel( "quickFilter.tooltip.openFilter" ) );
         open.setSrc( CONST_DEFAULT_ICON_PATH + "open.png" );
+        open.setStyle(CONST_POINTER_STYLE);
         open.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener() {
 
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
                 popup.open( selector );
             }
         } );
-        hbox.appendChild( open );
+        parent.appendChild( open );
 
         textbox = new Textbox();
         textbox.setSclass( "datalite-listbox-qfiltr-textbox" );
@@ -81,21 +89,23 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
                 onQuickFilter();
             }
         } );
-        hbox.appendChild( textbox );
+        parent.appendChild( textbox );
 
-        final Image image = new Image();
-        image.setSclass( "datalite-listbox-qfiltr-image" );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "search25x25.png" );
-        image.setStyle( CONST_IMAGE_STYLE );
-        image.setWidth( CONST_IMAGE_SIZE );
-        image.setHeight( CONST_IMAGE_SIZE );
-        image.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener() {
-
+        activateFilter = new Image();
+        activateFilter.setSclass( "datalite-listbox-qfiltr-image" );
+        activateFilter.setSrc( CONST_DEFAULT_ICON_PATH + "search25x25.png" );
+        activateFilter.setStyle( CONST_IMAGE_STYLE );
+        activateFilter.setWidth( CONST_IMAGE_SIZE );
+        activateFilter.setHeight( CONST_IMAGE_SIZE );
+        activateFilter.setStyle(CONST_POINTER_STYLE);
+        activateFilter.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener()
+        {
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
                 onQuickFilter();
             }
         } );
-        appendChild( image );
+        appendChild( activateFilter );
+        
     }
 
     public void setController( final DLQuickFilterController controller ) {
@@ -220,4 +230,29 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
             return super.getStyle();
         }
     }
+
+    /**
+     * Setting filter button with label = parameter.
+     * @param quickFilterButton label for button.
+     */
+    public void setQuickFilterButton(String quickFilterButton)
+    {
+        // whether i want filter button
+        if(quickFilterButton != null)
+        {
+            activateFilter.setParent(null);
+
+            final Button button = new Button();
+            button.setLabel(quickFilterButton);
+            button.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener()
+            {
+                public void onEvent( final org.zkoss.zk.ui.event.Event event )
+                {
+                    onQuickFilter();
+                }
+            } );
+            parent.appendChild( button );
+        }
+    }
+    
 }

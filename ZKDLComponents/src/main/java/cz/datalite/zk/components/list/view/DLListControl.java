@@ -26,6 +26,7 @@ public class DLListControl extends Hbox
     private boolean autohide = false;
     private boolean quickFilterAll = true;
     private String quickFilterDefault;
+    private String quickFilterButton;
 
     // style settings
     private String qFilterStyle;
@@ -98,6 +99,7 @@ public class DLListControl extends Hbox
     {
         qFilterComponent.setQuickFilterAll( quickFilterAll );
         qFilterComponent.setQuickFilterDefault( quickFilterDefault );
+        qFilterComponent.setQuickFilterButton(quickFilterButton);
     }
 
     private void initPaging()
@@ -229,6 +231,14 @@ public class DLListControl extends Hbox
 
     public void setQuickFilterDefault( final String quickFilterDefault ) {
         this.quickFilterDefault = quickFilterDefault;
+    }
+
+    public String getQuickFilterButton() {
+        return quickFilterButton;
+    }
+
+    public void setQuickFilterButton(String quickFilterButton) {
+        this.quickFilterButton = quickFilterButton;
     }
     
 }
