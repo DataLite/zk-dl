@@ -73,6 +73,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         open.setTooltiptext( Labels.getLabel( "quickFilter.tooltip.openFilter" ) );
         open.setSrc( CONST_DEFAULT_ICON_PATH + "open.png" );
         open.setStyle(CONST_POINTER_STYLE);
+        open.setWidth("10px");
+        open.setHeight(CONST_IMAGE_SIZE);
         open.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener() {
 
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
