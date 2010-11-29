@@ -49,6 +49,8 @@ public abstract class StringHelper
     }
 
     /**
+     * Zjistí, zda je v stringu uložená číselná hodnota (pokusí se jej převést na BigDecimal).
+     * 
      * @param attributeValue Testovana hodnota
      * @return true     POkud se jedna o ciselnou hodnotu
      */

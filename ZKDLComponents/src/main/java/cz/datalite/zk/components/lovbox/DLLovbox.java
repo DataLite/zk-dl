@@ -166,6 +166,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         if ( paging == null ) {
             paging = new DLPaging();
+            paging.setAutohide(true);
             popup.appendChild( paging );
         }
 

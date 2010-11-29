@@ -232,7 +232,6 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         fireChanges();
 
-        masterController.refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)
     }
 
     public void setListboxModel( final List<T> model ) {
