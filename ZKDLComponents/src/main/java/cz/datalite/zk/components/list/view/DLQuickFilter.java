@@ -38,6 +38,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     protected static final String CONST_DEFAULT_ICON_PATH = "~./dlzklib/img/";
     protected static final String CONST_IMAGE_SIZE = "20px";
     protected static final String CONST_IMAGE_STYLE = "";
+    protected static final String CONST_FILTER_BUTTON_STYLE = "background-color: #D6F2FF; font-size: 13px; border: 1px solid #86A4BE;";
     private static final String CONST_POINTER_STYLE = "cursor: pointer;";
 
     // Variables
@@ -246,6 +247,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
             final Button button = new Button();
             button.setLabel(quickFilterButton);
+            button.setImage(CONST_DEFAULT_ICON_PATH + "search25x25.png");
+            button.setStyle(CONST_FILTER_BUTTON_STYLE + CONST_POINTER_STYLE);
             button.addEventListener( Events.ON_CLICK, new org.zkoss.zk.ui.event.EventListener()
             {
                 public void onEvent( final org.zkoss.zk.ui.event.Event event )
@@ -254,6 +257,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
                 }
             } );
             parent.appendChild( button );
+
+            ((DLListControl)this.getParent()).setHeight("34px");
         }
     }
     
