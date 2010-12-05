@@ -5,11 +5,14 @@ import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
+import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import org.zkoss.lang.Classes;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 
@@ -49,6 +52,24 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         model.setValue( bindingModel.getValue() == null ? null : bindingModel.getValue().trim());
         model.setKey( bindingModel.getKey() );
         masterController.onFilterChange( DLListboxEvents.ON_QUICK_FILTER_CHANGE );
+    }
+
+    public boolean validateQuickFilter()
+    {
+        DLColumnUnitModel columnUnitModel = masterController.getColumnModel().getByName(bindingModel.getKey());
+        if (columnUnitModel != null && columnUnitModel.getColumnType() != null && bindingModel.getValue() != null)
+        {
+            try
+            {
+                Classes.coerce(columnUnitModel.getColumnType(), bindingModel.getValue());
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void fireChanges() {

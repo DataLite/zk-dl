@@ -14,6 +14,11 @@ public interface DLQuickFilterController {
     void onQuickFilter();
 
     /**
+     * Validate quick filter with column model - if data type is correct.
+     */
+    boolean validateQuickFilter();
+
+    /**
      * Notifies component that model changed
      */
     void fireChanges();

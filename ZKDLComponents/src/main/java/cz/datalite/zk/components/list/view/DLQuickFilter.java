@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -86,7 +87,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         textbox = new Textbox();
         textbox.setSclass( "datalite-listbox-qfiltr-textbox" );
-        textbox.addEventListener( Events.ON_OK, new org.zkoss.zk.ui.event.EventListener() {
+        addEventListener( Events.ON_OK, new org.zkoss.zk.ui.event.EventListener() {
 
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
                 onQuickFilter();
@@ -173,6 +174,9 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     }
 
     public void onQuickFilter() {
+        if (!controller.validateQuickFilter())
+            throw new WrongValueException(textbox, Labels.getLabel("quickFilter.validation.failed"));
+
         controller.onQuickFilter();
     }
 
@@ -197,6 +201,18 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     public String getQuickFilterDefault() {
         return this.quickFilterDefault;
     }
+
+    /**
+     * Setting focus on Quick Filter means focus on textbox
+     * @param focus if true, textbox is selected
+     */
+    @Override
+    public void setFocus(boolean focus)
+    {
+        textbox.setFocus(focus);
+    }
+
+
 
     class SelectMenuItemEventListener implements org.zkoss.zk.ui.event.EventListener {
 

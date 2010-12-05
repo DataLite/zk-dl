@@ -24,4 +24,9 @@ public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterControll
     public String getUuid() {
         return "";
     }
+
+    public boolean validateQuickFilter()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

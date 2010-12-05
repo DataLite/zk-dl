@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.paging;
 
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
@@ -114,6 +115,7 @@ public class DLPaging extends Hbox implements Pageable {
 
         additionalContent.setParent(this);
 
+        detailInfo.setStyle("align: right;");
         detailInfo.setParent(this);
 
         space = new Space();
@@ -219,10 +221,32 @@ public class DLPaging extends Hbox implements Pageable {
     }
 
     protected String getInfoText() {
+
+        if (getPagingModel().getTotalSize() == 0)
+            return "[ " + Labels.getLabel("listbox.paging.noData") + " ]";
+
         final int lastItem = ( getPagingModel().getActualPage() + 1 ) * getPagingModel().getPageSize();
-        return "[ " + ( getPagingModel().getActualPage() * getPagingModel().getPageSize() + 1 ) +
-                ( "os".equals( getMold() ) ? "" : " - " +
-                ( lastItem > getPagingModel().getTotalSize() ? getPagingModel().getTotalSize() : lastItem ) ) + " / " + ( getPagingModel().isKnownPageCount() ? getPagingModel().getTotalSize() : "??" ) + " ]";
+
+        StringBuilder text = new StringBuilder("[ ");
+        text.append(getPagingModel().getActualPage() * getPagingModel().getPageSize() + 1);
+
+        text.append(" - ");
+
+        if (!getPagingModel().isKnownPageCount() || getPagingModel().getTotalSize() > lastItem)
+            text.append(lastItem);
+        else
+            text.append(getPagingModel().getTotalSize());
+
+        text.append(" / ");
+
+        if (getPagingModel().isKnownPageCount())
+            text.append(getTotalSize());
+        else
+            text.append('?');
+
+        text.append(" ]");
+
+        return text.toString();
     }
 
     /**

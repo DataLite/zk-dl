@@ -58,7 +58,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected DLListbox listbox;
     // params
     /** defines page size for paging comonent */
-    protected Integer pageSize = 100;
+    protected Integer pageSize = 50;
     /** defines listbox width for component in the popup */
     protected String listWidth;
     /** defines names of properties which are shown in the lovbox value - Array of properties */
@@ -93,6 +93,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         super();
         super.setReadonly( true );
         setAutodrop( true );
+
+        // Bandbox component overrides onOk - we need it for quick filter
+        setWidgetOverride("enterPressed_", "function (evt) {}"); 
     }
 
     /**
@@ -160,8 +163,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         if ( filter == null ) {
-            filter = new DLQuickFilter();
-            popup.insertBefore( filter, listbox );
+            filter = new DLQuickFilter();            
+            popup.insertBefore( filter, listbox );            
         }
 
         if ( paging == null ) {
@@ -436,6 +439,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             listboxExtController.refreshDataModel();
             listboxExtController.setSelectedItem( this.getSelectedItem() );
         }
+
+         // default focus on textbox of quickFilter
+        if (filter != null)
+            filter.setFocus(true);
     }
 
     protected Button createClearButton() throws UiException {
