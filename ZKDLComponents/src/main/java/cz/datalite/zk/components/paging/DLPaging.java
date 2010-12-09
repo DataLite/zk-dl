@@ -7,6 +7,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
@@ -39,10 +40,15 @@ public class DLPaging extends Hbox implements Pageable {
     protected Label detailInfo = new Label();
 
     // buttons
-    protected final Button first = new Button("<<");
-    protected final Button previous = new Button("<");
-    protected final Button next = new Button(">");
-    protected final Button last = new Button(">>");
+    protected final Button first = new Button();
+    protected final Button previous = new Button();
+    protected final Button next = new Button();
+    protected final Button last = new Button();
+    // parents for buttons, because buttons need parent with css button class.
+    private final Div firstButton = new Div();
+    private final Div previousButton = new Div();
+    private final Div nextButton = new Div();
+    private final Div lastButton = new Div();
 
     // everyting added by ZUL page goes here (see appendChild)
     private final Hbox additionalContent = new Hbox();
@@ -60,21 +66,21 @@ public class DLPaging extends Hbox implements Pageable {
                 setActivePage(0);
             }
         });
-        previous.setSclass("z-paging-prev");
+        previous.setZclass("z-paging-prev");
         previous.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
                 setActivePage(getActivePage()-1);
             }
         });
-        next.setSclass("z-paging-next");
+        next.setZclass("z-paging-next");
         next.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
                 setActivePage(getActivePage()+1);
             }
         });
-        last.setSclass("z-paging-last");
+        last.setZclass("z-paging-last");
         last.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
@@ -82,8 +88,12 @@ public class DLPaging extends Hbox implements Pageable {
             }
         });
 
-        first.setParent(this);
-        previous.setParent(this);
+        first.setParent(firstButton);
+        previous.setParent(previousButton);
+
+        // place button parent
+        firstButton.setParent(this);
+        previousButton.setParent(this);
 
         pageNumber = new Intbox();
         pageNumber.setWidth( "3em" );
@@ -106,8 +116,12 @@ public class DLPaging extends Hbox implements Pageable {
 
         totalPages.setParent(this);
 
-        next.setParent(this);
-        last.setParent(this);
+        // place button parent
+        nextButton.setParent(this);
+        lastButton.setParent(this);
+
+        next.setParent(nextButton);
+        last.setParent(lastButton);
 
         Space space = new Space();
         space.setHflex("1");
@@ -120,6 +134,99 @@ public class DLPaging extends Hbox implements Pageable {
 
         space = new Space();
         space.setParent(this);
+
+        // events onMouseOver and onMouseOut for all buttons
+        next.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                nextButton.setClass("z-paging-btn z-paging-btn-over");
+            }
+        } );
+
+        next.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                if(! next.isDisabled())
+                {
+                    nextButton.setClass("z-paging-btn");
+                }
+                else
+                {
+                    nextButton.setClass("z-paging-btn z-paging-btn-disd");
+                }
+            }
+        } );
+
+        first.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                firstButton.setClass("z-paging-btn z-paging-btn-over");
+            }
+        } );
+
+        first.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                if(! first.isDisabled())
+                {
+                    firstButton.setClass("z-paging-btn");
+                }
+                else
+                {
+                    firstButton.setClass("z-paging-btn z-paging-btn-disd");
+                }
+            }
+        } );
+
+        previous.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                previousButton.setClass("z-paging-btn z-paging-btn-over");
+            }
+        } );
+
+        previous.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                if(! previous.isDisabled())
+                {
+                    previousButton.setClass("z-paging-btn");
+                }
+                else
+                {
+                    previousButton.setClass("z-paging-btn z-paging-btn-disd");
+                }
+            }
+        } );
+
+        last.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                lastButton.setClass("z-paging-btn z-paging-btn-over");
+            }
+        } );
+
+        last.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
+        {
+            public void onEvent( final org.zkoss.zk.ui.event.Event event )
+            {
+                if(! last.isDisabled())
+                {
+                    lastButton.setClass("z-paging-btn");
+                }
+                else
+                {
+                    lastButton.setClass("z-paging-btn z-paging-btn-disd");
+                }
+            }
+        } );
     }
 
     public void setController( final DLPagingController controller ) {
@@ -275,22 +382,30 @@ public class DLPaging extends Hbox implements Pageable {
 
         if (getActivePage() == 0)
         {
+            firstButton.setClass("z-paging-btn z-paging-btn-disd");
+            previousButton.setClass("z-paging-btn z-paging-btn-disd");
             first.setDisabled(true);
             previous.setDisabled(true);
         }
         else
         {
+            firstButton.setClass("z-paging-btn");
+            previousButton.setClass("z-paging-btn");
             first.setDisabled(false);
             previous.setDisabled(false);
         }
 
         if (getActivePage() == getPageCount()-1)
         {
+            nextButton.setClass("z-paging-btn z-paging-btn-disd");
+            lastButton.setClass("z-paging-btn z-paging-btn-disd");
             next.setDisabled(true);
             last.setDisabled(true);
         }
         else
         {
+            nextButton.setClass("z-paging-btn");
+            lastButton.setClass("z-paging-btn");
             next.setDisabled(false);
             last.setDisabled(false);
         }
@@ -298,6 +413,8 @@ public class DLPaging extends Hbox implements Pageable {
 
         if (!isKnownPageCount())
         {
+            nextButton.setClass("z-paging-btn");
+            lastButton.setClass("z-paging-btn z-paging-btn-disd");
             next.setDisabled(false);
             last.setDisabled(true);
         }
