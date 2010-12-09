@@ -2,8 +2,11 @@ package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.view.DLListbox;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.zkoss.zul.Listitem;
 
 /**
@@ -52,7 +55,8 @@ public class ListboxSelectorController {
         return usedModel;
     }
 
-    public void moveItem( final Listitem dragged, final Listitem dropped ) {
+    public void moveItem( final Listitem dragged, final Listitem dropped)
+    {
         final boolean isUsedSource = isUsedSource( dragged );
         final boolean isUsedTarget = CONST_USED_LISTBOX.equals( dropped.getListbox().getId() );
 
@@ -71,7 +75,8 @@ public class ListboxSelectorController {
         ZKBinderHelper.loadComponent( usedListbox.getFellow( isUsedTarget ? CONST_USED_LISTBOX : CONST_UNUSED_LISTBOX ) );
     }
 
-    public void moveItem( final Listitem dragged, final DLListbox dropped ) {
+    public void moveItem( final Listitem dragged, final DLListbox dropped )
+    {
         final boolean isUsedSource = isUsedSource( dragged );
         final boolean isUsedTarget = CONST_USED_LISTBOX.equals( dropped.getId() );
 
@@ -103,12 +108,30 @@ public class ListboxSelectorController {
         return CONST_USED_MODEL.equals( getAttribute( item, CONST_SOURCE_MODEL ).toString() );
     }
 
-    public void onUsedToUnusedMove() {
-        if ( usedListbox.getSelectedItem() != null )
-            if ( unusedListbox.getSelectedItem() == null )
-                moveItem( usedListbox.getSelectedItem(), unusedListbox );
-            else
-                moveItem( usedListbox.getSelectedItem(), unusedListbox.getSelectedItem() );
+    /**
+     * All selected items in used to unused.
+     */
+    public void onUsedToUnusedMove()
+    {
+        final int selected = unusedListbox.getSelectedIndex();
+
+        if ( usedListbox.getSelectedItems() != null )
+        {
+            Set<Listitem> copy = new HashSet<Listitem>(usedListbox.getSelectedItems());
+
+            for(Listitem item : copy)
+            {
+                if ( unusedListbox.getSelectedItem() == null )
+                {
+                    moveItem( item, unusedListbox );
+                }
+                else
+                {
+                    moveItem( item, unusedListbox.getSelectedItem() );
+                    unusedListbox.setSelectedIndex(selected);
+                }
+            }
+        }
     }
 
     public void onUsedToUnusedAllMove() {
@@ -122,12 +145,30 @@ public class ListboxSelectorController {
         ZKBinderHelper.loadComponent( usedListbox );
     }
 
-    public void onUnusedToUsedMove() {
-        if ( unusedListbox.getSelectedItem() != null )
-            if ( usedListbox.getSelectedItem() == null )
-                moveItem( unusedListbox.getSelectedItem(), usedListbox );
-            else
-                moveItem( unusedListbox.getSelectedItem(), usedListbox.getSelectedItem() );
+    /**
+     * All selected items in Unused to used.
+     */
+    public void onUnusedToUsedMove()
+    {
+        final int selected = usedListbox.getSelectedIndex();
+
+        if ( unusedListbox.getSelectedItems() != null )
+        {
+            Set<Listitem> copy = new HashSet<Listitem>(unusedListbox.getSelectedItems());
+
+            for(Listitem item : copy)
+            {
+                if ( usedListbox.getSelectedItem() == null )
+                {
+                    moveItem( item, usedListbox );
+                }
+                else
+                {
+                    moveItem( item, usedListbox.getSelectedItem() );
+                    usedListbox.setSelectedIndex(selected);
+                }
+            }
+        }
     }
 
     public void onUnusedToUsedAllMove() {
