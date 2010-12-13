@@ -83,8 +83,12 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     private String parentCascadeId;
     /** Cascading  parent property name. This property got from selectedItem in parentCascadeId component and used as a filter for this combo. */
     private String parentCascadeColumn;
-    /** Readonly is implemented by disabled*/
+    /** Readonly is implemented by disabled. */
     private boolean readonly;
+    /** If true, lovbox will create paging component on the listbox. */
+    private boolean createPaging = true;
+    /** If true, lovbox will create quick filter on the listbox.  */
+    private boolean createQuickFilter = true;
 
     /**
      * Create component without any parameter
@@ -162,12 +166,12 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             listbox.setHeight( popupHgt.toString() + "px" );
         }
 
-        if ( filter == null ) {
+        if ( filter == null && isCreateQuickFilter()) {
             filter = new DLQuickFilter();            
             popup.insertBefore( filter, listbox );            
         }
 
-        if ( paging == null ) {
+        if ( paging == null && isCreatePaging()) {
             paging = new DLPaging();
             paging.setAutohide(true);
             popup.appendChild( paging );
@@ -513,4 +517,30 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public String getLabelFormat() {
         return labelFormat;
     }
+
+    /** If true, lovbox will create paging component on the listbox (default true). */
+    public boolean isCreatePaging()
+    {
+        return createPaging;
+    }
+
+    /** If true, lovbox will create paging component on the listbox (default true). */
+    public void setCreatePaging(boolean createPaging)
+    {
+        this.createPaging = createPaging;
+    }
+
+    /** If true, lovbox will create quick filter component on the listbox (default true). */
+    public boolean isCreateQuickFilter()
+    {
+        return createQuickFilter;
+    }
+
+    /** If true, lovbox will create quick filter component on the listbox (default true). */
+    public void setCreateQuickFilter(boolean createQuickFilter)
+    {
+        this.createQuickFilter = createQuickFilter;
+    }
+
+
 }

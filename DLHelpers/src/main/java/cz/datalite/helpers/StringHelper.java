@@ -12,8 +12,10 @@ import java.util.List;
 public abstract class StringHelper
 {
     /**
+     * Vrací true, pokud je string null nebo prázdný
+     *
      * @param value Testovany objekt
-     * @return true pokud je objekt NULL
+     * @return true pokud je objekt NULL prázdný
      */
     public static boolean isNull(String value)
     {
