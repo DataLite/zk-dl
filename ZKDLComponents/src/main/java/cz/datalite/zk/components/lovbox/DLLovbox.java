@@ -199,7 +199,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             Long popupWidth = new Long( listWidth.substring(0, listWidth.length()-2) ) + 5;
             popup.setWidth( popupWidth.toString() + "px" );
         }
-        if ( pageSize != null ) {
+        if ( paging != null && pageSize != null ) {
             paging.setPageSize( pageSize );
             paging.setHflex("1");
             paging.setStyle("background: none; border: 0;");
