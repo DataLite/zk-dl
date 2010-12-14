@@ -115,7 +115,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
 
 
         final List<Cell> cells = new LinkedList<Cell>( heads );
-        for ( Object entity : masterController.loadData( Math.min( rows, 36000 ) ).getData() ) {
+        for ( Object entity : masterController.loadData( (rows == 0) ? 36000 : Math.min( rows, 36000 ) ).getData() ) {
             row++;
             column = 0;
 
