@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.controller.impl;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
@@ -57,7 +58,7 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
     public boolean validateQuickFilter()
     {
         DLColumnUnitModel columnUnitModel = masterController.getColumnModel().getByName(bindingModel.getKey());
-        if (columnUnitModel != null && columnUnitModel.getColumnType() != null && bindingModel.getValue() != null)
+        if (columnUnitModel != null && columnUnitModel.getColumnType() != null && !StringHelper.isNull(bindingModel.getValue()))
         {
             try
             {
