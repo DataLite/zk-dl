@@ -139,4 +139,16 @@ public class DLColumnModel {
         }
         return null;
     }
+
+    public DLColumnUnitModel getNativeByName( final String name )
+    {
+        for ( DLColumnUnitModel unit : columnModels )
+        {
+            if(unit.getLabel().equals(name))
+            {
+                return unit;
+            }
+        }
+        return null;
+    }
 }
