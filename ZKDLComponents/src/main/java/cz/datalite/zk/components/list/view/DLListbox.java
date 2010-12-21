@@ -3,6 +3,8 @@ package cz.datalite.zk.components.list.view;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import java.util.List;
+import org.zkoss.zk.ui.Execution;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.ListModel;
@@ -34,6 +36,10 @@ public class DLListbox extends Listbox {
 
     @Override
     public void setModel( final ListModel model ) {
+
+        final Execution exec = Executions.getCurrent();
+	exec.removeAttribute("zkoss.Listbox.deferInitModel_"+getUuid()); // TODO problems with ROD - Listbox#2482
+
         super.setModel( model );
 
         final int cnt = getItemCount();
