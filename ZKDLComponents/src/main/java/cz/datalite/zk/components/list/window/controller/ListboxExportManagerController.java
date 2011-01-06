@@ -6,6 +6,7 @@ import cz.datalite.helpers.excel.export.DataSource;
 import cz.datalite.helpers.excel.export.ExcelExportUtils;
 import cz.datalite.helpers.excel.export.HeadCell;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,11 +24,9 @@ import jxl.write.WritableFont;
 import jxl.write.WriteException;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
-import org.zkoss.zul.Window;
 
 /**
  * Controller for the export manager
@@ -104,6 +103,11 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
 
     protected List<Cell> prepareCells() throws WriteException {
         final List<HeadCell> heads = new ArrayList<HeadCell>();
+        
+        // list of columns that need to be visible only for the purpose of export 
+        // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+
         final WritableCellFormat headFormat = new WritableCellFormat( new WritableFont( WritableFont.ARIAL, 10, WritableFont.BOLD ) );
         headFormat.setBackground( Colour.LIGHT_GREEN );
         int column = 0;
@@ -113,9 +117,33 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
             column++;
         }
 
+        // load data 
+        List data;
+        try
+        {
+            // ensure, that column is visible in the model (is hidden if the user has added it only for export)
+            for ( Map<String, Object> unit : usedModel ) {
+                DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel( (Integer) unit.get("index") + 1 );
+                if (!columnUnitModel.isVisible())
+                {
+                    columnUnitModel.setVisible(true);
+                    hideOnFinish.add(columnUnitModel);
+                }
+            }
+
+            // and load data
+            data = masterController.loadData( (rows == 0) ? 36000 : Math.min( rows, 36000 ) ).getData();
+        }
+        finally
+        {
+            // after processing restore previous state
+            for (DLColumnUnitModel hide : hideOnFinish)
+                hide.setVisible(false);
+        }
+
 
         final List<Cell> cells = new LinkedList<Cell>( heads );
-        for ( Object entity : masterController.loadData( (rows == 0) ? 36000 : Math.min( rows, 36000 ) ).getData() ) {
+        for ( Object entity : data) {
             row++;
             column = 0;
 
