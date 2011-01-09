@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Vector;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
+import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -74,8 +75,20 @@ public class DLZkEvent
 
             // setup key events
             keyEvent = event.event().startsWith("on") ? new DLKeyEvent() : new DLKeyEvent(event.event());
+
             // load the component
-            final Component source = event.id().length() == 0 ? component : component.getFellow(event.id());
+            final Component source;
+            if (event.id().length() == 0)
+                source = component;
+            else if (event.id().startsWith("/"))
+            {
+                source = Path.getComponent(event.id());
+                if (source == null)
+                    throw new ComponentNotFoundException(event.id());
+            }
+            else
+               source = component.getFellow(event.id());
+
             if (source instanceof XulElement) {
                 if (((XulElement) source).getCtrlKeys() == null) {
                     ((XulElement) source).setCtrlKeys(keyEvent.getCtrlKey());
