@@ -16,7 +16,7 @@
         <hbox style="margin: 10px;">
             <vbox>
                 <label value="${c:l('listbox.exportManager.hidden')}" style="font-weight: bold; margin-bottom: 10px;" />
-                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" >
+                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" />
                     </listitem>
@@ -32,7 +32,7 @@
 
             <vbox>
                 <label value="${c:l('listbox.exportManager.displayed')}" style="font-weight: bold; margin-bottom: 10px;" />
-                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" >
+                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" />
                     </listitem>
