@@ -25,7 +25,9 @@
                         <comboitem self="@{each=column}" label="@{column.value}" value="@{column}"/>
                     </combobox>
                     <combobox selectedItem="@{sort.sortType}" model="@{sort.modelSortTypes}" width="100%">
-                        <comboitem self="@{each=sortType}" label="@{sortType.name}" value="@{sortType}"/>
+                        <comboitem self="@{each=sortType}" 
+                            label="@{sortType.stringValue, converter='cz.datalite.zk.components.list.window.controller.ListboxSortManagerController$SortTypeNameConverter'}"
+                            value="@{sortType}"/>
                     </combobox>
                 </row>
             </rows>

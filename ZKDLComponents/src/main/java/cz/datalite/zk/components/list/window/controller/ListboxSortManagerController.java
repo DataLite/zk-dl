@@ -7,9 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
+import org.zkoss.zkplus.databind.TypeConverter;
 
 /**
  * Controller for the manager which allows user to set advanced configuration for
@@ -18,13 +21,27 @@ import org.zkoss.zk.ui.util.GenericAutowireComposer;
  */
 public class ListboxSortManagerController extends GenericAutowireComposer {
 
+    public static class SortTypeNameConverter implements TypeConverter
+    {
+        public Object coerceToUi(Object o, Component cmpnt)
+        {
+            String value = o == null ? "natural" : o.toString();
+            return Labels.getLabel("listbox.sortingManager.sort." + value, value);
+        }
+        public Object coerceToBean(Object o, Component cmpnt)
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+    }
+
     protected List<Map<String, Object>> model = new java.util.ArrayList<Map<String, Object>>();
     protected final List<DLSortType> sortTypes;
 
     public ListboxSortManagerController() {
         sortTypes = new LinkedList<DLSortType>( Arrays.asList( DLSortType.values() ) );
-    }
-
+        }
+        
     @Override
     @SuppressWarnings( "unchecked" )
     public void doAfterCompose( final org.zkoss.zk.ui.Component comp ) throws Exception {
