@@ -221,7 +221,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         for ( DLColumnUnitModel unit : orderedModel ) {
             if ( unit.isVisible() ) {
-                renderTemplate.appendChild( rendererCellTemplates.get( unit ) );
+                renderTemplate.appendChild( rendererCellTemplates.get( unit ) ); // FIXME JB REV MP BUG 1 different column order
                 listhead.appendChild( listheaderTemplates.get( unit ) );
             }
         }

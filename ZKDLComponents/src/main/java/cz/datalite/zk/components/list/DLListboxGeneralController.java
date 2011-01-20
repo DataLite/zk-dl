@@ -266,10 +266,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         for ( Map<String, Object> map : data ) {
             DLColumnUnitModel column = model.getColumnModel().getColumnModels().get( ( Integer ) map.get( "index" ) );
             column.setVisible( true );
-            column.setOrder( ( Integer ) map.get("order"));
+            column.setOrder( ( Integer ) map.get("order")); // FIXME JB REV MP BUG 1 here is set column order
         }
 
-        getListboxController().fireOrderChanges();
+        getListboxController().fireOrderChanges(); // FIXME JB REV MP BUG 1 here column order is different
         autosaveModel();
 
         refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)
