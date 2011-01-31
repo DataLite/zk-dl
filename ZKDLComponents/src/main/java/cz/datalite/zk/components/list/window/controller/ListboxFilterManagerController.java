@@ -131,10 +131,10 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
      */
     protected <T> T getParentComponent( final Component component, final Class<T> type ) {
         Component comp = component;
-        while ( !(type.isInstance( comp )) ) {
+        while ( !(type.isInstance( comp )) && comp.getParent() != null ) {
             comp = comp.getParent();
         }
-        return comp == null ? null : type.cast( comp );
+        return (comp == null || !(type.isInstance( comp ))) ? null : type.cast( comp );
     }
 
     public void onOk() {
@@ -247,6 +247,11 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         filterComponent.addOnChangeEventListener( new EventListener() {
 
             public void onEvent( final Event event ) {
+
+                // premature Event - while in component setup
+                if (component.getParent() == null)
+                    return;
+                
                 filterComponent.validate();
                 final RowModel unitModel = getModelFromComponent( component );
                 unitModel.getModel().setValue( valueIndex, filterComponent.getValue() );
