@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <borderlayout id="ctl" apply="cz.datalite.zkdl.demo.hibernateDao.HibernateDaoController">
+        <north>
+            <listControl apply="${ctl$composer.listCtl}"/>
+        </north>
+        <center>
+            <listbox apply="${ctl$composer.listCtl}" vflex="true" selectedItem="@{ctl$composer.todo}" selectFirstRow="true"
+                     fixedLayout="true">
+                <listhead>
+                    <listheader label="Name" sort="db()" />
+                    <listheader label="Description" sort="db()" />
+                    <listheader label="Due" sort="db()" />
+                </listhead>
+                <listitem id="listitem" self="@{each=listEach}">
+                    <listcell label="@{listEach.name}" />
+                    <listcell label="@{listEach.description}" />
+                    <listcell label="@{listEach.targetDate}" />
+                </listitem>
+            </listbox>
+        </center>
+        <south>
+            <dlpaging apply="${ctl$composer.listCtl}" pageSize="50" autohide="true" />
+        </south>
+    </borderlayout>
+
+</zk>

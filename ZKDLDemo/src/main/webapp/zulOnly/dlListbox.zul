@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+  <!--
+    This example is here only to show, that everything can be done in ZUL only. It is much more readable,
+    when you use MVC design and split it at least to ZUL and composer (see zkDlComponents example).
+  -->
+  <zscript><![CDATA[
+    // the only dependencies are ZKDLComponents and DLHelpers modules.
+    import cz.datalite.dao.DLResponse;
+    import cz.datalite.dao.DLSort;
+    import cz.datalite.zk.components.list.DLFilter;
+    import cz.datalite.zk.components.list.DLListboxController;
+    import cz.datalite.zk.components.list.DLListboxSimpleController;
+    import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
+
+    // simple POJO class
+    public class ZulTodo {
+        public String name;
+        public String description;
+        public Date targetDate;
+        
+        ZulTodo(String name, String description, Date targetDate)
+        {
+            this.name = name;
+            this.description = description;
+            this.targetDate = targetDate;
+        }
+    }
+
+    // prepare some data to the model
+    java.util.Calendar today = java.util.Calendar.getInstance();
+    java.util.Calendar tomorrow = java.util.Calendar.getInstance(); tomorrow.add(java.util.Calendar.DATE, 1);
+    List zulTodoModel = new ArrayList();
+    zulTodoModel.add(new ZulTodo("Check out ZK-DL", "Download maven artifact and start today!", today.getTime()));
+    zulTodoModel.add(new ZulTodo("Look at ZK-DL Composer", "You can read your controller code like a story with these nice annotations", today.getTime()));
+    zulTodoModel.add(new ZulTodo("Get rid of getters/setters", "DLComposer has many more use", tomorrow.getTime()));
+    zulTodoModel.add(new ZulTodo("Ease of development - Maven", "You can start your own demo project with a  simple maven artifact.", tomorrow.getTime()));
+    zulTodoModel.add(new ZulTodo("Ease of development - Jetty", "Just write mvn jetty:run in a commmand line and launch our demo in 5 seconds.", tomorrow.getTime()));
+    zulTodoModel.add(new ZulTodo("Ease of development - JRebel", "No need to restart the server, just install JRebel - save source & refresh in the browser.", tomorrow.getTime()));
+    zulTodoModel.add(new ZulTodo("Test ZK with Selenium 2.0 (WebDriver)", "While still in beta, this testing style is very promissing", tomorrow.getTime()));
+
+    // here is the magic - simple controller
+    public class MyListboxController extends DLListboxSimpleController
+    {
+        public MyListboxController( String identifier, java.lang.Class clazz ) {
+            super( identifier, clazz );
+        }
+    
+        protected DLResponse loadData(List filter, int firstRow, int rowCount, List sorts)
+        {
+            return DLFilter.filterAndCount(filter, zulTodoModel, firstRow, rowCount, sorts);
+        }
+    };
+    DLListboxController listCtl = new MyListboxController("ZulTodoController", ZulTodo.class);
+
+    // not actually used here, but the variable allways contains object of selected row
+    ZulTodo selectedTodo;
+  ]]></zscript>
+
+    <!-- Border layout is not mandatory, you can use the listbox components any way you like. -->
+    <borderlayout>
+        <north>
+            <!-- The most simple way. It contains quick filter, manager, export to excel etc. -->
+            <listControl apply="${listCtl}" quickFilterAll="false"/>
+        </north>
+        <center>
+            <!-- Based on ZK listbox component with additional attributes and the controll is left to DLListboxController -->
+            <listbox apply="${listCtl}" vflex="true" selectedItem="@{selectedTodo}" selectFirstRow="true">
+                <listhead>
+                    <!-- There are many parameters off listheader, many of them are automaticaly infered from listcell databinding item -->
+                    <listheader label="Name" sort="db()" />
+                    <listheader label="Description" sort="db()" />
+                    <listheader label="Due" sort="db()" />
+                </listhead>
+                <listitem id="listitem" self="@{each=listEach}">
+                    <listcell label="@{listEach.name}" />
+                    <listcell label="@{listEach.description}" />
+                    <listcell label="@{listEach.targetDate}" />
+                </listitem>
+            </listbox>
+        </center>
+        <south>
+            <!-- Paging on the listbox - bound togetger by controller -->
+            <dlpaging apply="${listCtl}" pageSize="50" autohide="true" />
+        </south>
+    </borderlayout>
+    
+</zk>

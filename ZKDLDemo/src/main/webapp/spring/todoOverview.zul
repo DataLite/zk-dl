@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Variable resolver will find any spring bean by name. Here it is used only for apply=${bean} / will set spring bean -->
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
+<!-- Databinding on page -->
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit"?>
+
+<!-- Title -->
+<?page title="My Todo's list" id="todoOverviewPage"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window id="todoOverviewWindow" self="@{define(content)}" apply="${todoOverviewController}" width="100%" height="700px">
+        <borderlayout>
+            <north>
+                <listControl apply="${ctl.seznamCtl}">
+                    <button id="newButton" label="Create a Todo" mold="os" />
+                    <button id="openDetailButton" label="Open Todo Detail" mold="os" />
+                    <button id="deleteButton" label="Delete selected Todo" mold="os" />
+                </listControl>
+            </north>
+            <center>
+                <listbox apply="${ctl.seznamCtl}" vflex="true" selectedItem="@{ctl.todo}" selectFirstRow="true"
+                         fixedLayout="true">
+                    <listhead>
+                        <listheader label="Name" sort="db()" />
+                        <listheader label="Description" sort="db()" />
+                        <listheader label="Due" sort="db()" />
+                    </listhead>
+                    <listitem id="listitem" self="@{each=listEach}">
+                        <listcell label="@{listEach.name}" />
+                        <listcell label="@{listEach.description}" />
+                        <listcell label="@{listEach.targetDate}" />
+                    </listitem>
+                </listbox>
+            </center>
+            <south>
+                <dlpaging apply="${ctl.seznamCtl}" pageSize="100" autohide="true" />
+            </south>
+        </borderlayout>
+
+    </window>
+    
+</zk>

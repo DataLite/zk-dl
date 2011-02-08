@@ -1,0 +1,14 @@
+<zk>
+
+    <!-- Compatibility with  Springem and Hibernate, they use ThreadLocal variables. -->
+    <system-config>
+      <disable-event-thread/>
+    </system-config>
+
+    <listener>
+        <decription>Imports localization from ZKDLComponents library</decription>
+         <listener-class>cz.datalite.zk.components.LabelLocator</listener-class>
+    </listener>
+
+
+</zk>
