@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:h="http://www.w3.org/1999/xhtml">
+
+    <window border="none" apply="cz.datalite.zkspring.monitor.ZKMonitorController" >
+
+    <menubar>
+        <menuitem id="enableMonitor" label="Enable monitor" forward="onEnableMonitor"/>
+        <menuitem id="disableMonitor" label="Disable monitor" forward="onDisableMonitor"/>
+
+        <menuitem label="Refresh" forward="onRefresh"/>
+        <menuitem label="Clear data" forward="onClearData"/>
+    </menubar>
+
+	<listbox id="request" fixedLayout="true" rows="15">
+		<listhead sizable="true">
+			<listheader label="Context path" />
+			<listheader label="Request Id" />
+			<listheader label="Overall" />
+			<listheader label="Network" />
+			<listheader label="Browser" />
+            <listheader label="Start" />
+            <listheader label="Server" />
+            <listheader label="Compl" />
+            <listheader label="Reciev" />
+            <listheader label="Finish" />
+		</listhead>
+			<!-- zde to plním z controlleru -->
+	</listbox>
+
+    <tree treeitemRenderer="@{ctl.treeItemRenderer}" model="@{ctl.treeModel}" id="tree">
+        <treecols>
+            <treecol label="Name" />
+            <treecol label="Call At" width="120px"/>
+            <treecol label="Duration" width="80px"/>
+        </treecols>
+    </tree>
+
+    </window>
+</zk>
