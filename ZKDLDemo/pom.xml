@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.datalite.zk</groupId>
+    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLDemo</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -13,47 +13,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
         <org.springframework.security.version>3.0.3.RELEASE</org.springframework.security.version>
-        <org.zkoss.zk.version>5.0.4</org.zkoss.zk.version>
-        <cz.datalite.zk-dl.version>0.9-SNAPSHOT</cz.datalite.zk-dl.version>
+        <org.zkoss.zk.version>5.0.5</org.zkoss.zk.version>
+        <cz.datalite.zk-dl.version>1.0</cz.datalite.zk-dl.version>
+        <org.junit.version>4.8.1</org.junit.version>
         <netbeans.hint.deploy.server>liferay</netbeans.hint.deploy.server>
     </properties>
 
     <dependencies>
 
-		<dependency>
-			<groupId>com.liferay.portal</groupId>
-			<artifactId>portal-service</artifactId>
-			<version>6.0.5</version>
-			<scope>provided</scope>
-		</dependency>
 
-        <!-- Core utilities used by other modules. Define this if you use Spring
-                Utility APIs (org.springframework.core.*/org.springframework.util.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define
-                this if you use Spring Bean APIs (org.springframework.beans.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Aspect Oriented Programming (AOP) Framework (depends on core, beans)
-                Define this if you use Spring AOP APIs (org.springframework.aop.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Application Context (depends on core, expression, aop, beans) This
-                is the central artifact for Spring's Dependency Injection Container and is
-                generally always defined -->
+        <!-- Basic spring dependency. -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -76,10 +45,10 @@
         </dependency>
 
         <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>3.0.3.RELEASE</version>
-                <optional>true</optional>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security.version}</version>
+            <optional>true</optional>
         </dependency>
 
 
@@ -118,26 +87,11 @@
 
 
 
-        <!-- DataLite extension libraries -->
-        <dependency>
-            <groupId>cz.datalite.zk-dl</groupId>
-            <artifactId>DLHelpers</artifactId>
-            <version>0.9-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.datalite.zk-dl</groupId>
-            <artifactId>HibernateDAO</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
-        </dependency>
-
+        <!-- DataLite extension libraries - see http://zk.datalite.cz -->
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKComposer</artifactId>
             <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -149,30 +103,29 @@
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
-            <artifactId>ZKComponents</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.datalite.zk-dl</groupId>
-            <artifactId>ZKDLComponents</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKDLComponentsHibernateExt</artifactId>
             <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
         </dependency>
 
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKComponents</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+
+        <!-- Liferay integration - every app can run as a Liferay portlet.-->
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKLiferay</artifactId>
             <version>${cz.datalite.zk-dl.version}</version>
-            <type>jar</type>
+        </dependency>
+
+        <!-- Optinal library - http://zk.datalite.cz/wiki/-/wiki/Main/ZKStatistics+-+Performance+Monitoring+of+ZK+Applicaiton .-->
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKStatistics</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
 
 
@@ -181,17 +134,24 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- Jetty/Tomcat running -->
+
+        <!-- Jetty/Tomcat libraries -->
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.1</version>
         </dependency>
-
+        
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -205,35 +165,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.beanshell</groupId>
-            <artifactId>bsh</artifactId>
-            <version>2.0b5</version>
-        </dependency>
-
-        <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>1.8.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.5.ga</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.3.2.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.sql</groupId>
-            <artifactId>jdbc-stdext</artifactId>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.0.1B</version>
         </dependency>
     </dependencies>
 
@@ -242,10 +176,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
@@ -256,87 +197,54 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.9</version>
                 <configuration>
                     <connectors>
                         <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <!-- Runtime port - change here -->
                             <port>9090</port>
                             <maxIdleTime>60000</maxIdleTime>
                         </connector>
                     </connectors>
                 </configuration>
             </plugin>
-                        <plugin>
-                          <groupId>org.zeroturnaround</groupId>
-                          <artifactId>javarebel-maven-plugin</artifactId>
-                          <executions>
-                            <execution>
-                              <id>generate-rebel-xml</id>
-                              <phase>process-resources</phase>
-                              <goals>
-                                <goal>generate</goal>
-                              </goals>
-                            </execution>
-                          </executions>
-                        </plugin>
+
+            <!-- You need to setup your application server for use with JRebel. For maven+jetty setup see http://zk.datalite.cz -->
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>javarebel-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
+    <!-- ZK is not in maven central -->
     <repositories>
+       <repository>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+           <id>jboss</id>
+           <name>JBoss</name>
+           <url>http://repository.jboss.com/maven2</url>
+       </repository>
 
         <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-
-        <repository>
-            <id>jboss</id>
-            <name>JBoss</name>
-            <url>http://repository.jboss.com/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>zkoss</id>
-            <name>ZK Repository</name>
-            <url>http://mavensync.zkoss.org/zk/pe-eval</url>
-            <snapshots>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>codehaus-release-repo</id>
-            <name>Codehaus Release Repo</name>
-            <url>http://repository.codehaus.org</url>
-            <snapshots>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <url>http://download.java.net/maven/2/</url>
-            <id>hibernate-support</id>
-            <layout>default</layout>
-            <name>Repository for library Library[hibernate-support]</name>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+            <id>ZK CE</id>
+            <url>http://mavensync.zkoss.org/maven2</url>
         </repository>
     </repositories>
 

@@ -11,23 +11,23 @@ import java.util.TreeMap;
  */
 public enum DemoType
 {
-    ZUL_ONLY(
+    ZUL_ONLY("All in one ZUL",
         new String[] {"/zulOnly/dlListbox.zul"}
     ),
-    ZK_DL_COMPONENTS(
+    ZK_DL_COMPONENTS("Listbox - data driven components",
         new String[] {
             "/zkDlComponents/dataDriven.zul",
             "cz.datalite.zkdl.demo.zkDlComponents.DataDrivenController",
             "cz.datalite.zkdl.demo.zkDlComponents.SimpleTodo"
         }
     ),
-    ZK_COMPOSER(
+    ZK_COMPOSER("ZKComposer - annotation driven controller",
         new String[] {
             "/zkComposer/zkComposer.zul",
             "cz.datalite.zkdl.demo.zkComposer.ZkComposerController"
         }
     ),
-    HIBERNATE_DAO(
+    HIBERNATE_DAO("Listbox with database (Hibernate)",
         new String[] {
             "/hibernateDao/hibernateDao.zul",
             "cz.datalite.zkdl.demo.hibernateDao.HibernateDaoController",
@@ -35,7 +35,7 @@ public enum DemoType
             "cz.datalite.zkdl.demo.hibernateDao.HibernateTodo"
         }
     ),
-    SPRING(
+    SPRING("Enterprise architecture with Spring",
         new String[] {
             "/spring/todoOverview.zul",
             "/spring/todoDetail.zul",
@@ -49,11 +49,13 @@ public enum DemoType
         }
     );
 
+    String title;
     String[] sourceFiles;
     SortedMap<String, String> sourceMap;
 
-    DemoType(String[] sourceFiles)
+    DemoType(String title, String[] sourceFiles)
     {
+        this.title = title;
         this.sourceFiles = sourceFiles;
         this.sourceMap = createSourceMap();
     }
@@ -89,5 +91,12 @@ public enum DemoType
     {
         return sourceFiles[0];
     }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+
     
 }

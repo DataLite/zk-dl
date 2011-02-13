@@ -8,6 +8,7 @@ import cz.datalite.zk.annotation.ZkEvents;
 import cz.datalite.zk.annotation.ZkModel;
 import cz.datalite.zk.annotation.ZkParameter;
 import cz.datalite.zk.composer.DLComposer;
+import cz.datalite.zk.liferay.DLPortlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +48,15 @@ public class PreviewController extends DLComposer
         if (!sourceMap.isEmpty())
             sourceFile = sourceMap.firstKey();
     }
+
+    @Override
+    public void doAfterCompose(Component comp) throws Exception
+    {
+        super.doAfterCompose(comp);
+        session.setAttribute(DLPortlet.TITLE, demoType.getTitle());
+    }
+
+
 
     @ZkEvents(events={
         @ZkEvent(id="combo", event=Events.ON_SELECT),
