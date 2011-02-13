@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <artifactId>zk-dl</artifactId>        
+        <version>1.0</version>
+    </parent>
+
+    <groupId>cz.datalite.zk-dl</groupId>
+    <artifactId>ZKLiferay</artifactId>
+    <version>1.0</version>
+    <name>ZKLiferay</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKDLComponents</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-service</artifactId>
+            <version>${liferay.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <liferay.version>6.0.5</liferay.version>
+    </properties>
+</project>
