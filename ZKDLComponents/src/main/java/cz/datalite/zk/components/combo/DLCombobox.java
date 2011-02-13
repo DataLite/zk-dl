@@ -66,12 +66,9 @@ public class DLCombobox<T> extends Combobox implements CascadableComponent {
                 // @author Karel Cemus
                 // @author Jiri Bubnik
                 //
-                // ZK databinder registers own listener if
-                // no other is found. That listener is useles
-                // and caused a crash of component. The main
-                // reason of crashes wasn't found, there
-                // was no understandable output nor callstack
-                // this hack propably solves it.
+                // ZK databinder registers own listener is no other is found.
+                // Load on Save is very buggy feature, we dont want to use it.
+                // There is on library property to disable it, so we disable it this way
             }
         } );
     }
