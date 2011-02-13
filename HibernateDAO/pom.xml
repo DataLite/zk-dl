@@ -1,34 +1,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>zk-dl</artifactId>
     <groupId>cz.datalite.zk-dl</groupId>
-    <version>0.9-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
+
   <groupId>cz.datalite.zk-dl</groupId>
   <artifactId>HibernateDAO</artifactId>
-  <version>0.9-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <version>1.0</version>
   <name>Hibernate DAO</name>
-  <dependencies>
+  <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
 
+  <dependencies>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
-      <version>3.5.0-Final</version>
+      <version>${org.hibernateframework.version}</version>
     </dependency>
     <dependency>
     	<groupId>org.hibernate</groupId>
     	<artifactId>hibernate-validator</artifactId>
     	<version>4.0.2.GA</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
     </dependency>
     <dependency>
     	<groupId>cz.datalite.zk-dl</groupId>
     	<artifactId>DLHelpers</artifactId>
     	<version>${project.version}</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

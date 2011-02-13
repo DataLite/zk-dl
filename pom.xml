@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>zk-dl</artifactId>
-    <version>0.9</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <name>DataLite ZKoss framework extension library</name>
     <description>
@@ -18,45 +18,71 @@ HibernateDAO &amp; ZKDLComponentsHibernateExtensions - Hibernate generic DAO des
 
 SpringService? - service layer with spring - generic service which speaks to generic DAO. This is the way we use our components at DataLite?, but you can use any integration or DAO at your will.
     </description>
+    <url>http://zk.datalite.cz</url>
+
     <issueManagement>
-        <system>Jira</system>
-        <url>http://panda:8012/browse/ZK</url>
+        <system>Google Code</system>
+        <url>http://code.google.com/p/zk-dl/issues/</url>
     </issueManagement>
+
     <ciManagement>
         <system>Hudson</system>
-        <url>http://hudson</url>
     </ciManagement>
+
     <scm>
         <connection>scm:svn:https://zk-dl.googlecode.com/svn</connection>
         <url>https://zk-dl.googlecode.com/svn</url>
     </scm>
+
     <organization>
         <name>DataLite</name>
         <url>http://www.datalite.cz</url>
     </organization>
 
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>2.1.2</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+     <!-- Shared version number properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.zkframework.version>5.0.5</org.zkframework.version>
+        <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
+        <org.hibernateframework.version>3.5.0-Final</org.hibernateframework.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <!-- The "release" profile ensures that the source and javadoc JARs are included in deployments -->
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                    <goal>test-jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
 
     <build>
@@ -73,7 +99,6 @@ SpringService? - service layer with spring - generic service which speaks to gen
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -119,6 +144,9 @@ SpringService? - service layer with spring - generic service which speaks to gen
         <module>ZKDLComponents</module>
         <module>ZKDLComponentsHibernateExt</module>
         <module>DLHelpers</module>
+        <module>Selenium</module>
+        <module>ZKStatistics</module>
+        <module>ZKLiferay</module>
     </modules>
 
     <repositories>
@@ -129,16 +157,17 @@ SpringService? - service layer with spring - generic service which speaks to gen
            <id>jboss</id>
            <name>JBoss</name>
            <url>http://repository.jboss.com/maven2</url>
-       </repository>
-       <repository>
-           <snapshots>
-               <enabled>false</enabled>
-           </snapshots>
-           <id>zkoss</id>
-           <name>ZK Repository</name>
-           <url>http://mavensync.zkoss.org/maven2</url>
-       </repository>
-   </repositories>
+       </repository>    
+    
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>zkoss</id>
+            <name>ZK Repository</name>
+            <url>http://mavensync.zkoss.org/maven2</url>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>
@@ -154,10 +183,4 @@ SpringService? - service layer with spring - generic service which speaks to gen
         </snapshotRepository>
     </distributionManagement>
 
-     <!-- Shared version number properties -->
-    <properties>
-        <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
-        <org.zkframework.version>5.0.4</org.zkframework.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>

@@ -1,21 +1,28 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>zk-dl-private</artifactId>
+        <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>0.9-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
+
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>Selenium</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Selenium</name>
+    <description>Integration tests with Selenium 2.0 (WebDriver) - PageObjects pattern (still in beta)</description>
+
     <dependencies>
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>DLHelpers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium</artifactId>
             <version>2.0b1</version>
-            <type>jar</type>
         </dependency>
 
         <dependency>
