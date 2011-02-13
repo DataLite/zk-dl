@@ -5,6 +5,8 @@ import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.ListModel;
@@ -177,6 +179,23 @@ public class DLListbox extends Listbox {
     public void setController( final DLListboxComponentController controller ) {
         assert controller != null : "Controller cannot be null.";
         this.controller = controller;
+
+        // Hack of load on save only if used with controller (it needs to be set before binding init)
+        addEventListener( "onLoadOnSave", new EventListener() {
+
+            public void onEvent( final Event event )  {
+                //
+                // HACK!!!!
+                //
+                // @since 13.2.2011
+                // @author Jiri Bubnik
+                //
+                // ZK databinder registers own listener is no other is found.
+                // Load on Save is very buggy feature, we dont want to use it.
+                // There is on library property to disable it, so we disable it this way
+            }
+        } );
+
     }
 
     public DLListboxComponentController getController() {
