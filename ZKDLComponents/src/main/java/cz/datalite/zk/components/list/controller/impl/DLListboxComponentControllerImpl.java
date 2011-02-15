@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
+import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Composer;
@@ -221,7 +222,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         for ( DLColumnUnitModel unit : orderedModel ) {
             if ( unit.isVisible() ) {
-                renderTemplate.appendChild( rendererCellTemplates.get( unit ) ); // FIXME JB REV MP BUG 1 different column order
+                renderTemplate.appendChild( rendererCellTemplates.get( unit ) );
                 listhead.appendChild( listheaderTemplates.get( unit ) );
             }
         }
@@ -343,8 +344,34 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         target.addForward( originalEvent, listbox, targetEvent );
     }
 
+    /**
+     * It is not easy to find composer to a component, we need to use some best practices to find it.<br/>
+     * * find spaceOwner and get composer as spaceOwnerId$composer - set in GenericComposer with wire() components<br/>
+     * * use ctl attribute (set by DLComposer if not redefined) <br/>
+     *
+     * @return composer or null if not found
+     */
     public Composer getWindowCtl() {
-        return ( Composer ) listbox.getVariable( "ctl", true );
+        Composer composer = null;
+
+        IdSpace idSpace = listbox.getSpaceOwner();
+        if (idSpace instanceof Component)
+        {
+            String id = ((Component)idSpace).getId();
+            Object composerCandidate = listbox.getAttribute(id + "$composer", true );
+
+            if (composerCandidate != null && composerCandidate instanceof Composer)
+                composer = (Composer) composerCandidate;
+        }
+
+        if (composer == null)
+        {
+            Object composerCandidate = listbox.getAttribute("ctl", true);
+            if (composerCandidate != null && composerCandidate instanceof Composer)
+                composer = (Composer) composerCandidate;
+        }
+
+        return composer;
     }
 
     public void focus() {

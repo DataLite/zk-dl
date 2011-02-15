@@ -112,6 +112,17 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         this.order = order;
     }
 
+    /**
+     * Order starts at 1, 0 off - hidden.
+     * Use this method only if you set all columns programatically at once.
+     *
+     * @param order show order
+     */
+    public void setOrderDirectly( final Integer order )
+    {
+        this.order = order;
+    }
+
     public String getColumn() {
         return column;
     }
