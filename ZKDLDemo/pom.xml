@@ -224,7 +224,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> 
         </plugins>
     </build>
 
@@ -245,6 +245,11 @@
            </snapshots>
             <id>ZK CE</id>
             <url>http://mavensync.zkoss.org/maven2</url>
+        </repository>
+
+        <repository>
+            <id>ZK-DL</id>
+            <url>http://zk-dl.googlecode.com/svn/maven2-repo/</url>
         </repository>
     </repositories>
 
