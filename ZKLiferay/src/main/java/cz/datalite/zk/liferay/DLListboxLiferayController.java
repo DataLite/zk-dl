@@ -32,7 +32,7 @@ import org.zkoss.zk.ui.UiException.Aide;
  */
 public abstract class DLListboxLiferayController<T> extends DLListboxGeneralController<T> {
 
-    protected final FilterLiferayCompiler compiler;
+    final FilterLiferayCompiler compiler;
     protected static final Logger LOGGER = Logger.getLogger( DLListboxLiferayController.class );
 
     /**
@@ -100,7 +100,7 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
      * Returns distinct data according to the criterias defined in the search
      * object. This metod <b>can be overrided</b>. In the default implementation
      * is called method loadData.
-     * @param search search criterias.
+     * @param dQuery the Query
      * @return distinct data list
      */
     protected DLResponse<T> loadDistinctColumnValues( final DynamicQuery dQuery ) {
@@ -126,7 +126,7 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
         final List<Criterion> criterions = new LinkedList<Criterion>();
         for ( final Iterator<NormalFilterUnitModel> it = filter.iterator(); it.hasNext(); ) {
             final NormalFilterUnitModel unit = it.next();
-            if ( NormalFilterModel.ALL.equals( unit.getColumn() ) ) {
+            if (NormalFilterModel.ALL.equals(unit.getColumn())) {
                 criterions.add( compileKeyAll( ( String ) unit.getValue( 1 ), dynamicQuery ) );
             } else {
                 criterions.add( compileCriteria( unit, dynamicQuery ) );
@@ -138,7 +138,6 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
     /**
      * Converts key ALL to disjunction
      * @param value value in Quick filter
-     * @param search
      * @return disjnction
      */
     protected Criterion compileKeyAll( final String value, final DynamicQuery dynamicQuery ) {
@@ -159,11 +158,7 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
 
     /**
      * Compiles criteria with type conversion
-     * @param type column type
-     * @param key column address
      * @param value value to conversion
-     * @param search search object because of aliases
-     * @param joinType relation type
      * @return compiled criterion
      */
     @SuppressWarnings( "unchecked" )
@@ -200,12 +195,6 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
 
     /**
      * Compiles criteria according to the operator
-     * @param key column address
-     * @param value1 1st value
-     * @param value2 2nd value
-     * @param operator operator
-     * @param search search object because of alias
-     * @param joinType relation type
      * @return compiled criteria
      */
     protected Criterion compileCriteria( final NormalFilterUnitModel unit, final DynamicQuery dynamicQuery ) {
@@ -216,6 +205,6 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
 
         // search.addAliases( unit.getColumn(), joinType );
         final FilterLiferayCompiler localCompiler = unit.getFilterCompiler() == null ? compiler : (FilterLiferayCompiler) unit.getFilterCompiler();
-        return ( Criterion ) localCompiler.compile( unit.getOperator(), unit.getColumn(), unit.getValue( 1 ), unit.getValue( 2 ) );
+        return localCompiler.compile( unit.getOperator(), unit.getColumn(), unit.getValue( 1 ), unit.getValue( 2 ) );
     }
 }

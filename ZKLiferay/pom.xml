@@ -23,6 +23,7 @@
             <groupId>com.liferay.portal</groupId>
             <artifactId>portal-service</artifactId>
             <version>${liferay.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -30,6 +31,64 @@
             <artifactId>portlet-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+              <groupId>org.mockito</groupId>
+              <artifactId>mockito-all</artifactId>
+              <version>1.8.1</version>
+              <optional>true</optional>
+      </dependency>
+      
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-impl</artifactId>
+            <version>${liferay.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>util-java</artifactId>
+            <version>${liferay.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>easyconf</groupId>
+            <artifactId>easyconf</artifactId>
+            <version>0.9.5</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>xdoclet</groupId>
+                    <artifactId>xdoclet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xdoclet</groupId>
+                    <artifactId>xdoclet-web-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xpp3</groupId>
+                    <artifactId>xpp3_min</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-beanutils</groupId>
+                    <artifactId>commons-beanutils-bean-collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-beanutils</groupId>
+                    <artifactId>commons-beanutils-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
