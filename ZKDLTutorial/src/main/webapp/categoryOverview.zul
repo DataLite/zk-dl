@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" root="categoryOverviewWindow"?>
+
+<?page title="Task category overview" id="categoryPage"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window id="categoryOverviewWindow" height="100%" apply="${categoryOverviewController}">
+        <borderlayout>
+            <north>
+                <listControl apply="${ctl.listCtl}">
+                    <button id="newButton" label="Create new category"/>
+                    <button id="openDetailButton" label="Open selected category"/>
+                    <button id="deleteButton" label="Delete selected category"/>
+                </listControl>
+            </north>
+            <center>
+                <listbox apply="${ctl.listCtl}" vflex="true" selectedItem="@{ctl.category}" selectFirstRow="true"
+                         fixedLayout="true">
+                    <listhead>
+                        <listheader label="Name" sort="db()"/>
+                        <listheader label="Description" sort="db()"/>
+                    </listhead>
+                    <listitem id="listitem" self="@{each=listEach}">
+                        <listcell label="@{listEach.name}"/>
+                        <listcell label="@{listEach.description}"/>
+                    </listitem>
+                </listbox>
+            </center>
+            <south>
+                <dlpaging apply="${ctl.listCtl}" pageSize="50" autohide="true"/>
+            </south>
+        </borderlayout>
+
+    </window>
+
+</zk>

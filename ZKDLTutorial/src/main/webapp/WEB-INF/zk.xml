@@ -1,0 +1,14 @@
+
+<zk>
+    <listener>
+        <decription>Imports localization from ZKDLComponents library</decription>
+         <listener-class>cz.datalite.zk.components.LabelLocator</listener-class>
+    </listener>
+
+    <listener>
+        <description>For Selenium Testing</description>
+        <listener-class>cz.datalite.zk.components.selenium.InitListener</listener-class>
+    </listener>
+
+    
+</zk>

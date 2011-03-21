@@ -1,18 +1,5 @@
 package cz.datalite.zk.components.list;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.zkoss.lang.SystemException;
-import org.zkoss.lang.reflect.Fields;
-import org.zkoss.mesg.MCommon;
-
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
@@ -20,6 +7,13 @@ import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
+import org.zkoss.lang.SystemException;
+import org.zkoss.lang.reflect.Fields;
+import org.zkoss.mesg.MCommon;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility to filter and sort list with entities.
@@ -57,7 +51,7 @@ public final class DLFilter {
 		final List<T> data = new LinkedList<T>(list);
 
 		sort(sorts, data);
-		return filter(filterModel, list, firstRow, rowCount, null, false);
+		return filter(filterModel, list, firstRow, rowCount, null, rowCount == 0);
 	}
 
 	/**
@@ -86,7 +80,7 @@ public final class DLFilter {
 
 		sort(sorts, data);
 
-		data = filter(filterModel, list, firstRow, rowCount, distinct, false);
+		data = filter(filterModel, list, firstRow, rowCount, distinct, rowCount == 0);
 
 		final List<Object> distinctData = new LinkedList<Object>();
 		for (T entity : data) {
@@ -135,7 +129,7 @@ public final class DLFilter {
 	 */
 	public static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final int firstRow, final int rowCount) {
-		return filter(filterModel, list, firstRow, rowCount, null, false);
+		return filter(filterModel, list, firstRow, rowCount, null, rowCount == 0);
 	}
 
 	/**
@@ -370,7 +364,11 @@ public final class DLFilter {
 		final List<T> data = filter(filterModel, list, firstRow, rowCount, null, true);
 		sort(sorts, data);
 
-		if (data.size() > firstRow) {
+        if (rowCount == 0)
+        {
+            return new DLResponse<T>(data, data.size()); // all data
+        }
+		else if (data.size() > firstRow) {
 			return new DLResponse<T>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
 		} else {
 			final List<T> emptyList = Collections.emptyList(); // just to avoid type safety warning

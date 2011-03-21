@@ -20,8 +20,6 @@
     </properties>
 
     <dependencies>
-
-
         <!-- Basic spring dependency. -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -224,7 +222,18 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> 
+            </plugin>
+
+            <!-- Run the demo on Liferay -->
+            <plugin>
+                <groupId>com.liferay.maven.plugins</groupId>
+                <artifactId>liferay-maven-plugin</artifactId>
+                <version>6.0.5</version>
+                <configuration>
+                    <liferayVersion>6.0.5</liferayVersion>
+                    <autoDeployDir>c:\liferay\bundles\deploy</autoDeployDir>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

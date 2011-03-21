@@ -29,4 +29,13 @@ public interface FilterCompiler {
      * @return result of compilation or evaluation
      */
     Object compile( final DLFilterOperator operator, final String key, final Object... values );
+
+    /**
+     * Validate the value for filter - return true, if the value is correct type and can be used
+     * for filtering purpose.
+     *
+     * @param value the value for filter
+     * @return true if the value is correct.
+     */
+    boolean validateValue(Object value);
 }

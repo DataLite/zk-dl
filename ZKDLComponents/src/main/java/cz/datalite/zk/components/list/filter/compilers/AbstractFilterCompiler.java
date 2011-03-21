@@ -12,6 +12,16 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
 abstract public class AbstractFilterCompiler implements FilterCompiler {
 
     /**
+     * By default, all values can be used, override if you need another behaviour.
+     *
+     * @param value the value for filter
+     * @return always true
+     */
+    public boolean validateValue(Object value) {
+        return true;
+    }
+
+    /**
      * This implementation of this method defines a huge switch which calls the
      * specific method according to the filter operator. These methods have to
      * be redefined in the children. 

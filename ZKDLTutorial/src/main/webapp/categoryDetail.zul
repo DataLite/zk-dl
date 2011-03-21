@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" root="categoryDetailWindow" validator="${validator}"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window id="categoryDetailWindow" border="normal" title="Detail category" closable="true" width="700px"
+            apply="${categoryDetailController}">
+
+        <grid>
+            <rows>
+                <row>
+                    <label value="Category name"/>
+                    <textbox value="@{ctl.category.name}" hflex="1"/>
+                </row>
+                <row>
+                    <label value="Category descripton"/>
+                    <textbox value="@{ctl.category.description}" rows="5" hflex="1"/>
+                </row>
+            </rows>
+        </grid>
+
+        <hbox>
+            <button id="saveCategoryButton" label="Save"/>
+            <button id="cancelCategoryButton" label="Cancel"/>
+        </hbox>
+
+    </window>
+
+</zk>

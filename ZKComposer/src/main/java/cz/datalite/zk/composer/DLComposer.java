@@ -1,24 +1,10 @@
 package cz.datalite.zk.composer;
 
-import cz.datalite.helpers.ZKHelper;
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.ZKHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMasterController;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.SystemException.Aide;
 import org.zkoss.util.ModificationException;
@@ -30,6 +16,15 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
+
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Composer for MVC development.</p>
@@ -310,6 +305,14 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
                     + "\"doesn't contain @ZkModel or @ZkController property \"" + key + "\"." ) );
         }
     }
+
+    /** Only to implement all Map interface methods. Don't use. */
+    public boolean containsKey( final Object key ) {
+        // ZK's databinding check, if the key is available in a map.
+        // We can skip this here, because get() method covers all cases.
+        return true;
+    }
+
 
     private Object getDefault( final String key ) {
         try {
@@ -791,11 +794,6 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
     /** Only to implement all Map interface methods. Don't use. */
     public boolean isEmpty() {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    /** Only to implement all Map interface methods. Don't use. */
-    public boolean containsKey( final Object key ) {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 

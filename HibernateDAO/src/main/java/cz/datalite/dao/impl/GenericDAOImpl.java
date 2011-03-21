@@ -4,23 +4,18 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSearch;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.GenericDAO;
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.util.Iterator;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.Iterator;
+import java.util.List;
 
 /*
  * Generic DAO design pattern.

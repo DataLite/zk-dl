@@ -31,5 +31,19 @@ public interface DLPagingController {
      */
     DLPaging getPaging();
 
+    /**
+     * Returns true, if associated listbox controller can count total number of rows in databaset.
+     * @return true or false
+     */
+    boolean supportsRowCount();
+
+    /**
+     * Returns total number of rows in database. Note, that listbox controller must support this feature, check #supportsRowCount first.
+     *
+     * @return total number of rows in database.
+     */
+    int getRowCount();
+    
+
     String getUuid();
 }

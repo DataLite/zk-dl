@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>zk-dl</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>pom</packaging>
     <name>DataLite ZKoss framework extension library</name>
     <description>
@@ -42,8 +42,8 @@ SpringService? - service layer with spring - generic service which speaks to gen
      <!-- Shared version number properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.zkframework.version>5.0.5</org.zkframework.version>
-        <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
+        <org.zkframework.version>5.0.6</org.zkframework.version>
+        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
         <org.hibernateframework.version>3.5.0-Final</org.hibernateframework.version>
     </properties>
 
@@ -147,6 +147,7 @@ SpringService? - service layer with spring - generic service which speaks to gen
         <module>Selenium</module>
         <module>ZKStatistics</module>
         <module>ZKLiferay</module>
+        <module>ToDo</module>
     </modules>
 
     <repositories>

@@ -1,13 +1,19 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import cz.datalite.helpers.excel.export.Cell;
-import cz.datalite.helpers.excel.export.DataCell;
-import cz.datalite.helpers.excel.export.DataSource;
-import cz.datalite.helpers.excel.export.ExcelExportUtils;
-import cz.datalite.helpers.excel.export.HeadCell;
+import cz.datalite.helpers.excel.export.*;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
+import jxl.format.Colour;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WriteException;
+import org.zkoss.lang.Strings;
+import org.zkoss.lang.reflect.Fields;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.GenericAutowireComposer;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,15 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jxl.format.Colour;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WriteException;
-import org.zkoss.lang.Strings;
-import org.zkoss.lang.reflect.Fields;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.util.Composer;
-import org.zkoss.zk.ui.util.GenericAutowireComposer;
 
 /**
  * Controller for the export manager
@@ -187,10 +184,19 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
 
     protected Object convertWithClt( final Object value, final Method converter ) throws InvocationTargetException {
         try {
-            return converter.invoke( windowCtl, new Object[]{ value } );
+            if (converter.getGenericParameterTypes().length == 2)
+            {
+                // two parameter converter - add component (usually there is a no parameter public constructor)
+                Object component = converter.getGenericParameterTypes()[1].getClass().newInstance();
+                return converter.invoke( windowCtl, value, component );
+            }
+            else
+                return converter.invoke( windowCtl, value );
         } catch ( IllegalAccessException ex ) {
             return value;
         } catch ( IllegalArgumentException ex ) {
+            return value;
+        } catch (InstantiationException e) {
             return value;
         }
     }

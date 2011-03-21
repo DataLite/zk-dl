@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.controller.impl;
 
+import cz.datalite.zk.components.list.RowCount;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
@@ -63,5 +64,19 @@ public class DLPagingControllerImpl implements DLPagingController {
 
     public String getUuid() {
         return paging.getUuid();
+    }
+
+    public boolean supportsRowCount()
+    {
+        return (masterController instanceof RowCount);
+    }
+
+    public int getRowCount()
+    {
+        if (!supportsRowCount())
+            throw new IllegalStateException("Listbox controller does not support rowcount.");
+
+        return ((RowCount)masterController).rowCount(masterController.getNormalFilterModel());
+
     }
 }

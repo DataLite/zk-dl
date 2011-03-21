@@ -3,9 +3,12 @@ package cz.datalite.zk.components.list;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
+
 import java.util.List;
 
 /**
+ * Load distinct values from controller (usefull especially for filters).
+ * This is not mandatory interface, because for large data it can be really slow.
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */

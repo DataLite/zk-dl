@@ -10,6 +10,11 @@ import com.liferay.portal.kernel.exception.SystemException;
  */
 public class LiferayException extends RuntimeException
 {
+    public LiferayException(String message)
+    {
+        super(message);
+    }
+
     public LiferayException(SystemException e)
     {
         super(e);

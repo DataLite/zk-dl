@@ -11,16 +11,14 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.AddressImpl;
 import com.liferay.portal.model.impl.ContactImpl;
 import com.liferay.portal.model.impl.UserImpl;
-import com.liferay.portal.service.AddressLocalServiceUtil;
-import com.liferay.portal.service.ContactLocalServiceUtil;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.UserLocalService;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.*;
+
 import java.util.ArrayList;
-import static org.mockito.Mockito.*;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -173,6 +171,6 @@ public class UserMockFactory
         when(userLocalService.getUserById(anyLong())).thenReturn(defaultUser);
         when(userLocalService.getUserById(eq(CompanyMockFactory.DEFAULT_COMPANY_ID), anyLong())).thenReturn(defaultUser);
         when(userLocalService.getUserIdByEmailAddress(eq(CompanyMockFactory.DEFAULT_COMPANY_ID), anyString())).thenReturn(defaultUserId);
-
     }
+
 }

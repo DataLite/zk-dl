@@ -3,8 +3,6 @@
   <persistence-unit name="ZkExamplePU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <non-jta-data-source>java:comp/env/jdbc/ZkExampleDB</non-jta-data-source>
-    <class>cz.datalite.zkdl.demo.hibernateDao.HibernateTodo</class>
-    <class>cz.datalite.zkdl.demo.spring.model.Todo</class>
     <properties>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>

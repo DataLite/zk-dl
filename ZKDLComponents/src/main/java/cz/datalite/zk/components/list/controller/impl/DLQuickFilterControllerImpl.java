@@ -2,20 +2,17 @@ package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
-import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
-import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
+import org.zkoss.lang.Classes;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import org.zkoss.lang.Classes;
-import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
 
 /**
  * Implementation of the controller for the quick filter component.
@@ -60,13 +57,21 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         DLColumnUnitModel columnUnitModel = masterController.getColumnModel().getByName(bindingModel.getKey());
         if (columnUnitModel != null && columnUnitModel.getColumnType() != null && !StringHelper.isNull(bindingModel.getValue()))
         {
-            try
+            if (columnUnitModel.getFilterCompiler() != null)
             {
-                Classes.coerce(columnUnitModel.getColumnType(), bindingModel.getValue());
+                columnUnitModel.getFilterCompiler().validateValue(bindingModel.getValue());
             }
-            catch (Exception e)
+            else
             {
-                return false;
+                // validate primitive value with a type (number, date, ...)
+                try
+                {
+                    Classes.coerce(columnUnitModel.getColumnType(), bindingModel.getValue());
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
         }
 

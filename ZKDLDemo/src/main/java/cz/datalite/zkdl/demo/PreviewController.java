@@ -2,25 +2,13 @@ package cz.datalite.zkdl.demo;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.stereotype.Controller;
-import cz.datalite.zk.annotation.ZkComponent;
-import cz.datalite.zk.annotation.ZkEvent;
-import cz.datalite.zk.annotation.ZkEvents;
-import cz.datalite.zk.annotation.ZkModel;
-import cz.datalite.zk.annotation.ZkParameter;
 import cz.datalite.zk.composer.DLComposer;
 import cz.datalite.zk.liferay.DLPortlet;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.SortedMap;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Html;
 import org.zkoss.zul.Label;
+
+import java.util.SortedMap;
 
 /**
  *

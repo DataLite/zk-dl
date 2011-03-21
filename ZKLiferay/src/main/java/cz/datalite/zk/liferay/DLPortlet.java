@@ -1,15 +1,20 @@
 package cz.datalite.zk.liferay;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.WebApp;
 import org.zkoss.zk.ui.http.DHtmlLayoutPortlet;
 import org.zkoss.zk.ui.http.WebManager;
 import org.zkoss.zk.ui.sys.SessionsCtrl;
+
+import javax.portlet.PortletException;
+import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import java.io.IOException;
 
 /**
  *
@@ -17,25 +22,56 @@ import org.zkoss.zk.ui.sys.SessionsCtrl;
  */
 public class DLPortlet extends DHtmlLayoutPortlet
 {
-    // set title
+    /**
+     * Use ZK's session attributes to set custom portlet title.
+     *  -> session.setAttribute(DLPortlet.TITLE, "My dynamic portlet title");
+     */
     public static final String TITLE = "cz.datalite.portlet.title";
 
-    // use title from attribute
-    @Override
-    protected String getTitle(RenderRequest request)
-    {
-        Session session;
-        try {
-            session = getSession(request);
-        } catch (PortletException ex) {
-            throw new RuntimeException("Misconfigured DL ZK portlet.", ex);
-        }
+    /**
+     * Session attribute to save map for portlet roles (roleName -> roleLink) to translate
+     * portlet roles to Liferay roles.
+     */
+    public static final String ROLE_MAPPERS = "cz.datalite.portlet.roleMappers";
 
-        if (session != null && session.hasAttribute(TITLE)) {
-            return String.valueOf(session.getAttribute(TITLE));
-        } else {
-            return super.getTitle(request);
-        }
+    /**
+     * Process a ZK page as a portlet.
+     *
+     * First setup some session parameters with Liferay info - to be able access it in runtime
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean process(Session sess, RenderRequest request, RenderResponse response, String path, boolean bRichlet) throws PortletException, IOException {
+
+        setupSessionParameters(sess, request);
+
+        boolean result = super.process(sess, request, response, path, bRichlet);
+
+
+        // overwrite portlet title with TITLE attribute from session (if set)
+        if (result && sess.hasAttribute(TITLE))
+            response.setTitle(String.valueOf(sess.getAttribute(TITLE)));
+
+        return result;
+    }
+
+    /**
+     * Setup Liferay parameters to the session
+     * <ul>
+     * <li> WebKeys.THEME_DISPLAY - all basic Liferay display parameters (including current user) </li>
+     * <li> ROLE_MAPPERS - list of mapped role (to provide isUserInRole even in servlet requests)</li>
+     * </ul>
+     * @param sess
+     * @param request
+     */
+    protected void setupSessionParameters(Session sess, RenderRequest request)
+    {
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
+        sess.setAttribute(WebKeys.THEME_DISPLAY, themeDisplay);
+
+        Portlet portlet = PortletLocalServiceUtil.getPortletById(themeDisplay.getPortletDisplay().getId());
+        sess.setAttribute(ROLE_MAPPERS, portlet.getRoleMappers());
     }
 
     private Session getSession(RenderRequest request)
@@ -47,5 +83,5 @@ public class DLPortlet extends DHtmlLayoutPortlet
             return sess != null ? sess:
                     SessionsCtrl.newSession(wapp, psess, request);
     }
-    
+
 }

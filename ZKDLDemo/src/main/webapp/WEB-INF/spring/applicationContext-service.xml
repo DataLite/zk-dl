@@ -26,4 +26,5 @@
         <!-- change here basic package -->
         <context:component-scan base-package="cz.datalite" annotation-config="false"/>
 
+        <!--bean class="cz.datalite.zk.liferay.mock.LiferayMockUtilUtil" init-method="initLiferay"/-->
 </beans>

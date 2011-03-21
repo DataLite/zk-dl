@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.list.filter.compilers;
 
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
+
 import java.util.Map;
 
 /**
@@ -83,6 +84,21 @@ public class FilterOracleSqlCompiler  implements  FilterCompiler {
         }
 
 
+    }
+
+    /**
+     * This compiler works only with String values.
+     *
+     * @param value the value for filter
+     * @return true if value is null or String.
+     */
+    public boolean validateValue(Object value) {
+        if (value == null)
+            return true;
+        if (value instanceof String)
+            return true;
+        else
+            return false;
     }
 
 }

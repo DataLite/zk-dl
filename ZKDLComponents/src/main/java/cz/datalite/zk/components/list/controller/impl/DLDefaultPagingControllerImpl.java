@@ -28,4 +28,14 @@ public class DLDefaultPagingControllerImpl implements DLPagingController {
     public String getUuid() {
         return "";
     }
+
+    public boolean supportsRowCount()
+    {
+        return false;
+    }
+
+    public int getRowCount()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
