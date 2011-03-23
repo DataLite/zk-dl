@@ -6,7 +6,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
 
-    <window id="categoryOverviewWindow" height="100%" apply="${categoryOverviewController}">
+    <window id="categoryOverviewWindow" height="400px" apply="${categoryOverviewController}">
         <borderlayout>
             <north>
                 <listControl apply="${ctl.listCtl}">

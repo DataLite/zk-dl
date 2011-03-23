@@ -18,6 +18,8 @@
     <filter-mapping>
         <filter-name>JpaFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
     <!-- ZK cleanup session after timeout -->
     <listener>

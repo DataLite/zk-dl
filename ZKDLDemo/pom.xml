@@ -5,16 +5,16 @@
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLDemo</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
     <name>ZKDLDemo</name>
     <url>http://zk.datalite.cz</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>3.0.4.RELEASE</org.springframework.version>
+        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>3.0.3.RELEASE</org.springframework.security.version>
-        <org.zkoss.zk.version>5.0.5</org.zkoss.zk.version>
-        <cz.datalite.zk-dl.version>1.0</cz.datalite.zk-dl.version>
+        <org.zkoss.zk.version>5.0.6</org.zkoss.zk.version>
+        <cz.datalite.zk-dl.version>1.1</cz.datalite.zk-dl.version>
         <org.junit.version>4.8.1</org.junit.version>
         <netbeans.hint.deploy.server>liferay</netbeans.hint.deploy.server>
     </properties>
@@ -119,6 +119,14 @@
             <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-service</artifactId>
+            <version>6.0.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+
         <!-- Optinal library - http://zk.datalite.cz/wiki/-/wiki/Main/ZKStatistics+-+Performance+Monitoring+of+ZK+Applicaiton .-->
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
@@ -212,7 +220,8 @@
             <!-- You need to setup your application server for use with JRebel. For maven+jetty setup see http://zk.datalite.cz -->
             <plugin>
                 <groupId>org.zeroturnaround</groupId>
-                <artifactId>javarebel-maven-plugin</artifactId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.0.7</version>
                 <executions>
                     <execution>
                         <id>generate-rebel-xml</id>

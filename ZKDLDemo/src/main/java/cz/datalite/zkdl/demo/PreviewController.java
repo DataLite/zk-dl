@@ -2,12 +2,14 @@ package cz.datalite.zkdl.demo;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.stereotype.Controller;
+import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.composer.DLComposer;
 import cz.datalite.zk.liferay.DLPortlet;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Label;
 
+import java.io.*;
 import java.util.SortedMap;
 
 /**
@@ -21,10 +23,12 @@ public class PreviewController extends DLComposer
     @ZkModel DemoType demoType;
 
     // selected source file to show
-    @ZkModel String sourceFile;
+    @ZkModel
+    String sourceFile;
 
     // where to put the source code
-    @ZkComponent Label sourceLabel;
+    @ZkComponent
+    Label sourceLabel;
 
     @ZkParameter(createIfNull=true)
     public void setDemoType(String type) throws IOException

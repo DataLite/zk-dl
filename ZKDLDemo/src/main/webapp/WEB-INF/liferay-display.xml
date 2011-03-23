@@ -2,7 +2,6 @@
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 5.2.0//EN" "http://www.liferay.com/dtd/liferay-display_5_2_0.dtd">
 <display>
   <category name="User_Portlets">
-    <portlet id="ZkExample">ZkExample</portlet>
-    <portlet id="ZkUser">ZkUser</portlet>
+    <portlet id="ZKDLDemo">ZKDLDemo</portlet>
   </category>
 </display>

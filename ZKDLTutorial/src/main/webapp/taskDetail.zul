@@ -5,7 +5,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
 
-    <window id="taskDetailWindow" border="normal" title="Detail task" closable="true" width="700px"
+    <window id="taskDetailWindow" border="normal" title="Task detail" closable="true" width="700px"
             apply="${taskDetailController}">
 
         <grid>

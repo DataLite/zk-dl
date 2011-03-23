@@ -188,7 +188,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>Selenium</artifactId>
-            <version>1.0</version>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
     </dependencies>
 

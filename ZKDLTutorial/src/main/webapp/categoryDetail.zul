@@ -5,7 +5,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
 
-    <window id="categoryDetailWindow" border="normal" title="Detail category" closable="true" width="700px"
+    <window id="categoryDetailWindow" border="normal" title="Category detail" closable="true" width="700px"
             apply="${categoryDetailController}">
 
         <grid>

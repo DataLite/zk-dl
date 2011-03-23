@@ -6,7 +6,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
 
-    <window id="taskOverviewWindow" self="@{define(content)}" height="100%" apply="${taskOverviewController}">
+    <window id="taskOverviewWindow" self="@{define(content)}" height="400px" apply="${taskOverviewController}">
 
         <borderlayout>
             <north>
@@ -17,8 +17,8 @@
                 </listControl>
             </north>
             <center>
-                <listbox apply="${ctl.listCtl}" vflex="true" selectedItem="@{ctl.task}" selectFirstRow="true"
-                         fixedLayout="true">
+                <listbox id="taskList" apply="${ctl.listCtl}" vflex="true" selectedItem="@{ctl.task}"
+                         selectFirstRow="true" fixedLayout="true">
                     <listhead>
                         <listheader label="Name" sort="db()"/>
                         <listheader label="Description" sort="db()"/>

@@ -147,7 +147,6 @@ SpringService? - service layer with spring - generic service which speaks to gen
         <module>Selenium</module>
         <module>ZKStatistics</module>
         <module>ZKLiferay</module>
-        <module>ToDo</module>
     </modules>
 
     <repositories>

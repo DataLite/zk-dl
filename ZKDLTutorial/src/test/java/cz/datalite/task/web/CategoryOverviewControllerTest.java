@@ -4,28 +4,21 @@
  */
 package cz.datalite.task.web;
 
-import cz.datalite.webdriver.By;
-import cz.datalite.webdriver.SeleniumUnitTest;
-import cz.datalite.webdriver.ZkWindow;
-import cz.datalite.webdriver.components.GridForm;
-import cz.datalite.webdriver.components.Window;
-import org.junit.Test;
-
-@ZkWindow( url = "/categoryOverview.zul", id = "categoryOverviewWindow", detailId = "openDetailButton" )
-public class CategoryOverviewControllerTest extends SeleniumUnitTest {
-
-    @Override
-    protected void openDetail( final Window window ) {
-        window.findButton( By.label("Open selected category") ).click();
-    }
-
-    @Test
-    public void zakladniTest() {
-        final GridForm form = new GridForm( window );
-        form.detectAll();
-        form.fill();
-        form.submit( "Cancel" );
-    }
-
-
-}
+//@ZkWindow( url = "/categoryOverview.zul", id = "categoryOverviewWindow", detailId = "openDetailButton" )
+//public class CategoryOverviewControllerTest extends SeleniumUnitTest {
+//
+//    @Override
+//    protected void openDetail( final Window window ) {
+//        window.findButton( By.label("Open selected category") ).click();
+//    }
+//
+//    @Test
+//    public void zakladniTest() {
+//        final GridForm form = new GridForm( window );
+//        form.detectAll();
+//        form.fill();
+//        form.submit( "Cancel" );
+//    }
+//
+//
+//}
