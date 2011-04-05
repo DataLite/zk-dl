@@ -30,10 +30,10 @@ public class BooleanCriterionCompiler extends FilterCriterionCompiler  {
             } else if ( val.equalsIgnoreCase("n") || val.equalsIgnoreCase("ne") ||
                  val.equalsIgnoreCase("no") ||
                  val.equalsIgnoreCase("false")) {
-                return Restrictions.sqlRestriction( "1=1" );
+                return Restrictions.sqlRestriction( "1=0" );
             }
             else {
-                return Restrictions.sqlRestriction( "1=0" );
+                return Restrictions.sqlRestriction( "1=1" );
             }
         } else if ( (value instanceof Boolean) || (Boolean.TYPE.equals( value.getClass() )) ) { // input from checkbox
             return compile( key, ( Boolean ) value );
