@@ -6,12 +6,13 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
+
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -292,7 +293,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                     final String controller = converter.split( "\\." )[0];
                     final String methodName = converter.split( "\\." )[1];
 
-                    final Composer ctl = ( Composer ) comp.getVariable( controller, true );
+                    final Composer ctl = ( Composer ) comp.getAttribute(controller, true);
 
                     if ( ctl != null ) {
                         for ( Method method : ctl.getClass().getDeclaredMethods() ) {
