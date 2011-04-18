@@ -10,14 +10,18 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.liferay.mock.LiferayMock;
 import cz.datalite.zk.liferay.security.ZulRolesHelper;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.zkoss.zk.ui.Executions;
 
+import javax.portlet.PortletRequest;
 import java.util.Date;
 import java.util.Map;
 
@@ -128,7 +132,14 @@ public class DLLiferayService {
      */
     public ThemeDisplay getThemeDisplay() {
         if (liferayMock != null && liferayMock.isLiferayRunning())
-            return (ThemeDisplay) Executions.getCurrent().getSession().getAttribute(WebKeys.THEME_DISPLAY);
+            if (Executions.getCurrent() != null) // ZK is running
+                return (ThemeDisplay) Executions.getCurrent().getSession().getAttribute(WebKeys.THEME_DISPLAY);
+            else if (RequestContextHolder.getRequestAttributes() != null) // Spring context listener
+                return (ThemeDisplay) RequestContextHolder.getRequestAttributes().
+                        getAttribute(WebKeys.THEME_DISPLAY, RequestAttributes.SCOPE_REQUEST);
+            else // do not know where to get ThemeDisplay
+                throw new LiferayException("Unable to get ThemeDisplay - DLLiferayService can be used only in ZK or Spring context.");
+
         else
             return getMockedThemeDisplay();
     }
@@ -204,24 +215,38 @@ public class DLLiferayService {
      */
     public boolean isUserInRole(String role) {
 
-        // in mock return always true
         if (!isLiferayRunning())
+            return isUserInRoleMock(role);
+        else
+            return isUserInRoleLiferay(role);
+    }
+
+
+    // check Liferay role based on a mapper
+    protected boolean isUserInRoleLiferay(String role) {
+
+        if (Executions.getCurrent() == null)
         {
-            if ("NOBODY".equals(role))
-                return false;
-            else
-                return true;
+            // not in ZK, try to use spring
+            return getRequestSpring().isUserInRole(role);
         }
 
+
+        // else get roles from session (set in DLPortlet)
 
         User user = getUser();
         long companyId = getCompanyId();
 
+        // not active user,
         if (user == null)
             return false;
 
-        // get roles from session (set in DLPortlet)
         Map<String, String> roleMappers = (Map<String, String>) Executions.getCurrent().getSession().getAttribute(DLPortlet.ROLE_MAPPERS);
+
+
+
+            roleMappers = PortletLocalServiceUtil.getPortletById(getThemeDisplay().getPortletDisplay().getId()).getRoleMappers();
+
         if (roleMappers == null)
             throw new LiferayException("Session attribute DLPortlet.ROLE_MAPPERS not found. Do you use DLPortlet in your portlet.xml configuration?");
 
@@ -241,7 +266,18 @@ public class DLLiferayService {
         } catch (SystemException e) {
             throw new LiferayException(e);
         }
+    }
 
+    // in a mock check the link - if not found, return false, otherwise return true unless it is mapped to NOBODY
+    protected boolean isUserInRoleMock(String role) {
+        Map<String, String> roleMappers = liferayMock.getLiferayRoleMapper();
+        String roleLink = roleMappers.get(role);
+        if (StringHelper.isNull(roleLink))
+            return false;
+        else if ("NOBODY".equals(roleLink))
+            return false;
+        else
+            return true;
     }
 
 
@@ -264,5 +300,12 @@ public class DLLiferayService {
 
     // artifical map as helper for ZUL map access (see getRoles() )
     private final ZulRolesHelper zulRolesHelper = new ZulRolesHelper(this);
+
+
+    private PortletRequest getRequestSpring()
+    {
+        return (PortletRequest) RequestContextHolder.currentRequestAttributes()
+                .resolveReference(RequestAttributes.REFERENCE_REQUEST);
+    }
 
 }

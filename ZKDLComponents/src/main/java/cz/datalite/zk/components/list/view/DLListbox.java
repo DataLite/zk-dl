@@ -2,18 +2,15 @@ package cz.datalite.zk.components.list.view;
 
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
-import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
-import org.zkoss.zul.ListModel;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listgroup;
-import org.zkoss.zul.Listitem;
-import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.*;
+
+import java.util.List;
 
 /**
  * This component is the extension for the ZK listbox. This component and
@@ -120,11 +117,11 @@ public class DLListbox extends Listbox {
      * @return value of the selected item or null if no item is selected
      */
     public Object getSelectedValue() {
-        if ( getSelectedItem() != null ) {
-            return getSelectedItem().getValue();
-        } else {
-            return null;
-        }
+        Listitem selected = getSelectedItem();
+        if (selected != null) {
+          return selected.getValue();
+       }
+        return null;
     }
 
     /**

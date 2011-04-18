@@ -1,19 +1,19 @@
 package cz.datalite.zk.liferay.mock;
 
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.model.Group;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.impl.CompanyImpl;
 import com.liferay.portal.model.impl.GroupImpl;
 import com.liferay.portal.model.impl.OrganizationImpl;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+
 import static org.mockito.Mockito.*;
-import static org.mockito.Matchers.*;
 
 /**
  *
@@ -60,9 +60,9 @@ public class CompanyMockFactory
      */
     public void setupClassNames()
     {
-        when(PortalUtil.getPortal().getClassName(GROUP_CLASSNAME_ID)).thenReturn("com.liferay.portal.model.Group");
-        when(PortalUtil.getPortal().getClassName(ORGANIZATION_CLASSNAME_ID)).thenReturn("com.liferay.portal.model.Organization");
-        when(PortalUtil.getPortal().getClassName(USER_CLASSNAME_ID)).thenReturn("com.liferay.portal.model.User");
+        doReturn("com.liferay.portal.model.Group").when(PortalUtil.getPortal()).getClassName(GROUP_CLASSNAME_ID);
+        doReturn("com.liferay.portal.model.Organization").when(PortalUtil.getPortal()).getClassName(ORGANIZATION_CLASSNAME_ID);
+        doReturn("com.liferay.portal.model.User").when(PortalUtil.getPortal()).getClassName(USER_CLASSNAME_ID);
     }
     
     /**

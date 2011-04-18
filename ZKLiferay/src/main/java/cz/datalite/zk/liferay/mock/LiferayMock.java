@@ -1,17 +1,28 @@
 package cz.datalite.zk.liferay.mock;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+import org.springframework.web.context.ServletContextAware;
+
+import javax.servlet.ServletContext;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Check if Liferay is available and if not, init main services with mock.
  *
  * @author Jiri Bubnik
  */
-public class LiferayMock
+public class LiferayMock implements ServletContextAware
 {
+    protected ServletContext servletContext;
+
     protected CompanyMockFactory companyMockFactory;
     protected UserMockFactory userMockFactory;
     protected ThemeDisplayMockFactory themeDisplayMockFactory;
+    protected Map<String, String> liferayRoleMapper;
+
 
     /**
      * Init mock to the default implementations
@@ -43,6 +54,13 @@ public class LiferayMock
     }
 
     /**
+     * Returns a role mapper based on liferay-portlet.xml
+     */
+    public Map<String, String> getLiferayRoleMapper() {
+        return liferayRoleMapper;
+    }
+
+    /**
      * Returns true if Liferay is really running (not only a mock)
      *
      * @return true if Liferay is really running
@@ -64,5 +82,19 @@ public class LiferayMock
 
         PortalMockFactory portalMockFactory = new PortalMockFactory(companyMockFactory, userMockFactory);
         portalMockFactory.initLiferay();
+
+        InputStream liferayPortletXml = servletContext.getResourceAsStream("/WEB-INF/liferay-portlet.xml");
+        if (liferayPortletXml == null)
+        {
+            Logger.getLogger(getClass().getName()).warning("The file /WEB-INF/liferay-portlet.xml does not exists, role mapper will not be available");
+            liferayRoleMapper = new HashMap<String, String>();
+        }
+        else
+            liferayRoleMapper = new LiferayRoleMapper(liferayPortletXml);
+    }
+
+    // remember the servlet context (injected via Spring)
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 }

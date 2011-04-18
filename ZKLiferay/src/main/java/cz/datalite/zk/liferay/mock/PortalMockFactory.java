@@ -10,22 +10,38 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.Digester;
-import com.liferay.portal.kernel.util.DigesterUtil;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.servlet.BrowserSniffer;
+import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
+import com.liferay.portal.kernel.util.*;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.*;
 import com.liferay.portal.model.impl.*;
+import com.liferay.portal.security.auth.AuthToken;
+import com.liferay.portal.security.auth.AuthTokenUtil;
 import com.liferay.portal.service.*;
-import com.liferay.portal.util.Portal;
+import com.liferay.portal.util.PortalImpl;
+import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.xml.SAXReaderImpl;
+import com.liferay.portlet.PortletPreferencesFactory;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Random;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
 
 public class PortalMockFactory
 {
@@ -73,6 +89,9 @@ public class PortalMockFactory
      *
      * For each utility class, we create a mock service with RETURNS_MOCKS (create not null objects for all functions).
      * We try to avoid as much NPE as possible.
+     *
+     * This is just a random list of services, as the need to use them pops out. It might be a good idea to
+     * start with list of Liferay services and do this more thoroughly.
      *
      * When some service call needs to be implemented, just add something like:
      *   when(CompanyLocalServiceUtil.getService().getCompany(companyId)).thenReturn(company);
@@ -147,8 +166,27 @@ public class PortalMockFactory
         new ListTypeServiceUtil().setService(mock(ListTypeService.class, RETURNS_MOCKS));
         when(ListTypeServiceUtil.getService().getListTypes(anyString())).thenReturn(Arrays.asList((ListType) new ListTypeImpl()));
 
-        new PortalUtil().setPortal(mock(Portal.class));
-        new DigesterUtil().setDigester(mock(Digester.class));
+        new PortalUtil().setPortal(spy(new PortalImpl()));
+        new PortletPreferencesFactoryUtil().setPortletPreferencesFactory(mock(PortletPreferencesFactory.class, RETURNS_MOCKS));
+        new DigesterUtil().setDigester(mock(Digester.class, RETURNS_MOCKS));
+        new HttpUtil().setHttp(mock(Http.class, RETURNS_MOCKS));
+        new AuthTokenUtil().setAuthToken(mock(AuthToken.class, RETURNS_MOCKS));
+        new SAXReaderUtil().setSAXReader(SAXReaderImpl.getInstance());
+
+        new LanguageUtil().setLanguage(mock(Language.class, RETURNS_MOCKS));
+
+        // language.get(Locale l, String key) should always return key
+        Answer<String> languageAnswer = new Answer<String>() {
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                return (String) args[1];
+            }
+        };
+        when(LanguageUtil.getLanguage().get(any(Locale.class), anyString())).thenAnswer(languageAnswer);
+        when(LanguageUtil.getLanguage().get(any(PageContext.class), anyString())).thenAnswer(languageAnswer);
+
+
+        new BrowserSnifferUtil().setBrowserSniffer(mock(BrowserSniffer.class, RETURNS_MOCKS));
 
         new CounterLocalServiceUtil().setService(mock(CounterLocalService.class, RETURNS_MOCKS));
         when(CounterLocalServiceUtil.getService().increment(anyString())).thenReturn(new Random().nextLong());
@@ -184,6 +222,7 @@ public class PortalMockFactory
 
         // default and the only one company (portal instance)
         companyMockFactory.createCompanyImpl("company", CompanyMockFactory.DEFAULT_COMPANY_ID);
+        PortalInstances.addCompanyId(1);
 
         // main group
         Group group = companyMockFactory.createGroupImpl("group", 1);
@@ -216,6 +255,9 @@ public class PortalMockFactory
 
         userMockFactory.createUserQuery( Arrays.asList(admin, edudant, francimor) );
 
+        doReturn("mockNamespace").when(PortalUtil.getPortal()).getPortletNamespace(anyString());
+        doReturn(1L).when(PortalUtil.getPortal()).getUserId(any(HttpServletRequest.class));
+        doReturn(1L).when(PortalUtil.getPortal()).getUserId(any(PortletRequest.class));
     }
 
 }

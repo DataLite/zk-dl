@@ -51,7 +51,7 @@ public final class DLFilter {
 		final List<T> data = new LinkedList<T>(list);
 
 		sort(sorts, data);
-		return filter(filterModel, list, firstRow, rowCount, null, rowCount == 0);
+		return filter(filterModel, data, firstRow, rowCount, null, rowCount == 0);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public final class DLFilter {
 
 		sort(sorts, data);
 
-		data = filter(filterModel, list, firstRow, rowCount, distinct, rowCount == 0);
+		data = filter(filterModel, data, firstRow, rowCount, distinct, rowCount == 0);
 
 		final List<Object> distinctData = new LinkedList<Object>();
 		for (T entity : data) {
@@ -220,6 +220,11 @@ public final class DLFilter {
 	 * @return sorted list - <b>SAME</b> instance
 	 */
 	public static <T> List<T> sort(final List<DLSort> sorts, final List<T> list) {
+
+        if (sorts == null || sorts.isEmpty()) {
+                    return list; // no sorting
+        }
+
 		final Comparator<T> comparator = new Comparator<T>() {
 
 			public int compare(final T o1, final T o2) {
@@ -320,7 +325,7 @@ public final class DLFilter {
 
 	/**
 	 * Method filters list with entities. DLFilter criterias is defined in the list. Index of first row starts at 0.
-	 * Also can be defined number of result rows. It row count is 0 all records are returned. There is also return
+	 * Also can be defined number of result rows. If row count is 0 all records are returned. There is also return
 	 * number of total size of filtered rows
 	 *
 	 * @param <T>
@@ -342,7 +347,7 @@ public final class DLFilter {
 
 	/**
 	 * Method filters list with entities. DLFilter criterias is defined in the list. Index of first row starts at 0.
-	 * Also can be defined number of result rows. It row count is 0 all records are returned. There is also return
+	 * Also can be defined number of result rows. If row count is 0 all records are returned. There is also return
 	 * number of total size of filtered rows
 	 *
 	 * @param <T>
