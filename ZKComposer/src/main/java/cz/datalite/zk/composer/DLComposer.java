@@ -117,12 +117,12 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
         // publish controller into component namespace. It can be than accessed from ZUL as "ctl.xxx".
         // defualt value is ctl, but it can be changed with @ZkController annotation on class level
-        comp.setAttribute( loadControllerClass( this.getClass() ), this );
+        comp.setAttribute( loadControllerClass( this.getClass() ), this, Component.SPACE_SCOPE );
 
         // the same for model. The default value is same as controller as well. It is more convenient to have only one variable to access controller
         // however, you can change the value with @ZkModel annotation on class level
         if ( !loadControllerClass( this.getClass() ).equals( loadModelClass( this.getClass() ) ) ) {
-            comp.setAttribute( loadModelClass( this.getClass() ), this );
+            comp.setAttribute( loadModelClass( this.getClass() ), this, Component.SPACE_SCOPE );
         }
 
         // setup model and controller fields and methods.
