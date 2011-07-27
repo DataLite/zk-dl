@@ -34,6 +34,7 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 
@@ -110,6 +111,13 @@ public class PortalMockFactory
 
         new EmailAddressLocalServiceUtil().setService(mock(EmailAddressLocalService.class, RETURNS_MOCKS));
         when(EmailAddressLocalServiceUtil.getService().createEmailAddress(anyLong())).thenReturn(new EmailAddressImpl());
+        when(EmailAddressLocalServiceUtil.getService().getEmailAddresses(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<EmailAddress>());
+
+        new PhoneLocalServiceUtil().setService(mock(PhoneLocalService.class, RETURNS_MOCKS));
+        when(PhoneLocalServiceUtil.getService().getPhones(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<Phone>());
+
+        new WebsiteLocalServiceUtil().setService(mock(WebsiteLocalService.class, RETURNS_MOCKS));
+        when(WebsiteLocalServiceUtil.getService().getWebsites(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<Website>());
 
         new GroupLocalServiceUtil().setService(mock(GroupLocalService.class, RETURNS_MOCKS));
         when(GroupLocalServiceUtil.getService().createGroup(anyLong())).thenReturn(new GroupImpl());
@@ -225,39 +233,39 @@ public class PortalMockFactory
         PortalInstances.addCompanyId(1);
 
         // main group
-        Group group = companyMockFactory.createGroupImpl("group", 1);
+        Group group = companyMockFactory.createGroupImpl("group", CompanyMockFactory.GROUP_ID);
 
         // with serveral organizations
-        Organization orgDefault = companyMockFactory.createOrganizationImpl("organization", 1);
+        Organization orgDefault = companyMockFactory.createOrganizationImpl("organization", 10493);
         companyMockFactory.addOrganizationToGroup(orgDefault, group);
 
-        Organization orgDatalite = companyMockFactory.createOrganizationImpl("datalite", 1);
+        Organization orgDatalite = companyMockFactory.createOrganizationImpl("datalite", 10818);
         companyMockFactory.addOrganizationToGroup(orgDatalite, group);
 
         // and several users
-        User admin = userMockFactory.createUserImpl("admin", 1);
-        Contact adminContact = userMockFactory.createContactImpl("admin", 1);
-        Address adminAddress = userMockFactory.createAddressImpl("admin", 1);
+        User admin = userMockFactory.createUserImpl("admin", CompanyMockFactory.MAIN_USER_ID);
+        Contact adminContact = userMockFactory.createContactImpl("admin", CompanyMockFactory.MAIN_USER_ID);
+        Address adminAddress = userMockFactory.createAddressImpl("admin", CompanyMockFactory.MAIN_USER_ID);
         userMockFactory.addContactToUser(adminContact, admin);
         userMockFactory.addAddressToContact(adminAddress, adminContact);
 
-        User edudant = userMockFactory.createUserImpl("edudant", 2);
-        Contact edudantContact = userMockFactory.createContactImpl("edudant", 2);
-        Address edudantAddress = userMockFactory.createAddressImpl("edudant", 2);
+        User edudant = userMockFactory.createUserImpl("Bruno", 10870);
+        Contact edudantContact = userMockFactory.createContactImpl("Bruno", 10870);
+        Address edudantAddress = userMockFactory.createAddressImpl("Bruno", 10870);
         userMockFactory.addContactToUser(edudantContact, edudant);
         userMockFactory.addAddressToContact(edudantAddress, edudantContact);
 
-        User francimor = userMockFactory.createUserImpl("francimor", 3);
-        Contact francimorContact = userMockFactory.createContactImpl("francimor", 3);
-        Address francimorAddress = userMockFactory.createAddressImpl("francimor", 3);
+        User francimor = userMockFactory.createUserImpl("Michelle", 11014);
+        Contact francimorContact = userMockFactory.createContactImpl("Michelle", 11014);
+        Address francimorAddress = userMockFactory.createAddressImpl("Michelle", 11014);
         userMockFactory.addContactToUser(francimorContact, francimor);
         userMockFactory.addAddressToContact(francimorAddress, francimorContact);
 
         userMockFactory.createUserQuery( Arrays.asList(admin, edudant, francimor) );
 
         doReturn("mockNamespace").when(PortalUtil.getPortal()).getPortletNamespace(anyString());
-        doReturn(1L).when(PortalUtil.getPortal()).getUserId(any(HttpServletRequest.class));
-        doReturn(1L).when(PortalUtil.getPortal()).getUserId(any(PortletRequest.class));
+        doReturn(CompanyMockFactory.MAIN_USER_ID).when(PortalUtil.getPortal()).getUserId(any(HttpServletRequest.class));
+        doReturn(CompanyMockFactory.MAIN_USER_ID).when(PortalUtil.getPortal()).getUserId(any(PortletRequest.class));
     }
 
 }

@@ -34,5 +34,12 @@ public class LiferayException extends RuntimeException
     {
         super(message, e);
     }
-    
+
+    @Override
+    public String getMessage() {
+        if (getCause() != null)
+            return super.getMessage() + " - " + getCause().toString();
+        else
+            return super.getMessage();
+    }
 }

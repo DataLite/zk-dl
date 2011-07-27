@@ -41,8 +41,12 @@ public class OpenEntityManagerInViewWithLiferayFilter extends OpenEntityManagerI
         // in AJAX calls the portal attribute is not available, lookup session attribute - set by DLPortlet.
         if (themeDisplay == null)
         {
-            HttpSession httpSession = ((HttpServletRequest) request).getSession();
-            themeDisplay = (ThemeDisplay) httpSession.getAttribute(WebKeys.THEME_DISPLAY);
+            // do NOT create new session EVER!
+            // If you create new session here, it will colide with portal session (it may happen after timeout)
+            // see http://liferay.datalite.cz/blog/-/blogs/create-session-v-zk-update-requestu
+            HttpSession httpSession = ((HttpServletRequest) request).getSession(false);
+            if (httpSession != null)
+                themeDisplay = (ThemeDisplay) httpSession.getAttribute(WebKeys.THEME_DISPLAY);
         }
 
         // set Liferay filter

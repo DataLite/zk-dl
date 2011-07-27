@@ -35,6 +35,10 @@ public class CompanyMockFactory
     public static final int GROUP_TYPE_PRIVATE = 2;
     public static final int GROUP_TYPE_CONTROL_PANEL = 3;
 
+    // ID from default installation
+    public static final long GROUP_ID = 18;
+    public static final long MAIN_USER_ID = 2;
+
     /**
      * Company / Portal Instance, Only one instance with ID DEFAULT_COMPANY_ID should be created for mocking.
      */

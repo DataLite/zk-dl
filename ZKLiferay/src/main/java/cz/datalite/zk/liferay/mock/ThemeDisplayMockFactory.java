@@ -23,14 +23,14 @@ public class ThemeDisplayMockFactory
 
         // setup values by default objects from LocalServiceUtil mocks.
 
-        themeDisplay.setUser(UserLocalServiceUtil.getUser(1l));
+        themeDisplay.setUser(UserLocalServiceUtil.getUser(CompanyMockFactory.MAIN_USER_ID));
         themeDisplay.setCompany(CompanyLocalServiceUtil.getCompany(CompanyMockFactory.DEFAULT_COMPANY_ID));
-        themeDisplay.setScopeGroupId(GroupLocalServiceUtil.getGroup(1l).getGroupId());
+        themeDisplay.setScopeGroupId(GroupLocalServiceUtil.getGroup(CompanyMockFactory.GROUP_ID).getGroupId());
 
-        themeDisplay.setAccount(AccountLocalServiceUtil.getAccount(1l));
-        themeDisplay.setContact(ContactLocalServiceUtil.getContact(1l));
-        themeDisplay.setDoAsGroupId(GroupLocalServiceUtil.getGroup(1l).getGroupId());
-        themeDisplay.setDoAsUserId(String.valueOf(UserLocalServiceUtil.getUser(1l).getUserId()));
+        themeDisplay.setAccount(AccountLocalServiceUtil.getAccount(CompanyMockFactory.MAIN_USER_ID));
+        themeDisplay.setContact(ContactLocalServiceUtil.getContact(CompanyMockFactory.MAIN_USER_ID));
+        themeDisplay.setDoAsGroupId(GroupLocalServiceUtil.getGroup(CompanyMockFactory.GROUP_ID).getGroupId());
+        themeDisplay.setDoAsUserId(String.valueOf(UserLocalServiceUtil.getUser(CompanyMockFactory.MAIN_USER_ID).getUserId()));
         themeDisplay.setLocale(Locale.getDefault());
         themeDisplay.setPlid(1l);
 

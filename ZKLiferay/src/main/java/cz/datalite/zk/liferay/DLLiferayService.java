@@ -10,6 +10,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -17,6 +18,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.liferay.mock.LiferayMock;
 import cz.datalite.zk.liferay.security.ZulRolesHelper;
+import org.hibernate.SQLQuery;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.zkoss.zk.ui.Executions;
@@ -29,6 +31,7 @@ import java.util.Map;
  * Connect to Liferay.
  */
 public class DLLiferayService {
+
     // set the mock if running in mocked mode
     private LiferayMock liferayMock;
 
@@ -104,6 +107,28 @@ public class DLLiferayService {
      */
     public Group getGroup() {
         return getThemeDisplay().getScopeGroup();
+    }
+
+    /**
+     * Returns the topmost group in parent/child group organization starting with current scope group.
+     *
+     * @return root group
+     */
+    public Group getRootGroup() {
+        Group group = getThemeDisplay().getScopeGroup();
+        long parentGroupId;
+        while((parentGroupId = group.getParentGroupId()) != 0)
+        {
+            try {
+                group = GroupLocalServiceUtil.getGroup(parentGroupId);
+            } catch (PortalException e) {
+                throw new LiferayException("Error while finding parent group: " + parentGroupId, e);
+            } catch (SystemException e) {
+                throw new LiferayException("Error while finding parent group: " + parentGroupId, e);
+            }
+        }
+
+        return group;
     }
 
 
@@ -223,6 +248,7 @@ public class DLLiferayService {
 
 
     // check Liferay role based on a mapper
+    @SuppressWarnings({"unchecked"})
     protected boolean isUserInRoleLiferay(String role) {
 
         if (Executions.getCurrent() == null)
@@ -242,10 +268,6 @@ public class DLLiferayService {
             return false;
 
         Map<String, String> roleMappers = (Map<String, String>) Executions.getCurrent().getSession().getAttribute(DLPortlet.ROLE_MAPPERS);
-
-
-
-            roleMappers = PortletLocalServiceUtil.getPortletById(getThemeDisplay().getPortletDisplay().getId()).getRoleMappers();
 
         if (roleMappers == null)
             throw new LiferayException("Session attribute DLPortlet.ROLE_MAPPERS not found. Do you use DLPortlet in your portlet.xml configuration?");
@@ -308,4 +330,25 @@ public class DLLiferayService {
                 .resolveReference(RequestAttributes.REFERENCE_REQUEST);
     }
 
+    /**
+     * Vrátí SQL (použití pouze s native SQL, ne criteria)
+     * pro zařazení do where podmínky nad tabulkami s COMPANY_ID a GROUP_ID.
+     *
+     * Používat společně s  setLiferayQuerySQLParams pro vlastní nastavení parametrů
+     *
+     * @return ( (COMPANYID is null or COMPANYID = :companyId) and (GROUPID is null or GROUPID = :groupId) )
+     */
+    public String getLiferayQuerySQL() {
+        return " ( (COMPANYID is null or COMPANYID = :companyId) and (GROUPID is null or GROUPID = :groupId) ) ";
+    }
+
+    /**
+     * Nastaví parametry pro where podmínku přidanou metodou getLiferayQuerySQL().
+     *
+     * @param query Hibernate SQL query ke kterému se má nastavit
+     */
+    public void setLiferayQuerySQLParams(SQLQuery query) {
+        query.setLong("companyId", getCompanyId());
+        query.setLong("groupId", getGroupId());
+    }
 }
