@@ -5,7 +5,10 @@ package cz.datalite.helpers;
  */
 public abstract class BooleanHelper
 {
-
+    // Constants \\
+    public static final String TRUE = "Ano"; // simple localization \\
+    public static final String FALSE = "Ne"; // simple localization \\
+    
     /**
      * Prevod ze znaku
      *
@@ -63,5 +66,17 @@ public abstract class BooleanHelper
                         || StringHelper.isEqualsIgnoreCase(value, "ne")
                         || StringHelper.isEqualsIgnoreCase(value, "0")
         );
+    }
+    
+    /**
+     * Method convert boolean value to string, which is defined like constant 
+     * this class.
+     * 
+     * @param bool boolean to convert.
+     * @return string value defined in constant.
+     */
+    public String booleanToString(final boolean bool)
+    {
+        return bool ? TRUE : FALSE;
     }
 }
