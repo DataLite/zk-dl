@@ -75,7 +75,7 @@ public abstract class BooleanHelper
      * @param bool boolean to convert.
      * @return string value defined in constant.
      */
-    public String booleanToString(final boolean bool)
+    public static String booleanToString(final boolean bool)
     {
         return bool ? TRUE : FALSE;
     }
