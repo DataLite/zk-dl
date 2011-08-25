@@ -10,6 +10,7 @@ import org.zkoss.zk.ui.event.KeyEvent;
  *
  * @author Jiri Bubnik
  */
+@Deprecated
 public class DLKeyEvent {
 
     private final boolean ctrl;

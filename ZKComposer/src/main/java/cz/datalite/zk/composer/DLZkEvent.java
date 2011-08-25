@@ -26,6 +26,7 @@ import org.zkoss.zul.impl.XulElement;
  *
  * @author Jiri Bubnik
  */
+@Deprecated
 public class DLZkEvent
 {
     private final Method method;

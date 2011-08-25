@@ -10,6 +10,7 @@ import org.zkoss.zkplus.databind.DataBinder;
  *
  * @author Jiri Bubnik
  */
+@Deprecated
 public class DLZkBindingCommand {
 
     private Component component;
