@@ -24,6 +24,7 @@ import cz.datalite.zk.annotation.ZkConfirm;
 import cz.datalite.zk.annotation.ZkEvent;
 import cz.datalite.zk.annotation.ZkEvents;
 import cz.datalite.zk.annotation.ZkException;
+import cz.datalite.zk.annotation.ZkExceptions;
 import cz.datalite.zk.annotation.invoke.Invoke;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -76,6 +77,7 @@ public class AnnotationProcessor {
         invokes = processAnnotation( ZkEventsProcessor.INSTANCE, ZkEvents.class, invokes, method );
         invokes = processAnnotation( ZkEventProcessor.INSTANCE, ZkEvent.class, invokes, method );
         invokes = processAnnotation( ZkExceptionProcessor.INSTANCE, ZkException.class, invokes, method );
+        invokes = processAnnotation( ZkExceptionsProcessor.INSTANCE, ZkExceptions.class, invokes, method );
         invokes = processAnnotation( ZkBindingProcessor.INSTANCE, ZkBinding.class, invokes, method );
         invokes = processAnnotation( ZkBindingsProcessor.INSTANCE, ZkBindings.class, invokes, method );
         invokes = processAnnotation( ZkConfirmProcessor.INSTANCE, ZkConfirm.class, invokes, method );
