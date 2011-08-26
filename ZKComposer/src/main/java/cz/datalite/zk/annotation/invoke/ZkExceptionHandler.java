@@ -24,9 +24,9 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Messagebox;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Handles exceptions thrown by invocated methods. It the thrown type
+ * is defined in annotation, then the exception is caught and messagebox
+ * is shown instead.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -48,11 +48,11 @@ public class ZkExceptionHandler extends Handler {
     @Override
     protected void goOn( Event event ) throws Exception {
         try {
-            super.goOn( event );
-        } catch ( InvocationTargetException ex ) {
-            Throwable target = ex.getTargetException();
-            if ( type.isAssignableFrom( target.getClass() ) ) {
-                try {
+            super.goOn( event ); // invoke method
+        } catch ( InvocationTargetException ex ) { // catch all
+            Throwable target = ex.getTargetException(); // thrown exception
+            if ( type.isAssignableFrom( target.getClass() ) ) { // is throw instance of catching type?
+                try { // show message instead
                     Messagebox.show( StringHelper.isNull( message ) ? target.getMessage() : message, title, Messagebox.OK, Messagebox.ERROR );
                 } catch ( InterruptedException e ) {
                 }

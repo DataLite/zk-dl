@@ -27,7 +27,13 @@ import org.zkoss.zk.ui.UiException;
 import org.zkoss.zul.impl.XulElement;
 
 /**
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkEvent}. The main 
+ * purpose of this processor to handle
+ * key events, eg. SHIFT+A. Handler parses
+ * given string and filters request by functional
+ * keys, if they are set or not. If keys fits then
+ * the method is invoked otherwise event is dropped.</p>
  *
  * <p></p>
  *
@@ -39,11 +45,11 @@ public class KeyEventProcessor extends AbstractProcessor<ZkEvent> {
 
     public Invoke process( ZkEvent annotation, Invoke inner, Method method, Component master, Object controller ) {
         if ( annotation.event().startsWith( "on" ) ) { // this is not definition of keyEvent
-            return inner;
+            return inner; // no decoration
         }
         Component component = inner.getTarget();
 
-        if ( component instanceof XulElement ) {
+        if ( component instanceof XulElement ) { // adding hot key listener on component
             XulElement target = ( XulElement ) component;
             String keys = target.getCtrlKeys() == null ? "" : target.getCtrlKeys();
 

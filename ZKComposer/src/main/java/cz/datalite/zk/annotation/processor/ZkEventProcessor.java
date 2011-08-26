@@ -30,9 +30,14 @@ import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Events;
 
 /**
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkEvent}</p>
  *
- * <p></p>
+ * <p>Result of processing is collection
+ * of {@link MethodInvoker}. That is the basic 
+ * element of hierarchy of decorated invokers.
+ * MethodInvoker provides the crucial functionality
+ * - invoking of desired method.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -54,6 +59,7 @@ public class ZkEventProcessor implements Processor<ZkEvent> {
             source = target.getFellow( annotation.id() );
         }
 
+        // if event starts with ON then it is regular event otherwise it is supposed as HOT KEY definition
         String event = annotation.event().startsWith( "on" ) ? annotation.event() : Events.ON_CTRL_KEY;
 
         Invoke methodInvoker = new MethodInvoker( event, source, method, controller, annotation.payload() );

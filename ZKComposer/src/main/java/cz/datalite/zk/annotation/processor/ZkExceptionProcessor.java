@@ -25,9 +25,8 @@ import java.lang.reflect.Method;
 import org.zkoss.zk.ui.Component;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkException}</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */

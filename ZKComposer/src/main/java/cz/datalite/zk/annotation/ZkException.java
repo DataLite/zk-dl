@@ -24,9 +24,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>This annotation declares that method 
+ * throws an exception. Exception handling 
+ * mechanism catches the exception of desired
+ * type and displays the error messagebox to the 
+ * user. The message can be defined in an
+ * attribute or the exception message is used</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -35,17 +38,21 @@ import java.lang.annotation.Target;
 public @interface ZkException {
 
     /**
-     * @return 
+     * Title of message box is required attribute
+     * @return title of window
      **/
     public String title();
 
     /**
-     * @return 
+     * Error message. If not defined the message from the
+     * exception is use instead.
+     * @return Error message
      **/
     public String message() default "";
 
     /**
-     * @return 
+     * Type of caught exception
+     * @return type of exception
      **/
     public Class type();
 }

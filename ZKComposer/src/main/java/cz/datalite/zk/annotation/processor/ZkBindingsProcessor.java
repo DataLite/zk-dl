@@ -30,28 +30,20 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkBindings}</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public class ZkBindingsProcessor implements Processor<ZkBindings> {
+public class ZkBindingsProcessor extends AbstractProcessor<ZkBindings> {
 
     public static final ZkBindingsProcessor INSTANCE = new ZkBindingsProcessor();
-
-    public List<Invoke> process( ZkBindings annotation, List<Invoke> inner, Method method, Component master, Object controller ) {
-        List<Invoke> invokes = new ArrayList<Invoke>();
-        for ( Invoke invoke : inner ) {
-            invokes.add( process( annotation, invoke, method, master, controller ) );
-        }
-        return invokes;
-    }
 
     public Invoke process( ZkBindings annotation, Invoke invoke, Method method, Component master, Object controller ) {
         List<Component> loadAfter = new ArrayList<Component>();
         List<Component> saveBefore = new ArrayList<Component>();
         for ( ZkBinding binding : annotation.bindings() ) {
+            // load all components defined in binding annotation
             try {
                 Component component = binding.component().length() == 0 ? master : master.getFellow( binding.component() );
                 loadAfter = binding.loadAfter() ? Collections.singletonList( component ) : Collections.EMPTY_LIST;

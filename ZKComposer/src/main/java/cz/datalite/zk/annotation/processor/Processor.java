@@ -24,13 +24,30 @@ import java.util.List;
 import org.zkoss.zk.ui.Component;
 
 /**
- * <p></p>
+ * <p>Processor interfaces provides basic method of each 
+ * annotation processor which can process Zk annotations
+ * using decorator pattern and {@link Invoke} interface.</p>
  *
- * <p></p>
+ * <p>The main method processes given annotation and adds
+ * another decorator to given set of {@link Invoke} objects.
+ * The role of decorator is based on annotaion point.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public interface Processor<T> {
 
+    /**
+     * <p>The basic method of each annotation processor. 
+     * There is given annotation which have to be processed.
+     * Processing lies in decorating given set of {@link Invoke}
+     * objects with annotation specific functionality
+     * which provides desired effect.</p>
+     * @param annotation processed annotation
+     * @param inner set of inner object to be decorated
+     * @param method annotated method
+     * @param master master component bound to controller
+     * @param controller the controller, owner of methods
+     * @return set of decorated invokers
+     */
     List<Invoke> process( T annotation, List<Invoke> inner, Method method, Component master, Object controller );
 }

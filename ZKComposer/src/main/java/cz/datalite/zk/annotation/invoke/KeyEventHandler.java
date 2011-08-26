@@ -23,20 +23,28 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.KeyEvent;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Handler filters key events if they are set. ZK
+ * doesnt offer specific event for each hot key so if
+ * there are more hot keys set on one component then
+ * there is only one fired event. But each source of
+ * event can be handled in a different way (different
+ * method, payload etc.) so there has to be key filter.
+ * Otherwise user would need to filter it himself.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class KeyEventHandler extends Handler {
 
+    /** has to be used ctrl or not */
     private final boolean ctrl;
 
+    /** has to be used alt or not */
     private final boolean alt;
 
+    /** has to be used shift or not */
     private final boolean shift;
 
+    /** ascii code of key */
     private final int code;
 
     private Keys key = null;
@@ -73,6 +81,10 @@ public class KeyEventHandler extends Handler {
         return false; // onKey filter but not onKey event
     }
 
+    /** 
+     * Přeloží user-friendly syntaxi do syntaxe ZK
+     * @return ZK syntaxe eventu
+     */
     public String getKeys() {
         if ( code == -1 ) {
             return "";

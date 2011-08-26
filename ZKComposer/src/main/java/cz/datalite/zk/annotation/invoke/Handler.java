@@ -22,33 +22,52 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Abstract class handler simplifies the implementation
+ * of {@link Invoke} interface. Handler serves as template
+ * for mathryoska class. The class provides basic functionality
+ * like delegation getters and keeping the the order of
+ * invocated methods.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public abstract class Handler implements Invoke {
 
+    /** Inner (wrapped) object */
     protected Invoke inner;
 
     public Handler( Invoke inner ) {
         this.inner = inner;
     }
 
+    /** 
+     * Additional functionality appended before method invocation
+     * @param event source event
+     * @return TRUE if continue invoking, FALSE for stop propagation
+     */
     protected boolean doBeforeInvoke( Event event ) {
         return true;
     }
 
+    /**
+     * Additional functionality appended after method invocation.
+     * @param event  Source event
+     */
     protected void doAfterInvoke( Event event ) {
     }
 
     public void invoke( Event event ) throws Exception {
-        if ( doBeforeInvoke( event ) ) {
-            goOn( event );
+        if ( doBeforeInvoke( event ) ) { // if propagate == true
+            goOn( event ); // execute invoke and do After
         }
     }
 
+    /**
+     * Invocation part of process, initialization is already done.
+     * This method can be also called by child class if it interrupted
+     * event propagation. After invoking resume just call this method.
+     * @param event source event
+     * @throws Exception  something went wrong
+     */
     protected void goOn( Event event ) throws Exception {
         inner.invoke( event );
         doAfterInvoke( event );

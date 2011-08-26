@@ -24,16 +24,18 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zkplus.databind.DataBinder;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Handles binding request before and after method invocation. For
+ * all registered component executes load or safe based on annotation's
+ * properties.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class ZkBindingHandler extends Handler {
 
+    /** Components to be saved before */
     private List<Component> saveBefore;
 
+    /** Components to be load after */
     private List<Component> loadAfter;
 
     public ZkBindingHandler( Invoke inner, List<Component> saveBefore, List<Component> loadAfter ) {

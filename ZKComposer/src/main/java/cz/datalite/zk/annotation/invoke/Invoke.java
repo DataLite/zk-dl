@@ -22,17 +22,38 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 
 /**
- * <p></p>
+ * <p>Interface defines functionality of invokable object. These objects
+ * wrap target method and provides additional functionality usually
+ * based on targeted method's annotations.</p>
  *
- * <p></p>
+ * <p>The main concept of {@link Invoke} interface lies in design
+ * pattern <strong>decorator</strong>. Each object which wrappes
+ * the method should provide one additional functionality and can
+ * be used as a part of many object like in matryoshka doll. The order
+ * of composed object is important, the functionality could be different
+ * with different order. The similar example is interface 
+ * {@link java.io.InputStream}</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public interface Invoke {
 
+    /**
+     * Invoke the desired method including additional functionality
+     * @param event source event
+     * @throws Exception Any exception has occured.
+     */
     void invoke( Event event ) throws Exception;
 
+    /**
+     * Targeted event which the invoke object should listen
+     * @return listened event
+     */
     String getEvent();
 
+    /**
+     * Targeted component on which should be listener registered
+     * @return observed component
+     */
     Component getTarget();
 }

@@ -22,30 +22,20 @@ import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
 import cz.datalite.zk.annotation.invoke.Invoke;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkBinding}</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public class ZkBindingProcessor implements Processor<ZkBinding> {
+public class ZkBindingProcessor extends AbstractProcessor<ZkBinding> {
 
     public static final ZkBindingProcessor INSTANCE = new ZkBindingProcessor();
-
-    public List<Invoke> process( ZkBinding annotation, List<Invoke> inner, Method method, Component master, Object controller ) {
-        List<Invoke> invokes = new ArrayList<Invoke>();
-        for ( Invoke invoke : inner ) {
-            invokes.add( process( annotation, invoke, method, master, controller ) );
-        }
-        return invokes;
-    }
 
     public Invoke process( ZkBinding annotation, Invoke invoke, Method method, Component master, Object controller ) {
         try {

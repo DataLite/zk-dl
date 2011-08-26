@@ -25,9 +25,9 @@ import java.util.List;
 import org.zkoss.zk.ui.Component;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Parent processor class implementing basic interface and provides decomposition
+ * of set of invokes to single invokes. After processing single invokes then 
+ * the invokes are again group up.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */

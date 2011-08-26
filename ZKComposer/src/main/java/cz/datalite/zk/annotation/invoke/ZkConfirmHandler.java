@@ -23,22 +23,28 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
 
 /**
- * <p></p>
- *
- * <p></p>
+ * <p>Handles confirm question before action is invoked. When the 
+ * action is invoked then the propagation of invocation is stopped
+ * and question is popped up instead. When positive answer comes
+ * then the event propagation goes on.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class ZkConfirmHandler extends Handler {
 
+    /** question message */
     private String message;
 
+    /** window title */
     private String title;
 
+    /** available buttons */
     private int buttons;
 
+    /** button of accept */
     private final int accessButton;
 
+    /** type of box */
     private final String icon;
 
     public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon ) {
@@ -55,12 +61,12 @@ public class ZkConfirmHandler extends Handler {
         if ( message == null ) {
             return true; // continue
         } else {
-            try {
+            try { // prompt question
                 Messagebox.show( message, title, buttons, icon, new EventListener() {
 
                     public void onEvent( final Event msgEvent ) throws Exception {
                         if ( ( Integer ) msgEvent.getData() == accessButton ) {
-                            goOn( event );
+                            goOn( event ); // correct answer, go on in executing
                         }
                     }
                 } );

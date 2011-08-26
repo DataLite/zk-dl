@@ -21,15 +21,21 @@ package cz.datalite.zk.annotation.processor;
 import cz.datalite.zk.annotation.ZkEvent;
 import cz.datalite.zk.annotation.ZkEvents;
 import cz.datalite.zk.annotation.invoke.Invoke;
+import cz.datalite.zk.annotation.invoke.MethodInvoker;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
 
 /**
- * <p></p>
+ * <p>Annotation processor which handles 
+ * processing of {@link ZkEvents}.</p>
  *
- * <p></p>
+ * <p>Result of processing is collection
+ * of {@link MethodInvoker}. That is the basic 
+ * element of hierarchy of decorated invokers.
+ * MethodInvoker provides the crucial functionality
+ * - invoking of desired method.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
