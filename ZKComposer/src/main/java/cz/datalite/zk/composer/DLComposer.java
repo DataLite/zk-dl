@@ -636,7 +636,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * @param ctl controller
      * @param component master component
      */
-    public static void registerZkEvents( final DLComposer ctl, final Component component ) {
+    public static void registerZkEvents( final Object ctl, final Component component ) {
         AnnotationProcessor processor = new AnnotationProcessor( component, ctl );
         for ( final Method method : ReflectionHelper.getAllMethods( ctl.getClass() ) ) {
             processor.processAnnotations( method );
