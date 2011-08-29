@@ -47,7 +47,7 @@ public class ZkBindingHandler extends Handler {
     @Override
     protected void doAfterInvoke( Event event ) {
         for ( Component component : loadAfter ) {
-            getBinder( component ).saveComponent( component );
+            getBinder( component ).loadComponent( component );
         }
     }
 
