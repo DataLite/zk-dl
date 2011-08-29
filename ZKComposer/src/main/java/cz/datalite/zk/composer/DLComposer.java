@@ -161,10 +161,6 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
         // it is not desirable to run autowiring. It is slow and can colide with @ZkXX annotations
         // super.doAfterCompose(comp);
 
-        // we should call super.super.doAfterCompose(comp); Now it contains only bindComponent() so we can reuse it here
-        // only for legacy projects - @ZkEvent is used instead.
-        bindComponent( comp );
-
         // wire all implicit variables
         wireImplicit();
 
@@ -173,8 +169,15 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
 
         // @ZkEvents annotation
         registerZkEvents( this, comp );
-
     }
+
+    @Override
+    public void bindComponent( Component comp ) {
+        // it is not desirable to run autowiring. It is slow and can colide with @ZkXX annotations
+        // only for legacy projects - @ZkEvent is used instead.
+    }
+
+
 
     /*************************************************  Master / Detail **************************************************************/
     /**
