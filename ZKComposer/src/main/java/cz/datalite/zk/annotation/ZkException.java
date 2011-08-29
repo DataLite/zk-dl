@@ -55,4 +55,11 @@ public @interface ZkException {
      * @return type of exception
      **/
     public Class type();
+
+    /**
+     * Defines if the title and message should be
+     * translated using {@link org.zkoss.util.resource.Labels}
+     * or not. In default it is <strong>false</strong>
+     */
+    public boolean localize() default false;
 }

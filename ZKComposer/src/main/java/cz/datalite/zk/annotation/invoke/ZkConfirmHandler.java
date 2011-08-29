@@ -18,6 +18,7 @@
  */
 package cz.datalite.zk.annotation.invoke;
 
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
@@ -47,10 +48,10 @@ public class ZkConfirmHandler extends Handler {
     /** type of box */
     private final String icon;
 
-    public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon ) {
+    public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon, boolean localize ) {
         super( inner );
-        this.message = message;
-        this.title = title;
+        this.message = localize ? Labels.getLabel( message ) : message;
+        this.title = localize ? Labels.getLabel( title ) : title;
         this.buttons = buttons;
         this.accessButton = accessButton;
         this.icon = icon;

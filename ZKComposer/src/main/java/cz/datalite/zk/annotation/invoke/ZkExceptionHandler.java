@@ -20,6 +20,7 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.helpers.StringHelper;
 import java.lang.reflect.InvocationTargetException;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Messagebox;
 
@@ -38,11 +39,14 @@ public class ZkExceptionHandler extends Handler {
 
     private Class type;
 
-    public ZkExceptionHandler( Invoke inner, String title, String message, Class type ) {
+    private boolean localize;
+
+    public ZkExceptionHandler( Invoke inner, String title, String message, Class type, boolean localize ) {
         super( inner );
-        this.title = title;
+        this.title = localize ? Labels.getLabel( title ) : title;
         this.message = message;
         this.type = type;
+        this.localize = localize;
     }
 
     @Override
@@ -53,7 +57,11 @@ public class ZkExceptionHandler extends Handler {
             Throwable target = ex.getTargetException(); // thrown exception
             if ( type.isAssignableFrom( target.getClass() ) ) { // is throw instance of catching type?
                 try { // show message instead
-                    Messagebox.show( StringHelper.isNull( message ) ? target.getMessage() : message, title, Messagebox.OK, Messagebox.ERROR );
+                    String msg = StringHelper.isNull( message ) ? target.getMessage() : message;
+                    if ( localize ) { // error message localization
+                        msg = Labels.getLabel( msg );
+                    }
+                    Messagebox.show( msg, title, Messagebox.OK, Messagebox.ERROR );
                 } catch ( InterruptedException e ) {
                 }
             } else {
