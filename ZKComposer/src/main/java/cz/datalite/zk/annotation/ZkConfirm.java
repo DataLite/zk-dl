@@ -59,5 +59,5 @@ public @interface ZkConfirm {
      * translated using {@link org.zkoss.util.resource.Labels}
      * or not. In default it is <strong>false</strong>
      */
-    public boolean localize() default false;
+    public boolean i18n() default false;
 }

@@ -35,6 +35,6 @@ public class ZkConfirmProcessor extends AbstractProcessor<ZkConfirm> {
     public static final ZkConfirmProcessor INSTANCE = new ZkConfirmProcessor();
 
     public Invoke process( ZkConfirm annotation, Invoke invoke, Method method, Component master, Object controller ) {
-        return new ZkConfirmHandler( invoke, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), annotation.localize() );
+        return new ZkConfirmHandler( invoke, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), annotation.i18n() );
     }
 }

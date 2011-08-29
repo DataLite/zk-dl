@@ -36,6 +36,6 @@ public class ZkExceptionProcessor extends AbstractProcessor<ZkException> {
 
     @Override
     public Invoke process( ZkException annotation, Invoke invoke, Method method, Component master, Object controller ) {
-        return new ZkExceptionHandler( invoke, annotation.title(), annotation.message(), annotation.type(), annotation.localize() );
+        return new ZkExceptionHandler( invoke, annotation.title(), annotation.message(), annotation.type(), annotation.i18n() );
     }
 }
