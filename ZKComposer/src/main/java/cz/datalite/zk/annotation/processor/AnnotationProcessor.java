@@ -25,13 +25,11 @@ import cz.datalite.zk.annotation.ZkConfirm;
 import cz.datalite.zk.annotation.ZkEvent;
 import cz.datalite.zk.annotation.ZkEvents;
 import cz.datalite.zk.annotation.ZkException;
-import cz.datalite.zk.annotation.ZkExceptions;
 import cz.datalite.zk.annotation.invoke.Invoke;
 import cz.datalite.zk.annotation.invoke.MethodInvoker;
 import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
 import cz.datalite.zk.annotation.invoke.ZkConfirmHandler;
 import cz.datalite.zk.annotation.invoke.ZkExceptionHandler;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +56,23 @@ import org.zkoss.zk.ui.Component;
 public class AnnotationProcessor<T> {
 
     /** Map of created processors. Serves as annotation cache */
-    private static Map< Class, AnnotationProcessor> processors = new HashMap<Class, AnnotationProcessor>();
+    private static final Map< Class, AnnotationProcessor> processors = new HashMap<Class, AnnotationProcessor>();
+
+    /** list of processors producing method invokers or similar */
+    private static final List<Initializer> initializers = new ArrayList<Initializer>();
+
+    /** list of processors producing wrappers for invoke object providing additional functionality */
+    private static final List<Wrapper> wrappers = new ArrayList<Wrapper>();
+
+    static {
+        initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
+        initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
+
+        wrappers.add( new GeneralWrapperProcessor( ZkException.class, ZkExceptionHandler.class ) );
+        wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
+        wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
+        wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
+    }
 
     /** List of all events gathered from class */
     private List<Invoke> invokes = new LinkedList<Invoke>();
@@ -71,9 +85,9 @@ public class AnnotationProcessor<T> {
     public static <T> AnnotationProcessor<T> getProcessor( Class<T> type ) {
         AnnotationProcessor<T> ap = processors.get( type );
         if ( ap == null ) {
-            processors.put( type, ap = new AnnotationProcessor<T>( type ) );
+//            processors.put( type, ap = new AnnotationProcessor<T>( type ) );
         }
-        return ap;
+        return new AnnotationProcessor<T>( type );
     }
 
     /**
@@ -91,9 +105,7 @@ public class AnnotationProcessor<T> {
     private AnnotationProcessor( Class<T> type ) {
         for ( final Method method : ReflectionHelper.getAllMethods( type ) ) {
             List<Invoke> result = processAnnotations( method );
-            if ( result != null ) {
-                invokes.addAll( result );
-            }
+            invokes.addAll( result );
         }
     }
 
@@ -109,73 +121,22 @@ public class AnnotationProcessor<T> {
      * @param method proceed method
      */
     private List<Invoke> processAnnotations( Method method ) {
-        try {
-            List<Invoke> events = new ArrayList<Invoke>();
+        List<Invoke> events = new ArrayList<Invoke>();
 
-            events.addAll( initAnnotations( MethodInvoker.class, method, ZkEvent.class ) );
-            events.addAll( initAnnotations( MethodInvoker.class, method, ZkEvents.class ) );
-            if ( !events.isEmpty() ) {
-                // the most inner object, invoked last (if the previous proceed right and event is not dropped)
-                events = processAnnotation( ZkExceptionHandler.class, method, events, ZkException.class );
-                events = processAnnotation( ZkExceptionHandler.class, method, events, ZkExceptions.class );
-                events = processAnnotation( ZkBindingHandler.class, method, events, ZkBinding.class );
-                events = processAnnotation( ZkBindingHandler.class, method, events, ZkBindings.class );
-                events = processAnnotation( ZkConfirmHandler.class, method, events, ZkConfirm.class );
-                // the most outer object, invoked first
+        for ( Initializer initializer : initializers ) {
+            events.addAll( initializer.process( method ) );
+        }
+
+        if ( !events.isEmpty() ) {
+            List<Invoke> output = new LinkedList<Invoke>();
+            for ( Invoke invoke : events ) {
+                for ( Wrapper wrapper : wrappers ) {
+                    invoke = wrapper.process( method, invoke );
+                }
+                output.add( invoke );
             }
-
-            return events;
-        } catch ( Exception ex ) {
-            throw new RuntimeException( ex );
+            events = output;
         }
-    }
-
-    private <S> List<Invoke> initAnnotations( Class processor, Method method, Class<S> type ) throws Exception {
-        List<Invoke> output = new ArrayList<Invoke>();
-        S annotation = findAnnotation( method, type );
-        if ( annotation != null ) {
-            Method processingMethod = processor.getMethod( "process", Method.class, type );
-            output.addAll( ( List<Invoke> ) processingMethod.invoke( null, method, annotation ) );
-        }
-        return output;
-    }
-
-    /**
-     * Method calls annotation processor if the annotation is not null
-     * @param <T> type of proceeded annotation
-     * @param processor annotation processor which can handle given type of annotation
-     * @param type of annotation
-     * @param invokes set of inner invokes
-     * @param method inspecting method
-     * @return set of decorated invokes
-     */
-    private <S> List<Invoke> processAnnotation( Class processor, Method method, List<Invoke> invokes, Class<S> type ) throws Exception {
-        S annotation = findAnnotation( method, type );
-        if ( annotation != null ) {
-            List<Invoke> output = new ArrayList<Invoke>();
-            Method processingMethod = processor.getMethod( "process", Invoke.class, type );
-            for ( Invoke invoke : invokes ) {
-                output.add( ( Invoke ) processingMethod.invoke( null, invoke, annotation ) );
-            }
-            return output;
-        }
-        return invokes;
-    }
-
-    /**
-     * Finds desired annotation on the given method. If the annotation
-     * is not set then method returns null.
-     * @param <S> type of annotation
-     * @param method investigated method
-     * @param type type of annotation
-     * @return found annotation or NULL if not set
-     */
-    private <S> S findAnnotation( Method method, Class<S> type ) {
-        for ( Annotation annotation : method.getAnnotations() ) {
-            if ( type.isAssignableFrom( annotation.getClass() ) ) {
-                return ( S ) annotation;
-            }
-        }
-        return null;
+        return events;
     }
 }
