@@ -41,19 +41,22 @@ public interface Invoke {
     /**
      * Invoke the desired method including additional functionality
      * @param event source event
+     * @param master master component of controller
+     * @param controller controller object
      * @throws Exception Any exception has occured.
      */
-    void invoke( Event event ) throws Exception;
+    void invoke( Event event, Component master, Object controller ) throws Exception;
+
+    /**
+     * Binds to the component. Sets up component's properties according to
+     * the handler's requirements
+     * @return observed component
+     */
+    Component bind( Component master );
 
     /**
      * Targeted event which the invoke object should listen
      * @return listened event
      */
     String getEvent();
-
-    /**
-     * Targeted component on which should be listener registered
-     * @return observed component
-     */
-    Component getTarget();
 }

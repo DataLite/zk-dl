@@ -19,6 +19,7 @@
 package cz.datalite.zk.annotation.processor;
 
 import cz.datalite.zk.annotation.invoke.Invoke;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 
@@ -33,11 +34,17 @@ public class InvokeListener implements EventListener {
 
     private Invoke invoke;
 
-    public InvokeListener( Invoke invoke ) {
+    private Object controller;
+
+    private Component master;
+
+    public InvokeListener( Invoke invoke, Component master, Object controller ) {
         this.invoke = invoke;
+        this.controller = controller;
+        this.master = master;
     }
 
     public void onEvent( Event event ) throws Exception {
-        invoke.invoke( event );
+        invoke.invoke( event, master, controller );
     }
 }

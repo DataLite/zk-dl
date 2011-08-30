@@ -18,6 +18,7 @@
  */
 package cz.datalite.zk.annotation.processor;
 
+import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
 import cz.datalite.zk.annotation.ZkConfirm;
@@ -26,10 +27,17 @@ import cz.datalite.zk.annotation.ZkEvents;
 import cz.datalite.zk.annotation.ZkException;
 import cz.datalite.zk.annotation.ZkExceptions;
 import cz.datalite.zk.annotation.invoke.Invoke;
+import cz.datalite.zk.annotation.invoke.MethodInvoker;
+import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
+import cz.datalite.zk.annotation.invoke.ZkConfirmHandler;
+import cz.datalite.zk.annotation.invoke.ZkExceptionHandler;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.zkoss.zk.ui.Component;
 
 /**
@@ -47,17 +55,46 @@ import org.zkoss.zk.ui.Component;
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public class AnnotationProcessor {
+public class AnnotationProcessor<T> {
 
-    /** Master component, the controller is bound to it */
-    final Component master;
+    /** Map of created processors. Serves as annotation cache */
+    private static Map< Class, AnnotationProcessor> processors = new HashMap<Class, AnnotationProcessor>();
 
-    /** Instance of proceeded class */
-    Object controller;
+    /** List of all events gathered from class */
+    private List<Invoke> invokes = new LinkedList<Invoke>();
 
-    public AnnotationProcessor( Component target, Object controller ) {
-        this.master = target;
-        this.controller = controller;
+    /**
+     * Returns AnnotationProcessor for existing class
+     * @param type annotated class
+     * @return processor
+     */
+    public static <T> AnnotationProcessor<T> getProcessor( Class<T> type ) {
+        AnnotationProcessor<T> ap = processors.get( type );
+        if ( ap == null ) {
+            processors.put( type, ap = new AnnotationProcessor<T>( type ) );
+        }
+        return ap;
+    }
+
+    /**
+     * <p>Registers all detected events to the component and bound events
+     * to given controller. Bounds invokes to the components to handle executions.</p>
+     * @param component targeted master component
+     * @param controller object with given
+     */
+    public void registerTo( Component component, T controller ) {
+        for ( final Invoke invoke : invokes ) {
+            invoke.bind( component ).addEventListener( invoke.getEvent(), new InvokeListener( invoke, component, controller ) );
+        }
+    }
+
+    private AnnotationProcessor( Class<T> type ) {
+        for ( final Method method : ReflectionHelper.getAllMethods( type ) ) {
+            List<Invoke> result = processAnnotations( method );
+            if ( result != null ) {
+                invokes.addAll( result );
+            }
+        }
     }
 
     /**
@@ -71,19 +108,36 @@ public class AnnotationProcessor {
      * is enough to register it.</p>
      * @param method proceed method
      */
-    public void processAnnotations( Method method ) {
-        List<Invoke> invokes = Collections.emptyList();
-        // the most inner object, invoked last (if the previous proceed right and event is not dropped)
-        invokes = processAnnotation( ZkEventsProcessor.INSTANCE, ZkEvents.class, invokes, method );
-        invokes = processAnnotation( ZkEventProcessor.INSTANCE, ZkEvent.class, invokes, method );
-        invokes = processAnnotation( ZkExceptionProcessor.INSTANCE, ZkException.class, invokes, method );
-        invokes = processAnnotation( ZkExceptionsProcessor.INSTANCE, ZkExceptions.class, invokes, method );
-        invokes = processAnnotation( ZkBindingProcessor.INSTANCE, ZkBinding.class, invokes, method );
-        invokes = processAnnotation( ZkBindingsProcessor.INSTANCE, ZkBindings.class, invokes, method );
-        invokes = processAnnotation( ZkConfirmProcessor.INSTANCE, ZkConfirm.class, invokes, method );
-        // the most outer object, invoked first
+    private List<Invoke> processAnnotations( Method method ) {
+        try {
+            List<Invoke> events = new ArrayList<Invoke>();
 
-        registerInvokes( invokes );
+            events.addAll( initAnnotations( MethodInvoker.class, method, ZkEvent.class ) );
+            events.addAll( initAnnotations( MethodInvoker.class, method, ZkEvents.class ) );
+            if ( !events.isEmpty() ) {
+                // the most inner object, invoked last (if the previous proceed right and event is not dropped)
+                events = processAnnotation( ZkExceptionHandler.class, method, events, ZkException.class );
+                events = processAnnotation( ZkExceptionHandler.class, method, events, ZkExceptions.class );
+                events = processAnnotation( ZkBindingHandler.class, method, events, ZkBinding.class );
+                events = processAnnotation( ZkBindingHandler.class, method, events, ZkBindings.class );
+                events = processAnnotation( ZkConfirmHandler.class, method, events, ZkConfirm.class );
+                // the most outer object, invoked first
+            }
+
+            return events;
+        } catch ( Exception ex ) {
+            throw new RuntimeException( ex );
+        }
+    }
+
+    private <S> List<Invoke> initAnnotations( Class processor, Method method, Class<S> type ) throws Exception {
+        List<Invoke> output = new ArrayList<Invoke>();
+        S annotation = findAnnotation( method, type );
+        if ( annotation != null ) {
+            Method processingMethod = processor.getMethod( "process", Method.class, type );
+            output.addAll( ( List<Invoke> ) processingMethod.invoke( null, method, annotation ) );
+        }
+        return output;
     }
 
     /**
@@ -95,10 +149,15 @@ public class AnnotationProcessor {
      * @param method inspecting method
      * @return set of decorated invokes
      */
-    private <T> List<Invoke> processAnnotation( Processor<T> processor, Class<T> type, List<Invoke> invokes, Method method ) {
-        T annotation = findAnnotation( method, type );
+    private <S> List<Invoke> processAnnotation( Class processor, Method method, List<Invoke> invokes, Class<S> type ) throws Exception {
+        S annotation = findAnnotation( method, type );
         if ( annotation != null ) {
-            return processor.process( annotation, invokes, method, master, controller );
+            List<Invoke> output = new ArrayList<Invoke>();
+            Method processingMethod = processor.getMethod( "process", Invoke.class, type );
+            for ( Invoke invoke : invokes ) {
+                output.add( ( Invoke ) processingMethod.invoke( null, invoke, annotation ) );
+            }
+            return output;
         }
         return invokes;
     }
@@ -106,27 +165,17 @@ public class AnnotationProcessor {
     /**
      * Finds desired annotation on the given method. If the annotation
      * is not set then method returns null.
-     * @param <T> type of annotation
+     * @param <S> type of annotation
      * @param method investigated method
      * @param type type of annotation
      * @return found annotation or NULL if not set
      */
-    private <T> T findAnnotation( Method method, Class<T> type ) {
+    private <S> S findAnnotation( Method method, Class<S> type ) {
         for ( Annotation annotation : method.getAnnotations() ) {
             if ( type.isAssignableFrom( annotation.getClass() ) ) {
-                return ( T ) annotation;
+                return ( S ) annotation;
             }
         }
         return null;
-    }
-
-    /**
-     * Bounds invokes to the components to handle executions.
-     * @param invokes set of invokes to be bound
-     */
-    private void registerInvokes( List<Invoke> invokes ) {
-        for ( final Invoke invoke : invokes ) {
-            invoke.getTarget().addEventListener( invoke.getEvent(), new InvokeListener( invoke ) );
-        }
     }
 }

@@ -177,8 +177,6 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
         // only for legacy projects - @ZkEvent is used instead.
     }
 
-
-
     /*************************************************  Master / Detail **************************************************************/
     /**
      * <p>Check masterController variable in attributes / arguments / parameterMap.</p>
@@ -640,10 +638,8 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      * @param component master component
      */
     public static void registerZkEvents( final Object ctl, final Component component ) {
-        AnnotationProcessor processor = new AnnotationProcessor( component, ctl );
-        for ( final Method method : ReflectionHelper.getAllMethods( ctl.getClass() ) ) {
-            processor.processAnnotations( method );
-        }
+        AnnotationProcessor processor = AnnotationProcessor.getProcessor( ctl.getClass() );
+        processor.registerTo( component, ctl );
     }
 
     /**

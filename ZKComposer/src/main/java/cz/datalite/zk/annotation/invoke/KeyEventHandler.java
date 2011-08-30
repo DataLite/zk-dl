@@ -19,8 +19,12 @@
 package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.Keys;
+import cz.datalite.zk.annotation.ZkEvent;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.KeyEvent;
+import org.zkoss.zul.impl.XulElement;
 
 /**
  * <p>Handler filters key events if they are set. ZK
@@ -47,10 +51,23 @@ public class KeyEventHandler extends Handler {
     /** ascii code of key */
     private final int code;
 
+    private final String event;
+
     private Keys key = null;
 
-    public KeyEventHandler( Invoke inner, String event ) {
+    public static Invoke process( Invoke inner, ZkEvent annotation ) {
+        if ( annotation.event().startsWith( "on" ) ) { // this is not definition of keyEvent
+            return inner; // no decoration
+        } else {
+            return new KeyEventHandler( inner, annotation.event() );
+        }
+    }
+
+    private KeyEventHandler( Invoke inner, String event ) {
         super( inner );
+
+        this.event = event;
+
         final String[] haystack = event.split( "\\+" );
         ctrl = find( "CTRL", haystack );
         alt = find( "ALT", haystack );
@@ -67,7 +84,7 @@ public class KeyEventHandler extends Handler {
     }
 
     @Override
-    protected boolean doBeforeInvoke( Event event ) {
+    protected boolean doBeforeInvoke( Event event, Component master, Object controller ) {
         if ( code == -1 ) {
             return true;
         } else if ( event instanceof KeyEvent ) {
@@ -81,11 +98,11 @@ public class KeyEventHandler extends Handler {
         return false; // onKey filter but not onKey event
     }
 
-    /** 
+    /**
      * Přeloží user-friendly syntaxi do syntaxe ZK
      * @return ZK syntaxe eventu
      */
-    public String getKeys() {
+    private String getKeys() {
         if ( code == -1 ) {
             return "";
         }
@@ -101,6 +118,22 @@ public class KeyEventHandler extends Handler {
         }
         s.append( key == null ? ( char ) code : key.getName() );
         return s.toString().toLowerCase();
+    }
+
+    @Override
+    public Component bind( Component master ) {
+        Component component = super.bind( master );
+
+        // adding hot key listener on component
+        if ( component instanceof XulElement ) {
+            XulElement target = ( XulElement ) component;
+            String keys = target.getCtrlKeys() == null ? "" : target.getCtrlKeys();
+            target.setCtrlKeys( keys + getKeys() );
+        } else {
+            throw new UiException( "CtrlKey event can be set only on XulElements." );
+        }
+
+        return component;
     }
 
     private boolean find( final String needle, final String[] haystack ) {

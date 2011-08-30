@@ -19,8 +19,11 @@
 package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.helpers.StringHelper;
+import cz.datalite.zk.annotation.ZkException;
+import cz.datalite.zk.annotation.ZkExceptions;
 import java.lang.reflect.InvocationTargetException;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Messagebox;
 
@@ -41,6 +44,17 @@ public class ZkExceptionHandler extends Handler {
 
     private boolean localize;
 
+    public static Invoke process( Invoke inner, ZkException annotation ) {
+        return new ZkExceptionHandler( inner, annotation.title(), annotation.message(), annotation.type(), annotation.i18n() );
+    }
+
+    public static Invoke process( Invoke inner, ZkExceptions annotations ) {
+        for ( ZkException annotation : annotations.exceptions() ) {
+            inner = new ZkExceptionHandler( inner, annotation.title(), annotation.message(), annotation.type(), annotation.i18n() );
+        }
+        return inner;
+    }
+
     public ZkExceptionHandler( Invoke inner, String title, String message, Class type, boolean localize ) {
         super( inner );
         this.title = localize ? Labels.getLabel( title ) : title;
@@ -50,9 +64,9 @@ public class ZkExceptionHandler extends Handler {
     }
 
     @Override
-    protected void goOn( Event event ) throws Exception {
+    protected void goOn( Event event, Component master, Object controller ) throws Exception {
         try {
-            super.goOn( event ); // invoke method
+            super.goOn( event, master, controller ); // invoke method
         } catch ( InvocationTargetException ex ) { // catch all
             Throwable target = ex.getTargetException(); // thrown exception
             if ( type.isAssignableFrom( target.getClass() ) ) { // is throw instance of catching type?

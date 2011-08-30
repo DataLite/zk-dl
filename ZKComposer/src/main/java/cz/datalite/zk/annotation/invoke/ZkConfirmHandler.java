@@ -18,7 +18,9 @@
  */
 package cz.datalite.zk.annotation.invoke;
 
+import cz.datalite.zk.annotation.ZkConfirm;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
@@ -48,6 +50,10 @@ public class ZkConfirmHandler extends Handler {
     /** type of box */
     private final String icon;
 
+    public static Invoke process( Invoke inner, ZkConfirm annotation ) {
+        return new ZkConfirmHandler( inner, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), annotation.i18n() );
+    }
+
     public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon, boolean localize ) {
         super( inner );
         this.message = localize ? Labels.getLabel( message ) : message;
@@ -58,7 +64,7 @@ public class ZkConfirmHandler extends Handler {
     }
 
     @Override
-    protected boolean doBeforeInvoke( final Event event ) {
+    protected boolean doBeforeInvoke( final Event event, final Component master, final Object controller ) {
         if ( message == null ) {
             return true; // continue
         } else {
@@ -67,7 +73,7 @@ public class ZkConfirmHandler extends Handler {
 
                     public void onEvent( final Event msgEvent ) throws Exception {
                         if ( ( Integer ) msgEvent.getData() == accessButton ) {
-                            goOn( event ); // correct answer, go on in executing
+                            goOn( event, master, controller ); // correct answer, go on in executing
                         }
                     }
                 } );

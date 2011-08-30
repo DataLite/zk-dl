@@ -44,7 +44,7 @@ public abstract class Handler implements Invoke {
      * @param event source event
      * @return TRUE if continue invoking, FALSE for stop propagation
      */
-    protected boolean doBeforeInvoke( Event event ) {
+    protected boolean doBeforeInvoke( Event event, Component master, Object controller ) {
         return true;
     }
 
@@ -52,12 +52,12 @@ public abstract class Handler implements Invoke {
      * Additional functionality appended after method invocation.
      * @param event  Source event
      */
-    protected void doAfterInvoke( Event event ) {
+    protected void doAfterInvoke( Event event, Component master, Object controller ) {
     }
 
-    public void invoke( Event event ) throws Exception {
-        if ( doBeforeInvoke( event ) ) { // if propagate == true
-            goOn( event ); // execute invoke and do After
+    public void invoke( Event event, Component master, Object controller ) throws Exception {
+        if ( doBeforeInvoke( event, master, controller ) ) { // if propagate == true
+            goOn( event, master, controller ); // execute invoke and do After
         }
     }
 
@@ -68,16 +68,16 @@ public abstract class Handler implements Invoke {
      * @param event source event
      * @throws Exception  something went wrong
      */
-    protected void goOn( Event event ) throws Exception {
-        inner.invoke( event );
-        doAfterInvoke( event );
+    protected void goOn( Event event, Component master, Object controller ) throws Exception {
+        inner.invoke( event, master, controller );
+        doAfterInvoke( event, master, controller );
     }
 
     public String getEvent() {
         return inner.getEvent();
     }
 
-    public Component getTarget() {
-        return inner.getTarget();
+    public Component bind( Component component ) {
+        return inner.bind( component );
     }
 }

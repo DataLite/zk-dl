@@ -18,11 +18,18 @@
  */
 package cz.datalite.zk.annotation.invoke;
 
+import cz.datalite.zk.annotation.ZkEvent;
+import cz.datalite.zk.annotation.ZkEvents;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.ComponentNotFoundException;
+import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
 
 /**
  * <p>Method invoker handles requests for invocation given
@@ -37,27 +44,38 @@ public class MethodInvoker implements Invoke {
     /** Target event */
     private String event;
 
-    /** Target of event */
-    private Component target;
+    /** Id of target component */
+    private String target;
 
     /** Target Method */
     private Method method;
 
-    /** Target object with method */
-    private Object controller;
-
     /** Method payload */
     private int payload;
 
-    public MethodInvoker( String event, Component target, Method method, Object controller, int payload ) {
-        this.event = event;
-        this.target = target;
-        this.method = method;
-        this.controller = controller;
-        this.payload = payload;
+    public static List<Invoke> process( Method method, ZkEvent annotation ) {
+        // if event starts with ON then it is regular event otherwise it is supposed as HOT KEY definition
+        String event = annotation.event().startsWith( "on" ) ? annotation.event() : Events.ON_CTRL_KEY;
+        Invoke methodInvoker = new MethodInvoker( method, event, annotation.id(), annotation.payload() );
+        return Collections.singletonList( KeyEventHandler.process( methodInvoker, annotation ) );
     }
 
-    public void invoke( Event event ) throws Exception {
+    public static List<Invoke> process( Method method, ZkEvents annotations ) {
+        List<Invoke> invokes = new ArrayList<Invoke>();
+        for ( ZkEvent annotation : annotations.events() ) {
+            invokes.addAll( process( method, annotation ) );
+        }
+        return invokes;
+    }
+
+    public MethodInvoker( Method method, String event, String target, int payload ) {
+        this.event = event;
+        this.method = method;
+        this.payload = payload;
+        this.target = target;
+    }
+
+    public void invoke( Event event, Component master, Object controller ) throws Exception {
         // unwrap forward event
         final Event unwrappedEvent = (event instanceof org.zkoss.zk.ui.event.ForwardEvent)
                 ? (( org.zkoss.zk.ui.event.ForwardEvent ) event).getOrigin() : event;
@@ -102,7 +120,20 @@ public class MethodInvoker implements Invoke {
         return event;
     }
 
-    public Component getTarget() {
-        return target;
+    public Component bind( Component master ) {
+        // load the component
+        final Component source;
+        if ( target.length() == 0 ) {
+            source = master;
+        } else if ( target.startsWith( "/" ) ) {
+            source = Path.getComponent( target );
+            if ( source == null ) {
+                throw new ComponentNotFoundException( target );
+            }
+        } else {
+            source = master.getFellow( target );
+        }
+
+        return source;
     }
 }
