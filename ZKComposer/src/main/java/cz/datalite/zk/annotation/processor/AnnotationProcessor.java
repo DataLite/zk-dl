@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
 
 /**
@@ -64,6 +65,12 @@ public class AnnotationProcessor<T> {
     /** list of processors producing wrappers for invoke object providing additional functionality */
     private static final List<Wrapper> wrappers = new ArrayList<Wrapper>();
 
+    /** configuration key in property files */
+    private static final String CONFIG = "zk-dl.annotation.cache";
+
+    /** caching is enabled / disabled */
+    private static boolean cache = true;
+
     static {
         initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
         initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
@@ -72,6 +79,9 @@ public class AnnotationProcessor<T> {
         wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
+
+        // loading property of caching or not
+        cache = Boolean.parseBoolean( System.getProperty( CONFIG, Library.getProperty( CONFIG, "true" ) ) );
     }
 
     /** List of all events gathered from class */
@@ -85,9 +95,12 @@ public class AnnotationProcessor<T> {
     public static <T> AnnotationProcessor<T> getProcessor( Class<T> type ) {
         AnnotationProcessor<T> ap = processors.get( type );
         if ( ap == null ) {
-//            processors.put( type, ap = new AnnotationProcessor<T>( type ) );
+            ap = new AnnotationProcessor<T>( type );
+            if ( cache ) { // if caching is enabled
+                processors.put( type, ap );
+            }
         }
-        return new AnnotationProcessor<T>( type );
+        return ap;
     }
 
     /**
