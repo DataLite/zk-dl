@@ -679,5 +679,22 @@ public abstract class ReflectionHelper
         } while (objOrSuper != null);
 
         return methods;
-    }    
+    }
+
+    /**
+     * Finds desired annotation on the given method. If the annotation
+     * is not set then method returns null.
+     * @param <T> type of annotation
+     * @param method investigated method
+     * @param type type of annotation
+     * @return found annotation or NULL if not set
+     */
+    public static <T> T findAnnotation( Method method, Class<T> type ) {
+        for ( Annotation annotation : method.getAnnotations() ) {
+            if ( type.isAssignableFrom( annotation.getClass() ) ) {
+                return ( T ) annotation;
+            }
+        }
+        return null;
+    }
 }
