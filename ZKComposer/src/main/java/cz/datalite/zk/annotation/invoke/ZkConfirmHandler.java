@@ -19,6 +19,7 @@
 package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkConfirm;
+import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
@@ -50,8 +51,15 @@ public class ZkConfirmHandler extends Handler {
     /** type of box */
     private final String icon;
 
+    private static boolean localizeAll;
+
+    static {
+        /** Reads default configuration for library */
+        localizeAll = Boolean.parseBoolean( Library.getProperty( "zk-dl.annotation.i18n", "false" ) );
+    }
+
     public static Invoke process( Invoke inner, ZkConfirm annotation ) {
-        return new ZkConfirmHandler( inner, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), annotation.i18n() );
+        return new ZkConfirmHandler( inner, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), localizeAll || annotation.i18n() );
     }
 
     public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon, boolean localize ) {
