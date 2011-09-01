@@ -1,6 +1,8 @@
 package cz.datalite.zk.components.list.view;
 
+import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -37,7 +39,7 @@ public class DLListbox extends Listbox {
     public void setModel( final ListModel model ) {
 
         final Execution exec = Executions.getCurrent();
-	exec.removeAttribute("zkoss.Listbox.deferInitModel_"+getUuid()); // TODO problems with ROD - Listbox#2482
+        exec.removeAttribute( "zkoss.Listbox.deferInitModel_" + getUuid() ); // TODO problems with ROD - Listbox#2482
 
         super.setModel( model );
 
@@ -58,6 +60,10 @@ public class DLListbox extends Listbox {
                 ZKBinderHelper.saveComponentAttribute( this, "selectedItem" );
             }
         }
+
+//        if ( getSelectedItem() == null ) {
+//            Events.postEvent( "onDeselect", this, null );
+//        }
 //        JB - it mihgt break client code if it doesn't expect null in selectedItem
 //        else if (cnt == 0)
 //        {
@@ -85,6 +91,14 @@ public class DLListbox extends Listbox {
         setSelectedIndex( index );
         if ( sendOnSelect ) {
             Events.postEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems() ) );
+        }
+    }
+
+    @Override
+    public void setSelectedIndex( int jsel ) {
+        if ( !EqualsHelper.isEqualsNull( jsel, getSelectedIndex() ) ) {
+            super.setSelectedIndex( jsel );
+            Events.postEvent( DLListboxEvents.ON_SELECTED_SHOW, this, null );
         }
     }
 
@@ -118,9 +132,9 @@ public class DLListbox extends Listbox {
      */
     public Object getSelectedValue() {
         Listitem selected = getSelectedItem();
-        if (selected != null) {
-          return selected.getValue();
-       }
+        if ( selected != null ) {
+            return selected.getValue();
+        }
         return null;
     }
 
@@ -137,6 +151,7 @@ public class DLListbox extends Listbox {
             return false;
         }
     }
+
     /**
      * should be automatically selected first row
      */
@@ -180,7 +195,7 @@ public class DLListbox extends Listbox {
         // Hack of load on save only if used with controller (it needs to be set before binding init)
         addEventListener( "onLoadOnSave", new EventListener() {
 
-            public void onEvent( final Event event )  {
+            public void onEvent( final Event event ) {
                 //
                 // HACK!!!!
                 //
@@ -220,8 +235,11 @@ public class DLListbox extends Listbox {
         // contrller doesn't support multpile select item. Setup selected index only if controller has selected item
         if ( controller != null && controller.getSelectedIndex() != -1 ) {
             setSelectedIndex( controller.getSelectedIndex(), false );
+        } else {
+            Events.postEvent( DLListboxEvents.ON_SELECTED_HIDE, this, null );
         }
     }
+
     /** Should the page start with listbox filled with data */
     boolean loadDataOnCreate = true;
 
