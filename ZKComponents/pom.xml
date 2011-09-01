@@ -8,7 +8,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComponents</artifactId>
-    <version>1.1</version>
+    <version>1.1-SNAPSHOT</version>
     <name>ZKComponents</name>
     <description>Other imporvements of basic ZK components - please check the documentation for each overriden component.</description>
 

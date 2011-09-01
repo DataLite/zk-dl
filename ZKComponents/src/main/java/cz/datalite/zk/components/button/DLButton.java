@@ -1,8 +1,10 @@
 package cz.datalite.zk.components.button;
 
 import cz.datalite.zk.help.DLI18n;
-import java.io.IOException;
-import org.zkoss.zk.ui.UiException;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
 
 /**
@@ -44,20 +46,27 @@ public class DLButton extends Button implements DLI18n {
      * Identifikator pro nalezeni helpu v databazi
      */
     private String helpId;
+
     /**
      * Text pro zobrazeni helpu (popup okno)
      */
     private String helpText;
+
     /**
      * Identifikator pro internacionalizaci (property file)
      */
     private String languageId;
 
+    /**
+     * Identifier of listbox which direct enabling/disabling of button
+     */
+    private String listenOnListbox;
+
     public boolean isDisabledOnNullValue() {
         return disabledOnNullValue;
     }
 
-    public void setDisabledOnNullValue(boolean disabledOnNullValue) {
+    public void setDisabledOnNullValue( boolean disabledOnNullValue ) {
         this.disabledOnNullValue = disabledOnNullValue;
     }
 
@@ -77,15 +86,13 @@ public class DLButton extends Button implements DLI18n {
      *
      * @param value Arbitrary value associated to the button.
      */
-    public void setValue(Object value) {
+    public void setValue( Object value ) {
         this.value = value;
 
-        if (isDisabledOnNullValue() && !userDisabled)
-        {
-            super.setDisabled(value == null);
+        if ( isDisabledOnNullValue() && !userDisabled ) {
+            super.setDisabled( value == null );
         }
     }
-
 
     /**
      * Like button setDisabled, only it checks value and disabledOnNullValue params as well.
@@ -93,22 +100,18 @@ public class DLButton extends Button implements DLI18n {
      * @param disabled should be the button enabled or disabled
      */
     @Override
-    public void setDisabled(boolean disabled)
-    {
+    public void setDisabled( boolean disabled ) {
         this.userDisabled = disabled;
 
-        if (isDisabledOnNullValue() && !disabled)
-        {
+        if ( isDisabledOnNullValue() && !disabled ) {
             // enable only if value is set
-            if (value != null)
-                super.setDisabled(disabled);
-        }
-        else
-        {
-            super.setDisabled(disabled);
+            if ( value != null ) {
+                super.setDisabled( disabled );
+            }
+        } else {
+            super.setDisabled( disabled );
         }
     }
-
 
     /**
      * If you set readonly for whole page (or component tree) via ZKHelper.setReadonly(), this will check if button has to be disabled as well.
@@ -125,10 +128,42 @@ public class DLButton extends Button implements DLI18n {
     public void setDisabledOnReadonly( boolean disabledOnReadonly ) {
         this.disabledOnReadonly = disabledOnReadonly;
 
-        if (disabledOnReadonly)
-            setAttribute("DISABLED_ON_READONLY", Boolean.TRUE);
-        else
-            removeAttribute("DISABLED_ON_READONLY");
+        if ( disabledOnReadonly ) {
+            setAttribute( "DISABLED_ON_READONLY", Boolean.TRUE );
+        } else {
+            removeAttribute( "DISABLED_ON_READONLY" );
+        }
+    }
+
+    /**
+     * This setter is called from ZUL file to bind
+     * button to DLListbox component. This component
+     * fires onSelectedShow and onSelectedHide events
+     * which says if the selected item is currently
+     * shown or not.
+     * @param listenOnListbox
+     */
+    public void setListenOnListbox( final String listenOnListbox ) {
+        Events.postEvent( "onInit", this, null );
+        addEventListener( "onInit", new EventListener() {
+
+            public void onEvent( Event event ) throws Exception {
+                DLButton.this.removeEventListener( "onInit", this );
+                Component cmp = DLButton.this.getFellow( listenOnListbox );
+                cmp.addEventListener( "onSelectedShow", new EventListener() {
+
+                    public void onEvent( Event event ) throws Exception {
+                        DLButton.this.setDisabled( false );
+                    }
+                } );
+                cmp.addEventListener( "onSelectedHide", new EventListener() {
+
+                    public void onEvent( Event event ) throws Exception {
+                        DLButton.this.setDisabled( true );
+                    }
+                } );
+            }
+        } );
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -155,5 +190,4 @@ public class DLButton extends Button implements DLI18n {
     public String getLanguageId() {
         return languageId;
     }
-
 }
