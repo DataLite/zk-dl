@@ -124,6 +124,6 @@
     </dependencies>
 
     <properties>
-        <liferay.version>6.0.5</liferay.version>
+        <liferay.version>6.0.6</liferay.version>
     </properties>
 </project>

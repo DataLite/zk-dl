@@ -4,6 +4,7 @@
  */
 package cz.datalite.zk.liferay;
 
+import com.liferay.portal.kernel.util.ThreadLocalRegistry;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -26,6 +27,8 @@ public class DLPortletLiferaySessionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
         // in AJAX calls the portal attribute is not available, lookup session attribute - set by DLPortlet.
@@ -51,6 +54,11 @@ public class DLPortletLiferaySessionFilter extends OncePerRequestFilter {
             finally {
                 PermissionThreadLocal.setPermissionChecker(null);
                 PrincipalThreadLocal.setName(null);
+
+                // at the end of each request, reset all thread locals
+                // normally it is done by com.liferay.portal.servlet.filters.threadlocal.ThreadLocalFilter
+                // with AJAX request, this is bypassed (request does not pass through ROOT webapp)
+                ThreadLocalRegistry.resetThreadLocals();
             }
 
         }
