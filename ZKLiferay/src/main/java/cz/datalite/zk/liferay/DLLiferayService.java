@@ -11,7 +11,6 @@ import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -26,6 +25,8 @@ import org.zkoss.zk.ui.Executions;
 import javax.portlet.PortletRequest;
 import java.util.Date;
 import java.util.Map;
+import java.util.prefs.Preferences;
+import javax.portlet.PortletPreferences;
 
 /**
  * Connect to Liferay.
@@ -350,5 +351,25 @@ public class DLLiferayService {
     public void setLiferayQuerySQLParams(SQLQuery query) {
         query.setLong("companyId", getCompanyId());
         query.setLong("groupId", getGroupId());
+    }
+    
+    /**
+     * Metoda vrací objekt s preferencemi portletu, pokud nějaké existují, jinak
+     * vrací null.
+     * @return preference portletu nebo null.
+     */
+    public PortletPreferences getPortletPreferences()
+    {
+        PortletPreferences preferences = null;
+        
+        try
+        {
+            preferences = this.getThemeDisplay().getPortletDisplay().getPortletSetup();
+        }
+        catch(NullPointerException npe)
+        {
+            return null;
+        }
+        return preferences;
     }
 }
