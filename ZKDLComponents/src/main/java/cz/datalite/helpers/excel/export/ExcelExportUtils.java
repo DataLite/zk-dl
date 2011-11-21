@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import jxl.CellType;
 import jxl.Workbook;
@@ -33,7 +34,9 @@ public final class ExcelExportUtils {
      */
     private ExcelExportUtils() {
     }
+
     private static final WritableCellFormat DATE_CELL_FORMAT = new WritableCellFormat( new DateFormat( "d.M.yyyy" ) );
+    private static final WritableCellFormat DATETIME_CELL_FORMAT = new WritableCellFormat( new DateFormat( "d.M.yyyy HH:mm" ) );
 
     /**
      * <p>Převede řetězec, kterým se v Excelu identifikují sloupce na číslo.
@@ -71,7 +74,7 @@ public final class ExcelExportUtils {
      * <p>Nastaví buňce zaslanou hodnotu string.</p>
      * @param ws WritableSheet
      * @param cell Bunka Excelu
-     * @param String text
+     * @param text the actulal text value
      * @throws WriteException
      */
     public static void setTextCell( WritableSheet ws, String cell, String text ) throws WriteException {
@@ -91,7 +94,7 @@ public final class ExcelExportUtils {
      * <p>Nastaví buňce zaslanou hodnotu number.</p>
      * @param ws WritableSheet
      * @param cell Bunka Excelu
-     * @param Long cislo
+     * @param cislo number
      * @throws WriteException
      */
     public static void setNumberCell( WritableSheet ws, String cell, Long cislo ) throws WriteException {
@@ -272,46 +275,65 @@ public final class ExcelExportUtils {
      * @throws jxl.write.WriteException
      */
     public static WritableCell createCell( final Cell cell ) throws WriteException {
-        if ( cell.getValue() == null ) { // nevíme co tam je, tak dáme nic
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont() ) );
+        Object value = cell.getValue();
+        WritableCellFormat format = cell.getFormat();
+
+        if ( value == null ) { // no information about format
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont() );
+                cell.setFormat( format );
             }
-            return new jxl.write.Blank( cell.getX(), cell.getY(), cell.getFormat() );
-        } else if ( cell.getValue() instanceof Integer ) { // když se jedná o číslo
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER ) );
+            return new jxl.write.Blank( cell.getX(), cell.getY(), format );
+        } else if ( value instanceof Integer ) {
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER );
+                cell.setFormat( format );
             }
-            return new jxl.write.Number( cell.getX(), cell.getY(), ( Integer ) cell.getValue(), cell.getFormat() );
-        } else if ( cell.getValue() instanceof Long ) {  // když se jedná o číslo
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER ) );
+            return new jxl.write.Number( cell.getX(), cell.getY(), ( Integer ) value, format );
+        } else if ( value instanceof Long ) {
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER );
+                cell.setFormat( format );
             }
-            return new jxl.write.Number( cell.getX(), cell.getY(), (( Long ) cell.getValue()), cell.getFormat() );
-        } else if ( cell.getValue() instanceof BigDecimal ) {  // když se jedná o číslo
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT ) );
+            return new jxl.write.Number( cell.getX(), cell.getY(), (( Long ) value), format );
+        } else if ( value instanceof BigDecimal ) {  // BigDecimal type
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT );
+                cell.setFormat( format );
             }
-            return new jxl.write.Number( cell.getX(), cell.getY(), (( BigDecimal ) cell.getValue()).doubleValue(), cell.getFormat() );
-        } else if ( cell.getValue() instanceof Double ) {  // když se jedná o číslo
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT ) );
+            return new jxl.write.Number( cell.getX(), cell.getY(), (( BigDecimal ) value).doubleValue(), format );
+        } else if ( value instanceof Double ) {  // double type
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT );
+                cell.setFormat( format );
             }
-            return new jxl.write.Number( cell.getX(), cell.getY(), ( Double ) cell.getValue(), cell.getFormat() );
-        } else if ( cell.getValue() instanceof Date ) {  // když se jedná o datum
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( DATE_CELL_FORMAT );
+            return new jxl.write.Number( cell.getX(), cell.getY(), ( Double ) value, format );
+        } else if ( value instanceof Date ) {  // Date type
+            if ( format == null ) {
+                Calendar dateValue = Calendar.getInstance();
+                dateValue.setTime((Date) value);
+
+                // if the time contains hours and minutes, set date time format
+                if (dateValue.get(Calendar.HOUR) != 0 || dateValue.get(Calendar.MINUTE) != 0)
+                   format = DATETIME_CELL_FORMAT;
+                else
+                    format = DATE_CELL_FORMAT;
+
+                cell.setFormat( format );
             }
-            return new DateTime( cell.getX(), cell.getY(), ( Date ) cell.getValue(), cell.getFormat() );
-        } else if ( cell.getValue() instanceof Enum ) {
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont() ) );
+            return new DateTime( cell.getX(), cell.getY(), ( Date ) value, format );
+        } else if ( value instanceof Enum ) {
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont() );
+                cell.setFormat( format );
             }
-            return new Label( cell.getX(), cell.getY(), cell.getValue().toString(), cell.getFormat() );
-        } else { // když se jedná o řetězec nebo jiny objekt
-            if ( cell.getFormat() == null ) {
-                cell.setFormat( new WritableCellFormat( cell.getFont() ) );
+            return new Label( cell.getX(), cell.getY(), value.toString(), format );
+        } else { // string or other object type
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont() );
+                cell.setFormat( format );
             }
-            return new Label( cell.getX(), cell.getY(), String.valueOf( cell.getValue() ), cell.getFormat() );
+            return new Label( cell.getX(), cell.getY(), String.valueOf( value ), cell.getFormat() );
         }
     }
 

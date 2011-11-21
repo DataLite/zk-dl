@@ -11,6 +11,7 @@ import jxl.write.WriteException;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
 
@@ -86,8 +87,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
                 try {
                     return prepareCells();
                 } catch ( WriteException ex ) {
-                    Logger.getLogger( ListboxExportManagerController.class.getName() ).log( Level.SEVERE, null, ex );
-                    return new ArrayList<Cell>();
+                    throw new UiException("Error in Excel export.", ex);
                 }
             }
 
