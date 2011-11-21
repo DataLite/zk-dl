@@ -354,22 +354,11 @@ public class DLLiferayService {
     }
     
     /**
-     * Metoda vrací objekt s preferencemi portletu, pokud nějaké existují, jinak
-     * vrací null.
-     * @return preference portletu nebo null.
+     * Method return portlet preference.
+     * @return portlet preference.
      */
     public PortletPreferences getPortletPreferences()
     {
-        PortletPreferences preferences = null;
-        
-        try
-        {
-            preferences = this.getThemeDisplay().getPortletDisplay().getPortletSetup();
-        }
-        catch(NullPointerException npe)
-        {
-            return null;
-        }
-        return preferences;
+        return this.getThemeDisplay().getPortletDisplay().getPortletSetup();
     }
 }
