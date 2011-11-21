@@ -34,6 +34,13 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKComposer</artifactId>
+            <version>1.1</version>
+            <optional>true</optional>
+        </dependency>
+
 
         <dependency>
             <groupId>com.liferay.portal</groupId>
