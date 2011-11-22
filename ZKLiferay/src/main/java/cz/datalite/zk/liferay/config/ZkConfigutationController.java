@@ -4,16 +4,13 @@
  */
 package cz.datalite.zk.liferay.config;
 
-import com.liferay.portlet.PortletPreferencesImpl;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.stereotype.Controller;
-import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkModel;
 import cz.datalite.zk.annotation.ZkParameter;
 import cz.datalite.zk.composer.DLComposer;
 import cz.datalite.zk.liferay.LiferayException;
 import cz.datalite.zk.liferay.jpa.LiferayOperationDenied;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
 
 import javax.portlet.PortletPreferences;
@@ -226,6 +223,14 @@ public class ZkConfigutationController extends DLComposer {
     {
         String portletBoundary = "#p_p_id_" + portletResource + "_";
         Clients.evalJavaScript("window.parent.Liferay.Portlet.refresh('" + portletBoundary + "')");
+    }
+    
+    /**
+     * Close config dialog via javascript (without refresh).
+     */
+    public void closeDialog()
+    {
+        Clients.evalJavaScript("var closeButton = top.document.getElementById('closethick');$(closeButton).click();");
     }
 }
 
