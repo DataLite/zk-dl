@@ -75,6 +75,7 @@ public class ZkConfigurationAction extends BaseConfigurationAction {
         // get portlet package from current portlet id by removeing portlet name
         String portletPackage = selPortlet.getPortletId();
         portletPackage = portletPackage.replaceFirst(selPortlet.getPortletName() , "");
+        portletPackage = portletPackage.replaceAll("_INSTANCE.*$" , "");
 
         // name of the config portlet from configuration
         String zkConfigPortletName = selPortlet.getInitParams().get("zkConfigPortlet");
