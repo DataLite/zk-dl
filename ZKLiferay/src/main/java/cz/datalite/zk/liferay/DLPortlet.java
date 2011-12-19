@@ -4,6 +4,7 @@ import com.liferay.portal.model.Portlet;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.WebKeys;
+import cz.datalite.helpers.StringHelper;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.WebApp;
 import org.zkoss.zk.ui.http.DHtmlLayoutPortlet;
@@ -70,7 +71,13 @@ public class DLPortlet extends DHtmlLayoutPortlet
 
         sess.setAttribute(WebKeys.THEME_DISPLAY, themeDisplay);
 
-        Portlet portlet = PortletLocalServiceUtil.getPortletById(themeDisplay.getPortletDisplay().getId());
+        String portletId = null;
+        if (themeDisplay != null && themeDisplay.getPortletDisplay() != null)
+            portletId = themeDisplay.getPortletDisplay().getId();
+        if (StringHelper.isNull(portletId))
+            portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
+
+        Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
         sess.setAttribute(ROLE_MAPPERS, portlet.getRoleMappers());
     }
 

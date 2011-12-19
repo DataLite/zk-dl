@@ -140,6 +140,31 @@ public class ZkConfigutationController extends DLComposer {
     };
 
     @ZkModel
+    protected Map<String, Boolean> preferencesBoolean = new HashMap<String, Boolean>()
+    {
+        @Override
+        public boolean containsKey(Object key) {
+            return true;
+        }
+
+        @Override
+        public Boolean get(Object key) {
+            String value = getPreferences().getValue((String) key, null);
+            return value == null ? null : Boolean.valueOf(value);
+        }
+
+        @Override
+        public Boolean put(String key, Boolean value) {
+            try {
+                getPreferences().setValue(key, value == null ? null : String.valueOf(value));
+            } catch (ReadOnlyException e) {
+                throw new LiferayException("Unable to store preferences: " + e.getMessage());
+            }
+            return null;
+        }
+    };
+
+    @ZkModel
     protected Map<String, Date> preferencesDate = new HashMap<String, Date>()
     {
         @Override
