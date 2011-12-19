@@ -15,11 +15,26 @@ import org.zkoss.zul.Button;
  *   <li>i18n</li>
  *   <li>readonly - depends on disabledOnReadonly disable the button if ZKHelper.setReadonly() is set</li>
  *   <li>load image from classpath</li>
+ *   <li>autodisable default value = true</li>
  * </ul>
  *
  * @author Jiri Bubnik
  */
 public class DLButton extends Button implements DLI18n {
+
+    public DLButton() {
+        setAutodisable("true");
+    }
+
+    public DLButton(String label) {
+        super(label);
+        setAutodisable("true");
+    }
+
+    public DLButton(String label, String image) {
+        super(label, image);
+        setAutodisable("true");
+    }
 
     /**
      * Arbitrary value associated to the button.
