@@ -40,7 +40,7 @@ public class ZkConfigutationController extends DLComposer {
     @ZkParameter(name = "zkConfigPortletPreferences", required = false)
     protected PortletPreferences portletPreferences; // = new PortletPreferencesImpl();
 
-    /** String values with escaped JAVASCRIPT. When you need javascript then use getPreferences().setValue().*/
+    /** String values with escaped HTML. When you need html then use getPreferences().setValue().*/
     @ZkModel
     protected Map<String, String> preferencesString = new HashMap<String, String>()
     {
@@ -49,19 +49,16 @@ public class ZkConfigutationController extends DLComposer {
             return true;
         }
 
-        /**
-         * Metoda vrací hodnotu preference očištěnou o všechny html tagy.
-         */
         @Override
         public String get(Object key) {
             return getPreferences().getValue((String) key, null);
         }
 
-        /** Insert string value to preferences with escaped JAVASCRIPT. */
+        /** Insert string value to preferences with escaped HTML. */
         @Override
         public String put(String key, String value) {
             try {
-                getPreferences().setValue(key, HtmlUtil.escapeJS(value));
+                getPreferences().setValue(key, HtmlUtil.escape(value));
             } catch (ReadOnlyException e) {
                 throw new LiferayOperationDenied("Preferences are read only, cannot reset.", e);
             }
