@@ -23,17 +23,17 @@ import org.zkoss.zul.Button;
 public class DLButton extends Button implements DLI18n {
 
     public DLButton() {
-        setAutodisable("true");
+        setAutodisable("self");
     }
 
     public DLButton(String label) {
         super(label);
-        setAutodisable("true");
+        setAutodisable("self");
     }
 
     public DLButton(String label, String image) {
         super(label, image);
-        setAutodisable("true");
+        setAutodisable("self");
     }
 
     /**
