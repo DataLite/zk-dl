@@ -9,10 +9,6 @@ import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.zkoss.lang.Objects;
 import org.zkoss.lang.Strings;
@@ -25,12 +21,12 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Bandbox;
-import org.zkoss.zul.Bandpopup;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Listcell;
-import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listitem;
+import org.zkoss.zul.*;
+
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Component simulating combobox behaviour. It is usable for huge
@@ -454,7 +450,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         button.setLabel( Labels.getLabel( "lovbox.clear" ) );
         button.setImage( LOVBOX_CLEAR_IMAGE );
-        button.setStyle( "position: absolute; top: 0px; right: 0px;" );
+        button.setStyle( "position: absolute; top: 0px; right: 0px; width: 80px" );
         button.addEventListener( Events.ON_CLICK, new EventListener() {
 
             public void onEvent( final Event event ) throws Exception {
