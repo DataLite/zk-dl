@@ -450,7 +450,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         button.setLabel( Labels.getLabel( "lovbox.clear" ) );
         button.setImage( LOVBOX_CLEAR_IMAGE );
-        button.setStyle( "position: absolute; top: 0px; right: 0px; width: 80px" );
+        button.setStyle( "position: absolute; top: 0px; right: 0px; width: 90px" );
         button.addEventListener( Events.ON_CLICK, new EventListener() {
 
             public void onEvent( final Event event ) throws Exception {
