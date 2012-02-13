@@ -20,13 +20,14 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zkplus.databind.DataBinder;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>Handles binding request before and after method invocation. For
@@ -55,8 +56,11 @@ public class ZkBindingHandler extends Handler {
         List<String> saveBefore = new ArrayList<String>();
         for ( ZkBinding binding : annotation.bindings() ) {
             // load all components defined in binding annotation
-            loadAfter = binding.loadAfter() ? Collections.singletonList( binding.component() ) : Collections.EMPTY_LIST;
-            saveBefore = binding.saveBefore() ? Collections.singletonList( binding.component() ) : Collections.EMPTY_LIST;
+            if (binding.loadAfter())
+                loadAfter.add( binding.component() );
+
+            if (binding.saveBefore())
+                saveBefore.add(binding.component());
         }
         return new ZkBindingHandler( inner, saveBefore, loadAfter );
     }
