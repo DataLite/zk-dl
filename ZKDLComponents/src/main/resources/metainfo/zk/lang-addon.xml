@@ -54,7 +54,7 @@
     </component>
 
     <component>
-        <component-name>combobox</component-name>
+        <component-name>dlcombobox</component-name>
         <component-class>cz.datalite.zk.components.combo.DLCombobox</component-class>
         <extends>combobox</extends>
         <annotation>

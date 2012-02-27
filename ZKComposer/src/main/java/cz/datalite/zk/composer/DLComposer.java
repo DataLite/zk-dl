@@ -658,7 +658,8 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
                     Component target = component.getFellowIfAny( id );
 
                     if ( target == null ) {
-                        throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
+                        if (((ZkComponent)annot).mandatory())
+                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
                                 + "Component not found in idspace of composer self component '" + component.getId() + "'." );
                     } else {
                         try {

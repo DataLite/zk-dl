@@ -21,12 +21,13 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkException;
 import cz.datalite.zk.annotation.ZkExceptions;
-import java.lang.reflect.InvocationTargetException;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Messagebox;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <p>Handles exceptions thrown by invocated methods. It the thrown type
@@ -71,11 +72,17 @@ public class ZkExceptionHandler extends Handler {
 
     public ZkExceptionHandler( Invoke inner, String title, String message, Class type, boolean localize, boolean unwrap ) {
         super( inner );
-        this.title = localize ? Labels.getLabel( title ) : title;
         this.message = message;
         this.type = type;
         this.localize = localize;
         this.unwrap = unwrap;
+
+        if (localize)
+            this.title =  Labels.getLabel( title );
+
+        if (this.title == null)
+            this.title = title;
+
     }
 
     @Override
@@ -88,7 +95,9 @@ public class ZkExceptionHandler extends Handler {
                 try { // show message instead
                     String msg = StringHelper.isNull( message ) ? target.getMessage() : message;
                     if ( localize ) { // error message localization
-                        msg = Labels.getLabel( msg );
+                        String localizedMessage = Labels.getLabel( msg );
+                        if (localizedMessage != null)
+                            msg = localizedMessage;
                     }
                     Messagebox.show( msg, title, Messagebox.OK, Messagebox.ERROR );
                 } catch ( InterruptedException e ) {

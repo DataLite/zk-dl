@@ -143,7 +143,19 @@
         <extends>checkbox</extends>
         <annotation>
             <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
+            <property-name>checked</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>objectValue</property-name>
             <attribute>
                 <attribute-name>access</attribute-name>
                 <attribute-value>both</attribute-value>
@@ -161,7 +173,19 @@
         <extends>checkbox</extends>
         <annotation>
             <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
+            <property-name>checked</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>objectValue</property-name>
             <attribute>
                 <attribute-name>access</attribute-name>
                 <attribute-value>both</attribute-value>

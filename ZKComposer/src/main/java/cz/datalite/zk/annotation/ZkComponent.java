@@ -1,6 +1,7 @@
 package cz.datalite.zk.annotation;
 
 import cz.datalite.zk.composer.DLComposer;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,4 +30,9 @@ public @interface ZkComponent
      * @return  ZUL ID of the component.
      **/
     public String id() default "";
+
+    /**
+     * Should an exception be thrown in case the component is not available?
+     */
+    public boolean mandatory() default true;
 }
