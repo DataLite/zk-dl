@@ -3,12 +3,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.1</version>
+        <version>1.3.0</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>Selenium</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3.0</version>
     <name>Selenium</name>
     <description>Integration tests with Selenium 2.0 (WebDriver) - PageObjects pattern (still in beta)</description>
 
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.3.0</version>
         </dependency>
         
         <dependency>

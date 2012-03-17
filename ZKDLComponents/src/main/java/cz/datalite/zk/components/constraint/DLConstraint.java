@@ -86,7 +86,7 @@ public class DLConstraint extends SimpleConstraint
                 return;
             }
 
-            // FIXME JB - Hack - Emtpy constraint fires when page constructused with binding in listitem
+            // JB - Hack - Emtpy constraint fires when page constructused with binding in listitem
 //            Caused by: org.zkoss.zk.ui.WrongValueException: Enter value
 //                at org.zkoss.zul.SimpleConstraint.wrongValue(SimpleConstraint.java:294)
 //                at org.zkoss.zul.SimpleConstraint.validate(SimpleConstraint.java:263)
