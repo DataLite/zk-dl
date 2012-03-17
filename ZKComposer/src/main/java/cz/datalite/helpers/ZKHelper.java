@@ -1,25 +1,18 @@
 package cz.datalite.helpers;
 
 import cz.datalite.zk.annotation.ZkEvents;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Doublebox;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Timebox;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
 import org.zkoss.zul.impl.NumberInputElement;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Pomocne funkce pro ZK framework
@@ -189,13 +182,13 @@ public class ZKHelper
      * Recurse to all chidlren in component tree and set readonly.
      * Note that there is custom behaviour for some components, please study source code before use.
      *
-     * TODO readonly sets custom color as well (#FEFFEF) - should be library property.
-     *
      * @param comp component (inclusive) and all children
      * @param readonly set/unset readonly
      */
     public static void setReadonly(Component comp, boolean readonly)
     {
+        final String READONLY_CLASS = " dl-readonly ";
+
         // nejprve rekurzivne vsechny deti
         for (Component child : (List<Component>) comp.getChildren())
         {
@@ -206,7 +199,7 @@ public class ZKHelper
         if (comp instanceof Combobox)
         {
             ((Combobox)comp).setReadonly(readonly);
-            ((Combobox)comp).setStyle("background-color: #FEFFEF ");
+            ((Combobox)comp).setSclass(((Combobox)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof Checkbox)
         {
@@ -215,24 +208,24 @@ public class ZKHelper
         else if (comp instanceof Datebox)
         {
             ((Datebox)comp).setReadonly(readonly);
-            ((Datebox)comp).setStyle("background-color: #FEFFEF ");
+            ((Datebox)comp).setSclass(((Datebox)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof Doublebox)
         {
             ((Doublebox)comp).setReadonly(readonly);
-            ((Doublebox)comp).setStyle("background-color: #FEFFEF ");
+            ((Doublebox)comp).setSclass(((Doublebox)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof Textbox)
         {
             // obecne kazdy textbox umi readonly
             ((Textbox)comp).setReadonly(readonly);
-            ((Textbox)comp).setStyle("background-color: #FEFFEF ");
+            ((Textbox)comp).setSclass(((Textbox)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof NumberInputElement)
         {
             // obecne kazdy textbox umi readonly
             ((NumberInputElement)comp).setReadonly(readonly);
-            ((NumberInputElement)comp).setStyle("background-color: #FEFFEF ");
+            ((NumberInputElement)comp).setSclass(((NumberInputElement)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof Button && ((Button)comp).getAttribute("DISABLED_ON_READONLY") != null)
         {
@@ -240,13 +233,12 @@ public class ZKHelper
         }
         else if (comp instanceof Listbox)
         {
-            //((Listbox)comp).setR(true);
-            ((Listbox)comp).setStyle("background-color: #FEFFEF ");
+            ((Listbox)comp).setSclass(((Listbox)comp).getSclass() + READONLY_CLASS);
         }
         else if (comp instanceof Timebox)
         {
             ((Timebox)comp).setReadonly(readonly);
-            ((Timebox)comp).setStyle("background-color: #FEFFEF ");
+            ((Timebox)comp).setSclass(((Timebox)comp).getSclass() + READONLY_CLASS);
         }
 
     }
