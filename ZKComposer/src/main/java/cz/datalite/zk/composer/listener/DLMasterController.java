@@ -10,7 +10,7 @@ import cz.datalite.zk.composer.DLComposer;
  * @see DLDetailController
  * @see DLComposer
  */
-public interface DLMasterController {
+public interface DLMasterController<T extends DLMainModel> {
 
     /**
      * Adds child controller. Each change will be propagated to this controller (unless it's removed)
@@ -30,9 +30,12 @@ public interface DLMasterController {
     /**
      * Detail will notify master with change.
      *
-     * @param model předávaný dítětem
+     * Usually master should send events to all listener. If the model extends DLMainModel, it should
+     * call DLMainModel.clearRefreshFlags to clare all flags.
+     *
+     * @param model new model from the child
      */
-    public void onDetailChanged(Object model);
+    public void onDetailChanged(T model);
 
     /**
      * Returns master model.
@@ -41,5 +44,14 @@ public interface DLMasterController {
      *
      * @return model model of master controller
      */
-    public Object getMasterControllerModel();
+    public T getMasterControllerModel();
+
+    /**
+     * Send event to main associated component of master controller (aka self).
+     * In DLComposer it is easy to catch this event with @ZkEvent annotation.
+     *
+     * @param eventName name of the event.
+     * @param data any associated data
+     */
+    public void postEvent(String eventName, Object data);
 }

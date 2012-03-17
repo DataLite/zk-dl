@@ -10,7 +10,7 @@ import cz.datalite.zk.composer.DLComposer;
  * @see DLMasterController
  * @see DLComposer
  */
-public interface DLDetailController {
+public interface DLDetailController<T extends DLMainModel> {
 
     /**
      * Model is changed.
@@ -21,6 +21,6 @@ public interface DLDetailController {
      *
      * @param model new model with data.
      */
-    void onMasterChanged(Object model);
+    void onMasterChanged(T model);
 
 }

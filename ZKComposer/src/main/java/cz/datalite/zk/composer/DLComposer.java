@@ -5,6 +5,7 @@ import cz.datalite.helpers.ZKHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.annotation.processor.AnnotationProcessor;
 import cz.datalite.zk.composer.listener.DLDetailController;
+import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.composer.listener.DLMasterController;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.SystemException.Aide;
@@ -72,7 +73,7 @@ import java.util.logging.Logger;
  *
  * @author Jiri Bubnik
  */
-public class DLComposer extends GenericAutowireComposer implements java.util.Map<String, Object>, DLMasterController, Serializable {
+public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer implements java.util.Map<String, Object>, DLMasterController<T>, Serializable {
 
     /** Map model name to field representing this model */
     private final Map<String, Field> zkModels = new java.util.HashMap<String, Field>();
@@ -84,7 +85,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
     private DLMasterController masterController;
 
     /** Model in master/detail. **/
-    private Object masterControllerModel;
+    private T masterControllerModel;
 
     /** List of child controller for master / detail page composition. **/
     private List<DLDetailController> detailControllers = new LinkedList<DLDetailController>();
@@ -215,8 +216,12 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      *
      * @return model Default implementation will store model from childe and resend new model to all children.
      */
-    public Object getMasterControllerModel() {
+    public T getMasterControllerModel() {
         return masterControllerModel;
+    }
+
+    public void postEvent(String eventName, Object data) {
+        Events.postEvent(eventName, self, data);
     }
 
     /**
@@ -224,7 +229,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      *
      * @param masterControllerModel new value
      */
-    public void setMasterControllerModel( Object masterControllerModel ) {
+    public void setMasterControllerModel( T masterControllerModel ) {
         this.masterControllerModel = masterControllerModel;
     }
 
@@ -262,7 +267,7 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      *
      * @return masterController if is defined, null othervise.
      */
-    public DLMasterController getMasterController() {
+    public DLMasterController<T> getMasterController() {
         return masterController;
     }
 
@@ -279,15 +284,17 @@ public class DLComposer extends GenericAutowireComposer implements java.util.Map
      *
      * @param model new model set by child.
      */
-    public void onDetailChanged( Object model ) {
+    public void onDetailChanged( T model ) {
         setMasterControllerModel( model );
 
         // opportunity to modify child model befor resend.
-        Object newModel = getMasterControllerModel();
+        T newModel = getMasterControllerModel();
 
         for ( DLDetailController detail : detailControllers ) {
             detail.onMasterChanged( newModel );
         }
+
+        newModel.clearRefreshFlags();
     }
 
     /*************************************************  @ZkModel and @ZkController ********************************************************/
