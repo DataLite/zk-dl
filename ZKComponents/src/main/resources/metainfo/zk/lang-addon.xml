@@ -242,6 +242,16 @@
             <property-name>visible</property-name>
         </annotation>
     </component>
+    
+    <component>
+        <component-name>toolbarbutton</component-name>
+        <component-class>cz.datalite.zk.components.button.DLToolbarButton</component-class>
+        <extends>toolbarbutton</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>visible</property-name>
+        </annotation>
+    </component>
 
     <component>
         <component-name>window</component-name>
