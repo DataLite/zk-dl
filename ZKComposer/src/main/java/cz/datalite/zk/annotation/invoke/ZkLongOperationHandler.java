@@ -19,7 +19,6 @@
 package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkLongOperation;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -27,15 +26,8 @@ import java.util.logging.Logger;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Div;
-import org.zkoss.zul.Html;
+import org.zkoss.zk.ui.event.*;
 import org.zkoss.zul.Window;
 
 /**
@@ -47,7 +39,13 @@ import org.zkoss.zul.Window;
  */
 public class ZkLongOperationHandler extends Handler {
 
+    private static final Logger LOGGER = Logger.getLogger(ZkLongOperationHandler.class.getCanonicalName());
+
+    /** name of echo event */
     private static final String EVENT = "onEchoEvent";
+
+    /** used queue name */
+    private static final String QUEUE = "qLongOperations";
 
     /** message to be shown to a user */
     private final String message;
@@ -59,7 +57,7 @@ public class ZkLongOperationHandler extends Handler {
     private static boolean localizeAll;
 
     /** opened busy window */
-    private Window busy;
+    private Window busybox;
 
     static {
         /** Reads default configuration for library */
@@ -81,20 +79,18 @@ public class ZkLongOperationHandler extends Handler {
 
     @Override
     protected boolean doBeforeInvoke(final Event event, final Component master, final Object controller) {
-        master.addEventListener(EVENT, new EventListener() {
 
-            public void onEvent(Event event) throws Exception {
-                master.removeEventListener(EVENT, this);
-                // user was informed, go on in execution
-                goOn(event, master, controller);
+        if (cancellable) { // request for async processing
+            // receiving async request failed
+            if (!fireAsynchronnousEvent(event, master, controller)) {
+                return false;
             }
-        });
+        } else { // receive sync request
+            fireEchoEvent(event, master, controller);
+        }
 
         // invokes status window informing user about operation
         invokeBusyBox();
-        
-        // send echo event
-        Events.echoEvent(EVENT, master, null);
 
         // prevent invoke propagation
         return false;
@@ -102,16 +98,10 @@ public class ZkLongOperationHandler extends Handler {
 
     @Override
     protected void doAfterInvoke(Event event, Component master, Object controller) {
-        busy.detach();
-        busy = null;
-    }
-
-    private Component getComponent(String id, Component master) {
-        try {
-            return id.length() == 0 ? master : master.getFellow(id);
-        } catch (ComponentNotFoundException ex) {
-            throw new ComponentNotFoundException("ZkBinding could not be registered on component \"" + id + "\" because component wasn\'t found.", ex);
+        if (busybox != null) {
+            busybox.detach();
         }
+        busybox = null;
     }
 
     /**
@@ -122,8 +112,92 @@ public class ZkLongOperationHandler extends Handler {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("cancellable", cancellable);
         parameters.put("message", message);
-        busy = (Window) Executions.createComponents("~./busybox.zul", null, parameters);
-        
-        // ToDo cancelable
+        busybox = (Window) Executions.createComponents("~./busybox.zul", null, parameters);
+
+        if (cancellable) {
+            busybox.addEventListener(Events.ON_CLOSE, new EventListener() {
+
+                public void onEvent(Event event) throws Exception {
+                    // ToDo cancelable
+                    LOGGER.log(Level.WARNING, "STOP!!....");
+                    event.stopPropagation();
+                }
+            });
+        }
+    }
+
+    /**
+     * Fires assynchronnous event - that allows cancelable operations
+     */
+    private boolean fireAsynchronnousEvent(final Event event, final Component master, final Object controller) {
+        // check for already running
+        if (EventQueues.exists(QUEUE, EventQueues.SESSION)) {
+            LOGGER.log(Level.FINE, "One operation is already running. Request was rejected.");
+            return false; //busy
+        }
+
+        // create / get a queue
+        EventQueue queue = EventQueues.lookup(QUEUE, EventQueues.SESSION, true);
+
+        // subscribe async listener to handle long operation
+        queue.subscribe(new EventListener() {
+
+            public void onEvent(Event evt) { //asynchronous
+                try {
+                    Thread.currentThread().sleep(5000);
+                    LOGGER.log(Level.FINE, "Starting async operation.");
+                    goOn(event, master, controller);
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Execution of long running operation failed. Exception has been thrown.", ex);
+                }
+            }
+        }, new EventListener() {  //callback
+
+            public void onEvent(Event evt) throws Exception {
+                LOGGER.log(Level.FINE, "Async operation finished.");
+                if (busybox != null) {
+                    busybox.detach();
+                }
+                EventQueues.remove(QUEUE, EventQueues.SESSION);
+            }
+        });
+
+        // fire event to start the long operation
+        queue.publish(new Event("FireEvent"));
+        return true; // fired
+    }
+
+    /**
+     * fires synchronnous echo event
+     *
+     * @param sourceEvent source of event origin
+     * @param master      master component (usually window)
+     * @param controller  controller of the master component
+     */
+    private void fireEchoEvent(final Event sourceEvent, final Component master, final Object controller) {
+
+        master.addEventListener(EVENT, new EventListener() {
+
+            public void onEvent(Event event) throws Exception {
+                master.removeEventListener(EVENT, this);
+
+
+//                final Timer timer = new Timer(1000);
+//                timer.setParent(master);
+//                timer.setRepeats(true);
+//                timer.addEventListener(Events.ON_TIMER, new EventListener() {
+//
+//                    public void onEvent(Event event) throws Exception {
+//                        Logger.getLogger(ZkLongOperationHandler.class.getCanonicalName()).log(Level.FINE, "timer");
+//                    }
+//                });
+//                timer.start();
+
+                // user was informed, go on in execution
+                goOn(sourceEvent, master, controller);
+            }
+        });
+        // fire event
+        Events.echoEvent(EVENT, master, null);
     }
 }
