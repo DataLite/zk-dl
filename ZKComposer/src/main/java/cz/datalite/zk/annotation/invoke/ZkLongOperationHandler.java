@@ -19,12 +19,24 @@
 package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkLongOperation;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.zkoss.lang.Library;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Html;
+import org.zkoss.zul.Window;
 
 /**
  * <p>Handles binding request before and after method invocation. For all
@@ -36,28 +48,35 @@ import org.zkoss.zk.ui.util.Clients;
 public class ZkLongOperationHandler extends Handler {
 
     private static final String EVENT = "onEchoEvent";
-    /**
-     * message to be shown to a user
-     */
-    private final String message;
-    /**
-     * if a message is localized
-     */
-    private final boolean i18n;
-    /**
-     * if the operation is interruptable
-     */
-    private final boolean cancelable;
 
-    public static Invoke process(Invoke inner, ZkLongOperation annotation) {
-        return new ZkLongOperationHandler(inner, annotation.message(), annotation.i18n(), annotation.cancelable());
+    /** message to be shown to a user */
+    private final String message;
+
+    /** if the operation is interruptable */
+    private final boolean cancellable;
+
+    /** state of general property */
+    private static boolean localizeAll;
+
+    /** opened busy window */
+    private Window busy;
+
+    static {
+        /** Reads default configuration for library */
+        localizeAll = Boolean.parseBoolean(Library.getProperty("zk-dl.annotation.i18n", "false"));
     }
 
-    public ZkLongOperationHandler(Invoke inner, final String message, final boolean i18n, final boolean cancelable) {
+    public static Invoke process(Invoke inner, ZkLongOperation annotation) {
+        String message = annotation.message();
+        // check for default localized message
+        boolean i18n = localizeAll || message.startsWith("zkcomposer.") || annotation.i18n();
+        return new ZkLongOperationHandler(inner, message, i18n, annotation.cancellable());
+    }
+
+    public ZkLongOperationHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable) {
         super(inner);
-        this.message = message;
-        this.i18n = i18n;
-        this.cancelable = cancelable;
+        this.message = i18n ? Labels.getLabel(message) : message;
+        this.cancellable = cancellable;
     }
 
     @Override
@@ -66,23 +85,25 @@ public class ZkLongOperationHandler extends Handler {
 
             public void onEvent(Event event) throws Exception {
                 master.removeEventListener(EVENT, this);
-                goOn(event, master, controller); // correct answer, go on in executing
+                // user was informed, go on in execution
+                goOn(event, master, controller);
             }
         });
 
-        // show busy message
-        // ToDo localization
-        // ToDo cancelable
-        Clients.showBusy(message);
+        // invokes status window informing user about operation
+        invokeBusyBox();
+        
         // send echo event
         Events.echoEvent(EVENT, master, null);
+
         // prevent invoke propagation
         return false;
     }
 
     @Override
     protected void doAfterInvoke(Event event, Component master, Object controller) {
-        Clients.clearBusy();
+        busy.detach();
+        busy = null;
     }
 
     private Component getComponent(String id, Component master) {
@@ -91,5 +112,18 @@ public class ZkLongOperationHandler extends Handler {
         } catch (ComponentNotFoundException ex) {
             throw new ComponentNotFoundException("ZkBinding could not be registered on component \"" + id + "\" because component wasn\'t found.", ex);
         }
+    }
+
+    /**
+     * Invokes busy box window informing user about long running operation
+     */
+    private void invokeBusyBox() {
+        // show busy message
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("cancellable", cancellable);
+        parameters.put("message", message);
+        busy = (Window) Executions.createComponents("~./busybox.zul", null, parameters);
+        
+        // ToDo cancelable
     }
 }

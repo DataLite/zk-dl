@@ -48,7 +48,7 @@ public @interface ZkLongOperation {
      * @return message
      *
      */
-    public String message() default "This operation can take long. Please be patient.";
+    public String message() default "zkcomposer.bePatient";
 
     /**
      * <p>Some applications are written localizable. Usually the approach
@@ -94,7 +94,7 @@ public @interface ZkLongOperation {
     /**
      * If user is allowed to abort a running operation. Default is true
      *
-     * @return cancelable operation
+     * @return cancellable operation
      */
-    public boolean cancelable() default true;
+    public boolean cancellable() default true;
 }
