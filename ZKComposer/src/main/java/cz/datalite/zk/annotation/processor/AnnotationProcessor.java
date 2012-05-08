@@ -19,23 +19,10 @@
 package cz.datalite.zk.annotation.processor;
 
 import cz.datalite.helpers.ReflectionHelper;
-import cz.datalite.zk.annotation.ZkBinding;
-import cz.datalite.zk.annotation.ZkBindings;
-import cz.datalite.zk.annotation.ZkConfirm;
-import cz.datalite.zk.annotation.ZkEvent;
-import cz.datalite.zk.annotation.ZkEvents;
-import cz.datalite.zk.annotation.ZkException;
-import cz.datalite.zk.annotation.invoke.Invoke;
-import cz.datalite.zk.annotation.invoke.MethodInvoker;
-import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
-import cz.datalite.zk.annotation.invoke.ZkConfirmHandler;
-import cz.datalite.zk.annotation.invoke.ZkExceptionHandler;
+import cz.datalite.zk.annotation.*;
+import cz.datalite.zk.annotation.invoke.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
 
@@ -78,6 +65,7 @@ public class AnnotationProcessor<T> {
         wrappers.add( new GeneralWrapperProcessor( ZkException.class, ZkExceptionHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
+        wrappers.add( new GeneralWrapperProcessor( ZkLongOperation.class, ZkLongOperationHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
 
         // loading property of caching or not
