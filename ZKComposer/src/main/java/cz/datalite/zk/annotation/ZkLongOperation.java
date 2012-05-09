@@ -93,8 +93,27 @@ public @interface ZkLongOperation {
 
     /**
      * If user is allowed to abort a running operation. Default is true
+     * 
+     * Cancellable operations are executed in <strong>asynchronnous</strong>
+     * event which prevents from working with desktop bound object. Look
+     * at {@link #eventAfter } to let things done correctly.
      *
      * @return cancellable operation
      */
     public boolean cancellable() default true;
+
+    
+    /**
+     * Asynchronnous operations are executed in an async event, which doesn't allow
+     * to work with components and objects bound to user's session and desktop.
+     * Such things has to be done in a synchronous event. To let things be done
+     * properly (including binding etc.), after finishing the async operation
+     * another event is fired. The default name of such event is
+     * <code>onLongOperationAfter</code> but this attribute defines it. Such
+     * following event is free to be annotated by all standard annotations
+     * including this one.
+     * 
+     * @return a name of the event fired after completing async operation
+     */
+    public String eventAfter() default "onLongOperationAfter";
 }

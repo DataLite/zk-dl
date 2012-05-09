@@ -24,9 +24,8 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 
 /**
- * <p>Invocation listener is bound to components
- * and listens on required event. When it is called
- * then the {@link Invoke} object is executed.</p>
+ * <p>Invocation listener is bound to components and listens on required event.
+ * When it is called then the {@link Invoke} object is executed.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -38,13 +37,17 @@ public class InvokeListener implements EventListener {
 
     private Component master;
 
-    public InvokeListener( Invoke invoke, Component master, Object controller ) {
+    public InvokeListener(Invoke invoke, Component master, Object controller) {
         this.invoke = invoke;
         this.controller = controller;
         this.master = master;
     }
 
-    public void onEvent( Event event ) throws Exception {
-        invoke.invoke( event, master, controller );
+    public void onEvent(Event event) throws Exception {
+        if (invoke.doBeforeInvoke(event, master, controller)) {
+            if (invoke.invoke(event, master, controller)) {
+                invoke.doAfterInvoke(event, master, controller);
+            }
+        }
     }
 }

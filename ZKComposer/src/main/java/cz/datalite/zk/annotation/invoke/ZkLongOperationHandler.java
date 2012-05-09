@@ -47,17 +47,23 @@ public class ZkLongOperationHandler extends Handler {
     /** used queue name */
     private static final String QUEUE = "qLongOperations";
 
+    /** state of general property */
+    private static boolean localizeAll;
+
     /** message to be shown to a user */
     private final String message;
 
     /** if the operation is interruptable */
     private final boolean cancellable;
 
-    /** state of general property */
-    private static boolean localizeAll;
+    /** name of event fired after async long operation is done */
+    private String eventAfter;
 
     /** opened busy window */
     private Window busybox;
+
+    /** something went wrong */
+    private Exception exception;
 
     static {
         /** Reads default configuration for library */
@@ -68,40 +74,51 @@ public class ZkLongOperationHandler extends Handler {
         String message = annotation.message();
         // check for default localized message
         boolean i18n = localizeAll || message.startsWith("zkcomposer.") || annotation.i18n();
-        return new ZkLongOperationHandler(inner, message, i18n, annotation.cancellable());
+        return new ZkLongOperationHandler(inner, message, i18n, annotation.cancellable(), annotation.eventAfter());
     }
 
-    public ZkLongOperationHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable) {
+    public ZkLongOperationHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable, final String eventAfter) {
         super(inner);
         this.message = i18n ? Labels.getLabel(message) : message;
         this.cancellable = cancellable;
+        this.eventAfter = eventAfter;
     }
 
     @Override
-    protected boolean doBeforeInvoke(final Event event, final Component master, final Object controller) {
+    public boolean invoke(Event event, Component master, Object controller) throws Exception {
 
         if (cancellable) { // request for async processing
             // receiving async request failed
-            if (!fireAsynchronnousEvent(event, master, controller)) {
-                return false;
+            if (fireAsynchronnousEvent(event, master, controller)) {
+                // invokes status window informing user about operation
+                invokeBusyBox();
             }
         } else { // receive sync request
             fireEchoEvent(event, master, controller);
+            // invokes status window informing user about operation
+            invokeBusyBox();
         }
 
-        // invokes status window informing user about operation
-        invokeBusyBox();
-
-        // prevent invoke propagation
+        // invocation is not complete, prevent resuming
         return false;
     }
 
     @Override
-    protected void doAfterInvoke(Event event, Component master, Object controller) {
-        if (busybox != null) {
-            busybox.detach();
+    protected void doAfter(Event event, Component master, Object controller) {
+        try {
+            if (busybox != null) {
+                busybox.detach();
+                busybox = null;
+            }
+
+            if (exception != null) {
+                LOGGER.log(Level.WARNING, "Execution of long running operation failed. Exception has been thrown.", exception);
+                throw new RuntimeException(exception);
+            }
+        } finally {
+            // exception was passed through
+            exception = null;
         }
-        busybox = null;
     }
 
     /**
@@ -114,12 +131,12 @@ public class ZkLongOperationHandler extends Handler {
         parameters.put("message", message);
         busybox = (Window) Executions.createComponents("~./busybox.zul", null, parameters);
 
-        if (cancellable) {
+        if (cancellable) { // button is visible only if cancellable, otherwise not
             busybox.addEventListener(Events.ON_CLOSE, new EventListener() {
 
                 public void onEvent(Event event) throws Exception {
                     // ToDo cancelable
-                    LOGGER.log(Level.WARNING, "STOP!!....");
+                    LOGGER.log(Level.WARNING, "STOP!!");
                     event.stopPropagation();
                 }
             });
@@ -144,21 +161,23 @@ public class ZkLongOperationHandler extends Handler {
 
             public void onEvent(Event evt) { //asynchronous
                 try {
-                    Thread.currentThread().sleep(5000);
                     LOGGER.log(Level.FINE, "Starting async operation.");
-                    goOn(event, master, controller);
+                    // resume invoking
+                    inner.invoke(event, master, controller);
                 } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Execution of long running operation failed. Exception has been thrown.", ex);
+                    exception = ex;
                 }
             }
         }, new EventListener() {  //callback
 
             public void onEvent(Event evt) throws Exception {
                 LOGGER.log(Level.FINE, "Async operation finished.");
-                if (busybox != null) {
-                    busybox.detach();
-                }
+
                 EventQueues.remove(QUEUE, EventQueues.SESSION);
+                // async processing is done, fire notification to process rest
+                Events.postEvent(eventAfter, master, null);
+                // invoke doAfter on all objects
+                source.doAfterInvoke(event, master, controller);
             }
         });
 
@@ -181,23 +200,13 @@ public class ZkLongOperationHandler extends Handler {
             public void onEvent(Event event) throws Exception {
                 master.removeEventListener(EVENT, this);
 
-
-//                final Timer timer = new Timer(1000);
-//                timer.setParent(master);
-//                timer.setRepeats(true);
-//                timer.addEventListener(Events.ON_TIMER, new EventListener() {
-//
-//                    public void onEvent(Event event) throws Exception {
-//                        Logger.getLogger(ZkLongOperationHandler.class.getCanonicalName()).log(Level.FINE, "timer");
-//                    }
-//                });
-//                timer.start();
-
-                // user was informed, go on in execution
-                goOn(sourceEvent, master, controller);
+                // user was informed, resume in execution
+                if (inner.invoke(sourceEvent, master, controller)) {
+                    source.doAfterInvoke(sourceEvent, master, controller);
+                }
             }
         });
-        // fire event
+        // fire echo event
         Events.echoEvent(EVENT, master, null);
     }
 }

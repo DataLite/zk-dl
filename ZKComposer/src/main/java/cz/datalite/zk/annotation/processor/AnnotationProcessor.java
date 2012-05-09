@@ -34,7 +34,7 @@ import org.zkoss.zk.ui.Component;
  * object because if they would be decorated in wrong order then the
  * final functionality could be undeterministic or at least undesired.</p>
  *
- * <p>Instance of annotation processor is bound to the instance of component 
+ * <p>Instance of annotation processor is bound to the instance of component
  * controller but there is possible way to refactor it as unbound to anything.
  * Then the class would create templates which would be cloned and bound to 
  * the specific instance.</p>
@@ -59,14 +59,14 @@ public class AnnotationProcessor<T> {
     private static boolean cache = true;
 
     static {
-        initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
-        initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
+        initializers.add(new GeneralInitializerProcessor(ZkEvent.class, MethodInvoker.class));
+        initializers.add(new GeneralInitializerProcessor(ZkEvents.class, MethodInvoker.class));
 
-        wrappers.add( new GeneralWrapperProcessor( ZkException.class, ZkExceptionHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkLongOperation.class, ZkLongOperationHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
+        wrappers.add(new GeneralWrapperProcessor(ZkException.class, ZkExceptionHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkBinding.class, ZkBindingHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkBindings.class, ZkBindingHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkConfirm.class, ZkConfirmHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkLongOperation.class, ZkLongOperationHandler.class));
 
         // loading property of caching or not
         cache = Boolean.parseBoolean( System.getProperty( CONFIG, Library.getProperty( CONFIG, "true" ) ) );
@@ -113,7 +113,7 @@ public class AnnotationProcessor<T> {
     /**
      * <p>Basic method responsible for processing annotations on the methods. This method
      * is called by composer processor and the rest of annotating is proceed here.</p>
-     * 
+     *
      * <p>This method holds processing order of annotations. There is defined exact
      * order from the most inner to the most outer. If somebody whats to add another
      * annotation then he have to decide which annotatin should it be and set its
@@ -134,7 +134,8 @@ public class AnnotationProcessor<T> {
                 for ( Wrapper wrapper : wrappers ) {
                     invoke = wrapper.process( method, invoke );
                 }
-                output.add( invoke );
+                invoke.setSource(invoke);
+                output.add(invoke);
             }
             events = output;
         }

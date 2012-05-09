@@ -20,14 +20,13 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zkplus.databind.DataBinder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * <p>Handles binding request before and after method invocation. For
@@ -72,7 +71,7 @@ public class ZkBindingHandler extends Handler {
     }
 
     @Override
-    protected boolean doBeforeInvoke( Event event, Component master, Object controller ) {
+    protected boolean doBefore( Event event, Component master, Object controller ) {
         for ( String id : saveBefore ) {
             Component component = getComponent( id, master );
             getBinder( component ).saveComponent( component );
@@ -81,7 +80,7 @@ public class ZkBindingHandler extends Handler {
     }
 
     @Override
-    protected void doAfterInvoke( Event event, Component master, Object controller ) {
+    protected void doAfter( Event event, Component master, Object controller ) {
         for ( String id : loadAfter ) {
             Component component = getComponent( id, master );
             getBinder( component ).loadComponent( component );

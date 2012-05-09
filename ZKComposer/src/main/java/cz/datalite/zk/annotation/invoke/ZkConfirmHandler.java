@@ -27,10 +27,10 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
 
 /**
- * <p>Handles confirm question before action is invoked. When the 
- * action is invoked then the propagation of invocation is stopped
- * and question is popped up instead. When positive answer comes
- * then the event propagation goes on.</p>
+ * <p>Handles confirm question before action is invoked. When the action is
+ * invoked then the propagation of invocation is stopped and question is popped
+ * up instead. When positive answer comes then the event propagation goes
+ * on.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -55,37 +55,38 @@ public class ZkConfirmHandler extends Handler {
 
     static {
         /** Reads default configuration for library */
-        localizeAll = Boolean.parseBoolean( Library.getProperty( "zk-dl.annotation.i18n", "false" ) );
+        localizeAll = Boolean.parseBoolean(Library.getProperty("zk-dl.annotation.i18n", "false"));
     }
 
-    public static Invoke process( Invoke inner, ZkConfirm annotation ) {
-        return new ZkConfirmHandler( inner, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), localizeAll || annotation.i18n() );
+    public static Invoke process(Invoke inner, ZkConfirm annotation) {
+        return new ZkConfirmHandler(inner, annotation.message(), annotation.title(), annotation.buttons(), annotation.accessButton(), annotation.icon(), localizeAll || annotation.i18n());
     }
 
-    public ZkConfirmHandler( Invoke inner, String message, String title, int buttons, int accessButton, String icon, boolean localize ) {
-        super( inner );
-        this.message = localize ? Labels.getLabel( message ) : message;
-        this.title = localize ? Labels.getLabel( title ) : title;
+    public ZkConfirmHandler(Invoke inner, String message, String title, int buttons, int accessButton, String icon, boolean localize) {
+        super(inner);
+        this.message = localize ? Labels.getLabel(message) : message;
+        this.title = localize ? Labels.getLabel(title) : title;
         this.buttons = buttons;
         this.accessButton = accessButton;
         this.icon = icon;
     }
 
     @Override
-    protected boolean doBeforeInvoke( final Event event, final Component master, final Object controller ) {
-        if ( message == null ) {
+    protected boolean doBefore(final Event event, final Component master, final Object controller) {
+        if (message == null) {
             return true; // continue
         } else {
             try { // prompt question
-                Messagebox.show( message, title, buttons, icon, new EventListener() {
+                Messagebox.show(message, title, buttons, icon, new EventListener() {
 
-                    public void onEvent( final Event msgEvent ) throws Exception {
-                        if ( ( Integer ) msgEvent.getData() == accessButton ) {
-                            goOn( event, master, controller ); // correct answer, go on in executing
+                    public void onEvent(final Event msgEvent) throws Exception {
+                        if ((Integer) msgEvent.getData() == accessButton) {
+                            // correct answer, resume executing
+                            resume(event, master, controller);
                         }
                     }
-                } );
-            } catch ( InterruptedException ex ) {
+                });
+            } catch (InterruptedException ex) {
             }
         }
         return false; // do not continue invocation

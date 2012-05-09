@@ -22,16 +22,16 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 
 /**
- * <p>Interface defines functionality of invokable object. These objects
- * wrap target method and provides additional functionality usually
- * based on targeted method's annotations.</p>
+ * <p>Interface defines functionality of invokable object. These objects wrap
+ * target method and provides additional functionality usually based on targeted
+ * method's annotations.</p>
  *
- * <p>The main concept of {@link Invoke} interface lies in design
- * pattern <strong>decorator</strong>. Each object which wrappes
- * the method should provide one additional functionality and can
- * be used as a part of many object like in matryoshka doll. The order
- * of composed object is important, the functionality could be different
- * with different order. The similar example is interface 
+ * <p>The main concept of {@link Invoke} interface lies in design pattern
+ * <strong>decorator</strong>. Each object which wrappes the method should
+ * provide one additional functionality and can be used as a part of many object
+ * like in matryoshka doll. The order of composed object is important, the
+ * functionality could be different with different order. The similar example is
+ * interface
  * {@link java.io.InputStream}</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
@@ -39,24 +39,53 @@ import org.zkoss.zk.ui.event.Event;
 public interface Invoke {
 
     /**
-     * Invoke the desired method including additional functionality
+     * Additional functionality appended before method invocation
+     *
      * @param event source event
-     * @param master master component of controller
-     * @param controller controller object
-     * @throws Exception Any exception has occured.
+     *
+     * @return TRUE if continue invoking, FALSE for stop propagation
      */
-    void invoke( Event event, Component master, Object controller ) throws Exception;
+    boolean doBeforeInvoke(Event event, Component master, Object controller);
 
     /**
-     * Binds to the component. Sets up component's properties according to
-     * the handler's requirements
+     * Invoke the desired method including additional functionality
+     *
+     * @param event      source event
+     * @param master     master component of controller
+     * @param controller controller object
+     *
+     * @return TRUE if continue invoking, FALSE for stop propagation
+     *
+     * @throws Exception Any exception has occured.
+     */
+    boolean invoke(Event event, Component master, Object controller) throws Exception;
+
+    /**
+     * Additional functionality appended after method invocation.
+     *
+     * @param event Source event
+     */
+    void doAfterInvoke(Event event, Component master, Object controller);
+
+    /**
+     * Binds to the component. Sets up component's properties according to the
+     * handler's requirements
+     *
      * @return observed component
      */
-    Component bind( Component master );
+    Component bind(Component master);
 
     /**
      * Targeted event which the invoke object should listen
+     *
      * @return listened event
      */
     String getEvent();
+
+    /**
+     * sets outer wrapper of invocation object to allow resume execution
+     *
+     * @param source source of execution
+     */
+    void setSource(Invoke source);
 }

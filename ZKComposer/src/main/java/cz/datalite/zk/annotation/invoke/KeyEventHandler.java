@@ -73,7 +73,7 @@ public class KeyEventHandler extends Handler {
         alt = find( "ALT", haystack );
         shift = find( "SHIFT", haystack );
 
-        int ascii = 0;
+        int ascii;
         try {
             key = Keys.valueOf( haystack[haystack.length - 1] );
             ascii = key.getCode();
@@ -84,7 +84,7 @@ public class KeyEventHandler extends Handler {
     }
 
     @Override
-    protected boolean doBeforeInvoke( Event event, Component master, Object controller ) {
+    protected boolean doBefore( Event event, Component master, Object controller ) {
         if ( code == -1 ) {
             return true;
         } else if ( event instanceof KeyEvent ) {
