@@ -81,8 +81,8 @@ public class ZkConfirmHandler extends Handler {
 
                     public void onEvent(final Event msgEvent) throws Exception {
                         if ((Integer) msgEvent.getData() == accessButton) {
-                            // correct answer, resume executing
-                            resume(event, master, controller);
+                            // correct answer, resumeBeforeInvoke executing
+                            resumeBeforeInvoke(event, master, controller);
                         }
                     }
                 });

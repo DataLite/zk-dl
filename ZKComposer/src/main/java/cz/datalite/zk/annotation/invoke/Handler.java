@@ -88,14 +88,28 @@ public abstract class Handler implements Invoke {
      *
      * @throws Exception something went wrong
      */
-    protected void resume(Event event, Component master, Object controller) throws Exception {
-        // resume initialization
+    protected void resumeBeforeInvoke(Event event, Component master, Object controller) throws Exception {
+        // resumeBeforeInvoke initialization
         if (inner.doBeforeInvoke(event, master, controller)) {
             // full invocation
             if (source.invoke(event, master, controller)) {
                 // full do after
                 source.doAfterInvoke(event, master, controller);
             }
+        }
+    }
+
+    /**
+     * When doBeforeInvoke was interrupted, this method resumes proper execution
+     * of rest of doBefore, full invoke and full doAfterInvoke.
+     *
+     * @throws Exception something went wrong
+     */
+    protected void resumeInvoke(Event event, Component master, Object controller) throws Exception {
+        // resume invocation
+        if (inner.invoke(event, master, controller)) {
+            // full do after
+            source.doAfterInvoke(event, master, controller);
         }
     }
 

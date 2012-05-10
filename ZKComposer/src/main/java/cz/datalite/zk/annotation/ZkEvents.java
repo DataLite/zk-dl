@@ -26,6 +26,14 @@ public @interface ZkEvents {
     * For example when detail has been closed and master should be refreshed.
     */
     public static final String ON_REFRESH = "onRefresh";
+    
+    
+    /**
+     * Default event name to be fired after asynchronnous
+     * method invocation finished. The method to be invoked asynchronnously is
+     * set by {@link ZkAsync}.
+     */
+    public static String ON_ASYNC_FINISHED = "onAsyncFinished";
 
     /**
      * Predefined constant for default event type for payload.

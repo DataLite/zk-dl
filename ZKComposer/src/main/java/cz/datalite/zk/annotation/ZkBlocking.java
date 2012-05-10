@@ -30,17 +30,15 @@ import java.lang.annotation.Target;
  *
  * <p>Framework ensures to show an user a localizable busy message and disables
  * screen to prevent other action.</p>
- *
- * <p>Some actions may be long running and we want to allow to users change
- * their mind so the long running operation can be cancelable. In such case
- * there is shown localizable button to cancel running operation. Default value
- * is <b>TRUE</b> to allow cancel it.</p>
+ * 
+ * <p>Do <strong>NOT</strong> use this annotation with {@link ZkAsync}. Both
+ * annotations are considered to provide similar effect in different ways.</p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface ZkLongOperation {
+public @interface ZkBlocking {
 
     /**
      * Message for user to be informed
@@ -92,28 +90,10 @@ public @interface ZkLongOperation {
     public boolean i18n() default false;
 
     /**
-     * If user is allowed to abort a running operation. Default is true
+     * Identifier of component to be blocked. User won't be able to invoke
+     * any actions on this component.
      * 
-     * Cancellable operations are executed in <strong>asynchronnous</strong>
-     * event which prevents from working with desktop bound object. Look
-     * at {@link #eventAfter } to let things done correctly.
-     *
-     * @return cancellable operation
+     * @return id of component, otherwise is blocked whole page
      */
-    public boolean cancellable() default true;
-
-    
-    /**
-     * Asynchronnous operations are executed in an async event, which doesn't allow
-     * to work with components and objects bound to user's session and desktop.
-     * Such things has to be done in a synchronous event. To let things be done
-     * properly (including binding etc.), after finishing the async operation
-     * another event is fired. The default name of such event is
-     * <code>onLongOperationAfter</code> but this attribute defines it. Such
-     * following event is free to be annotated by all standard annotations
-     * including this one.
-     * 
-     * @return a name of the event fired after completing async operation
-     */
-    public String eventAfter() default "onLongOperationAfter";
+    public String component() default "";
 }

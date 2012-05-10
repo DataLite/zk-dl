@@ -66,7 +66,8 @@ public class AnnotationProcessor<T> {
         wrappers.add(new GeneralWrapperProcessor(ZkBinding.class, ZkBindingHandler.class));
         wrappers.add(new GeneralWrapperProcessor(ZkBindings.class, ZkBindingHandler.class));
         wrappers.add(new GeneralWrapperProcessor(ZkConfirm.class, ZkConfirmHandler.class));
-        wrappers.add(new GeneralWrapperProcessor(ZkLongOperation.class, ZkLongOperationHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkBlocking.class, ZkBlockingHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkAsync.class, ZkAsyncHandler.class));
 
         // loading property of caching or not
         cache = Boolean.parseBoolean( System.getProperty( CONFIG, Library.getProperty( CONFIG, "true" ) ) );
