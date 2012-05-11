@@ -18,6 +18,7 @@
  */
 package cz.datalite.zk.annotation.invoke;
 
+import cz.datalite.utils.ZkCancellable;
 import cz.datalite.zk.annotation.ZkAsync;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +52,12 @@ public class ZkAsyncHandler extends Handler {
     /** something went wrong */
     private Exception exception;
 
+    /** if operation is cancellable */
+    private final boolean cancellable;
+
+    /** instance of interruptor object to interrupt running thread */
+    private ZkCancellable interruptor;
+
     static {
         /** Reads default configuration for library */
         localizeAll = Boolean.parseBoolean(Library.getProperty("zk-dl.annotation.i18n", "false"));
@@ -69,14 +76,20 @@ public class ZkAsyncHandler extends Handler {
     public ZkAsyncHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable, final String component, final String eventAfter) {
         super(inner);
         busybox = new BusyBoxHandler(message, i18n, cancellable, component);
+        this.cancellable = cancellable;
         this.eventAfter = eventAfter;
 
         if (cancellable) { // listen for request to cancel
             busybox.setEventListener(Events.ON_CLOSE, new EventListener() {
 
                 public void onEvent(Event event) throws Exception {
-                    // ToDo cancelable
-                    LOGGER.log(Level.SEVERE, "STOP PROCESSING");
+                    LOGGER.log(Level.FINE, "Async operation was cancelled.");
+                    // race conditions - 2 threads works with interruptor, NPE prevention
+                    synchronized (ZkAsyncHandler.this) {
+                        if (interruptor != null) {
+                            interruptor.cancel();
+                        }
+                    }
                     // prevent window closing
                     event.stopPropagation();
                 }
@@ -183,6 +196,17 @@ public class ZkAsyncHandler extends Handler {
             public void onEvent(Event evt) throws Exception { //asynchronous
                 try {
                     LOGGER.log(Level.FINE, "Starting async operation.");
+
+                    if (cancellable) {
+                        // add request to allow cancelling
+                        // instance can be detected
+                        ZkCancellable.setCancellable();
+                        // race conditions - 2 threads works with interruptor, NPE prevention
+                        synchronized (ZkAsyncHandler.this) {
+                            interruptor = ZkCancellable.get();
+                        }
+                    }
+
                     // resume invoking inner methods
                     inner.invoke(event, master, controller);
                 } catch (Exception ex) {
@@ -190,6 +214,14 @@ public class ZkAsyncHandler extends Handler {
                     // in a synchronnous event to allow simple displaying 
                     // displayingin UI
                     exception = ex;
+                } finally {
+                    // clean up current thread. 
+                    // This is not to be cancellable any more
+                    ZkCancellable.clean();
+                    // race conditions - 2 threads works with interruptor, NPE prevention
+                    synchronized (ZkAsyncHandler.this) {
+                        interruptor = null;
+                    }
                 }
             }
         };
