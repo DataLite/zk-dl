@@ -28,8 +28,7 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Window;
 
 /**
- * BusyBoxHandler allows to show modal blocking window on client. This window is
- * considered to be used to inform user about blocking operation.
+ * BusyBoxHandler allows to show modal blocking window on client. This window is considered to be used to inform user about blocking operation.
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
@@ -80,8 +79,11 @@ public class BusyBoxHandler {
                     busybox.addEventListener(eventName, listener);
                 }
             } else { // is not cancellable, simple busy window is fine
-                Component parent = parentId == null ? master : master.getFellow(parentId);
-                Clients.showBusy(parent, message);
+                if (parentId == null) {
+                    Clients.showBusy(message);
+                } else {
+                    Clients.showBusy(master.getFellow(parentId), message);
+                }
             }
             busy = true;
         }
@@ -93,8 +95,11 @@ public class BusyBoxHandler {
     public void close(Component master) {
         if (busy) {
             if (busybox == null) { // clients used
-                Component parent = parentId == null ? master : master.getFellow(parentId);
-                Clients.clearBusy(parent);
+                if (parentId == null) {
+                    Clients.clearBusy();
+                } else {
+                    Clients.clearBusy(master.getFellow(parentId));
+                }
             } else { // modal window used
                 busybox.detach();
                 busybox = null;
