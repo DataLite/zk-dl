@@ -1,7 +1,5 @@
 package cz.datalite.zk.liferay;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 
 import java.util.Locale;

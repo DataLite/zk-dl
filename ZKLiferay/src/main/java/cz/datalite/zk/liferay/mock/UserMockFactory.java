@@ -40,7 +40,6 @@ public class UserMockFactory
         user.setEmailAddress(prefix + "_email@address.cz");
         user.setScreenName(prefix + " ScreenName");
 
-        user.setActive(true);
         user.setComments(prefix + " comments");
         user.setAgreedToTermsOfUse(true);
         user.setCreateDate(new Date());
@@ -152,16 +151,16 @@ public class UserMockFactory
 
         when(userLocalService.getGroupUsers(anyLong())).thenReturn(users);
         when(userLocalService.getGroupUsersCount(anyLong())).thenReturn(users.size());
-        when(userLocalService.getGroupUsersCount(anyLong(), anyBoolean())).thenReturn(users.size());
+        when(userLocalService.getGroupUsersCount(anyLong(), anyInt())).thenReturn(users.size());
 
         when(userLocalService.getOrganizationUsers(anyLong())).thenReturn(users);
         when(userLocalService.getOrganizationUsersCount(anyLong())).thenReturn(users.size());
-        when(userLocalService.getOrganizationUsersCount(anyLong(), anyBoolean())).thenReturn(users.size());
+        when(userLocalService.getOrganizationUsersCount(anyLong(), anyInt())).thenReturn(users.size());
 
         when(userLocalService.getRoleUsers(anyLong())).thenReturn(users);
         when(userLocalService.getRoleUsers(anyLong(), anyInt(), anyInt())).thenReturn(users);
         when(userLocalService.getRoleUsersCount(anyLong())).thenReturn(users.size());
-        when(userLocalService.getRoleUsersCount(anyLong(), anyBoolean())).thenReturn(users.size());
+        when(userLocalService.getRoleUsersCount(anyLong(), anyInt())).thenReturn(users.size());
 
         // default user when not found by parameter
         when(userLocalService.getUser(anyLong())).thenReturn(defaultUser);

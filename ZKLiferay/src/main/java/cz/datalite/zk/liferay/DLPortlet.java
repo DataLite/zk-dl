@@ -7,7 +7,7 @@ import com.liferay.portal.util.WebKeys;
 import cz.datalite.helpers.StringHelper;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.WebApp;
-import org.zkoss.zk.ui.http.DHtmlLayoutPortlet;
+import org.zkoss.zk.ui.http.DHtmlLayoutPortletFix;
 import org.zkoss.zk.ui.http.WebManager;
 import org.zkoss.zk.ui.sys.SessionsCtrl;
 
@@ -21,7 +21,7 @@ import java.io.IOException;
  *
  * @author Jiri Bubnik
  */
-public class DLPortlet extends DHtmlLayoutPortlet
+public class DLPortlet extends DHtmlLayoutPortletFix
 {
     /**
      * Use ZK's session attributes to set custom portlet title.
@@ -90,5 +90,7 @@ public class DLPortlet extends DHtmlLayoutPortlet
             return sess != null ? sess:
                     SessionsCtrl.newSession(wapp, psess, request);
     }
+
+
 
 }

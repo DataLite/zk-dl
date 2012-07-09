@@ -21,8 +21,7 @@ public class FilterLiferayCompiler extends AbstractFilterCompiler {
     /**
      * Converts condition to the hiberanate criterion according to the operand
      * @param key column name
-     * @param values[0] 1st operand
-     * @param values[1] 2nd operand
+     * @param values operands
      * @return compiled criterion
      */
     @Override

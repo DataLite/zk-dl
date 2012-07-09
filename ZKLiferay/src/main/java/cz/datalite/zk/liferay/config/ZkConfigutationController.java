@@ -5,18 +5,29 @@
 package cz.datalite.zk.liferay.config;
 
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.stereotype.Autowired;
 import cz.datalite.stereotype.Controller;
 import cz.datalite.zk.annotation.ZkModel;
 import cz.datalite.zk.annotation.ZkParameter;
 import cz.datalite.zk.composer.DLComposer;
+import cz.datalite.zk.composer.listener.DLMainModel;
+import cz.datalite.zk.liferay.DLLiferayService;
 import cz.datalite.zk.liferay.LiferayException;
+import cz.datalite.zk.liferay.ZKLiferayHelper;
 import cz.datalite.zk.liferay.jpa.LiferayOperationDenied;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
 
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,17 +39,49 @@ import java.util.*;
  * @author Jiri Bubnik
  */
 @Controller
-public class ZkConfigutationController extends DLComposer {
+public class ZkConfigutationController<T extends DLMainModel> extends DLComposer<T> {
+
+    @Autowired
+    DLLiferayService dlLiferayService;
 
     protected DateFormat dateFormat = DateFormat.getInstance();
 
     // required - should be true, but set to false for convenient testing outside portal
-    @ZkParameter(name = "zkConfigPortletResource", required = false)
+    @ZkParameter(name = "portletResource", required = false)
     protected String portletResource;
 
     // required - should be true, but set to false for convenient testing outside portal
-    @ZkParameter(name = "zkConfigPortletPreferences", required = false)
+    @ZkParameter(name = "layoutId", required = false)
+    protected String layoutId;
+
+    // preferences to update
     protected PortletPreferences portletPreferences; // = new PortletPreferencesImpl();
+
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
+
+        // find preferences on layout page (it can be different to configuration page in case of
+        // ZkConfig on hidden page)
+        Layout layout = LayoutLocalServiceUtil.getLayout(Long.valueOf(layoutId));
+        portletPreferences =
+                PortletPreferencesFactoryUtil.getPortletSetup(layout, portletResource, StringPool.BLANK);
+
+        setupWindowSize(comp);
+    }
+
+    /**
+     * Defualt implementation is to change popup window according to ZK window size.
+     * You can override this method and use methods like ZKLiferayHelper.clientCalculateComponent90Percent(comp);
+     * to resize borderlayout windows according to acctual window size.
+     *
+     * ZK usually behaves like an application - fit into screen. We need to set size on client.
+     * @param comp component to resize
+     */
+    protected void setupWindowSize(Component comp) {
+        ZKLiferayHelper.clientResizeBodyHeightAuto(comp);
+    }
+
 
     /** String values with escaped HTML. When you need html then use getPreferences().setValue().*/
     @ZkModel
@@ -51,7 +94,7 @@ public class ZkConfigutationController extends DLComposer {
 
         @Override
         public String get(Object key) {
-            return getPreferences().getValue((String) key, null);
+            return getPreferences().getValue(String.valueOf(key), null);
         }
 
         /** Insert string value to preferences with escaped HTML. */
