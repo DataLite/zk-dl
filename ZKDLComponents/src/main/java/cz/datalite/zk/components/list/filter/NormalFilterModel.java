@@ -1,5 +1,7 @@
 package cz.datalite.zk.components.list.filter;
 
+import cz.datalite.helpers.StringHelper;
+
 import java.util.LinkedList;
 
 /**
@@ -27,5 +29,22 @@ public class NormalFilterModel extends LinkedList<NormalFilterUnitModel> impleme
     @Override
     public NormalFilterModel clone() {
         return new NormalFilterModel( this );
+    }
+
+    /**
+     * Findl normal filter unit model by colum name
+     *
+     * @param columnName column name to find
+     * @return found object or null
+     */
+    public NormalFilterUnitModel findUnitModelByColumnName(String columnName) {
+        if (StringHelper.isNull(columnName))
+            throw new IllegalArgumentException("findUnitModelByColumnName without columnName secified");
+
+        for (NormalFilterUnitModel unitModel : this)
+            if (columnName.equals(unitModel.getColumn()))
+                return unitModel;
+
+        return null;
     }
 }

@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComposer</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.2</version>
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
 
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.4</version>
         </dependency>
     </dependencies>
 </project>

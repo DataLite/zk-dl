@@ -2,22 +2,18 @@ package cz.datalite.zk.components.list.view;
 
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Menuitem;
-import org.zkoss.zul.Menupopup;
-import org.zkoss.zul.Textbox;
+import org.zkoss.zul.*;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Component for tool which allows user to quickly filter in the listbox
@@ -113,7 +109,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
     public void setController( final DLQuickFilterController controller ) {
         this.controller = controller;
-        setVariable( getUuid() + "_model", controller, true );
+        setAttribute( getUuid() + "_model", controller, Component.COMPONENT_SCOPE);
         ZKBinderHelper.registerAnnotation( textbox, "value", "value", getUuid() + "_model.bindingModel.value" );
     }
 

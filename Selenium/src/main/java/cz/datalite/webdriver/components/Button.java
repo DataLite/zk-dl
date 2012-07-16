@@ -15,5 +15,7 @@ public class Button extends ZkElement {
 
     public void click() {
         webElement.click();
+        zkDriver.sleep(100);
+        zkDriver.waitForProcessing();
     }
 }

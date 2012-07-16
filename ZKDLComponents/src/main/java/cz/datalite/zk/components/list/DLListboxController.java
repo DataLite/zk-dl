@@ -1,8 +1,11 @@
 package cz.datalite.zk.components.list;
 
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
+import cz.datalite.zk.components.list.model.DLMasterModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import org.zkoss.zk.ui.event.EventListener;
+
+import java.util.Set;
 
 /**
  * Interface for work with controller for extended component 
@@ -171,6 +174,12 @@ public interface DLListboxController<T> {
     boolean loadModel();
 
     /**
+     * Returns master model.
+     * @return master model
+     */
+    DLMasterModel getModel();
+
+    /**
      * <p>Clears all models and if autosave is true then empty model is saved.</p>
      */
     void clearAllModel();
@@ -214,6 +223,18 @@ public interface DLListboxController<T> {
      * @param selectedItem selected item
      */
     void setSelectedItem( T selectedItem );
+
+    /**
+     * <p>Returns selected items in the listbox.</p>
+     * @return selectedItems
+     */
+    Set<T> getSelectedItems();
+
+    /**
+     * Sets seltected items to the listbox
+     * @param selectedItems selected items
+     */
+    void setSelectedItems(Set<T> selectedItems);
 
     /**
      * <p>Locks model - since this time method refreshData model is disable.

@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Controller for the export manager
@@ -50,7 +48,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     @Override
     public void doAfterCompose( final Component comp ) throws Exception {
         super.doAfterCompose( comp );
-        comp.setVariable( "ctl", this, true );
+        comp.setAttribute( "ctl", this, Component.SPACE_SCOPE);
 
         // save masterController
         masterController = ( DLListboxExtController ) arg.get( "master" );

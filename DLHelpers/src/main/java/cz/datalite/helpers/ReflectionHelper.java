@@ -1,22 +1,9 @@
 package cz.datalite.helpers;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility pro praci s objekty
@@ -678,6 +665,14 @@ public abstract class ReflectionHelper
             objOrSuper = objOrSuper.getSuperclass();
         } while (objOrSuper != null);
 
+        if (clazz.isInterface())
+        {
+            for (Class superInterface : getGeneralizations(clazz))
+            {
+                methods.addAll(Arrays.asList(superInterface.getDeclaredMethods()));
+            }
+        }
+
         return methods;
     }
 
@@ -697,4 +692,30 @@ public abstract class ReflectionHelper
         }
         return null;
     }
+
+    /**
+     * Builds an <b>unordered</b> set of all interface and object classes that
+     * are generalizations of the provided class.
+     * @param classObject the class to find generalization of.
+     * @return a Set of class objects.
+     */
+    public static Set<Class> getGeneralizations(Class classObject) {
+        Set generalizations = new HashSet();
+
+        generalizations.add(classObject);
+
+        Class superClass = classObject.getSuperclass();
+        if (superClass != null) {
+            generalizations.addAll(getGeneralizations(superClass));
+        }
+
+        Class[] superInterfaces = classObject.getInterfaces();
+        for (int i = 0; i < superInterfaces.length; i++) {
+            Class superInterface = superInterfaces[i];
+            generalizations.addAll(getGeneralizations(superInterface));
+        }
+
+        return generalizations;
+    }
+
 }

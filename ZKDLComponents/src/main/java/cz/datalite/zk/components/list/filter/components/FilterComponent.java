@@ -15,7 +15,7 @@ import org.zkoss.zk.ui.event.EventListener;
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public interface FilterComponent {
+public interface FilterComponent<T> {
 
     /**
      * This method returns existing instance of the component which is used to
@@ -28,14 +28,14 @@ public interface FilterComponent {
      * This method returns value setted up in the component.
      * @return setted value
      */
-    Object getValue();
+    T getValue();
 
     /**
      * There are setted new value to the component. This method is called
      * on OnChange event.
      * @param value value to be setted
      */
-    void setValue( final Object value );
+    void setValue( final T value );
 
     /**
      * There have to be registered Event Listener on the event, which is emitted

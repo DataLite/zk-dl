@@ -6,6 +6,7 @@ import cz.datalite.zk.components.cascade.CascadableExt;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.view.DLListbox;
+import cz.datalite.zk.components.list.view.DLListhead;
 import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
@@ -21,11 +22,13 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.*;
 
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -85,6 +88,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     private boolean createPaging = true;
     /** If true, lovbox will create quick filter on the listbox.  */
     private boolean createQuickFilter = true;
+    /** Allow to select multiple values from the lovbox.  */
+    private boolean multiple = false;
+    /** defines hflex for each column in listbox. */
+    protected String[] hflexes;
 
     /**
      * Create component without any parameter
@@ -95,13 +102,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         setAutodrop( true );
 
         // Bandbox component overrides onOk - we need it for quick filter
-        setWidgetOverride("enterPressed_", "function (evt) {}"); 
+        setWidgetOverride("enterPressed_", "function (evt) {}");
+        // default tooltip
+        setTooltiptext(getValue());
     }
 
     /**
      * This method creates components like quick filter, paging and if it
      * is necessary also creates listbox.
-     * @throws IOException
      */
     public void afterCompose() {
         setClass( "z-lovbox" );
@@ -124,7 +132,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
-            final Listhead head = new Listhead(); // create lishead and listitem
+            final Listhead head = new DLListhead(); // create lishead and listitem
             listbox.appendChild( head );
 
             final Listitem item = new Listitem();
@@ -135,8 +143,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             if ( this.labelProperties == null ) {
                 throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
             }
+
+            int i=0;
             for ( String property : this.labelProperties ) {
-                this.createCell( property ); // create columns with properties
+                String hflex = hflexes == null ? null : hflexes.length >= i ? null : hflexes[i++];
+                this.createCell( property); // create columns with properties
             }
 
             if ( descriptionProperty != null ) // if it is defined create description column
@@ -145,6 +156,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
             if ( filterCompiler != null ) {
                 (( DLListheader ) listbox.getFirstChild().getFirstChild()).setFilterCompiler( filterCompiler );
+            }
+
+            if ( multiple ) {
+                listbox.setCheckmark(true);
+                listbox.setMultiple(true);
             }
 
             Events.postEvent( new Event( Events.ON_CREATE, listbox ) );
@@ -163,7 +179,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         if ( filter == null && isCreateQuickFilter()) {
-            filter = new DLQuickFilter();            
+            filter = new DLQuickFilter();
+            filter.setQuickFilterAll(false);
+            if (searchProperty != null)
+                filter.setQuickFilterDefault(searchProperty);
             popup.insertBefore( filter, listbox );            
         }
 
@@ -205,8 +224,27 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         controller.getListboxExtController().doAfterCompose( filter );
-        controller.getListboxExtController().doAfterCompose( paging );
+        controller.getListboxExtController().doAfterCompose(paging);
         controller.getListboxExtController().doAfterCompose( listbox );
+    }
+
+    /**
+     * Lovbox component requires usage of DataBinding. If the component is created manunally (out of ZUL
+     * and without databinding), it is mandatory to call lifecycle and binding method explicitely.
+     *
+     * Mandatory lifecycle methods:<ul>
+     * <li> DLLovbox lovbox = new DLLovbox();
+     * <li> lovbox.setLabelProperty("xxx"); // and other lovbox parameters
+     * <li> lovbox.afterCompose();  // after compose lifecycle
+     * <li> lovbox.setController( controller ); // custom controller to load data
+     * <li> lovbox.initSelfBinding(); // create custom databinder for this component only and init binding.
+     * </ul>
+     */
+    public void initSelfBinding()
+    {
+        AnnotateDataBinder binder = new AnnotateDataBinder(this);
+        this.setAttribute("binder", binder);
+        binder.loadAll();
     }
 
     /**
@@ -285,26 +323,78 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     /**
+     * Method for databinding - returns selected items (if multiple)
+     * @return selected items
+     */
+    public Set<T> getSelectedItems() {
+        return controller.getModel().getSelectedItems();
+    }
+
+    /**
+     * Method for databinding. Sets selected items.
+     * @param selectedItems list of selected items
+     */
+    public void setSelectedItems( final Set<T> selectedItems ) {
+        if ( controller == null ) {
+            throw new IllegalStateException( "Lovbox controller is missing (id=" + getId() + ")" );
+        }
+        final boolean isChange = !Objects.equals( selectedItems, getSelectedItems() );
+
+        controller.getListboxExtController().setSelectedItems(selectedItems);
+        controller.getModel().setSelectedItems(selectedItems);
+
+        if ( isChange ) {
+            fireChanges();
+        }
+    }
+
+    /**
      * Refresh this component from model. Sets new lovbox value
      */
     public void fireChanges() {
-        final T selectedItem = this.controller.getSelectedItem();
-        if ( selectedItem == null ) {
-            this.setValue( "" ); // nothing selected
-            return;
-        }
-
         if ( this.labelProperties == null ) {
             throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
         }
 
-        // get values for properties
+        if (!multiple)
+        {
+            final T selectedItem = getSelectedItem();
+            if ( selectedItem == null ) {
+                this.setValue( "" ); // nothing selected
+                return;
+            }
+
+            // get values for properties
+            this.setValue( getDispalyValueForModel(this.controller.getSelectedItem()) );
+        }
+        else
+        {
+            StringBuilder value = new StringBuilder();
+            for (T selectedItem : getSelectedItems())
+            {
+                if (value.length() > 0)
+                    value.append(",");
+
+                value.append(getDispalyValueForModel(selectedItem));
+            }
+            this.setValue( value.toString() );
+        }
+    }
+
+    /**
+     * Get and format display value according to labelProperties and/or labelFormat.
+     *
+     * @param model model to get value
+     * @return formated string
+     */
+    protected String getDispalyValueForModel(T model) {
+
         final int size = this.labelProperties.length;
         Object[] values = new Object[ size ]; // values of properties
         for ( int i = 0; i < size; i++ ) {
             try {
                 // null nahrad za prazdny retezec
-                final Object value = Fields.getByCompound( this.controller.getSelectedItem(), this.labelProperties[i] );
+                final Object value = Fields.getByCompound(model, this.labelProperties[i]);
                 values[i] = value == null ? "" : value;
             } catch ( NoSuchMethodException e ) {
                 final String msg = "Unknown value for: " + this.labelProperties[i];
@@ -313,7 +403,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         // format values by the MessageFormat and this.labelFormat
-        if ( this.labelFormat != null && !Strings.isEmpty( this.labelFormat ) ) {
+        if ( this.labelFormat != null && !Strings.isEmpty(this.labelFormat) ) {
             String strValue;
             try {
                 final MessageFormat messageFormat = new MessageFormat( this.labelFormat, Locales.getCurrent() );
@@ -322,8 +412,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 strValue = "Cannot format values by format: " + this.labelFormat;
                 LOGGER.error( strValue, e );
             }
-            this.setValue( strValue );
-            return;
+            return strValue;
         }
 
         // just append values to the String separated spaces
@@ -334,7 +423,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
             builder.append( String.valueOf( values[i] ) );
         }
-        this.setValue( builder.toString() );
+        return builder.toString();
     }
 
     /**
@@ -371,7 +460,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     protected void createCell( final String field ) {
         final Listcell cell = new Listcell();
-        listbox.getLastChild().appendChild( cell );
         ZKBinderHelper.registerAnnotation( cell, "label", "value", "row" + getUuid() + "." + field );
         listbox.getLastChild().appendChild( cell );
 
@@ -436,8 +524,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             // state and on the first onOpen event are unlocked and
             // their models are refreshed.
             listboxExtController.unlockModel();
-            listboxExtController.refreshDataModel();
-            listboxExtController.setSelectedItem( this.getSelectedItem() );
+            if (listboxExtController.getListbox().isLoadDataOnCreate())
+            {
+                listboxExtController.refreshDataModel();
+                listboxExtController.setSelectedItem( this.getSelectedItem() );
+            }
         }
 
          // default focus on textbox of quickFilter
@@ -448,7 +539,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected Button createClearButton() throws UiException {
         final Button button = new Button();
 
-        button.setLabel( Labels.getLabel( "lovbox.clear" ) );
+        button.setLabel(Labels.getLabel("lovbox.clear"));
         button.setImage( LOVBOX_CLEAR_IMAGE );
         button.setStyle( "position: absolute; top: 0px; right: 0px; width: 90px" );
         button.addEventListener( Events.ON_CLICK, new EventListener() {
@@ -538,5 +629,19 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.createQuickFilter = createQuickFilter;
     }
 
+    /**
+     * Allow to select multiple values from the lovbox.
+     * @return true if multiple values
+     */
+    public boolean isMultiple() {
+        return multiple;
+    }
 
+    /**
+     * Allow to select multiple values from the lovbox.
+     * @param multiple true if multiple values
+     */
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
+    }
 }

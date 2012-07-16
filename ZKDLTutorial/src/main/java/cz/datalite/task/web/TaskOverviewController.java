@@ -22,6 +22,9 @@ import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.composer.DLComposer;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Textbox;
+
+import java.util.Set;
 
 
 /**
@@ -39,6 +42,12 @@ public class TaskOverviewController extends DLComposer {
     // Selected item in ZUL
     @ZkModel Task task;
 
+    // Selected items in ZUL
+    @ZkModel Set<Task> tasks;
+
+    @ZkComponent
+    Textbox textboxSelected;
+
     // Controller for the main list
     @ZkController
     DLListboxController<Task> listCtl = new DLListboxCriteriaController<Task>("TaskList") {
@@ -55,6 +64,18 @@ public class TaskOverviewController extends DLComposer {
 
     @ZkController
     FilterCompiler priorityFilterCompiler = new EnumCriterionCompiler(Priority.values(), "name");
+
+    @ZkEvent(id="taskList", event = Events.ON_SELECT)
+    public void select()
+    {
+        StringBuilder selectedText = new StringBuilder();
+        for (Task selectedTask : listCtl.getSelectedItems())
+        {
+            selectedText.append(selectedTask.getName());
+            selectedText.append(", ");
+        }
+        textboxSelected.setValue(selectedText.toString());
+    }
 
 
     /**

@@ -14,11 +14,13 @@
                     <button id="newButton" label="Create new task"/>
                     <button id="openDetailButton" label="Open selected task"/>
                     <button id="deleteButton" label="Delete selected task"/>
+                    <textbox id="textboxSelected"/>
                 </listControl>
             </north>
             <center>
                 <listbox id="taskList" apply="${ctl.listCtl}" vflex="true" selectedItem="@{ctl.task}"
-                         selectFirstRow="true" fixedLayout="true">
+                         selectFirstRow="true" fixedLayout="true"
+                         selectedItems="@{ctl.tasks}" checkmark="true" multiple="true">
                     <listhead>
                         <listheader label="Name" sort="db()"/>
                         <listheader label="Description" sort="db()"/>

@@ -8,7 +8,7 @@ package cz.datalite.zk.components.list.filter.components;
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
-public interface CloneableFilterComponent extends FilterComponent {
+public interface CloneableFilterComponent<T> extends FilterComponent<T> {
 
     /**
      * Returns new instance of this component. There is expected deep copy of

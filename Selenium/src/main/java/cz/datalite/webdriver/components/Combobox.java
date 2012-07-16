@@ -31,7 +31,7 @@ public class Combobox extends InputElement {
 
     @Override
     public String getValue() {
-        return webElement.findElement( By.tagName( "input" ) ).getText();
+        return webElement.findElement( By.tagName( "input" ) ).getAttribute("value");
     }
 
     /**

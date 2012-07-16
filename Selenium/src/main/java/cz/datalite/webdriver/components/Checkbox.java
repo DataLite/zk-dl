@@ -15,12 +15,13 @@ public class Checkbox extends InputElement {
     }
 
     public void check() {
-        clear();
-        webElement.click();
+        if (!webElement.isSelected())
+            webElement.click();
     }
 
     public void uncheck() {
-        webElement.clear();
+        if (webElement.isSelected())
+            webElement.clear();
     }
 
     public void toggle() {

@@ -132,6 +132,32 @@ public final class DLFilter {
 		return filter(filterModel, list, firstRow, rowCount, null, rowCount == 0);
 	}
 
+    /**
+     * Method filters and sort list with entities. DLFilter criterias is defined in the list as well as sorts. Index of
+     * first row starts at 0. Also can be defined number of result rows. It row count is 0 all records are returned.
+     *
+     * @param <T>
+     *            entity type in the listbox
+     * @param filterModel
+     *            model criterias
+     * @param firstRow
+     *            index of the first row
+     * @param rowCount
+     *            max row count
+     * @param list
+     *            list of entities
+     * @param distinct
+     *            name of the column with unique data
+     * @param all
+     *            return all records or only coresponding
+     * @return filtered list - new instance
+     */
+    private static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
+                                      final int firstRow, final int rowCount, final String distinct, final boolean all)
+    {
+        return filter(filterModel, list, firstRow, rowCount, distinct, all, false);
+    }
+
 	/**
 	 * Method filters and sort list with entities. DLFilter criterias is defined in the list as well as sorts. Index of
 	 * first row starts at 0. Also can be defined number of result rows. It row count is 0 all records are returned.
@@ -150,13 +176,17 @@ public final class DLFilter {
 	 *            name of the column with unique data
 	 * @param all
 	 *            return all records or only coresponding
+     * @param disjunction
+     *            multiple filter condition - disjunction or conjunction (OR or AND)
+     *
 	 * @return filtered list - new instance
 	 */
 	private static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
-			final int firstRow, final int rowCount, final String distinct, final boolean all) {
+			final int firstRow, final int rowCount, final String distinct, final boolean all, final boolean disjunction) {
 		for (NormalFilterUnitModel unit : filterModel) {
 			if (NormalFilterModel.ALL.equals(unit.getColumn())) {
-				throw new UnsupportedOperationException("DLFilter is not able to filter by all columns at one time.");
+				throw new UnsupportedOperationException("DLFilter is not able to filter by all columns, " +
+                        "you need to parse ALL unitModel to filters for each column before calling DLFilter.");
 			}
 		}
 		try {
@@ -169,7 +199,7 @@ public final class DLFilter {
 				if (distinct != null && values.contains(getValue(entity, distinct))) {
 					continue; // if distinct and value is in the values continue;
 				}
-				if (!filter(filterModel, entity)) {
+				if (!filter(filterModel, entity, disjunction)) {
 					continue;
 				}
 
@@ -192,20 +222,34 @@ public final class DLFilter {
 		}
 	}
 
-	private static <T> boolean filter(final List<NormalFilterUnitModel> filterModel, final T entity)
+	private static <T> boolean filter(final List<NormalFilterUnitModel> filterModel, final T entity, final boolean disjunction)
 			throws NoSuchMethodException {
+
 		for (NormalFilterUnitModel unit : filterModel) {
 			final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE
 					: unit.getFilterCompiler();
 			if (unit.getOperator().getArity() >= 1 & unit.getValue(1) == null) {
-				return false; // neprošlo konverzí
+                if (!disjunction)
+				    return false; // conversion not satisfied
 			}
+
+            // check the result
 			if (!(Boolean) compiler.compile(unit.getOperator(), unit.getColumn(), getValue(entity, unit.getColumn()),
 					unit.getValue(1), unit.getValue(2))) {
-				return false;
+                if (!disjunction)
+                    return false;
 			}
+            else
+            {
+                if (disjunction)
+                    return true;
+            }
 		}
-		return true;
+
+        if (!disjunction)
+            return true;
+        else
+		    return filterModel.size() == 0; // if no filter specified, it is ok. Otherwise no condition was satisfied, fail.
 	}
 
 	/**
@@ -366,27 +410,50 @@ public final class DLFilter {
 	 */
 	public static <T> DLResponse<T> filterAndCount(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final int firstRow, final int rowCount, final List<DLSort> sorts) {
-		final List<T> data = filter(filterModel, list, firstRow, rowCount, null, true);
-		sort(sorts, data);
+        return filterAndCount(filterModel, list, firstRow, rowCount, sorts, false);
+	}
+
+    /**
+     * Method filters list with entities. DLFilter criterias is defined in the list. Index of first row starts at 0.
+     * Also can be defined number of result rows. If row count is 0 all records are returned. There is also return
+     * number of total size of filtered rows
+     *
+     * @param <T>
+     *            entity type in the listbox
+     * @param filterModel
+     *            model criterias
+     * @param firstRow
+     *            index of the first row
+     * @param rowCount
+     *            max row count
+     * @param list
+     *            list of entities
+     * @param sorts
+     *            list of sorting criterias
+     * @param disjunction
+     *            multiple filter condition - disjunction or conjunction (OR or AND)
+     * @return filtered list - new instance
+     */
+    public static <T> DLResponse<T> filterAndCount(final List<NormalFilterUnitModel> filterModel, final List<T> list,
+                                                   final int firstRow, final int rowCount, final List<DLSort> sorts,
+                                                   boolean disjunction)
+    {
+        final List<T> data = filter(filterModel, list, firstRow, rowCount, null, true, disjunction);
+        sort(sorts, data);
 
         if (rowCount == 0)
         {
             return new DLResponse<T>(data, data.size()); // all data
         }
-		else if (data.size() > firstRow) {
-			return new DLResponse<T>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
-		} else {
-			final List<T> emptyList = Collections.emptyList(); // just to avoid type safety warning
-			return new DLResponse<T>(emptyList, data.size());
-		}
-	}
+        else if (data.size() > firstRow) {
+            return new DLResponse<T>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
+        } else {
+            final List<T> emptyList = Collections.emptyList(); // just to avoid type safety warning
+            return new DLResponse<T>(emptyList, data.size());
+        }
+    }
 
-	protected static Object getValue(final Object entity, final String address) throws NoSuchMethodException {
+    protected static Object getValue(final Object entity, final String address) throws NoSuchMethodException {
 		return Fields.getByCompound(entity, address);
-		//Object object = entity;
-		//for (String key : address.split("\\.")) {
-		//	object = Fields.get(object, key);
-		//}
-		//return object;
 	}
 }

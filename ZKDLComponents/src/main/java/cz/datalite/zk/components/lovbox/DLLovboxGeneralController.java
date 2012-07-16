@@ -8,16 +8,17 @@ import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.DLListboxGeneralController;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>Controller for new lovbox which can substitude combobox. Main advantage is
@@ -88,6 +89,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
      */
     protected void onSelect( final boolean close ) {
         model.setSelectedItem( listboxController.getSelectedItem() );
+        model.setSelectedItems( listboxController.getSelectedItems() );
         lovbox.fireChanges();
         cascadeUtil.dofireParentChanges();
         if ( close ) {

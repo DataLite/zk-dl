@@ -1,8 +1,9 @@
 package cz.datalite.webdriver.components;
 
-import java.util.Calendar;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.Calendar;
 
 /**
  * Mirror of Datebox
@@ -33,6 +34,6 @@ public class Datebox extends InputElement {
 
     @Override
     public String getValue() {
-        return webElement.findElement( By.tagName( "input" ) ).getText();
+        return webElement.findElement( By.tagName( "input" ) ).getAttribute("value");
     }
 }

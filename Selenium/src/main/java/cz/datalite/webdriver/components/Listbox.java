@@ -1,8 +1,11 @@
 package cz.datalite.webdriver.components;
 
-import java.util.List;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 /**
  * Mirror of ZK Listbox component. This also covers QuickFilter and Paging.
@@ -63,13 +66,43 @@ public class Listbox extends ZkElement {
      */
     protected void testListheader( final int index ) {
         for ( Phase phase : Phase.values() ) {
-            final List<WebElement> listheaders = parentElement.findElement( By.className( "z-listhead" ) ).findElements( By.className( "z-listheader" ) );
-            sortListheader( listheaders.get( index ) );
+            // StaleElementReferenceException can be thrown if javascript object is not yet ready (attached to the DOM).
+            int recoveryCount = 10;
+            while(recoveryCount > 0)
+            {
+                try{
+                    final List<WebElement> listheaders = parentElement.findElement( By.className( "z-listhead" ) ).findElements( By.className( "z-listheader" ) );
+                    sortListheader( listheaders.get( index ) );
+                    break;
+                }
+                catch (StaleElementReferenceException e) { }
+                recoveryCount--;
+                zkDriver.sleep(100);
+            }
+
+            if (recoveryCount == 0)
+                throw new StaleElementReferenceException("Listheader " + index + " shows StaleElementReferenceException even after 10 retry.");
         }
     }
 
     protected void sortListheader( final WebElement listheader ) {
-        listheader.click();
+        int recoveryCount = 10;
+        while(recoveryCount > 0)
+        {
+            try
+            {
+                listheader.click();
+                break;
+            }
+            catch (ElementNotVisibleException e) {}
+
+            recoveryCount--;
+            zkDriver.sleep(100);
+        }
+
+        if (recoveryCount == 0)
+            throw new ElementNotVisibleException("Listheader " + listheader + " not visible even after 10 retry.");
+
         zkDriver.waitForProcessing();
     }
 
@@ -99,9 +132,13 @@ public class Listbox extends ZkElement {
         return getRows().get( index - 1 );
     }
 
-    public String get( final int row, final int column ) {
+    public WebElement getCell(  final int row, final int column ) {
         final WebElement rowEl = getRow( row );
-        return rowEl.findElements( By.xpath( "./td" ) ).get( column - 1 ).getText();
+        return rowEl.findElements( By.xpath( "./td" ) ).get( column - 1 );
+    }
+
+    public String get( final int row, final int column ) {
+        return getCell(row, column).getText();
     }
 
     public int getPageCount() {
@@ -131,7 +168,7 @@ public class Listbox extends ZkElement {
 
     public void doubleClickOnRow( final int index ) {
         selectRow( index );
-        doubleClickOn( getRows().get( index - 1 ) );
+        doubleClickOn( getCell( index, 1) );
     }
 
     public void setPaging( final Paging paging ) {

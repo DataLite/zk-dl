@@ -2,16 +2,18 @@ package cz.datalite.zk.components.list;
 
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
-import cz.datalite.zk.components.list.controller.impl.*;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.utils.HashMapAutoCreate;
 import cz.datalite.zk.components.list.controller.*;
+import cz.datalite.zk.components.list.controller.impl.*;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.enums.DLFiterType;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
-import cz.datalite.zk.components.list.model.*;
+import cz.datalite.zk.components.list.model.DLColumnModel;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.model.DLMasterModel;
 import cz.datalite.zk.components.list.view.DLListControl;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListboxManager;
@@ -19,11 +21,6 @@ import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
 import cz.datalite.zk.components.paging.DLPagingModel;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -33,6 +30,8 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Paging;
+
+import java.util.*;
 
 /**
  * Main controller for the extended listbox component. This controller is the
@@ -176,6 +175,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         }
         model.getPagingModel().clear();
         managerController.fireChanges();
+        getListboxController().fireChanges();
         refreshDataModel();
         autosaveModel();
 
@@ -420,7 +420,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public void registerEasyFilterVariable( final Component comp, final String variableName ) {
-        comp.setVariable( variableName, easyFilterController.getBindingModel(), true );
+        comp.setAttribute( variableName, easyFilterController.getBindingModel(), Component.SPACE_SCOPE );
     }
 
     public void registerEasyFilterOnClear( final String compId ) {
@@ -520,8 +520,20 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         getListboxController().setSelectedIndex( index );
     }
 
+    public Set<T> getSelectedItems() {
+        return getListboxController().getSelectedItems();
+    }
+
+    public void setSelectedItems( final Set<T> selecteItems ) {
+        getListboxController().setSelectedItems( selecteItems );
+    }
+
     public DLEasyFilterController getEasyFilterController() {
         return easyFilterController;
+    }
+
+    public DLQuickFilterController getQuickFilterController() {
+        return quickFilterController;
     }
 
     public DLMasterModel getModel() {

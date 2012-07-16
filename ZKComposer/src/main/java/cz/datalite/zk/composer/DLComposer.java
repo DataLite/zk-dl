@@ -1,6 +1,7 @@
 package cz.datalite.zk.composer;
 
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.annotation.processor.AnnotationProcessor;
@@ -121,12 +122,12 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
 
         // publish controller into component namespace. It can be than accessed from ZUL as "ctl.xxx".
         // defualt value is ctl, but it can be changed with @ZkController annotation on class level
-        comp.setAttribute( loadControllerClass( this.getClass() ), this, Component.SPACE_SCOPE );
+        comp.setAttribute( loadControllerClass( this.getClass() ), this, Component.COMPONENT_SCOPE );
 
         // the same for model. The default value is same as controller as well. It is more convenient to have only one variable to access controller
         // however, you can change the value with @ZkModel annotation on class level
         if ( !loadControllerClass( this.getClass() ).equals( loadModelClass( this.getClass() ) ) ) {
-            comp.setAttribute( loadModelClass( this.getClass() ), this, Component.SPACE_SCOPE );
+            comp.setAttribute( loadModelClass( this.getClass() ), this, Component.COMPONENT_SCOPE );
         }
 
         // setup model and controller fields and methods.
@@ -288,11 +289,17 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
         // opportunity to modify child model befor resend.
         T newModel = getMasterControllerModel();
 
-        for ( DLDetailController detail : detailControllers ) {
-            detail.onMasterChanged( newModel );
+        try
+        {
+            for ( DLDetailController detail : detailControllers ) {
+                detail.onMasterChanged( newModel );
+            }
         }
-
-        newModel.clearRefreshFlags();
+        finally {
+            // we want to clear flags in all cases, because if a flag triggers an error, we need to
+            // clear it to recover from it.
+            newModel.clearRefreshFlags();
+        }
     }
 
     /*************************************************  @ZkModel and @ZkController ********************************************************/
@@ -417,11 +424,15 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
         for ( Method method : ReflectionHelper.getAllMethods( this.getClass() ) ) {
             for ( Annotation annotation : method.getDeclaredAnnotations() ) {
                 if ( annotation instanceof ZkParameter ) {
-                    if ( !method.getName().startsWith( "set" ) ) {
-                        throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p)  (e.g. setParamName). "
-                                + "Found: " + method.getName() );
+                    String paramName = ((ZkParameter)annotation).name();
+                    if (StringHelper.isNull(paramName))
+                    {
+                        if ( !method.getName().startsWith( "set" ) ) {
+                            throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p)  (e.g. setParamName). "
+                                    + "Found: " + method.getName() );
+                        }
+                        paramName = getMethodLowerCase( method.getName().substring( 3 ) );
                     }
-                    String paramName = getMethodLowerCase( method.getName().substring( 3 ) );
 
                     if ( method.getParameterTypes().length != 1 ) {
                         throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p), wrong number of parameters. "

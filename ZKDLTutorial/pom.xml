@@ -102,6 +102,18 @@
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKDLComponents</artifactId>
+            <version>1.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zkplus</artifactId>
+                    <groupId>org.zkoss.zk</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKDLComponentsHibernateExt</artifactId>
             <version>${cz.datalite.zk-dl.version}</version>
             <exclusions>
@@ -220,10 +232,10 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.9</version>
+                <version>6.1.26</version>
                 <configuration>
                     <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                        <connector implementation="org.mortbay.jetty.bio.SocketConnector">
                             <!-- Runtime port - change here -->
                             <port>9090</port>
                             <maxIdleTime>60000</maxIdleTime>

@@ -6,13 +6,7 @@ import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Div;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Intbox;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Paging;
-import org.zkoss.zul.Space;
+import org.zkoss.zul.*;
 import org.zkoss.zul.ext.Pageable;
 import org.zkoss.zul.ext.Paginated;
 
@@ -370,8 +364,9 @@ public class DLPaging extends Hbox implements Pageable {
             detailInfo.setVisible(false);
         }
 
-        pageNumber.setValue( getActivePage() + 1 );
-        if ( ( getPagingModel().getActualPage() + 1 ) > getPagingModel().getPageCount() )
+        int newPageNumber = getPagingModel().getPageCount() == 0 ? 0 : getActivePage() + 1;
+        pageNumber.setValue( newPageNumber );
+        if ( newPageNumber > getPagingModel().getPageCount() )
             pageNumber.setStyle( "border: 2px red solid; background-image: none; background-color: pink; " );
         else pageNumber.setStyle( "" );
 

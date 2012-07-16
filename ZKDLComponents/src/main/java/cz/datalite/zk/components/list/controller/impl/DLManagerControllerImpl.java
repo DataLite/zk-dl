@@ -9,17 +9,15 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
+
+import java.util.*;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -223,7 +221,9 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        Messagebox.show( "Opravdu chcete resetovat filtry?", "Resetovat filtry", Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+        Messagebox.show(Labels.getLabel("listbox.manager.resetFilter.message.text"),
+                Labels.getLabel("listbox.manager.resetFilter.message.title"),
+                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
 
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
@@ -238,7 +238,9 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        Messagebox.show( "Opravdu chcete všechna nastavení resetovat?", "Resetovat vše", Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+        Messagebox.show( Labels.getLabel("listbox.manager.reset.message.text"),
+                Labels.getLabel("listbox.manager.reset.message.title"),
+                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
 
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
@@ -279,6 +281,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                 if ( unit.getValue( i ) instanceof Date ) {
                     filter.append( DateHelper.dateToString( ( Date ) unit.getValue( i ) ) );
                 } else {
+                    // TODO if the value is complex obejct, there is no way how to override it's printout (always toString())
+                    // this value is then printed in listbox manager as tooltip
                     filter.append( unit.getValue( i ) );
                 }
             }

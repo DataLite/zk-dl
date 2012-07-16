@@ -4,11 +4,11 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.zk.components.list.DLListboxController;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnModel;
-import cz.datalite.zk.components.list.model.DLMasterModel;
-import java.util.List;
-import java.util.Map;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.util.Composer;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for the master listbox controller. This is private api.
@@ -99,17 +99,17 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
     DLEasyFilterController getEasyFilterController();
 
     /**
+     * Returns quickFilter controller
+     * @return quickFilter controller
+     */
+    DLQuickFilterController getQuickFilterController();
+
+    /**
      * Loads data with actual filter model model but not with paging.
      * @param rowLimit limit of entities
      * @return loaded data
      */
     DLResponse<T> loadData( int rowLimit );
-
-    /**
-     * Returns master model.
-     * @return master model
-     */
-    DLMasterModel getModel();
 
     /**
      * Returns window controller - main controller on the page.

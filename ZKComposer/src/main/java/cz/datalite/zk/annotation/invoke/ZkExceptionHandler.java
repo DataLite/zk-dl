@@ -21,12 +21,14 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkException;
 import cz.datalite.zk.annotation.ZkExceptions;
-import java.lang.reflect.InvocationTargetException;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Messagebox;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <p>Handles exceptions thrown by invocated methods. It the thrown type is
@@ -110,6 +112,7 @@ public class ZkExceptionHandler extends Handler {
                 if (localize) { // error message localization
                     msg = Labels.getLabel(msg, msg);
                 }
+                Clients.clearBusy();
                 Messagebox.show(msg, title, Messagebox.OK, Messagebox.ERROR);
             } catch (InterruptedException e) {
                 // ignore

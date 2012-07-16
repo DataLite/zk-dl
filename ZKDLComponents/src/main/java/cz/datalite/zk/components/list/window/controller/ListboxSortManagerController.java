@@ -1,18 +1,15 @@
 package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.dao.DLSortType;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
 import org.zkoss.zkplus.databind.TypeConverter;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Controller for the manager which allows user to set advanced configuration for
@@ -46,7 +43,7 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
     @SuppressWarnings( "unchecked" )
     public void doAfterCompose( final org.zkoss.zk.ui.Component comp ) throws Exception {
         super.doAfterCompose( comp );
-        comp.setVariable( "ctl", this, true );
+        comp.setAttribute( "ctl", this, Component.SPACE_SCOPE);
 
         final List<Map<String, Object>> unitModels = ( List<Map<String, Object>> ) arg.get( "columnModels" );
 

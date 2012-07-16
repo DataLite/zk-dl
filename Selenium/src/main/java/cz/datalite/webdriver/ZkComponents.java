@@ -2,7 +2,6 @@ package cz.datalite.webdriver;
 
 import cz.datalite.webdriver.components.*;
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebElement;
 
 /**
@@ -78,6 +77,13 @@ public enum ZkComponents {
             return new Listbox( parent, webElement );
         }
     },
+    TREE( "z-dottree" ) {
+
+        @Override
+        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
+            return new Tree( parent, webElement );
+        }
+    },
     CHECKBOX( "z-checkbox", true ) {
 
         @Override
@@ -90,6 +96,13 @@ public enum ZkComponents {
         @Override
         public ZkElement create( final ZkElement parent, final WebElement webElement ) {
             return new Button( parent, webElement );
+        }
+    },
+    TOOLBAR_BUTTON( "z-toolbarbutton" ) {
+
+        @Override
+        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
+            return new ToolbarButton( parent, webElement );
         }
     },
     GRID( "z-grid" ) {

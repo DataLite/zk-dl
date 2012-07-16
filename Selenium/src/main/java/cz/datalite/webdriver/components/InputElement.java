@@ -47,9 +47,13 @@ public abstract class InputElement extends ZkElement {
 
     /**
      * Returns value written or selected in the component
+     * (if the component contains value attribute, it returns it's value, otherwise getText())
      * @return value of component
      */
     public String getValue() {
-        return webElement.getText();
+        if (webElement.getAttribute("value") != null)
+            return webElement.getAttribute("value");
+        else
+            return webElement.getText();
     }
 }

@@ -1,8 +1,10 @@
 package cz.datalite.webdriver.components;
 
-import java.util.List;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 /**
  * <p>This component is mirror of DLZK component - QuickFilter. It allows to 
@@ -36,6 +38,7 @@ public class QuickFilter extends ZkElement {
         final WebElement input = webElement.findElement( By.tagName( "input" ) );
         input.clear();
         input.sendKeys( value );
+        input.sendKeys(Keys.ENTER);
         filter();
     }
 
@@ -58,7 +61,7 @@ public class QuickFilter extends ZkElement {
     /**
      * Set filter key, after this filter is not called.
      *
-     * @param key key - index starts at 1
+     * @param index - index starts at 1
      */
     public void setKey( final int index ) {
         final WebElement list = openList();
@@ -76,8 +79,12 @@ public class QuickFilter extends ZkElement {
      * Pushs filter button
      */
     public void filter() {
-        final WebElement image = webElement.findElement( By.className( "datalite-listbox-qfiltr-image" ) );
+        zkDriver.waitForProcessing();
+        final WebElement image = webElement.findElement(By.className("datalite-listbox-qfiltr-image"));
         image.click();
+
+        // filter click does not throw processing immediately
+        zkDriver.sleep(100);
         zkDriver.waitForProcessing();
     }
 

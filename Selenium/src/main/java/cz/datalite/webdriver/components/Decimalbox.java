@@ -17,4 +17,9 @@ public class Decimalbox extends InputElement {
     public void autoFill() {
         write( "12345" );
     }
+
+    @Override
+    public String getValue() {
+        return webElement.getAttribute("value");
+    }
 }

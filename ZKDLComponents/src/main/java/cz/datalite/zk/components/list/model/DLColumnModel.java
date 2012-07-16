@@ -2,10 +2,8 @@ package cz.datalite.zk.components.list.model;
 
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * Master column model - groups column unit models and makes global changes.
@@ -101,6 +99,10 @@ public class DLColumnModel {
         return unit;
     }
 
+    /**
+     * Returns list of sorts (created on the fly from column model)
+     * @return unmodifyable collection of sorts
+     */
     public List<DLSort> getSorts() {
         final List<DLSort> sorts = new ArrayList<DLSort>();
         for ( int i = 0; i < sortMaxIndex; i++ ) {
@@ -122,7 +124,9 @@ public class DLColumnModel {
                 it.remove();
         }
         }
-        return sorts;
+
+        // since it is copy of data anyway, do not allow the client to think it is
+        return Collections.unmodifiableList(sorts);
     }
 
     public void clear() {

@@ -1,30 +1,28 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import org.apache.log4j.Logger;
-
-import org.zkoss.zul.Row;
-import org.zkoss.zul.Space;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.util.GenericAutowireComposer;
-
 import cz.datalite.helpers.ZKBinderHelper;
-import cz.datalite.zk.components.list.model.RowModel;
+import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
+import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
-import cz.datalite.zk.components.list.controller.DLListboxExtController;
-import cz.datalite.zk.components.list.filter.components.RequireController;
 import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
+import cz.datalite.zk.components.list.filter.components.RequireController;
+import cz.datalite.zk.components.list.model.RowModel;
+import org.apache.log4j.Logger;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.GenericAutowireComposer;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.Space;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -47,7 +45,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     @SuppressWarnings( "unchecked" )
     public void doAfterCompose( final org.zkoss.zk.ui.Component comp ) throws Exception {
         super.doAfterCompose( comp );
-        comp.setVariable( "ctl", this, true );
+        comp.setAttribute( "ctl", this, Component.SPACE_SCOPE);
 
         // save masterController
         masterController = ( DLListboxExtController ) arg.get( "master" );
@@ -67,6 +65,11 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         } );
 
         for ( NormalFilterUnitModel unit : modelFilter ) {
+
+            // if column was added manally, template might not be set - enforce template
+            if (unit.getTemplate() == null)
+                unit.setTemplate(modelTemplates.findUnitModelByColumnName(unit.getColumn()));
+
             rows.add( new RowModel( unit ) );
         }
     }

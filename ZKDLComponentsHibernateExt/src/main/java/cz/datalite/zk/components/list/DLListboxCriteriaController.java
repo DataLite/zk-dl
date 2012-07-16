@@ -4,22 +4,22 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSearch;
 import cz.datalite.dao.DLSort;
 import cz.datalite.helpers.TypeConverter;
-import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import cz.datalite.zk.components.list.filter.*;
+import cz.datalite.zk.components.list.filter.NormalFilterModel;
+import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCriterionCompiler;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Master extended controller for listbox. This implementation uses Hibernate
@@ -81,6 +81,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts ) {
         final DLSearch<T> search = getDefaultSearchObject( filter, firstRow, rowCount, sorts );
 

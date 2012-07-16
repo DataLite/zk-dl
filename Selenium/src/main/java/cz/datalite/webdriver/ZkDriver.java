@@ -1,26 +1,25 @@
 package cz.datalite.webdriver;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import cz.datalite.webdriver.components.ZkElement;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Properties;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-
-import cz.datalite.webdriver.components.ZkElement;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -277,7 +276,7 @@ public class ZkDriver {
     }
 
     private static WebDriver initHTMLUnitDriver() {
-        final HtmlUnitDriver htmlDriver = new HtmlUnitDriver( BrowserVersion.FIREFOX_3 );
+        final HtmlUnitDriver htmlDriver = new HtmlUnitDriver( BrowserVersion.getDefault() );
         htmlDriver.setJavascriptEnabled( true );
         return htmlDriver;
     }
@@ -398,8 +397,22 @@ public class ZkDriver {
     }
 
     public void waitForElement( final String id ) {
+        waitForElement(By.id( id ));
+    }
+
+    public void waitForElement( final By by ) {
         waitForProcessing();
-        webDriverWait.until( new VisibilityOfElementLocated( By.id( id ) ) );
+        webDriverWait.until( new VisibilityOfElementLocated( by ) );
+    }
+
+    public void waitForElement( final WebElement parent, final By by ) {
+        waitForProcessing();
+        webDriverWait.until( new VisibilityOfElementLocated( parent, by ) );
+    }
+
+    public void waitForElementVisible( final By by ) {
+        waitForProcessing();
+        webDriverWait.until( new VisibilityOfElementLocated( by ) );
     }
 
     /**
@@ -467,4 +480,5 @@ public class ZkDriver {
         waitForProcessing();
         return webDriver.findElement( By.className( "selenium-response" ) ).getText();
     }
+
 }

@@ -2,10 +2,12 @@ package cz.datalite.zk.components.list.controller;
 
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
-import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Listitem;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Interface for the listbox component controller which reacts
@@ -77,6 +79,18 @@ public interface DLListboxComponentController<T> {
      * @param selectedItem selected item
      */
     void setSelectedItem( T selectedItem );
+
+    /**
+     * <p>Returns selected items in the listbox.</p>
+     * @return selectedItems
+     */
+    Set<T> getSelectedItems();
+
+    /**
+     * Sets seltected items to the listbox
+     * @param selectedItems selected items
+     */
+    void setSelectedItems(Set<T> selectedItems);
 
     /**
      * Sets selected index to the component.

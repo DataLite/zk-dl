@@ -59,7 +59,7 @@ public enum DLFilterOperator {
                 return op;
             }
         }
-        throw new UnsupportedOperationException( "Unknown filter operator." );
+        throw new UnsupportedOperationException( "Unknown filter operator: " + key );
     }
 
     public String getLabel() {

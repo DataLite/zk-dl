@@ -6,7 +6,7 @@ import cz.datalite.webdriver.SeleniumUnitTest;
 import cz.datalite.webdriver.ZkDriver;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.File;
@@ -154,7 +154,7 @@ public class ZkElement {
      * @param by criterion
      * @param contextElement parent
      * @param childBy criterion fow child if it is required.
-     * @return
+     * @return the element
      */
     public static WebElement find( final By by, final ZkElement contextElement, final By childBy ) {
         WebElement element;
@@ -259,7 +259,7 @@ public class ZkElement {
             zkDriver.waitForProcessing();
             zkDriver.sleep( 1000 );
 
-            final WebElement element = (( ZkElement ) errorWin.find( By.className( "error-window-details" ) )).getWebElement();
+            final WebElement element = ( errorWin.find( By.className( "error-window-details" ) )).getWebElement();
 
             final StringBuilder errorText = new StringBuilder( "Test failed:\n" );
 
@@ -327,16 +327,17 @@ public class ZkElement {
      * @param element target element
      */
     protected static void doubleClickOn( final WebElement element ) {
-        if ( zkDriver.getWebDriver() instanceof InternetExplorerDriver ) {//        This works for IE driver
-            zkDriver.executeScript( "arguments[0].fireEvent('ondblclick')", element );
-            zkDriver.waitForProcessing();
-        } else { //        For the FirefoxDriver and 'ChromeDriver':
-            zkDriver.executeScript(
-                    "var evt = document.createEvent('MouseEvents'); evt.initMouseEvent('dblclick',"
-                    + "true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,"
-                    + "null); "
-                    + "arguments[0].dispatchEvent(evt);", element );
-        }
+        new Actions(zkDriver.getWebDriver()).doubleClick(element).perform();
+//        if ( zkDriver.getWebDriver() instanceof InternetExplorerDriver ) {//        This works for IE driver
+//            zkDriver.executeScript( "arguments[0].fireEvent('ondblclick')", element );
+//            zkDriver.waitForProcessing();
+//        } else { //        For the FirefoxDriver and 'ChromeDriver':
+//            zkDriver.executeScript(
+//                    "var evt = document.createEvent('MouseEvents'); evt.initMouseEvent('dblclick',"
+//                    + "true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,"
+//                    + "null); "
+//                    + "arguments[0].dispatchEvent(evt);", element );
+//        }
     }
 
     /**
@@ -385,6 +386,7 @@ public class ZkElement {
      * @param by criterion
      * @return found element derived from ZkElement
      */
+    @SuppressWarnings("unchecked")
     public <T extends ZkElement> T find( final By by ) {
         return ( T ) ElementFactory.create( findElement( by, this ), this );
     }
@@ -397,6 +399,7 @@ public class ZkElement {
      * @param by criterion
      * @return found element derived from ZkElement
      */
+    @SuppressWarnings("unchecked")
     public <T extends ZkElement> List<T> findAll( final By by ) {
         final List<WebElement> webElements = findElements( by, this );
         final List<T> elements = new ArrayList<T>( webElements.size() );
@@ -416,6 +419,12 @@ public class ZkElement {
             return new Button( this, findElement( by, this, BUTTON.getBy() ) );
         }
     }
+
+    public ToolbarButton findToolbarButton( String label ) {
+        WebElement labelElement = findElement( By.xpath(".//div[contains(@class, 'z-toolbarbutton')]/div/div[text()='" + label + "']/../.."), this);
+        return new ToolbarButton( this, labelElement );
+    }
+
 
     public Checkbox findCheckbox( final By by ) {
         return new Checkbox( this, findElement( by, this, CHECKBOX.getBy() ) );
@@ -484,6 +493,10 @@ public class ZkElement {
             }
         }
         return listboxes;
+    }
+
+    public Tree findTree( final By by ) {
+        return new Tree( this, findElement( by, this, TREE.getBy() ) );
     }
 
     public Lovbox findLovbox() {

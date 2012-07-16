@@ -3,18 +3,14 @@ package cz.datalite.webdriver;
 import cz.datalite.webdriver.components.Listbox;
 import cz.datalite.webdriver.components.Window;
 import cz.datalite.webdriver.components.ZkElement;
-
-import java.util.Set;
-import java.lang.annotation.Annotation;
-
-import org.junit.Test;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.*;
+import org.junit.rules.MethodRule;
 import org.junit.rules.TestName;
+import org.junit.rules.TestWatchman;
+import org.junit.runners.model.FrameworkMethod;
+
+import java.lang.annotation.Annotation;
+import java.util.Set;
 
 /**
  * This is parent class of SeleniumUnitTests which
@@ -59,6 +55,15 @@ public class SeleniumUnitTest {
     }
     @Rule
     public TestName name = new TestName();
+
+    @Rule
+    public MethodRule watchman = new TestWatchman() {
+        @Override
+        public void failed(Throwable e, FrameworkMethod method) {
+            ZkElement.takeScreenshot();
+            super.failed(e, method);
+        }
+    };
 
     @Before
     public void setUp() {

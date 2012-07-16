@@ -1,10 +1,12 @@
 package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.zk.components.list.view.DLListbox;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.util.GenericAutowireComposer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.zkoss.zk.ui.util.GenericAutowireComposer;
 
 /**
  * Controller for the column manager which allows to move and hide some columns
@@ -25,7 +27,7 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     @SuppressWarnings( "unchecked" )
     public void doAfterCompose( final org.zkoss.zk.ui.Component comp ) throws Exception {
         super.doAfterCompose(comp);
-        comp.setVariable( "ctl", this, true );
+        comp.setAttribute("ctl", this, Component.SPACE_SCOPE);
 
 //        usedListbox = ( DLListbox ) comp.getFellow( "usedListbox" );
 //        unusedListbox = ( DLListbox ) comp.getFellow( "unusedListbox" );

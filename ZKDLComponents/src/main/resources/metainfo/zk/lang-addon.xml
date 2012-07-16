@@ -171,6 +171,26 @@ e%3D0%3B
                 <attribute-value>both</attribute-value>
             </attribute>
         </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedItems</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>cz.datalite.zk.databinder.SelectedItemsConverter</attribute-value>
+            </attribute>
+        </annotation>
     </component>
 
     <component>

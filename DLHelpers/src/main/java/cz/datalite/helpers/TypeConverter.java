@@ -46,7 +46,7 @@ final public class TypeConverter {
         } else if ( Long.class.equals( type ) || Long.TYPE.equals( type.getClass() ) ) {
             return ( T ) Long.valueOf( value );
         } else if ( Boolean.class.equals( type ) || Boolean.TYPE.equals( type.getClass() ) ) {
-            return ( T ) Boolean.valueOf( value );
+            return ( T ) (BooleanHelper.isTrue(value) ? Boolean.TRUE : (Boolean.valueOf( value )));
         } else if ( type.isEnum() ) {
             for ( T enumValue : type.getEnumConstants() ) {
                 if ( enumValue.toString().equals( value ) ) {
@@ -55,7 +55,7 @@ final public class TypeConverter {
             }
             return null;
         } else {
-            return ( T ) type;
+            return ( T ) value;
         }
     }
 

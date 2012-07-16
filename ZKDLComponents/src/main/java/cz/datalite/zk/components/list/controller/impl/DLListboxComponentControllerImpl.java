@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.dao.DLSortType;
+import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
@@ -8,13 +9,6 @@ import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.IdSpace;
@@ -24,6 +18,9 @@ import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listitem;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  *  Implementation of the listbox controller.
@@ -49,6 +46,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     protected final Map<DLColumnUnitModel, DLListheader> listheaderTemplates = new HashMap<DLColumnUnitModel, DLListheader>();
     /** selected item */
     protected T selectedItem;
+    /** selected items */
+    protected Set<T> selectedItems;
     // default model
     protected final List<DLListheader> defaultHeaders = new LinkedList<DLListheader>();
     protected final List<Listcell> defaultRendererCellTemplates = new LinkedList<Listcell>();
@@ -71,6 +70,12 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 } else {
                     selectedItem = listboxModel.get( listbox.getSelectedIndex() );
                 }
+
+                // multiple selected items
+                selectedItems = new HashSet<T>();
+                for (Listitem listitem : (Set<Listitem>) listbox.getSelectedItems())
+                    selectedItems.add(listboxModel.get(listitem.getIndex()));
+
                 masterController.onSelect();
             }
         } );
@@ -173,6 +178,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             // if selected item is null or not in new list and we should select first row
             if ( listbox.isSelectFirstRow() && !listboxModel.contains( getSelectedItem() ) && listboxModel.size() > 0 ) {
                 setSelectedItem( listboxModel.get( 0 ) );
+                setSelectedItems( Collections.singleton(listboxModel.get(0)));
             }
         }
 
@@ -282,7 +288,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     /**
-     * Returns data type of the fild according to the main entity and address
+     * Returns data type of the fild according to the main entity and address.
+     * Search all public fields and getter methods.
+     *
      * @param cls class with entity
      * @param key address
      * @return type
@@ -294,9 +302,17 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         final int index = key.indexOf( '.' );
         final String name = index == -1 ? key : key.substring( 0, index );
         final String newKey = index == -1 ? "" : key.substring( index + 1 );
-        for ( java.lang.reflect.Field field : cls.getDeclaredFields() ) {
+
+        for ( java.lang.reflect.Field field : ReflectionHelper.getAllFields(cls) ) {
             if ( field.getName().equals( name ) ) {
                 return getFieldType( field.getType(), newKey );
+            }
+        }
+
+        String getterMethodName = "get" + name.substring(0,1).toUpperCase() + name.substring(1);
+        for ( Method method : ReflectionHelper.getAllMethods(cls) ) {
+            if ( method.getName().equals( getterMethodName )) {
+                return getFieldType( method.getReturnType(), newKey );
             }
         }
         return null;
@@ -307,10 +323,22 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     public void setSelectedItem( final T selectedItem ) {
-        if ( masterController.isLocked() ) {
+        if ( masterController.isLocked() || listboxModel == null) {
             return;
         }
         this.selectedItem = selectedItem;
+        listbox.setSelectedIndex( getSelectedIndex(), false );
+    }
+
+    public Set<T> getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(Set<T> selectedItems) {
+        if ( masterController.isLocked() ) {
+            return;
+        }
+        this.selectedItems = selectedItems;
         listbox.setSelectedIndex( getSelectedIndex(), false );
     }
 
@@ -324,8 +352,10 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
         if ( listboxModel.size() <= selectedIndex || selectedIndex < 0 ) {
             setSelectedItem( null );
+            setSelectedItems( Collections.<T>emptySet() );
         } else {
             setSelectedItem( listboxModel.get( selectedIndex ) );
+            setSelectedItems( Collections.singleton(getSelectedItem()));
         }
     }
 
