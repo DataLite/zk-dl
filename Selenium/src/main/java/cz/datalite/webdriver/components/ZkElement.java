@@ -420,10 +420,11 @@ public class ZkElement {
         }
     }
 
-    public ToolbarButton findToolbarButton( String label ) {
-        WebElement labelElement = findElement( By.xpath(".//div[contains(@class, 'z-toolbarbutton')]/div/div[text()='" + label + "']/../.."), this);
-        return new ToolbarButton( this, labelElement );
-    }
+// ToDo Not implemented yet
+//    public ToolbarButton findToolbarButton( String label ) {
+//        WebElement labelElement = findElement( By.xpath(".//div[contains(@class, 'z-toolbarbutton')]/div/div[text()='" + label + "']/../.."), this);
+//        return new ToolbarButton( this, labelElement );
+//    }
 
 
     public Checkbox findCheckbox( final By by ) {
@@ -495,9 +496,10 @@ public class ZkElement {
         return listboxes;
     }
 
-    public Tree findTree( final By by ) {
-        return new Tree( this, findElement( by, this, TREE.getBy() ) );
-    }
+// ToDo Not implemented yet    
+//    public Tree findTree( final By by ) {
+//        return new Tree( this, findElement( by, this, TREE.getBy() ) );
+//    }
 
     public Lovbox findLovbox() {
         return findLovbox( LOVBOX.getBy() );

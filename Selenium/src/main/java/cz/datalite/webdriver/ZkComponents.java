@@ -77,13 +77,14 @@ public enum ZkComponents {
             return new Listbox( parent, webElement );
         }
     },
-    TREE( "z-dottree" ) {
-
-        @Override
-        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
-            return new Tree( parent, webElement );
-        }
-    },
+// ToDo Not implemented yet
+//    TREE( "z-dottree" ) {
+//
+//        @Override
+//        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
+//            return new Tree( parent, webElement );
+//        }
+//    },
     CHECKBOX( "z-checkbox", true ) {
 
         @Override
@@ -98,13 +99,14 @@ public enum ZkComponents {
             return new Button( parent, webElement );
         }
     },
-    TOOLBAR_BUTTON( "z-toolbarbutton" ) {
-
-        @Override
-        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
-            return new ToolbarButton( parent, webElement );
-        }
-    },
+// ToDo Not implemented yet
+//    TOOLBAR_BUTTON( "z-toolbarbutton" ) {
+//
+//        @Override
+//        public ZkElement create( final ZkElement parent, final WebElement webElement ) {
+//            return new ToolbarButton( parent, webElement );
+//        }
+//    },
     GRID( "z-grid" ) {
 
         @Override
