@@ -152,4 +152,11 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * @return uuid
      */
     String getListboxUuid();
+    
+    /**
+     * Request for direct export to MS Excel
+     * 
+     * The result is file send to the user
+     */
+    void onDirectExport();
 }

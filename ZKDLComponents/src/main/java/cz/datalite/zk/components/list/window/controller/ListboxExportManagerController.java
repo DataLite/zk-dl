@@ -1,26 +1,15 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import cz.datalite.helpers.excel.export.*;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
-import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
-import jxl.format.Colour;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WriteException;
-import org.zkoss.lang.Strings;
-import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,145 +67,19 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
         selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox );
     }
 
-    protected DataSource prepareSource() {
-        return new DataSource() {
-
-            public List<Cell> getCells() {
-                try {
-                    return prepareCells();
-                } catch ( WriteException ex ) {
-                    throw new UiException("Error in Excel export.", ex);
-                }
-            }
-
-            @Override
-            public int getCellCount() {
-                return usedModel.size();
-            }
-        };
-    }
-
-    protected List<Cell> prepareCells() throws WriteException {
-        final List<HeadCell> heads = new ArrayList<HeadCell>();
-        
-        // list of columns that need to be visible only for the purpose of export 
-        // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
-        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
-
-        final WritableCellFormat headFormat = new WritableCellFormat( new WritableFont( WritableFont.ARIAL, 10, WritableFont.BOLD ) );
-        headFormat.setBackground( Colour.LIGHT_GREEN );
-        int column = 0;
-        int row = 0;
-        for ( Map<String, Object> unit : usedModel ) {
-            heads.add( new HeadCell( unit.get( "label" ), column, row, headFormat ) );
-            column++;
-        }
-
-        // load data 
-        List data;
-        try
-        {
-            // ensure, that column is visible in the model (is hidden if the user has added it only for export)
-            for ( Map<String, Object> unit : usedModel ) {
-                DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel( (Integer) unit.get("index") + 1 );
-                if (!columnUnitModel.isVisible())
-                {
-                    columnUnitModel.setVisible(true);
-                    hideOnFinish.add(columnUnitModel);
-                }
-            }
-
-            // and load data
-            data = masterController.loadData( (rows == 0) ? 36000 : Math.min( rows, 36000 ) ).getData();
-        }
-        finally
-        {
-            // after processing restore previous state
-            for (DLColumnUnitModel hide : hideOnFinish)
-                hide.setVisible(false);
-        }
-
-
-        final List<Cell> cells = new LinkedList<Cell>( heads );
-        for ( Object entity : data) {
-            row++;
-            column = 0;
-
-            for ( Map<String, Object> unit : usedModel ) {
-                try {
-                    final String columnName = ( String ) unit.get( "column" );
-
-                    Object value;
-
-                    if (entity instanceof Map)
-                        value = ((Map)entity).get(columnName);
-                    else
-                        value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
-
-                    if ( ( Boolean ) unit.get( "isConverter" ) ) {
-                        value = convert( value, ( Method ) unit.get( "converter" ) );
-                    }
-                    cells.add( new DataCell( row, value, heads.get( column ) ) );
-                } catch ( InvocationTargetException ex ) {
-                    throw new RuntimeException( ex );
-                } catch ( InstantiationException ex ) {
-                    throw new RuntimeException( ex );
-                } catch ( Exception ex ) { // ignore
-                    org.apache.log4j.Logger.getLogger( ListboxExportManagerController.class ).warn(
-                            "Error occured during exporting column " + ( String ) unit.get( "column" ) + ".", ex );
-                }
-                column++;
-            }
-        }
-
-        return cells;
-    }
-
-    protected Object convert( final Object value, final Method converter ) throws InvocationTargetException, InstantiationException {
-        if ( "coerceToUi".equals( converter.getName() ) ) {
-            return convertWithTypeConverter( value, converter );
-        } else {
-            return convertWithClt( value, converter );
-        }
-    }
-
-    protected Object convertWithClt( final Object value, final Method converter ) throws InvocationTargetException {
-        try {
-            if (converter.getGenericParameterTypes().length == 2)
-            {
-                // two parameter converter - add component (usually there is a no parameter public constructor)
-                Object component = converter.getGenericParameterTypes()[1].getClass().newInstance();
-                return converter.invoke( windowCtl, value, component );
-            }
-            else
-                return converter.invoke( windowCtl, value );
-        } catch ( IllegalAccessException ex ) {
-            return value;
-        } catch ( IllegalArgumentException ex ) {
-            return value;
-        } catch (InstantiationException e) {
-            return value;
-        }
-    }
-
-    protected Object convertWithTypeConverter( final Object value, final Method converter ) throws InvocationTargetException, InstantiationException {
-        try {
-            return converter.invoke( converter.getDeclaringClass().newInstance(), new Object[]{ value, null } );
-        } catch ( IllegalAccessException ex ) {
-            return value;
-        } catch ( IllegalArgumentException ex ) {
-            return value;
-        }
-    }
-
-    protected Map<String, Object> prepareMap( final Map<String, Object> map ) {
-        return new java.util.HashMap<String, Object>( map );
+    protected Map<String, Object> prepareMap(final Map<String, Object> map) {
+        return new java.util.HashMap<String, Object>(map);
     }
 
     public void onOk() throws FileNotFoundException, IOException {
-        org.zkoss.zk.ui.event.Events.postEvent( new org.zkoss.zk.ui.event.Event(
-                "onSave", self,
-                ExcelExportUtils.exportSimple( fileName, sheetName, prepareSource() ) ) );
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("filename", fileName);
+        args.put("sheetname", sheetName);
+        args.put("model", usedModel);
+        args.put("rows", rows);
+
+        org.zkoss.zk.ui.event.Events.postEvent(new org.zkoss.zk.ui.event.Event(
+                "onSave", self, args));
         self.detach();
     }
 

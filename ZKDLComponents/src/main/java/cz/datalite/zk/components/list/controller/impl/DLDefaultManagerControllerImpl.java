@@ -40,4 +40,8 @@ public class DLDefaultManagerControllerImpl implements DLManagerController {
 
     public void fireChanges() {
     }
+
+    public void exportCurrentView() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.helpers.DateHelper;
+import cz.datalite.helpers.excel.export.*;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLManagerController;
 import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
@@ -9,6 +10,10 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
+import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.media.AMedia;
@@ -18,6 +23,13 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
 
 import java.util.*;
+import java.util.logging.Level;
+import jxl.format.Colour;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WriteException;
+import org.zkoss.lang.reflect.Fields;
+import org.zkoss.zk.ui.UiException;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -166,7 +178,64 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         showPage( "listboxFilterManagerWindow.zul", args, listener );
     }
 
+    /**
+     * exports current view in listbox and sends the file as a response
+     */
+    public void exportCurrentView() {
+        try {
+            // grab model of current view
+            final Map<String, Object> args = takeCurrentViewSnapshoot();
+
+            List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
+
+            for (Iterator<Map<String, Object>> it = columnModels.iterator(); it.hasNext();) {
+                Map<String, Object> item = it.next();
+                // remove invisible columns
+                if (!(Boolean) item.get("visible")) {
+                    it.remove();
+                }
+            }
+            Integer rows = (Integer) args.get("rows");
+
+            export("report", "data", columnModels, rows);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(DLManagerControllerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void onExportManager() {
+
+        // grab model of current view
+        final Map<String, Object> args = takeCurrentViewSnapshoot();
+
+        // add master component
+        args.put("windowCtl", masterController.getWindowCtl());
+
+        final EventListener listener = new EventListener() {
+
+            public void onEvent(final Event event) throws IOException {
+                Map<String, Object> args = (Map<String, Object>) event.getData();
+                String fileName = (String) args.get("filename");
+                String sheetName = (String) args.get("sheetname");
+                List<Map<String, Object>> model = (List<Map<String, Object>>) args.get("model");
+                Integer rows = (Integer) args.get("rows");
+                export(fileName, sheetName, model, rows);
+            }
+        };
+
+        // invoke form allowing to grabbed model change
+        // process data when model modification is over
+        showPage("listboxExportManagerWindow.zul", args, listener);
+    }
+
+    /**
+     * Collects all information about current view in listbox. Such model
+     * contains state of each column, their order, mapping and so on. The new
+     * model can be used for data exportation.
+     *
+     * @return new model containing information about current view
+     */
+    private Map<String, Object> takeCurrentViewSnapshoot() {
         final Map<String, Object> args = new HashMap<String, Object>();
         final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
 
@@ -204,16 +273,10 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             columnModels.add( unitMap );
         }
 
-        args.put( "columnModels", columnModels );
-        args.put( "rows", Math.max( 0, masterController.getModel().getPagingModel().getTotalSize() ) );
-        args.put( "windowCtl", masterController.getWindowCtl() );
-        final EventListener listener = new EventListener() {
+        args.put("columnModels", columnModels);
+        args.put("rows", Math.max(0, masterController.getModel().getPagingModel().getTotalSize()));
 
-            public void onEvent( final Event event ) {
-                masterController.onExportManagerOk( ( AMedia ) event.getData() );
-            }
-        };
-        showPage( "listboxExportManagerWindow.zul", args, listener );
+        return args;
     }
 
     public void onResetFilters() throws InterruptedException {
@@ -293,5 +356,138 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
     public void fireChanges() {
         manager.fireChanges();
+    }
+
+    protected void export(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
+        final AMedia file = ExcelExportUtils.exportSimple(fileName, sheetName, prepareSource(model, rows));
+        masterController.onExportManagerOk(file);
+    }
+
+    protected DataSource prepareSource(final List<Map<String, Object>> model, final int rows) {
+        return new DataSource() {
+
+            public List<Cell> getCells() {
+                try {
+                    return prepareCells(model, rows);
+                } catch (WriteException ex) {
+                    throw new UiException("Error in Excel export.", ex);
+                }
+            }
+
+            @Override
+            public int getCellCount() {
+                return model.size();
+            }
+        };
+    }
+
+    protected List<Cell> prepareCells(final List<Map<String, Object>> model, int rows) throws WriteException {
+        final List<HeadCell> heads = new ArrayList<HeadCell>();
+
+        // list of columns that need to be visible only for the purpose of export 
+        // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+
+        final WritableCellFormat headFormat = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
+        headFormat.setBackground(Colour.LIGHT_GREEN);
+        int column = 0;
+        int row = 0;
+        for (Map<String, Object> unit : model) {
+            heads.add(new HeadCell(unit.get("label"), column, row, headFormat));
+            column++;
+        }
+
+        // load data 
+        List data;
+        try {
+            // ensure, that column is visible in the model (is hidden if the user has added it only for export)
+            for (Map<String, Object> unit : model) {
+                DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel((Integer) unit.get("index") + 1);
+                if (!columnUnitModel.isVisible()) {
+                    columnUnitModel.setVisible(true);
+                    hideOnFinish.add(columnUnitModel);
+                }
+            }
+
+            // and load data
+            data = masterController.loadData((rows == 0) ? 36000 : Math.min(rows, 36000)).getData();
+        } finally {
+            // after processing restore previous state
+            for (DLColumnUnitModel hide : hideOnFinish) {
+                hide.setVisible(false);
+            }
+        }
+
+
+        final List<Cell> cells = new LinkedList<Cell>(heads);
+        for (Object entity : data) {
+            row++;
+            column = 0;
+
+            for (Map<String, Object> unit : model) {
+                try {
+                    final String columnName = (String) unit.get("column");
+
+                    Object value;
+
+                    if (entity instanceof Map) {
+                        value = ((Map) entity).get(columnName);
+                    } else {
+                        value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
+                    }
+
+                    if ((Boolean) unit.get("isConverter")) {
+                        value = convert(value, (Method) unit.get("converter"));
+                    }
+                    cells.add(new DataCell(row, value, heads.get(column)));
+                } catch (InvocationTargetException ex) {
+                    throw new RuntimeException(ex);
+                } catch (InstantiationException ex) {
+                    throw new RuntimeException(ex);
+                } catch (Exception ex) { // ignore
+                    org.apache.log4j.Logger.getLogger(ListboxExportManagerController.class).warn(
+                            "Error occured during exporting column " + (String) unit.get("column") + ".", ex);
+                }
+                column++;
+            }
+        }
+
+        return cells;
+    }
+
+    protected Object convert(final Object value, final Method converter) throws InvocationTargetException, InstantiationException {
+        if ("coerceToUi".equals(converter.getName())) {
+            return convertWithTypeConverter(value, converter);
+        } else {
+            return convertWithClt(value, converter);
+        }
+    }
+
+    protected Object convertWithClt(final Object value, final Method converter) throws InvocationTargetException {
+        try {
+            if (converter.getGenericParameterTypes().length == 2) {
+                // two parameter converter - add component (usually there is a no parameter public constructor)
+                Object component = converter.getGenericParameterTypes()[1].getClass().newInstance();
+                return converter.invoke(masterController.getWindowCtl(), value, component);
+            } else {
+                return converter.invoke(masterController.getWindowCtl(), value);
+            }
+        } catch (IllegalAccessException ex) {
+            return value;
+        } catch (IllegalArgumentException ex) {
+            return value;
+        } catch (InstantiationException e) {
+            return value;
+        }
+    }
+
+    protected Object convertWithTypeConverter(final Object value, final Method converter) throws InvocationTargetException, InstantiationException {
+        try {
+            return converter.invoke(converter.getDeclaringClass().newInstance(), new Object[]{value, null});
+        } catch (IllegalAccessException ex) {
+            return value;
+        } catch (IllegalArgumentException ex) {
+            return value;
+        }
     }
 }

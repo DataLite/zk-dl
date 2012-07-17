@@ -55,4 +55,9 @@ public interface DLManagerController {
      * Notifies controller that something was changed.
      */
     void fireChanges();
+
+    /**
+     * Exports current view in listbox. The result is MS Excel file
+     */
+    void exportCurrentView();
 }

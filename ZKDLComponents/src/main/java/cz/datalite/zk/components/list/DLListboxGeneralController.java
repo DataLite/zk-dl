@@ -21,6 +21,7 @@ import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
 import cz.datalite.zk.components.paging.DLPagingModel;
+import java.util.*;
 import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -30,8 +31,6 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Paging;
-
-import java.util.*;
 
 /**
  * Main controller for the extended listbox component. This controller is the
@@ -608,6 +607,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public String getQuickFilterUuid() {
         return quickFilterController.getUuid();
     }
+
+    public void onDirectExport() {
+        managerController.exportCurrentView();
+    }
+    
+    
 
     public static class EventListeners extends LinkedList<EventListener> {
     }

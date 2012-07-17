@@ -22,6 +22,9 @@ import java.util.List;
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class DLListbox extends Listbox {
+    
+    /** request for direct export to MS Excel */
+    public static final String ON_DIRECT_EXPORT = "onDirectExport";
 
     protected DLListboxComponentController controller;
 

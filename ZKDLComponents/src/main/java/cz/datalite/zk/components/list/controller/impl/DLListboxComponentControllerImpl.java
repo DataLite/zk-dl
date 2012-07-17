@@ -9,18 +9,18 @@ import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
+import java.lang.reflect.Method;
+import java.util.*;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.UiException;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listitem;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  *  Implementation of the listbox controller.
@@ -95,6 +95,14 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 masterController.getEasyFilterController().onClearEasyFilter( true );
             }
         } );
+        
+        // direct export listener
+        listbox.addEventListener(DLListbox.ON_DIRECT_EXPORT, new org.zkoss.zk.ui.event.EventListener() {
+
+            public void onEvent(Event event) throws Exception {
+                masterController.onDirectExport();
+            }
+        });
 
         defaultHeaders.addAll( listbox.getListheaders() );
         initListheaderModels( listbox.getListheaders(), autoinit );

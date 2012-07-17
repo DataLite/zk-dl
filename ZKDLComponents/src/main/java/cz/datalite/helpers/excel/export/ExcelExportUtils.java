@@ -1,24 +1,12 @@
 package cz.datalite.helpers.excel.export;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import jxl.CellType;
 import jxl.Workbook;
-import jxl.write.DateFormat;
-import jxl.write.DateTime;
-import jxl.write.Label;
-import jxl.write.NumberFormats;
-import jxl.write.WritableCell;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
+import jxl.write.*;
 import org.zkoss.util.media.AMedia;
 
 /**
@@ -34,9 +22,11 @@ public final class ExcelExportUtils {
      */
     private ExcelExportUtils() {
     }
-
-    private static final WritableCellFormat DATE_CELL_FORMAT = new WritableCellFormat( new DateFormat( "d.M.yyyy" ) );
-    private static final WritableCellFormat DATETIME_CELL_FORMAT = new WritableCellFormat( new DateFormat( "d.M.yyyy HH:mm" ) );
+    
+    @Deprecated // format cannot be reusable across more than one workbook
+    private static final WritableCellFormat DATE_CELL_FORMAT = new WritableCellFormat(new DateFormat("d.M.yyyy"));
+    @Deprecated // format cannot be reusable across more than one workbook
+    private static final WritableCellFormat DATETIME_CELL_FORMAT = new WritableCellFormat(new DateFormat("d.M.yyyy HH:mm"));
 
     /**
      * <p>Převede řetězec, kterým se v Excelu identifikují sloupce na číslo.
@@ -166,7 +156,7 @@ public final class ExcelExportUtils {
         for ( jxl.Cell cell : sheet.getColumn( column ) ) {
 
             if ( cell.getContents().length() > 0 ) {
-                int len = 0;
+                int len;
                 if ( CellType.DATE.equals( cell.getType() ) ) {
                     len = 10;
                 } else {
@@ -240,7 +230,7 @@ public final class ExcelExportUtils {
      * @param sheetName název listu
      * @param index index, kam chceme list vložit
      * @return nový list
-     * @see jxl.write.WritableWorkbook#createSheet(java.lang.String, int) 
+     * @see jxl.write.WritableWorkbook#createSheet(java.lang.String, int)
      */
     public static WritableSheet insertSheet( final WritableWorkbook workbook, final String sheetName, final int index ) {
         return workbook.createSheet( sheetName, index );
@@ -253,7 +243,7 @@ public final class ExcelExportUtils {
      * @param exportName název souboru pro exportSimple
      * @return vygenerovaný AMedia připravený ke stažení
      * @throws IOException
-     * @throws WriteException 
+     * @throws WriteException
      */
     public static AMedia getAMediaOutput( final WritableWorkbook workbook, final ByteArrayOutputStream os, final String exportName ) throws IOException, WriteException {
         if ( os == null ) {
@@ -314,10 +304,12 @@ public final class ExcelExportUtils {
                 dateValue.setTime((Date) value);
 
                 // if the time contains hours and minutes, set date time format
-                if (dateValue.get(Calendar.HOUR) != 0 || dateValue.get(Calendar.MINUTE) != 0)
-                   format = DATETIME_CELL_FORMAT;
-                else
-                    format = DATE_CELL_FORMAT;
+                if (dateValue.get(Calendar.HOUR) != 0 || dateValue.get(Calendar.MINUTE) != 0) {
+                    // bug fix, format cannot be reused across more than one workbook
+                    format = new WritableCellFormat(new DateFormat("d.M.yyyy HH:mm"));
+                } else {
+                    format = new WritableCellFormat(new DateFormat("d.M.yyyy"));
+                }
 
                 cell.setFormat( format );
             }
@@ -346,7 +338,7 @@ public final class ExcelExportUtils {
      * @param sheetName název listu
      * @param dataSource datasource s datovými a hlavičkovými buňkami
      * @return hotový AMedia připravený ke stažení
-     * @throws IOException 
+     * @throws IOException
      */
     public static AMedia exportSimple( final String reportName, final String sheetName, final DataSource dataSource ) throws IOException {
 
