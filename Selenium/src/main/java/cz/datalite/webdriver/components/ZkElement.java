@@ -259,7 +259,7 @@ public class ZkElement {
             zkDriver.waitForProcessing();
             zkDriver.sleep( 1000 );
 
-            final WebElement element = ( errorWin.find( By.className( "error-window-details" ) )).getWebElement();
+            final WebElement element = (( ZkElement ) errorWin.find( By.className( "error-window-details" ) )).getWebElement();
 
             final StringBuilder errorText = new StringBuilder( "Test failed:\n" );
 
