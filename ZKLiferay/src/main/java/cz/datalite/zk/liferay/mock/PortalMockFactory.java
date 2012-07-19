@@ -32,6 +32,7 @@ import org.mockito.stubbing.Answer;
 
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -190,7 +191,7 @@ public class PortalMockFactory
             }
         };
         when(LanguageUtil.getLanguage().get(any(Locale.class), anyString())).thenAnswer(languageAnswer);
-        //when(LanguageUtil.getLanguage().get(any(PageContext.class), anyString())).thenAnswer(languageAnswer);
+        when(LanguageUtil.getLanguage().get(any(PageContext.class), anyString())).thenAnswer(languageAnswer);
 
 
         new BrowserSnifferUtil().setBrowserSniffer(mock(BrowserSniffer.class, RETURNS_MOCKS));
