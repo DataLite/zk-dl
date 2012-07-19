@@ -55,7 +55,7 @@ public class DLListControl extends Hbox
     public DLListControl()
     {
         super();
-        setClass("z-paging"); // TODO - own class
+        setClass("z-paging");
         setWidth("100%");
         setHeight("28px");
 

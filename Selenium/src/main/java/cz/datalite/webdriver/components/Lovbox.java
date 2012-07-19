@@ -2,7 +2,6 @@ package cz.datalite.webdriver.components;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -172,7 +171,7 @@ public class Lovbox extends InputElement {
 
     protected boolean isOpened() {
         try {
-            return (( RenderedWebElement ) getPopup()).isDisplayed();
+            return getPopup().isDisplayed();
         } catch ( NoSuchElementException ex ) {
             return false;
         }

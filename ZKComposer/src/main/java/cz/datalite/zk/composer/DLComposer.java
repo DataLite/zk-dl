@@ -69,8 +69,6 @@ import java.util.logging.Logger;
  * Include child page into master page and set masterController to this variable. DLComposer will connect master/detail automatically.
  * </p>
  *
- * // TODO example
- *
  * @author Jiri Bubnik
  */
 public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer implements java.util.Map<String, Object>, DLMasterController<T>, Serializable {

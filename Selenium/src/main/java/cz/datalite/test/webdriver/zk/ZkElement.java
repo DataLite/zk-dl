@@ -1,9 +1,12 @@
 package cz.datalite.test.webdriver.zk;
 
-import cz.datalite.webdriver.VisibilityOfElementLocated;
-import java.util.List;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.List;
 
 /**
  * Top of ZK test component class hierarchy.
@@ -115,10 +118,10 @@ public class ZkElement implements WebElement {
 
     public WebElement findElement( final By by, final boolean wait ) {
         if ( wait ) {
-            getZkDriver().until( new VisibilityOfElementLocated( this, by ) );
+            getZkDriver().until( ExpectedConditions.visibilityOfElementLocated(by));
         }
 
-        return findElement( by );
+        return findElement(by);
     }
 
     // Method delegation methods to webElement instance
@@ -132,16 +135,8 @@ public class ZkElement implements WebElement {
         return webElement.equals( obj );
     }
 
-    public boolean toggle() {
-        return webElement.toggle();
-    }
-
     public void submit() {
         webElement.submit();
-    }
-
-    public void setSelected() {
-        webElement.setSelected();
     }
 
     public void sendKeys( final CharSequence... keysToSend ) {
@@ -154,10 +149,6 @@ public class ZkElement implements WebElement {
 
     public boolean isEnabled() {
         return webElement.isEnabled();
-    }
-
-    public String getValue() {
-        return webElement.getValue();
     }
 
     public String getText() {
@@ -178,6 +169,22 @@ public class ZkElement implements WebElement {
 
     public WebElement findElement( final By by ) {
         return webElement.findElement( by );
+    }
+
+    public boolean isDisplayed() {
+        return webElement.isDisplayed();
+    }
+
+    public Point getLocation() {
+        return webElement.getLocation();
+    }
+
+    public Dimension getSize() {
+        return webElement.getSize();
+    }
+
+    public String getCssValue(String propertyName) {
+        return webElement.getCssValue(propertyName);
     }
 
     public void click() {

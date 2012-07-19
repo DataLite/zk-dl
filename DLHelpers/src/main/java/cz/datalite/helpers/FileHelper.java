@@ -67,7 +67,6 @@ public abstract class FileHelper {
         {
             return "text/plain";
         }
-        // TODO dodělat další formáty a sekce formátů
         else
         {
             return null;
@@ -95,7 +94,6 @@ public abstract class FileHelper {
         {
             return "Word";
         }
-        // TODO dodělat další formáty a sekce formátů
         else
         {
             return koncovka.toUpperCase();

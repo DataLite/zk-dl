@@ -4,6 +4,14 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.google.common.base.Function;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.webdriver.VisibilityOfElementLocated;
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -12,17 +20,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
@@ -411,7 +408,7 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
     }
 
     // method delegation for webDriverWait
-    public <T> T until( final Function<WebDriver, T> isTrue ) {
+    public <T> T until( final Function<? super WebDriver,T> isTrue ) {
         return webDriverWait.until( isTrue );
     }
 }

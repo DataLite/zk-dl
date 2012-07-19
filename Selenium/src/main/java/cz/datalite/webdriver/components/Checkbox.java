@@ -16,7 +16,7 @@ public class Checkbox extends InputElement {
 
     public void check() {
         clear();
-        webElement.toggle();
+        webElement.click();
     }
 
     public void uncheck() {
@@ -24,7 +24,7 @@ public class Checkbox extends InputElement {
     }
 
     public void toggle() {
-        webElement.toggle();
+        webElement.click();
     }
 
     @Override

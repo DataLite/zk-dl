@@ -48,6 +48,6 @@ public class Paging extends ZkElement {
     }
 
     public int getPageIndex() {
-        return Integer.parseInt( webElement.findElement( By.tagName( "input" ) ).getValue() );
+        return Integer.parseInt( webElement.findElement( By.tagName( "input" ) ).getText() );
     }
 }

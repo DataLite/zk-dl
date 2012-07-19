@@ -57,7 +57,7 @@ public class MessageBox {
     }
 
     protected static WebElement findMessageBox( final String label ) {
-        return ZkElement.getZkDriver().getWebDriver().findElement( By.xpath( "//div[text()='" + label + "']/ancestor::div[@class='z-window-highlighted-hl']/parent::div[1]" ) );
+        return ZkElement.waitUntilShown(By.xpath( "//div[text()='" + label + "']/ancestor::div[@class='z-window-highlighted-hl']/parent::div[1]" ));
     }
 
     protected static Button findButton( final WebElement messageBox, final String label ) {

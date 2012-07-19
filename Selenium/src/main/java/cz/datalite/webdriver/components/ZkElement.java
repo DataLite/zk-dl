@@ -1,28 +1,22 @@
 package cz.datalite.webdriver.components;
 
 import cz.datalite.helpers.StringHelper;
-import cz.datalite.webdriver.VisibilityOfElementLocated;
 import cz.datalite.webdriver.ElementFactory;
 import cz.datalite.webdriver.SeleniumUnitTest;
 import cz.datalite.webdriver.ZkDriver;
-import static cz.datalite.webdriver.ZkComponents.*;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.RenderedWebElement;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.TimeoutException;
+import static cz.datalite.webdriver.ZkComponents.*;
 
 /**
  * <p>This is base element for all ZK elements on the page. There are
@@ -57,8 +51,8 @@ public class ZkElement {
      * <p>Waits until component specified by By is not shown or timeout exceed.</p>
      * @param by How to find component
      */
-    protected static void waitUntilShown( final By by ) {
-        zkDriver.getWebDriverWait().until( new VisibilityOfElementLocated( by ) );
+    protected static WebElement waitUntilShown(final By by) {
+        return zkDriver.getWebDriverWait().until( ExpectedConditions.visibilityOfElementLocated(by) );
     }
 
     /**
@@ -215,7 +209,6 @@ public class ZkElement {
      * <p>Finds first windows on the page and has option
      * if to wait til window appears or not. It can
      * throw {@link org.openqa.selenium.NoSuchElementException}
-     * or {@link org.openqa.selenium.support.ui.TimeoutException}.</p>
      *
      * @param by criteria
      * @param wait if wait til component appears
@@ -224,7 +217,7 @@ public class ZkElement {
     public static Window findWindow( final By by, final boolean wait ) {
         try {
             return new Window( null, findElement( by, null, wait ) );
-        } catch ( TimeoutException ex ) {
+        } catch ( Exception ex ) {
             throw new NoSuchElementException( "Window looked up by: '" + by.toString() + "' wasn't found." );
         }
     }
@@ -471,7 +464,7 @@ public class ZkElement {
     public Listbox findListbox() {
         final List<WebElement> listboxes = findElements( LISTBOX.getBy(), this );
         for ( WebElement element : listboxes ) {
-            if ( (( RenderedWebElement ) element).isDisplayed() ) {
+            if ( element.isDisplayed() ) {
                 return new Listbox( this, element );
             }
         }
@@ -486,7 +479,7 @@ public class ZkElement {
         final List<WebElement> elements = findElements( LISTBOX.getBy(), this );
         final Set<Listbox> listboxes = new HashSet<Listbox>();
         for ( WebElement element : elements ) {
-            if ( (( RenderedWebElement ) element).isDisplayed() ) {
+            if ( element.isDisplayed() ) {
                 listboxes.add( new Listbox( this, element ) );
             }
         }
@@ -515,11 +508,7 @@ public class ZkElement {
      * @return if the element is displayed
      */
     public boolean isVisible() {
-        if ( webElement instanceof RenderedWebElement ) {
-            return (( RenderedWebElement ) webElement).isDisplayed();
-        } else {
-            return false;
-        }
+        return webElement.isDisplayed();
     }
 
     @Override

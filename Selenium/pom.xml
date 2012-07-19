@@ -8,7 +8,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>Selenium</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Selenium</name>
     <description>Integration tests with Selenium 2.0 (WebDriver) - PageObjects pattern (still in beta)</description>
 
@@ -16,13 +16,13 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${project.version}</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium</artifactId>
-            <version>2.0b1</version>
+            <artifactId>selenium-java</artifactId>
+            <version>2.20.0</version>
             <exclusions>
                 <exclusion>
                     <!-- Problem with surfire when TestNG is on classpath -->

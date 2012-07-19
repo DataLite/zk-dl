@@ -2,16 +2,17 @@ package cz.datalite.zkdl.demo.spring.model;
 
 import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.JpaEqualHelper;
-import java.io.Serializable;
-import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
- * Basic JPA entity for Todo - mapped to a database table.
+ * Basic JPA entity for Xxx - mapped to a database table.
  *
  * @author Jiri Bubnik
  */
