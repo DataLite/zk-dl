@@ -124,9 +124,7 @@ public class DLColumnModel {
                 it.remove();
         }
         }
-
-        // since it is copy of data anyway, do not allow the client to think it is
-        return Collections.unmodifiableList(sorts);
+        return sorts;
     }
 
     public void clear() {
