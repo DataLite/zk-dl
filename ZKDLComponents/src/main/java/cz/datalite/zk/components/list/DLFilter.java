@@ -222,35 +222,64 @@ public final class DLFilter {
 		}
 	}
 
-	private static <T> boolean filter(final List<NormalFilterUnitModel> filterModel, final T entity, final boolean disjunction)
-			throws NoSuchMethodException {
+    private static <T> boolean filter(final List<NormalFilterUnitModel> filterModel, final T entity, final boolean disjunction) throws NoSuchMethodException {
 
-		for (NormalFilterUnitModel unit : filterModel) {
-			final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE
-					: unit.getFilterCompiler();
-			if (unit.getOperator().getArity() >= 1 & unit.getValue(1) == null) {
-                if (!disjunction)
-				    return false; // conversion not satisfied
-			}
-
-            // check the result
-			if (!(Boolean) compiler.compile(unit.getOperator(), unit.getColumn(), getValue(entity, unit.getColumn()),
-					unit.getValue(1), unit.getValue(2))) {
-                if (!disjunction)
-                    return false;
-			}
-            else
-            {
-                if (disjunction)
-                    return true;
-            }
-		}
-
-        if (!disjunction)
+         // if no filter specified, it is ok. all "rules" are satisfied
+        if (filterModel.isEmpty()) {
             return true;
-        else
-		    return filterModel.size() == 0; // if no filter specified, it is ok. Otherwise no condition was satisfied, fail.
-	}
+        }
+        
+        // apply each filter rule on given entity
+        for (NormalFilterUnitModel unit : filterModel) {
+            
+            // get compiler for the value and operator to be able to evaluate the rule
+            final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
+
+            // prevent compilation of rules with arity higher or equal to 1 
+            // to prevent null pointer exception on value1.compareTo(value2)
+            // what is common implementation of comparison
+            if (unit.getOperator().getArity() >= 1 & unit.getValue(1) == null) {
+                
+                // if the filter is not in disjunction mode then the rule cannot 
+                // be satisfied. If the filter is in the disjunction mode
+                // than another rule can be satisfied and entity can be valid
+                if (!disjunction) {
+                    // conversion not satisfied
+                    return false; 
+                }
+            }
+
+            // check the result, make comparison based on given operator
+            if ((Boolean) compiler.compile(unit.getOperator(), unit.getColumn(), getValue(entity, unit.getColumn()), unit.getValue(1), unit.getValue(2))) {
+                // comparison was succesfull, value fits the rules
+                
+                // when the filter is in disjunction mode, than is enough to 
+                // satisfy just one rule, so the entity is valid
+                if (disjunction) {
+                    return true;
+                }
+            } else {
+                
+                // if the filter is not in disjunction mode then the rule cannot 
+                // be satisfied. If the filter is in the disjunction mode
+                // than another rule can be satisfied and entity can be valid
+                if (!disjunction) {
+                    return false;
+                }
+            }
+        }
+
+        
+        // If the filter is in a disjunction mode, than we are looking for at least
+        // one rule (nonempty ruleset) that the value matches. If there is no 
+        // such rule thus the value is not valid.
+        // If the filter is in a conjunction mode, than we are looking for just one
+        // rule, that the value doesn't match. Otherwise the value is valid. 
+        // Now there are no other rules, so all rules are satisfied in conjunction mode
+        // but none of them is satisfied in disjunction mode.
+        // so return TRUE for conjunction mode, otherwise FALSE
+        return !disjunction;
+    }
 
 	/**
 	 * Sorts list of entities according to list of sorts.
