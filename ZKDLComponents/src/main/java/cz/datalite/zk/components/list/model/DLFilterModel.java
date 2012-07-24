@@ -93,6 +93,13 @@ public class DLFilterModel {
         final NormalFilterUnitModel unit = column == null ? new NormalFilterUnitModel( quickFilter.getKey() ) : new NormalFilterUnitModel( column );
         if ( QuickFilterModel.CONST_ALL.equals( quickFilter.getKey() ) ) { // quickfilter key == ALL 
             unit.setValue( 1, quickFilter.getValue() );
+            // ZK-161 this is hack to support filter operator ALL in DLFilter which runs without 
+            // an access to a database. Since now the filter wasn't able to support this operator
+            // because there wasn't column model so filter processor didn't know what the ALL
+            // means. Due to that the whole model si send as a 2nd parameter to allow filter
+            // get what the All means. This propagation of inner model out is potentially dangerous
+            // and shoudl be fixed in newer versions after refactoring
+            unit.setValue(2, columnModel.getColumnModels());
         } else if ( unit.getFilterCompiler() != null ) { // has own compiler
             unit.setValue( 1, quickFilter.getValue() );
             unit.setOperator( unit.getQuickFilterOperator() );

@@ -183,12 +183,13 @@ public final class DLFilter {
 	 */
 	private static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final int firstRow, final int rowCount, final String distinct, final boolean all, final boolean disjunction) {
-		for (NormalFilterUnitModel unit : filterModel) {
-			if (NormalFilterModel.ALL.equals(unit.getColumn())) {
-				throw new UnsupportedOperationException("DLFilter is not able to filter by all columns, " +
-                        "you need to parse ALL unitModel to filters for each column before calling DLFilter.");
-			}
-		}
+// ToDo ZK-161 remove after completition            
+//		for (NormalFilterUnitModel unit : filterModel) {
+//			if (NormalFilterModel.ALL.equals(unit.getColumn())) {
+//				throw new UnsupportedOperationException("DLFilter is not able to filter by all columns, " +
+//                        "you need to parse ALL unitModel to filters for each column before calling DLFilter.");
+//			}
+//		}
 		try {
 			final Set<Object> values = new HashSet<Object>();
 
