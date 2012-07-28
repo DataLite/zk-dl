@@ -36,6 +36,14 @@ public class NormalFilterUnitModel implements Cloneable {
     /** defines selected template in the filter. It is used to looking for 
      * selected value in filter comboboxes. */
     protected NormalFilterUnitModel template;
+    
+    /**
+     * overriding property for filter compiler. This can be used when the
+     * columnModel is not set or we want to override defined value. This
+     * property was design to override compiler for QuickFilter#ALL option,
+     * which has not columnModel and need specialized compiler.
+     */
+    protected FilterCompiler compiler;
 
     public NormalFilterUnitModel() {
         // creates new empty unit
@@ -74,6 +82,21 @@ public class NormalFilterUnitModel implements Cloneable {
             this.operator = operators.get( 0 );
         else
             this.operator = null;
+    }
+    
+    /** Sets filter operator. If the force is false, the innernally is called 
+     * {@link #setOperator(cz.datalite.zk.components.list.enums.DLFilterOperator) }.
+     * If the force is true, then the operator is set nevertheless it is supported
+     * by column model or event when it is not defined at all.
+     * @param operator new operator
+     * @param force don't check support by columnModel
+     */
+    public void setOperator( final DLFilterOperator operator, boolean force) {
+        if (force) {
+            this.operator = operator;
+        } else {
+            setOperator(operator);
+        }
     }
 
 
@@ -124,7 +147,17 @@ public class NormalFilterUnitModel implements Cloneable {
     }
 
     public FilterCompiler getFilterCompiler() {
-        return columnModel == null ? null : columnModel.getFilterCompiler();
+        if (this.compiler == null) {
+            // overriding compiler is not set, use default
+            return columnModel == null ? null : columnModel.getFilterCompiler();
+        } else {
+            // overriding compiler is set, use it
+            return this.compiler;
+        }
+    }
+    
+    public void setFilterCompiler( final FilterCompiler compiler) {
+        this.compiler = compiler;
     }
 
     public String getColumn() {

@@ -3,17 +3,19 @@ package cz.datalite.zk.components.list;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
+import cz.datalite.zk.components.list.enums.DLFilterOperator;
+import static cz.datalite.zk.components.list.filter.FilterUtils.getValue;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
+import cz.datalite.zk.components.list.filter.compilers.FilterByAllCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
-import org.zkoss.lang.SystemException;
-import org.zkoss.lang.reflect.Fields;
-import org.zkoss.mesg.MCommon;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.zkoss.lang.SystemException;
+import org.zkoss.lang.reflect.Fields;
+import org.zkoss.mesg.MCommon;
 
 /**
  * Utility to filter and sort list with entities.
@@ -183,13 +185,21 @@ public final class DLFilter {
 	 */
 	private static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final int firstRow, final int rowCount, final String distinct, final boolean all, final boolean disjunction) {
-// ToDo ZK-161 remove after completition            
-//		for (NormalFilterUnitModel unit : filterModel) {
-//			if (NormalFilterModel.ALL.equals(unit.getColumn())) {
-//				throw new UnsupportedOperationException("DLFilter is not able to filter by all columns, " +
-//                        "you need to parse ALL unitModel to filters for each column before calling DLFilter.");
-//			}
-//		}
+
+                // Changed by ZK-161 on 27.6.2012
+                //  @author Karel Cemus
+                //  Implemented support for filter method FilterByAll
+                //  This option need specialized compiler. It can be
+                //  determined when the model is used but because of repeated
+                //  calling in a loop, the compiler is set now to allow for 
+                //  better performance
+		for (NormalFilterUnitModel unit : filterModel) {
+			if (NormalFilterModel.ALL.equals(unit.getColumn())) {
+                            unit.setFilterCompiler(FilterByAllCompiler.INSTANCE);
+                            unit.setOperator(DLFilterOperator.EQUAL, true);
+			}
+		}
+                
 		try {
 			final Set<Object> values = new HashSet<Object>();
 
@@ -234,7 +244,7 @@ public final class DLFilter {
         for (NormalFilterUnitModel unit : filterModel) {
             
             // get compiler for the value and operator to be able to evaluate the rule
-            final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
+            final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();            
 
             // prevent compilation of rules with arity higher or equal to 1 
             // to prevent null pointer exception on value1.compareTo(value2)
@@ -483,7 +493,5 @@ public final class DLFilter {
         }
     }
 
-    protected static Object getValue(final Object entity, final String address) throws NoSuchMethodException {
-		return Fields.getByCompound(entity, address);
-	}
+    
 }
