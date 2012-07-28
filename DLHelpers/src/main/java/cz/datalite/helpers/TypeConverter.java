@@ -20,7 +20,68 @@ final public class TypeConverter {
 
     private TypeConverter() {
     }
-
+    
+     /**
+     * Převede hodnotu typu String na hodnotu definovanou parametrem Type. Pokud se nejedná o 
+     * známé primitivum, bude vrácen původní objekt bez konverze.
+     * 
+     * @param <T> typ, na které se bude hodnota převádět
+     * @param value hodnota, která se bude konvertovat
+     * @param type typ hodnoty, na kterou se bude konvertovat
+     * @return zkonvertovaná hodnota nebo původní, pokud konverze není definovaná
+     * @throws ParseException nepovedlo se zkonvertovat - generuje se při přetypování na date
+     * @throws ClassCastException nepovedlo se přetypovat
+     * @throws NumberFormatException nepovedlo se přetypovat - generuje se při přetypování na číslo
+     */
+    public static <T> Object tryToConvertTo( final String value, final Class<T> type ) throws ParseException, ClassCastException, NumberFormatException {
+        if ( value == null ) {
+            return null;
+        }
+        if ( java.util.Date.class.isAssignableFrom( type ) ) {
+            return (java.util.Date)( new java.text.SimpleDateFormat( dateFormat, java.util.Locale.getDefault() ).parse( value ) );
+        } else if ( String.class.isAssignableFrom( type ) ) {
+            return type.cast( value );
+        } else if ( Integer.class.isAssignableFrom( type ) || Integer.TYPE.equals( type.getClass() ) ) {
+            return   Integer.valueOf( value );
+        } else if ( Double.class.isAssignableFrom( type ) || Double.TYPE.equals( type.getClass() ) ) {
+            return  Double.valueOf( value );
+        } else if ( Long.class.isAssignableFrom( type ) || Long.TYPE.equals( type.getClass() ) ) {
+            return   Long.valueOf( value );
+        } else if ( Boolean.class.isAssignableFrom( type ) || Boolean.TYPE.equals( type.getClass() ) ) {
+            return   (BooleanHelper.isTrue(value) ? Boolean.TRUE : (Boolean.valueOf( value )));
+        } else if ( type.isEnum() ) {
+            for ( T enumValue : type.getEnumConstants() ) {
+                if ( enumValue.toString().equals( value ) ) {
+                    return enumValue;
+                }
+            }
+            return null;
+        } else {
+            return value;
+        }
+    }
+    
+    
+    /**
+     * Volá metodu {@link TypeConverter#tryToConvertTo(java.lang.String, java.lang.Class) } ale potlačuje všechny výjimky
+     * @param <T> typ, na který se bude konvertovat
+     * @param value hodnota ke konverzi
+     * @param type typ, na který se bude konvertovat
+     * @return zkonvertovaná hodnota, v případě neúspěchu vrací původní instanci
+     */
+    public static <T> Object tryToConvertToSilent( final String value, final Class<T> type ) {
+        try {
+            return tryToConvertTo( value, type );
+        } catch ( ParseException ex ) {
+            return value;
+        } catch ( ClassCastException ex ) {
+            return value;
+        } catch ( NumberFormatException ex ) {
+            return value;
+        }
+    }
+    
+    
     /**
      * Převede hodnotu typu String na hodnotu definovanou parametrem Type
      * @param <T> typ, na které se bude hodnota převádět
@@ -32,31 +93,7 @@ final public class TypeConverter {
      * @throws NumberFormatException nepovedlo se přetypovat - generuje se při přetypování na číslo
      */
     public static <T> T convertTo( final String value, final Class<T> type ) throws ParseException, ClassCastException, NumberFormatException {
-        if ( value == null ) {
-            return null;
-        }
-        if ( java.util.Date.class.equals( type ) ) {
-            return type.cast( new java.text.SimpleDateFormat( dateFormat, java.util.Locale.getDefault() ).parse( value ) );
-        } else if ( String.class.equals( type ) ) {
-            return type.cast( value );
-        } else if ( Integer.class.equals( type ) || Integer.TYPE.equals( type.getClass() ) ) {
-            return ( T ) Integer.valueOf( value );
-        } else if ( Double.class.equals( type ) || Double.TYPE.equals( type.getClass() ) ) {
-            return ( T ) Double.valueOf( value );
-        } else if ( Long.class.equals( type ) || Long.TYPE.equals( type.getClass() ) ) {
-            return ( T ) Long.valueOf( value );
-        } else if ( Boolean.class.equals( type ) || Boolean.TYPE.equals( type.getClass() ) ) {
-            return ( T ) (BooleanHelper.isTrue(value) ? Boolean.TRUE : (Boolean.valueOf( value )));
-        } else if ( type.isEnum() ) {
-            for ( T enumValue : type.getEnumConstants() ) {
-                if ( enumValue.toString().equals( value ) ) {
-                    return enumValue;
-                }
-            }
-            return null;
-        } else {
-            return ( T ) value;
-        }
+       return (T) tryToConvertTo(value, type);
     }
 
     /**

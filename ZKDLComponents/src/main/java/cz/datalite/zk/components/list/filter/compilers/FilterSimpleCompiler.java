@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.filter.compilers;
 
+import cz.datalite.helpers.TypeConverter;
 import cz.datalite.zk.components.list.DLFilter;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 
@@ -39,14 +40,23 @@ public class FilterSimpleCompiler extends AbstractFilterCompiler {
 	}
 
 	protected Boolean compileOperatorEqual(final String key, final Object... values) {
-		Object val0 = values[0], val1 = values[1];
-		if (val0 == val1) {
-			return true;
-		}
-		// I am not sure, if this is OK for non-string values ...
-		val0 = nullToEmptyString(val0);
-		val1 = nullToEmptyString(val1);
-		return val0.equals(val1);
+            
+            // value to compare with
+            final Object val0 = values[0];
+            // value to be compared
+            final Object val1 = values[1];
+            
+            // filter out one null value as false and both as true
+            if ( val0 == null ) return val0 == val1;
+            
+             // try to convert 2nd object to target class
+            Object compareTo = val1;
+            if ( compareTo instanceof String  ) {
+                compareTo = TypeConverter.tryToConvertToSilent((String) compareTo, val0.getClass());
+            }
+            
+            // compare instances
+            return val0.equals(compareTo);
 	}
 
 	protected Boolean compileOperatorNotEqual(final String key, final Object... values) {
