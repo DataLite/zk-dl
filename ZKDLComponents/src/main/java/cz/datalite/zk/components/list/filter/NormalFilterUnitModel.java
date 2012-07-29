@@ -84,12 +84,18 @@ public class NormalFilterUnitModel implements Cloneable {
             this.operator = null;
     }
     
-    /** Sets filter operator. If the force is false, the innernally is called 
+    /** <p>Sets filter operator. If the force is false, the innernally is called 
      * {@link #setOperator(cz.datalite.zk.components.list.enums.DLFilterOperator) }.
      * If the force is true, then the operator is set nevertheless it is supported
-     * by column model or event when it is not defined at all.
+     * by column model or event when it is not defined at all.</p>
+     * 
+     * <p>This setter was defined during ZK-161 changes to allow the quick filter ALL
+     * option pass the tests. Otherwise this method shouldn't be used or by
+     * expert users only!</p>
+     * 
      * @param operator new operator
-     * @param force don't check support by columnModel
+     * @param force don't check the support by columnModel. It can lead to the exception
+     * because a compiler couldn't be able to process this operator with this entity class
      */
     public void setOperator( final DLFilterOperator operator, boolean force) {
         if (force) {

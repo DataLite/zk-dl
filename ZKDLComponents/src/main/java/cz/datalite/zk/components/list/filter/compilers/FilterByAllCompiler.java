@@ -38,9 +38,11 @@ public class FilterByAllCompiler implements FilterCompiler {
 
     public Object compile(DLFilterOperator unusedOperator, String key, Object... values) {
         // as a part of change ZK-161 the model is propagated as 2nd parameter
+        // that is needed allow to translate the ALL operator. So there are needed full model
         List<DLColumnUnitModel> model = (List<DLColumnUnitModel>) values[2];
 
-        // the key used as needle
+        // the key used as needle, the value input by the user
+        // occurrence of this value is tested in the each column
         final String needle = (String) values[1];
 
         // for each column
@@ -49,7 +51,7 @@ public class FilterByAllCompiler implements FilterCompiler {
             try {
 
                 // filter by visible columns only
-                // filter by recognized columns only
+                // filter by recognized (deifned) columns only
                 // filter by columns available in QF only
                 if (!unit.isVisible() || !unit.isColumn() || !unit.isQuickFilter()) {
                     continue;
@@ -58,20 +60,28 @@ public class FilterByAllCompiler implements FilterCompiler {
                 // get compiler for the value and operator to be able to evaluate the rule
                 final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
 
-                // get filter operater. There are expected 2 values:CONTAINS for Strings and EQUALS for others
+                // get filter operator. There are expected only 2 values: CONTAINS for Strings and EQUALS for others
+                // also some other types but the String uses CONTAINS as the default operator. It benefits from the
+                // string representation of the value. Eg. integer: value "1223", needle "223". CONTAINS evaluates this
+                // as the valid entity but the EQUALS doesn't.
                 final DLFilterOperator operator = unit.getQuickFilterOperator();
 
                 // get value to be evaluated against given key
+                // entity property - the value shown in the listbox
                 final Object value = FilterUtils.getValue(values[0], unit.getColumn());
 
                 // if the value is missing it cannot match the rules
+                // this if also prevents the NPE in the following code
                 if (value == null) {
                     continue;
                 }
 
                 // try to evaluate column
                 // if matches, entity is valid
+                // this is the basic implementation used also in DLFilter
                 if ((Boolean) compiler.compile(operator, unit.getColumn(), value, needle)) {
+                    // matching property is found, the entity is valid
+                    // otherwise we have to continue searching for matching column
                     return true;
                 }
 
