@@ -10,7 +10,6 @@ import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.composer.listener.DLMasterController;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.SystemException.Aide;
-import org.zkoss.util.ModificationException;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
@@ -385,8 +384,6 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
     private void putDefault( final String key, final Object value ) {
         try {
             org.zkoss.lang.reflect.Fields.set( this, key, value, true );
-        } catch ( ModificationException ex ) {
-            throw Aide.wrap( ex );
         } catch ( NoSuchMethodException ex ) {
             throw Aide.wrap( ex );
         }

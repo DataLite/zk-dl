@@ -6,7 +6,6 @@ import cz.datalite.zk.components.cascade.CascadableExt;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.zkoss.util.ModificationException;
 import org.zkoss.zk.ui.Component;
 
 /**

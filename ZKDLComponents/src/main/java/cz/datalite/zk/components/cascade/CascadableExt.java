@@ -1,7 +1,5 @@
 package cz.datalite.zk.components.cascade;
 
-import org.zkoss.util.ModificationException;
-
 /**
  *
  * @param <T> 

@@ -20,17 +20,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.sys.SessionCtrl;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listcell;
-import org.zkoss.zul.Listgroup;
-import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listitem;
-import org.zkoss.zul.SimpleTreeModel;
-import org.zkoss.zul.Tree;
-import org.zkoss.zul.Treecell;
-import org.zkoss.zul.Treeitem;
-import org.zkoss.zul.TreeitemRenderer;
-import org.zkoss.zul.Treerow;
+import org.zkoss.zul.*;
 
 /**
  * Monitor controller (to monitor.zul)
@@ -40,7 +30,7 @@ import org.zkoss.zul.Treerow;
 public class ZKMonitorController extends GenericForwardComposer
 {
     private Collection allRequests;              // all request collection
-    private SimpleTreeModel treeModel;          // object call tree
+    private DefaultTreeModel treeModel;          // object call tree
     private HashMap<String, Long> desktopTimeMap = new HashMap();    // id_desktop -> last call at (for sorting)
     
     /**
@@ -50,7 +40,7 @@ public class ZKMonitorController extends GenericForwardComposer
      */
     private TreeitemRenderer treeItemRenderer = new TreeitemRenderer()
     {
-        public void render(Treeitem item, Object data) throws Exception
+        public void render(Treeitem item, Object data, int index) throws Exception
         {
             ZKRequestMonitorMethod requestData = (ZKRequestMonitorMethod)data;
             Treecell tcName = new Treecell(requestData.getName());
@@ -119,7 +109,7 @@ public class ZKMonitorController extends GenericForwardComposer
     public void doAfterCompose(Component comp) throws Exception
     {
         super.doAfterCompose(comp);
-        comp.setVariable("ctl", this, true);
+        comp.getSpaceOwner().setAttribute( "ctl", this, true );
 
         onRefresh();
     }
@@ -266,7 +256,7 @@ public class ZKMonitorController extends GenericForwardComposer
                                                 // take  event -> listitem -> statistics -> tree model
                     root.getChildren().add(((ZKRequestMonitor)((Listitem)event.getTarget()).getValue()).getParentInvocation());
 
-                    treeModel = new SimpleTreeModel( root );
+                    treeModel = new DefaultTreeModel( root );
                     tree.setModel(treeModel);
                 }
             });
@@ -352,7 +342,7 @@ public class ZKMonitorController extends GenericForwardComposer
     /**
      * @return the tree
      */
-    public SimpleTreeModel getTreeModel() {
+    public DefaultTreeModel getTreeModel() {
         return treeModel;
     }
 

@@ -43,7 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>LGPL</netbeans.hint.license>
-        <org.zkframework.version>5.0.10</org.zkframework.version>
+        <org.zkframework.version>6.0.1</org.zkframework.version>
         <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
         <org.hibernateframework.version>3.5.0-Final</org.hibernateframework.version>
         <cz.datalite.zk-dl.version>1.4.0-SNAPSHOT</cz.datalite.zk-dl.version>

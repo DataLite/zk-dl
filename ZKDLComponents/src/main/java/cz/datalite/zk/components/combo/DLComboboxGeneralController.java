@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.zkoss.util.ModificationException;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -175,7 +174,7 @@ public abstract class DLComboboxGeneralController<T> implements DLComboboxExtCon
      */
     protected class SelectListener implements EventListener {
 
-        public void onEvent( final Event event ) throws NoSuchMethodException, ModificationException {
+        public void onEvent( final Event event ) throws NoSuchMethodException {
             final SelectEvent selectEvent = ( SelectEvent ) event;
             int index;
             if ( selectEvent.getSelectedItems().isEmpty() ) {

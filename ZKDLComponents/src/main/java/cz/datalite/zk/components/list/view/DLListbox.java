@@ -218,7 +218,7 @@ public class DLListbox extends Listbox {
 
     @SuppressWarnings( "unchecked" )
     public List<DLListheader> getListheaders() {
-        return ( List<DLListheader> ) getListhead().getChildren();
+        return ( List<DLListheader> ) ( List ) getListhead().getChildren();
     }
 
     @SuppressWarnings( "unchecked" )

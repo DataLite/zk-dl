@@ -3,14 +3,14 @@ package cz.datalite.zkspring.monitor;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import org.zkoss.zul.SimpleTreeNode;
+import org.zkoss.zul.DefaultTreeNode;
 
 /**
  * Request invocation tree
  *
  * @author Jiri Bubnik
  */
-public class ZKRequestMonitorMethod extends SimpleTreeNode  implements Serializable {
+public class ZKRequestMonitorMethod extends DefaultTreeNode implements Serializable {
     String name;
 
     long startTime;

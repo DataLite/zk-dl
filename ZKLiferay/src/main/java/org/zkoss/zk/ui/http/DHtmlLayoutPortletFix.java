@@ -31,7 +31,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletPreferences;
 
-import org.zkoss.lang.D;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.Exceptions;
 import org.zkoss.lang.Library;
@@ -166,7 +165,8 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
     protected boolean process(Session sess, RenderRequest request,
                               RenderResponse response, String path, boolean bRichlet)
             throws PortletException, IOException {
-        if (D.ON && log.debugable()) log.debug("Creates from "+path);
+        // Class org.zkoss.lang.D is missing in ZK 6.0.1 release build
+        //if (D.ON && log.debugable()) log.debug("Creates from "+path);
         final WebManager webman = getWebManager();
         final WebApp wapp = webman.getWebApp();
         final WebAppCtrl wappc = (WebAppCtrl)wapp;

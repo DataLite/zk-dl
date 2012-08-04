@@ -162,7 +162,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             final Listitem item = new Listitem();
             listbox.appendChild( item );
             // add renderer annotation
-            item.addAnnotation( "default", Collections.singletonMap( "each", "row" + getUuid() ) );
+            item.addAnnotation( null, "default", Collections.singletonMap( "each", new String[]{ "row" + getUuid() } ) );
 
             if ( this.labelProperties == null ) {
                 throw new IllegalArgumentException( "Please define labelProperty in lovbox." );

@@ -127,11 +127,14 @@ public class DLCombobox<T> extends Combobox implements CascadableComponent {
         this.parentCascadeColumn = parentComboColumn;
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public List<Comboitem> getChildren() {
-        return super.getChildren();
-    }
+// unavailable since ZK 6 with generics
+// commented out on 19th July 2012    
+//
+//    @Override
+//    @SuppressWarnings( "unchecked" )
+//    public List<Comboitem> getChildren() {
+//        return ( List ) super.getChildren();
+//    }
 
     /**
      * Creates binding model from the ordinary list and sets it like a model

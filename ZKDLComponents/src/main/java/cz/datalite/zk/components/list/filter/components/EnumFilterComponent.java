@@ -34,7 +34,7 @@ public class EnumFilterComponent extends AbstractFilterComponent<Combobox> {
         this( enums );
         final ComboitemRenderer renderer = new ComboitemRenderer() {
 
-            public void render( final Comboitem item, final Object object ) throws NoSuchMethodException  {
+            public void render( final Comboitem item, final Object object, final int index ) throws NoSuchMethodException  {
                 item.setLabel( Fields.getByCompound( object, fieldPath ).toString() );
                 item.setValue( object );
             }

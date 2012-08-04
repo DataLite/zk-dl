@@ -107,19 +107,15 @@ public class ZkExceptionHandler extends Handler {
     @Override
     protected void doAfter(Event event, Component master, Object controller) {
         if (target != null) { // is there message to be show?
-            try { // show message instead
-                String msg = StringHelper.isNull(message) ? target.getMessage() : message;
-                if (localize) { // error message localization
-                    msg = Labels.getLabel(msg, msg);
-                }
-                Clients.clearBusy();
-                Messagebox.show(msg, title, Messagebox.OK, Messagebox.ERROR);
-            } catch (InterruptedException e) {
-                // ignore
-            } finally {
-                // message processed
-                target = null;
+            // show message instead
+            String msg = StringHelper.isNull( message ) ? target.getMessage() : message;
+            if ( localize ) { // error message localization
+                msg = Labels.getLabel( msg, msg );
             }
+            Clients.clearBusy();
+            Messagebox.show( msg, title, Messagebox.OK, Messagebox.ERROR );
+            // message processed
+            target = null;
         }
     }
 

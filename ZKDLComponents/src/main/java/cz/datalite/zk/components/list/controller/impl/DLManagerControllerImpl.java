@@ -319,11 +319,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      */
     protected boolean isLocked() {
         if ( masterController.isLocked() ) {
-            try {
-                Messagebox.show( "Listbox is locked.", "Locked", Messagebox.OK, Messagebox.INFORMATION );
-            } catch ( InterruptedException ex ) {
-                LOGGER.debug( "Messagebox failed.", ex );
-            }
+            Messagebox.show( "Listbox is locked.", "Locked", Messagebox.OK, Messagebox.INFORMATION );
             return true;
         } else {
             return false;

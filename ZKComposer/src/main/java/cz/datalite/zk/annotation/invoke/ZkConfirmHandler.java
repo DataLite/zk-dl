@@ -76,18 +76,16 @@ public class ZkConfirmHandler extends Handler {
         if (message == null) {
             return true; // continue
         } else {
-            try { // prompt question
-                Messagebox.show(message, title, buttons, icon, new EventListener() {
+            // prompt question
+            Messagebox.show( message, title, buttons, icon, new EventListener() {
 
-                    public void onEvent(final Event msgEvent) throws Exception {
-                        if ((Integer) msgEvent.getData() == accessButton) {
-                            // correct answer, resumeBeforeInvoke executing
-                            resumeBeforeInvoke(event, master, controller);
-                        }
+                public void onEvent( final Event msgEvent ) throws Exception {
+                    if ( ( Integer ) msgEvent.getData() == accessButton ) {
+                        // correct answer, resumeBeforeInvoke executing
+                        resumeBeforeInvoke( event, master, controller );
                     }
-                });
-            } catch (InterruptedException ex) {
-            }
+                }
+            } );
         }
         return false; // do not continue invocation
     }

@@ -256,7 +256,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     @SuppressWarnings( "unchecked" )
     public void setRendererTemplate( final Listitem item ) {
         renderTemplate = listbox.getItemAtIndex( 0 );
-        defaultRendererCellTemplates.addAll( renderTemplate.getChildren() );
+        for ( final Component cmp : renderTemplate.getChildren() )
+            defaultRendererCellTemplates.add( ( Listcell ) cmp );
         initRendererTemplate( listbox.getListheaders(), defaultRendererCellTemplates );
     }
 

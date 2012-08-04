@@ -185,8 +185,8 @@ public abstract class ZKBinderHelper {
      * @author Karel Čemus
      */
     public static void registerAnnotation( final org.zkoss.zk.ui.AbstractComponent component, final String property, final String annotName, final String value ) {
-        final java.util.Map<String, String> map = new java.util.HashMap<String, String>();
-        map.put( annotName, value );
+        final java.util.Map<String, String[]> map = new java.util.HashMap<String, String[]>();
+        map.put( annotName, new String[]{ value } );
         component.addAnnotation( property, "default", map );
     }
 
