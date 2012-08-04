@@ -60,7 +60,6 @@ public class DLListControl extends Hbox
         super();
         setClass("z-paging");
         setWidth("100%");
-        setHeight("28px");
 
         qFilterComponent = new DLQuickFilter();
         qFilterComponent.setParent( this );
