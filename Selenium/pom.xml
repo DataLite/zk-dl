@@ -30,6 +30,11 @@
                     <groupId>org.testng</groupId>
                     <artifactId>testng</artifactId>
                 </exclusion>
+                 <!-- exclude apache logging, zk-dl uses SLF4J -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

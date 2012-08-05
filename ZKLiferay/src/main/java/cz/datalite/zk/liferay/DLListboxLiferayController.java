@@ -20,7 +20,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.UiException.Aide;
 
 /**
@@ -33,7 +34,7 @@ import org.zkoss.zk.ui.UiException.Aide;
 public abstract class DLListboxLiferayController<T> extends DLListboxGeneralController<T> {
 
     final FilterLiferayCompiler compiler;
-    protected static final Logger LOGGER = Logger.getLogger( DLListboxLiferayController.class );
+    protected static final Logger LOGGER = LoggerFactory.getLogger( DLListboxLiferayController.class );
 
     /**
      * Creates instance of the extended controller which uses Hibernate Criteria
@@ -174,19 +175,15 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
                 unit.setValue( 1, TypeConverter.convertTo( value, type ) );
                 return compileCriteria( unit, dynamicQuery );
             } catch ( Exception ex ) {
-                LOGGER.debug( "Error occured when Quick Filter was converted to "
-                        + type.getName() + ". Column: "
-                        + (unit.getColumn() == null ? "unknown" : unit.getColumn())
-                        + ", Value: " + value + "." );
+                LOGGER.debug( "Error occured when Quick Filter was converted to '{}'. Column: '{}', Value: '{}'.",
+                        new Object[]{type.getName(), (unit.getColumn() == null ? "unknown" : unit.getColumn()), value});
 
                 return null;
             }
         } else {
             LOGGER.error( "Error occured when Quick Filter was compiled. There was request to compile unsupported datatype. Please "
-                    + "define FilterCompiler. Type: "
-                    + (type == null ? "unknown" : type.getName())
-                    + ", Column: " + (unit.getColumn() == null ? "unknown" : unit.getColumn())
-                    + ", Value: " + value + "." );
+                    + "define FilterCompiler. Type: '{}', Column: '{}', Value: '{}'.",
+                        new Object[]{(type == null ? "unknown" : type.getName()), (unit.getColumn() == null ? "unknown" : unit.getColumn()), value} );
             return null;
             //  throw new UnsupportedOperationException( "Unknown data-type was used in listbox filter. For type " + (type == null ? "unknown" : type.getCanonicalName()) + " have to be defined special filter component." );
             // Thow was commented due to back compatibility in the projects which have not used attribute filter="false".

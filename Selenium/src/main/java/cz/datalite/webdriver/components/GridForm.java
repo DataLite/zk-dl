@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -18,6 +20,7 @@ import org.openqa.selenium.NoSuchElementException;
  */
 public class GridForm extends Grid {
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger( "cz.datalite.selenium" );
     /** Window with the form. */
     protected Window window;
     /** Map with detected elements. As keys are used labels */
@@ -78,21 +81,21 @@ public class GridForm extends Grid {
             for ( ZkElement zkElement : found ) {
                 try {
                     if ( !zkElement.isVisible() ) { // element is not probably shown
-                        ZkDriver.getLogger().debug( "Ignored hidden element " + component.getStyleClass() );
+                        LOGGER.debug( "Ignored hidden element '{}'.", component.getStyleClass() );
                         continue;
                     }
                     final String label = findLabelFor( zkElement );
                     if ( label == null || label.length() == 0 ) {
                         throw new NoSuchElementException( "Label for element wasn't found." );
                     }
-                    ZkDriver.getLogger().debug( "Detected " + component.getStyleClass() + " with label " + label );
+                    LOGGER.debug( "Detected '{}' with label '{}'.", component.getStyleClass(), label );
                     if ( zkElement instanceof InputElement ) {
                         elements.put( label, ( InputElement ) zkElement );
                     } else {
-                        ZkDriver.getLogger().error( "Element " + zkElement.getClass() + " doesn't implement InputElement interface." );
+                        LOGGER.error( "Element '{}' doesn't implement InputElement interface.", zkElement.getClass() );
                     }
                 } catch ( NoSuchElementException ex ) {
-                    ZkDriver.getLogger().error( "Element with style " + component.getStyleClass() + " was ignored. Label wasn't found." );
+                    LOGGER.error( "Element with style '{}' was ignored. Label wasn't found.", component.getStyleClass() );
                 }
             }
         }
@@ -117,7 +120,7 @@ public class GridForm extends Grid {
      */
     public void setValue( final String label, final String value ) {
         if ( !elements.containsKey( label ) ) {
-            ZkDriver.getLogger().error( "Label '" + label + "' was not found in the form. Your value won't be used." );
+            LOGGER.error( "Label '{}' was not found in the form. Your value won't be used.", label );
         }
         values.put( label, value );
     }
@@ -136,7 +139,7 @@ public class GridForm extends Grid {
      */
     public void fill() {
         for ( String label : elements.keySet() ) {
-            ZkDriver.getLogger().debug( "Filling '" + label + "'." );
+            LOGGER.debug( "Filling '{}'.", label );
             final InputElement element = elements.get( label );
             if ( values.containsKey( label ) ) {
                 element.write( values.get( label ) );

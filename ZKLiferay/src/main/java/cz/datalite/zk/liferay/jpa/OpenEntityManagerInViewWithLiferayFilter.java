@@ -26,9 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenEntityManagerInViewWithLiferayFilter extends OpenEntityManagerInViewFilter {
 
+    /** logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenEntityManagerInViewWithLiferayFilter.class);
+    
     /**
      * Create an entity manager and set the "LiferayFilter" values to companyId and groupId.
      */
@@ -76,7 +81,7 @@ public class OpenEntityManagerInViewWithLiferayFilter extends OpenEntityManagerI
 			participate = true;
 		}
 		else {
-			logger.trace("Opening JPA EntityManager in OpenEntityManagerInViewFilter");
+			LOGGER.trace("Opening JPA EntityManager in OpenEntityManagerInViewFilter");
 			try {
 				EntityManager em = createEntityManager(emf, request);
 				TransactionSynchronizationManager.bindResource(emf, new EntityManagerHolder(em));
@@ -94,7 +99,7 @@ public class OpenEntityManagerInViewWithLiferayFilter extends OpenEntityManagerI
 			if (!participate) {
 				EntityManagerHolder emHolder = (EntityManagerHolder)
 						TransactionSynchronizationManager.unbindResource(emf);
-				logger.trace("Closing JPA EntityManager in OpenEntityManagerInViewFilter");
+				LOGGER.trace("Closing JPA EntityManager in OpenEntityManagerInViewFilter");
 				EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
 			}
 		}
@@ -109,9 +114,8 @@ public class OpenEntityManagerInViewWithLiferayFilter extends OpenEntityManagerI
 	 */
     @Override
 	protected EntityManagerFactory lookupEntityManagerFactory() {
-		if (logger.isTraceEnabled()) {
-			logger.trace("Using EntityManagerFactory '" + getEntityManagerFactoryBeanName() +
-                    "' for OpenEntityManagerInViewFilter");
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Using EntityManagerFactory '{}' for OpenEntityManagerInViewFilter", getEntityManagerFactoryBeanName());
 		}
 		WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 		return wac.getBean(getEntityManagerFactoryBeanName(), EntityManagerFactory.class);

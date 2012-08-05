@@ -6,13 +6,14 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
-import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -60,7 +61,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     /** redefines filter compiler which is used to compile filter operators */
     private FilterCompiler filterCompiler;
     /** logger */
-    protected final static Logger LOGGER = Logger.getLogger( DLColumnUnitModel.class );
+    protected final static Logger LOGGER = LoggerFactory.getLogger( DLColumnUnitModel.class );
 
     public DLColumnUnitModel( final DLColumnModel columnModel ) {
         this.columnModel = columnModel;
@@ -346,7 +347,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
     public List<DLFilterOperator> getFilterOperators() {
         if ( filterOperators == null ) { // No
-            LOGGER.debug( "Get operators for type: " + (getColumnType() == null ? "null" : getColumnType().getCanonicalName()) );
+            LOGGER.debug( "Get operators for type: '{}'.", (getColumnType() == null ? "null" : getColumnType().getCanonicalName()) );
             if ( columnType == null && column == null ) { // empty model
                 filterOperators = Collections.emptyList();
             } else if ( columnType == null ) { // Is this type defined? know name but known type
@@ -356,7 +357,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
             } else {
                 throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type " + columnType.getCanonicalName() + " have to be defined special filter component." );
             }
-            LOGGER.debug( "Operator list: " + filterOperators.size() );
+            LOGGER.debug( "Operator list: '{}'.", filterOperators.size() );
         }
         return filterOperators;
     }
@@ -377,7 +378,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                 if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) { // Is the default configuration known for this type?
                     quickFilterOperator = FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator();
                 } else {
-                    Logger.getLogger( DLColumnUnitModel.class ).debug( "Unknown datatype was used in listbox quick filter. For type " + columnType.getCanonicalName() + " have been used EQUAL operator." );
+                    LOGGER.debug( "Unknown datatype was used in listbox quick filter. For type '{}' have been used EQUAL operator.", columnType.getCanonicalName() );
                     quickFilterOperator = DLFilterOperator.EQUAL;
                 }
             }

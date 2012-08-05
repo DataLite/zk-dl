@@ -10,7 +10,6 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCriterionCompiler;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
@@ -20,6 +19,8 @@ import org.hibernate.criterion.Restrictions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Master extended controller for listbox. This implementation uses Hibernate
@@ -31,7 +32,7 @@ import java.util.List;
 public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralController<T> {
 
     protected final FilterCriterionCompiler compiler;
-    protected static final Logger LOGGER = Logger.getLogger( DLListboxCriteriaController.class );
+    protected static final Logger LOGGER = LoggerFactory.getLogger( DLListboxCriteriaController.class );
 
     /**
      * Creates instance of the extended controller which uses Hibernate Criteria
@@ -158,19 +159,15 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
                 unit.setValue( 1, TypeConverter.convertTo( value, type ) );
                 return compileCriteria( unit, search, joinType );
             } catch ( Exception ex ) {
-                LOGGER.debug( "Error occured when Quick Filter was converted to "
-                        + type.getName() + ". Column: "
-                        + (unit.getColumn() == null ? "unknown" : unit.getColumn())
-                        + ", Value: " + value + "." );
+                LOGGER.debug( "Error occured when Quick Filter was converted to '{}'. Column: '{}', Value: '{}'.", 
+                        new Object[]{ type.getName(), (unit.getColumn() == null ? "unknown" : unit.getColumn()), value });
 
                 return null;
             }
         } else {
             LOGGER.error( "Error occured when Quick Filter was compiled. There was request to compile unsupported datatype. Please "
-                    + "define FilterCompiler. Type: "
-                    + (type == null ? "unknown" : type.getName())
-                    + ", Column: " + (unit.getColumn() == null ? "unknown" : unit.getColumn())
-                    + ", Value: " + value + "." );
+                    + "define FilterCompiler. Type: '{}', Column: '{}', Value: '{}'.",
+                    new Object[]{ (type == null ? "unknown" : type.getName()), (unit.getColumn() == null ? "unknown" : unit.getColumn()), value });
             return null;
             //  throw new UnsupportedOperationException( "Unknown data-type was used in listbox filter. For type " + (type == null ? "unknown" : type.getCanonicalName()) + " have to be defined special filter component." );
             // Thow was commented due to back compatibility in the projects which have not used attribute filter="false".

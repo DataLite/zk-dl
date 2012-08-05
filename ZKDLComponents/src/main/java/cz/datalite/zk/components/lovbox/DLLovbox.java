@@ -10,7 +10,6 @@ import cz.datalite.zk.components.list.view.DLListhead;
 import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
-import org.apache.log4j.Logger;
 import org.zkoss.lang.Objects;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.event.OpenEvent;
 
@@ -53,7 +53,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** default listbox rows */
     private static final Integer ROWS;
     /** logger */
-    private static final Logger LOGGER = Logger.getLogger( DLLovbox.class );
+    protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLLovbox.class );
     
     static {
         // init page size

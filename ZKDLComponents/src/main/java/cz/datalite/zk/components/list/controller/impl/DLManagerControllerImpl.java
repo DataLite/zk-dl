@@ -14,7 +14,6 @@ import cz.datalite.zk.components.list.window.controller.ListboxExportManagerCont
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
@@ -28,6 +27,8 @@ import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WriteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.UiException;
 
@@ -39,7 +40,7 @@ import org.zkoss.zk.ui.UiException;
  */
 public class DLManagerControllerImpl<T> implements DLManagerController {
 
-    protected static final Logger LOGGER = Logger.getLogger( DLManagerControllerImpl.class );
+    protected static final Logger LOGGER = LoggerFactory.getLogger( DLManagerControllerImpl.class );
     // master controller
     protected final DLListboxExtController<T> masterController;
     // view
@@ -147,7 +148,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             }
             if ( (unit.getColumnType() == null || !FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( unit.getColumnType() ))
                     && !unit.isFilterComponent() && !unit.isFilterOperators() ) {
-                LOGGER.debug( "Column '" + unit.getColumn() + "' was ignored in filter due to not have the filter component or filter operators." );
+                LOGGER.debug( "Column '{}' was ignored in filter due to not have the filter component or filter operators.", unit.getColumn() );
                 continue;
             }
             templateModels.add( new NormalFilterUnitModel( unit ) );
@@ -445,8 +446,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                 } catch (InstantiationException ex) {
                     throw new RuntimeException(ex);
                 } catch (Exception ex) { // ignore
-                    org.apache.log4j.Logger.getLogger(ListboxExportManagerController.class).warn(
-                            "Error occured during exporting column " + (String) unit.get("column") + ".", ex);
+                    LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
                 }
                 column++;
             }

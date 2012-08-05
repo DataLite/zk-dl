@@ -5,7 +5,7 @@ import cz.datalite.zk.components.list.filter.components.CloneFilterComponentFact
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
 import cz.datalite.zk.components.list.window.controller.ListboxFilterManagerController;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Space;
 
@@ -15,7 +15,7 @@ import org.zkoss.zul.Space;
  */
 public class RowModel {
 
-    protected final static Logger LOGGER = Logger.getLogger( ListboxFilterManagerController.class );
+    protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( ListboxFilterManagerController.class );
     protected NormalFilterUnitModel model;
     protected Component position1;
     protected Component position2;
@@ -32,7 +32,7 @@ public class RowModel {
         if ( template == model.getTemplate() ) {
             return;
         }
-        LOGGER.debug( "Column template was changed for property " + template.getLabel() );
+        LOGGER.debug( "Column template was changed for property '{}'.", template.getLabel() );
         final FilterComponentFactory oldFactory = model.getFilterComponentFactory();
         final FilterComponentFactory newFactory = template.getFilterComponentFactory();
 

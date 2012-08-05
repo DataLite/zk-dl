@@ -1,7 +1,8 @@
 package cz.datalite.utils;
 
 import java.util.HashMap;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mapa, která pokaždé vrací existující instanci. Pokud je požadován záznam z nepoužitého klíče,
@@ -12,6 +13,9 @@ import org.apache.log4j.Logger;
  */
 public class HashMapAutoCreate<K, V> extends HashMap<K, V> implements MapAutoCreate<K, V> {
 
+    /** logger */
+    protected final static Logger LOGGER = LoggerFactory.getLogger( HashMapAutoCreate.class );
+    
     protected final Class<V> entityClass;
 
     public HashMapAutoCreate( final Class<V> entityClass ) {
@@ -29,11 +33,11 @@ public class HashMapAutoCreate<K, V> extends HashMap<K, V> implements MapAutoCre
             return super.get( (K) key );
         }
         catch ( InstantiationException ex ) {
-            Logger.getLogger( HashMapAutoCreate.class.getName() ).error("HashMapAutoCreate failed!", ex );
+            LOGGER.error("HashMapAutoCreate failed!", ex );
             return null;
         }
         catch ( IllegalAccessException ex ) {
-            Logger.getLogger( HashMapAutoCreate.class.getName() ).error( "HashMapAutoCreate failed!", ex );
+            LOGGER.error( "HashMapAutoCreate failed!", ex );
             return null;
         }
     }

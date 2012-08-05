@@ -22,7 +22,7 @@ import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
 import cz.datalite.zk.components.paging.DLPagingModel;
 import java.util.*;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -44,6 +44,8 @@ import org.zkoss.zul.Paging;
  */
 public abstract class DLListboxGeneralController<T> implements DLListboxExtController<T> {
 
+    /** logger */
+    protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLListboxGeneralController.class );
     /** Complete listbox, filter and paging model. This is storable to the session. */
     protected DLMasterModel model = new DLMasterModel();
     /** Controller for the listbox component */
@@ -591,7 +593,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             try {
                 listener.onEvent( event );
             } catch ( Exception ex ) {
-                Logger.getLogger( DLListboxGeneralController.class.getName() ).error( "Event couldn't be send. Error has occured in DLListboxGeneralController.", ex );
+                LOGGER.error( "Event couldn't be send. Error has occured in DLListboxGeneralController.", ex );
             }
         }
     }

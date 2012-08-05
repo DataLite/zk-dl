@@ -5,10 +5,8 @@ import cz.datalite.zk.components.cascade.Cascadable;
 import cz.datalite.zk.components.cascade.CascadableExt;
 import cz.datalite.zk.components.cascade.CascadeUtil;
 import cz.datalite.zk.components.list.DLListboxEvents;
-import cz.datalite.zk.components.list.DLListboxGeneralController;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -19,6 +17,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.event.*;
 
 /**
@@ -33,6 +33,7 @@ import org.zkoss.zk.ui.event.*;
  */
 public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
+    protected final static Logger LOGGER = LoggerFactory.getLogger( DLLovboxGeneralController.class );
     // controller
     /** multifunction controller for the listbox, paging and quickfilter */
     protected DLListboxExtController<T> listboxController;
@@ -162,7 +163,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             try {
                 listener.onEvent( event );
             } catch ( Exception ex ) {
-                Logger.getLogger( DLListboxGeneralController.class.getName() ).error( "Event couldn't be send. Error has occured in DLListboxGeneralController.", ex );
+               LOGGER.error( "Event couldn't be send. Error has occured in DLListboxGeneralController.", ex );
             }
         }
     }

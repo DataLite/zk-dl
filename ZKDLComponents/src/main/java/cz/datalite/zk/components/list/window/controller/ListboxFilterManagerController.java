@@ -10,7 +10,6 @@ import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
 import cz.datalite.zk.components.list.filter.components.RequireController;
 import cz.datalite.zk.components.list.model.RowModel;
-import org.apache.log4j.Logger;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -23,6 +22,8 @@ import org.zkoss.zul.Space;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -31,7 +32,7 @@ import java.util.List;
  */
 public class ListboxFilterManagerController extends GenericAutowireComposer {
 
-    protected final static Logger LOGGER = Logger.getLogger( ListboxFilterManagerController.class );
+    protected final static Logger LOGGER = LoggerFactory.getLogger( ListboxFilterManagerController.class );
     // model
     // column models for sorting
     /** model for the columns, their configuration etc. */

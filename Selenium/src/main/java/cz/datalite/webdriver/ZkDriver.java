@@ -2,7 +2,6 @@ package cz.datalite.webdriver;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import cz.datalite.webdriver.components.ZkElement;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +19,8 @@ import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -77,7 +78,7 @@ import java.util.Properties;
  */
 public class ZkDriver {
 
-    protected static final Logger LOGGER = Logger.getLogger( "cz.datalite.selenium" );
+    protected static final Logger LOGGER = LoggerFactory.getLogger( "cz.datalite.selenium" );
     /** The webDriver instance. */
     protected WebDriver webDriver;
     /** Wait for instance. */
@@ -225,7 +226,7 @@ public class ZkDriver {
                 properties.load( file );
                 return properties;
             } catch ( IOException ex ) {
-                getLogger().error( ex );
+                LOGGER.error("Property file couldn't be loaded", ex );
                 throw new IllegalStateException( "Property file wasn't loaded." );
             }
         }
@@ -290,10 +291,6 @@ public class ZkDriver {
         final ZkDriver zkDriver = new ZkDriver( properties );
         ZkElement.setZkDriver( zkDriver );
         return zkDriver;
-    }
-
-    public static Logger getLogger() {
-        return LOGGER;
     }
 
     protected ZkDriver( final Map<Property, String> properties ) {

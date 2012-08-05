@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import static cz.datalite.webdriver.ZkComponents.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>This is base element for all ZK elements on the page. There are
@@ -27,6 +29,7 @@ import static cz.datalite.webdriver.ZkComponents.*;
  */
 public class ZkElement {
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger( "cz.datalite.selenium" );
     /** The Web driver for a test. This is used to call support methods etc. */
     protected static ZkDriver zkDriver;
     /** The web element instance (aka client component counterpart). */
@@ -236,7 +239,7 @@ public class ZkElement {
                 final File f = driver.getScreenshotAs( OutputType.FILE );
                 final File screenshot = new File( zkDriver.getScreenshotDir(), SeleniumUnitTest.getActualTestName() + ".png" );
                 FileUtils.copyFile( f, screenshot );
-                ZkDriver.getLogger().debug( "Screenshot taken. File location is " + screenshot.getAbsolutePath() );
+                LOGGER.debug( "Screenshot taken. File location is '{}'.", screenshot.getAbsolutePath() );
                 return zkDriver.getScreenshotUrl() + screenshot.getName();
             } catch ( IOException ex ) {
                 throw new RuntimeException( ex );

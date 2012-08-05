@@ -10,7 +10,8 @@ import cz.datalite.stereotype.Autowired;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericDAO<T, ID>> implements GenericService<T,ID> {
 
-    static Logger logger = Logger.getLogger(GenericServiceImpl.class);
+    protected final static Logger LOGGER = LoggerFactory.getLogger(GenericServiceImpl.class);
 
     protected DAO defaultDAO;
 
@@ -45,9 +46,8 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         this.idClass = (Class<ID>) types.get(1);
         this.daoClass = (Class<DAO>) types.get(2);
 
-        logger.trace("Create new Service for class " + this.getClass().getCanonicalName() +
-                " EntityClass = " + this.entityClass.getCanonicalName() +
-                ", DAOClass = " + this.daoClass.getCanonicalName());
+        LOGGER.trace("Create new Service for class '{}' EntityClass = '{}', DAOClass = '{}'.", new Object[] {
+                this.getClass().getCanonicalName(), this.entityClass.getCanonicalName(),this.daoClass.getCanonicalName() } );
     }
     
     @Autowired
@@ -59,7 +59,7 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         {
             // autocreate generic DAO implementation according to interface
             defaultDAO = GenericDAOFactory.createDAO(applicationContext, entityClass, idClass, daoClass);
-            logger.trace("Default DAO created - " + defaultDAO.getClass().getCanonicalName());
+            LOGGER.trace("Default DAO created - '{}'.", defaultDAO.getClass().getCanonicalName());
 
 //            throw new InstantiationError("Error autowiring bean '" + this.getClass().getName() + "': " +
 //                    "No bean exists of DAO type '" + daoClass.getName() + "'.");
@@ -78,7 +78,7 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         else
         {
             defaultDAO = (DAO) applicationContext.getBeansOfType(daoClass).values().iterator().next();
-            logger.trace("Uniqueue default DAO got by bean class type " + daoClass.getCanonicalName());
+            LOGGER.trace("Uniqueue default DAO got by bean class type '{}'.", daoClass.getCanonicalName());
         }
     }
 
