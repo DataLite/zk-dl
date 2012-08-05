@@ -44,6 +44,13 @@
             <optional>true</optional>
         </dependency>
         
+         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.6</version>
+            <optional>true</optional>
+        </dependency>
+        
     </dependencies>
 	
 </project>
