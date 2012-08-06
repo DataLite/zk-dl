@@ -4,40 +4,40 @@
     <parent>
         <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>        
-        <version>1.3.0</version>
+        <version>1.4.0-SNAPSHOT</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKLiferay</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0-SNAPSHOT</version>
     <name>ZKLiferay</name>
 
     <dependencies>
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKDLComponents</artifactId>
-            <version>1.3.0</version>
+            <version>${cz.datalite.zk-dl.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>HibernateDAO</artifactId>
-            <version>1.3.0</version>
+            <version>${cz.datalite.zk-dl.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>SpringService</artifactId>
-            <version>1.3.0</version>
+            <version>${cz.datalite.zk-dl.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKComposer</artifactId>
-            <version>1.3.0</version>
+            <version>${cz.datalite.zk-dl.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -57,11 +57,11 @@
         </dependency>
 
         <dependency>
-              <groupId>org.mockito</groupId>
-              <artifactId>mockito-all</artifactId>
-              <version>1.8.1</version>
-              <optional>true</optional>
-      </dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.1</version>
+            <optional>true</optional>
+        </dependency>
       
         <dependency>
             <groupId>com.liferay.portal</groupId>
