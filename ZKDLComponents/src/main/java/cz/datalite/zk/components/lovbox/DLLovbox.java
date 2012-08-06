@@ -177,10 +177,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             Long popupHgt = new Long( popupHeight.substring(0, popupHeight.length()-2) ) - 55;
             listbox.setHeight( popupHgt.toString() + "px" );
         }
-
+        
         if ( filter == null && isCreateQuickFilter()) {
             filter = new DLQuickFilter();
-            filter.setQuickFilterAll(false);
             if (searchProperty != null)
                 filter.setQuickFilterDefault(searchProperty);
             popup.insertBefore( filter, listbox );            
