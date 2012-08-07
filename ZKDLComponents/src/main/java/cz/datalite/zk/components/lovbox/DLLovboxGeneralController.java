@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import org.zkoss.zk.ui.event.*;
 
 /**
  * <p>Controller for new lovbox which can substitude combobox. Main advantage is
@@ -108,7 +109,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
         // ensure, that listbox is loaded
         if ( listboxController.isLocked() ) {
-            lovbox.onOpen();
+            lovbox.onOpen( new OpenEvent( Events.ON_OPEN, lovbox, true ) );
         }
 
         listboxController.setSelectedItem( selectedItem );
