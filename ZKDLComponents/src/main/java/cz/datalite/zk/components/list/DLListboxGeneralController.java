@@ -271,6 +271,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         }
 
         getListboxController().fireOrderChanges(); 
+        // update list of available columns to filter by
+        getQuickFilterController().fireChanges();
+        
         autosaveModel();
 
         refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)

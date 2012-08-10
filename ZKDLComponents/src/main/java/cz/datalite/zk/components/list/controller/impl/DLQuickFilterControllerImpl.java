@@ -83,8 +83,13 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
     public void fireChanges() {
         quickFilter.setModel( getModel() );
+
+        // if the column is not visible anymore then reset the filter
+        if ( model.getModel() != null && !model.getModel().isVisible() ) model.clear();
+        
         bindingModel.setValue( model.getValue() );
         bindingModel.setKey( model.getKey() );
+        bindingModel.setModel( model.getModel() );
         quickFilter.fireChanges();
         ZKBinderHelper.loadComponent( quickFilter );
     }

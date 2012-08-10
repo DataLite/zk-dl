@@ -133,6 +133,9 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         }
 
         for ( final Entry<DLColumnUnitModel, String> entry : model ) {
+            // do not allow to filter by invisible column
+            if ( !entry.getKey().isVisible() ) continue;
+            
             popup.appendChild( new Menuitem( entry.getValue() ) {
 
                 {
@@ -151,11 +154,15 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         // Actual button selection
         final DLColumnUnitModel unit = controller.getBindingModel().getModel();
         for (Entry<DLColumnUnitModel, String> entry : model) {
+             // do not allow to filter by invisible column
+            if ( !entry.getKey().isVisible() ) continue;
+            
             if (EqualsHelper.isEqualsNull(entry.getKey(), unit)) {
                 setActiveFilter((Menuitem) popup.getChildren().get(model.indexOf(entry) + (quickFilterAll ? 1 : 0)));
                 return;
             }
         }
+        // model wasn't found in the menu list
         if ( popup.getChildren().size() > 0 ) {
             setActiveFilter( ( Menuitem ) popup.getFirstChild() );
             setVisible( true );

@@ -65,5 +65,6 @@ public class QuickFilterModel {
     public void clear() {
         key = CONST_ALL;
         value = null;
+        model = null;
     }
 }
