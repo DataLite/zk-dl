@@ -43,6 +43,9 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     private Hbox parent;
     private Image activateFilter;
 
+    /** ZK-164 It says that the QuickFilter should use the Contains operator for quick filter base comparison */
+    private Boolean quickFilterContainsOnly = null;
+
     public DLQuickFilter() {
         super();
 
@@ -153,12 +156,15 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     protected void setActiveFilter() {
         // Actual button selection
         final DLColumnUnitModel unit = controller.getBindingModel().getModel();
+        
+        int indexOfVisible = quickFilterAll ? 0 : -1;
         for (Entry<DLColumnUnitModel, String> entry : model) {
              // do not allow to filter by invisible column
-            if ( !entry.getKey().isVisible() ) continue;
+            if ( entry.getKey().isVisible() )  ++indexOfVisible;
+            else continue;
             
             if (EqualsHelper.isEqualsNull(entry.getKey(), unit)) {
-                setActiveFilter((Menuitem) popup.getChildren().get(model.indexOf(entry) + (quickFilterAll ? 1 : 0)));
+                setActiveFilter((Menuitem) popup.getChildren().get(indexOfVisible));
                 return;
             }
         }
@@ -215,7 +221,13 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         textbox.setFocus(focus);
     }
 
+    void setQuickFilterUseContainsOnly( boolean quickFilterContainsOnly ) {
+        this.quickFilterContainsOnly = quickFilterContainsOnly;
+    }
 
+    public Boolean isQuickFilterContainsOnly() {
+        return quickFilterContainsOnly;
+    }
 
     class SelectMenuItemEventListener implements org.zkoss.zk.ui.event.EventListener {
 

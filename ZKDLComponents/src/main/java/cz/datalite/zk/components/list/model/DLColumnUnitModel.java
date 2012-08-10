@@ -442,4 +442,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     public Composer getController() {
         return controller;
     }
+
+    public void setQuickFilterOperator( DLFilterOperator filterOperator ) {
+        this.quickFilterOperator = filterOperator;
+    }
 }

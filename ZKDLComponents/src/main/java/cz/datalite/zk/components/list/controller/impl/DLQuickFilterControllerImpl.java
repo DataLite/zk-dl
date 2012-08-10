@@ -1,18 +1,17 @@
 package cz.datalite.zk.components.list.controller.impl;
 
-import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
+import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
-import org.zkoss.lang.Classes;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import org.zkoss.lang.Library;
 
 /**
  * Implementation of the controller for the quick filter component.
@@ -21,6 +20,8 @@ import java.util.Map.Entry;
  */
 public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
+    /** property describing behavior of the quick filter - it says to use contains operator only */
+    protected static final boolean USE_CONTAINS_IN_QF = "true".equalsIgnoreCase( Library.getProperty( "zk-dl.filter.quick.use-contains" ) );
     // master controller
     protected final DLListboxExtController masterController;
     // model
@@ -127,5 +128,21 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
     public String getUuid() {
         return quickFilter.getUuid();
+    }
+
+    public void initModel( List<DLColumnUnitModel> columnModels ) {
+        // ZK-164
+        // determine wheather or not the Quick Filter should use operator contains
+        //
+        // if the local atribute is TRUE
+        // or local attribute is NOT DEFINED but the library property is TRUE
+        // then set the operator to LIKE
+        //
+        // this allows to override the library attribute by local definition
+        if ( quickFilter.isQuickFilterContainsOnly() == true
+                || ( quickFilter.isQuickFilterContainsOnly() == null && USE_CONTAINS_IN_QF ) )
+            for ( DLColumnUnitModel unit : columnModels ) {
+                unit.setQuickFilterOperator( DLFilterOperator.LIKE );
+            }
     }
 }

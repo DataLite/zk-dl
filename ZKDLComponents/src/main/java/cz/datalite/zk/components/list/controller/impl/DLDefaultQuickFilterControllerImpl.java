@@ -2,6 +2,8 @@ package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import java.util.List;
 
 /**
  * Default implementation of controller. It is used because of
@@ -28,5 +30,8 @@ public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterControll
     public boolean validateQuickFilter()
     {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void initModel( List<DLColumnUnitModel> columnModels ) {
     }
 }

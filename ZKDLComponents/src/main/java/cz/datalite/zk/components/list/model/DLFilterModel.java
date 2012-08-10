@@ -108,7 +108,7 @@ public class DLFilterModel {
                     + quickFilter.getKey()
                     + " was not found in column model. This can happen when column is java primitive type (filter by primitive is not supported)." );
         } else { // standard case
-            unit.setOperator( column.getQuickFilterOperator() );
+            unit.setOperator( column.getQuickFilterOperator(), true );
             final Object value = column.getColumnType() == null ? quickFilter.getValue() : TypeConverter.convertToSilent( quickFilter.getValue(), column.getColumnType() );
             unit.setValue( 1, value ); // can be null if conversion failed
         }
