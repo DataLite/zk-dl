@@ -286,7 +286,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
             {
-                columnMap.get( header ).setConverter( converter, header );
+                columnMap.get( header ).setConverter( converter, listbox );
             }
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
             {

@@ -29,6 +29,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     protected Class columnType;
     // converter for the modifying value
     protected Method converter;
+    // instance of controller to allow to use convertors defined as "ctl.coerce..."
+    protected Composer controller;
     // column label
     protected String label;
     // column order - 1 starts, 0 turned off, hidden
@@ -291,18 +293,18 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                 return;
             } catch ( Exception ex ) {
                 if ( converter.contains( "." ) ) {
-                    final String controller = converter.split( "\\." )[0];
+                    final String ctl = converter.split( "\\." )[0];
                     final String methodName = converter.split( "\\." )[1];
 
-                    final Composer ctl = ( Composer ) comp.getAttribute(controller, true);
+                    controller = ( Composer ) comp.getAttribute(ctl, true);
 
-                    if ( ctl != null ) {
+                    if ( controller != null ) {
                         // set the controller to component scope for future use (e.g. reset filters)
                         // if the component is removed because of visibility, the controller is not available
                         // through normal reference
-                        comp.setAttribute(controller, ctl, Component.COMPONENT_SCOPE);
+                        comp.setAttribute(ctl, controller, Component.COMPONENT_SCOPE);
 
-                        for ( Method method : ctl.getClass().getDeclaredMethods() ) {
+                        for ( Method method : controller.getClass().getDeclaredMethods() ) {
                             if ( methodName.equals( method.getName() ) ) {
                                 setConverter( method );
                                 return;
@@ -435,5 +437,9 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         if (o == null)
             return 0;
         return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
+    }
+
+    public Composer getController() {
+        return controller;
     }
 }

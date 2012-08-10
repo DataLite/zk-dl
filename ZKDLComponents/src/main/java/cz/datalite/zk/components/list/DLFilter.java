@@ -10,9 +10,10 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.compilers.FilterByAllCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.SystemException;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.mesg.MCommon;
@@ -26,6 +27,29 @@ import org.zkoss.mesg.MCommon;
  * @author xmedeko
  */
 public final class DLFilter {
+    
+    /** logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(DLFilter.class);
+
+    private static Object getConvertedValue(Object value, DLColumnUnitModel columnModel) {
+        // try to convert value
+        if (columnModel != null && columnModel.isConverter()) {
+
+            try {
+                if (columnModel.getController() == null) {
+                    // converter defined as a class
+                    final Object converter = columnModel.getConverter().getDeclaringClass().newInstance();
+                    return columnModel.getConverter().invoke(converter, value, null);
+                } else {
+                    // converter defined as 'ctl.coerce...'
+                    return columnModel.getConverter().invoke(columnModel.getController(), value);
+                }
+            } catch (Exception ex) {
+                LOGGER.warn("Conversion in DLFilter failed!", ex);
+            }
+        }
+        return value;
+    }
 
 	private DLFilter() {
 	}
@@ -89,7 +113,7 @@ public final class DLFilter {
 			try {
 				distinctData.add(getValue(entity, distinct));
 			} catch (NoSuchMethodException ex) {
-				Logger.getLogger(DLFilter.class.getName()).log(Level.SEVERE, null, ex);
+				LOGGER.error("Filtering in DLFilter failed!",ex);
 			}
 		}
 		return distinctData;
@@ -260,8 +284,11 @@ public final class DLFilter {
                 }
             }
 
+            // value to be compiled and compared
+            final Object fieldValue = getConvertedValue( getValue(entity, unit.getColumn()), unit.getColumnModel());
+            
             // check the result, make comparison based on given operator
-            if ((Boolean) compiler.compile(unit.getOperator(), unit.getColumn(), getValue(entity, unit.getColumn()), unit.getValue(1), unit.getValue(2))) {
+            if ((Boolean) compiler.compile(unit.getOperator(), unit.getColumn(), fieldValue, unit.getValue(1), unit.getValue(2))) {
                 // comparison was succesfull, value fits the rules
                 
                 // when the filter is in disjunction mode, than is enough to 
