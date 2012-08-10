@@ -60,15 +60,16 @@ public class FilterByAllCompiler implements FilterCompiler {
                 // get compiler for the value and operator to be able to evaluate the rule
                 final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
 
-                // get filter operator. There are expected only 2 values: CONTAINS for Strings and EQUALS for others
-                // also some other types but the String uses CONTAINS as the default operator. It benefits from the
-                // string representation of the value. Eg. integer: value "1223", needle "223". CONTAINS evaluates this
+                // When the user wants to filter by ALL then he wants to use WYSIWYG search
+                // Due to his expectations the filter uses CONTAINS operator to make a STRING
+                // comparison as the user expect Eg. integer: value "1223", needle "223". CONTAINS evaluates this
                 // as the valid entity but the EQUALS doesn't.
-                final DLFilterOperator operator = unit.getQuickFilterOperator();
+                final DLFilterOperator operator = DLFilterOperator.LIKE;
 
                 // get value to be evaluated against given key
                 // entity property - the value shown in the listbox
-                final Object value = FilterUtils.getValue(values[0], unit.getColumn());
+                // try to convert value
+                final Object value = FilterUtils.getConvertedValue( FilterUtils.getValue(values[0], unit.getColumn()), unit);
 
                 // if the value is missing it cannot match the rules
                 // this if also prevents the NPE in the following code

@@ -4,13 +4,13 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
+import static cz.datalite.zk.components.list.filter.FilterUtils.getConvertedValue;
 import static cz.datalite.zk.components.list.filter.FilterUtils.getValue;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.compilers.FilterByAllCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
-import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,26 +30,6 @@ public final class DLFilter {
     
     /** logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(DLFilter.class);
-
-    private static Object getConvertedValue(Object value, DLColumnUnitModel columnModel) {
-        // try to convert value
-        if (columnModel != null && columnModel.isConverter()) {
-
-            try {
-                if (columnModel.getController() == null) {
-                    // converter defined as a class
-                    final Object converter = columnModel.getConverter().getDeclaringClass().newInstance();
-                    return columnModel.getConverter().invoke(converter, value, null);
-                } else {
-                    // converter defined as 'ctl.coerce...'
-                    return columnModel.getConverter().invoke(columnModel.getController(), value);
-                }
-            } catch (Exception ex) {
-                LOGGER.warn("Conversion in DLFilter failed!", ex);
-            }
-        }
-        return value;
-    }
 
 	private DLFilter() {
 	}
