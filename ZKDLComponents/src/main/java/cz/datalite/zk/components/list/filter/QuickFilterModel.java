@@ -1,5 +1,7 @@
 package cz.datalite.zk.components.list.filter;
 
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+
 /**
  * Model for quick filter
  * @author Karel Čemus <cemus@datalite.cz>
@@ -8,12 +10,14 @@ public class QuickFilterModel {
 
     protected String key;
     protected String value;
+    protected DLColumnUnitModel model;
     public static final String CONST_ALL = "ALL_FILTER_VALUES";
 
-    public QuickFilterModel( final String key, final String value ) {
+    public QuickFilterModel( final String key, final String value, final DLColumnUnitModel model ) {
         assert key != null && key.length() > 0 : "Invalid argument. Key cannot be null or empty in quick filter.";
         this.key = key;
         this.value = value;
+        this.model = model;
     }
 
     public QuickFilterModel( final String value ) {
@@ -32,6 +36,14 @@ public class QuickFilterModel {
 
     public String getValue() {
         return value;
+    }
+
+    public DLColumnUnitModel getModel() {
+        return model;
+    }
+
+    public void setModel(DLColumnUnitModel model) {
+        this.model = model;
     }
 
     public void setKey( final String key ) {

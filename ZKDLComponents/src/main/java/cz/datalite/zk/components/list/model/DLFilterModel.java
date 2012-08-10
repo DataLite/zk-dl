@@ -89,7 +89,7 @@ public class DLFilterModel {
             return new NormalFilterModel();
         }
 
-        final DLColumnUnitModel column = columnModel.getByName( quickFilter.getKey() );
+        final DLColumnUnitModel column =  quickFilter.getModel();
         final NormalFilterUnitModel unit = column == null ? new NormalFilterUnitModel( quickFilter.getKey() ) : new NormalFilterUnitModel( column );
         if ( QuickFilterModel.CONST_ALL.equals( quickFilter.getKey() ) ) { // quickfilter key == ALL 
             unit.setValue( 1, quickFilter.getValue() );

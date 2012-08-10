@@ -1,7 +1,9 @@
 package cz.datalite.zk.components.list.view;
 
+import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -24,7 +26,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     // Controller
     protected DLQuickFilterController controller;
     // Model
-    protected List<Entry<String, String>> model;
+    protected List<Entry<DLColumnUnitModel, String>> model;
     protected boolean quickFilterAll = true;
     protected String quickFilterDefault;
     // View
@@ -130,11 +132,12 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
             } );
         }
 
-        for ( final Entry<String, String> entry : model ) {
+        for ( final Entry<DLColumnUnitModel, String> entry : model ) {
             popup.appendChild( new Menuitem( entry.getValue() ) {
 
                 {
-                    setValue( entry.getKey() );
+                    setAttribute( "model", entry.getKey() );
+                    setValue( entry.getKey().getColumn() );
                     addEventListener( Events.ON_CLICK, new SelectMenuItemEventListener( this ) );
                 }
             } );
@@ -146,13 +149,11 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
     protected void setActiveFilter() {
         // Actual button selection
-        final String key = controller.getBindingModel().getKey();
-        if ( key != null && key.length() > 0 ) {
-            for ( Entry<String, String> entry : model ) {
-                if ( entry.getKey().equals( key ) ) {
-                    setActiveFilter( ( Menuitem ) popup.getChildren().get( model.indexOf( entry ) + (quickFilterAll ? 1 : 0) ) );
-                    return;
-                }
+        final DLColumnUnitModel unit = controller.getBindingModel().getModel();
+        for (Entry<DLColumnUnitModel, String> entry : model) {
+            if (EqualsHelper.isEqualsNull(entry.getKey(), unit)) {
+                setActiveFilter((Menuitem) popup.getChildren().get(model.indexOf(entry) + (quickFilterAll ? 1 : 0)));
+                return;
             }
         }
         if ( popup.getChildren().size() > 0 ) {
@@ -175,9 +176,9 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         controller.onQuickFilter();
     }
 
-    public void setModel( final List<Entry<String, String>> model ) {
-        for ( final Iterator<Entry<String, String>> it = model.iterator(); it.hasNext(); ) {
-            final Entry<String, String> entry = it.next();
+    public void setModel( final List<Entry<DLColumnUnitModel, String>> model ) {
+        for ( final Iterator<Entry<DLColumnUnitModel, String>> it = model.iterator(); it.hasNext(); ) {
+            final Entry<DLColumnUnitModel, String> entry = it.next();
             if ( entry.getValue() == null || Strings.isEmpty( entry.getValue() ) ) {
                 it.remove();
             }
@@ -213,14 +214,17 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 
         protected final Menuitem item;
         protected final String column;
+        protected final DLColumnUnitModel model;
 
         public SelectMenuItemEventListener( final Menuitem item ) {
             this.item = item;
             this.column = item.getValue();
+            this.model = (DLColumnUnitModel) item.getAttribute("model");
         }
 
         public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
             controller.getBindingModel().setKey( column );
+            controller.getBindingModel().setModel( model );
             setActiveFilter( item );
         }
     }

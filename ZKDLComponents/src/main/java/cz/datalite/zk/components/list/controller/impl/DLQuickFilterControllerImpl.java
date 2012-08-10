@@ -39,7 +39,7 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
             this.model.setKey(quickFilter.getQuickFilterDefault());
         }
 
-        bindingModel = new QuickFilterModel( model.getKey(), model.getValue() );
+        bindingModel = new QuickFilterModel( model.getKey(), model.getValue(), model.getModel() );
         quickFilter.setController( this );
     }
 
@@ -49,31 +49,34 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         }
         model.setValue( bindingModel.getValue() == null ? null : bindingModel.getValue().trim());
         model.setKey( bindingModel.getKey() );
+        model.setModel( bindingModel.getModel() );
         masterController.onFilterChange( DLListboxEvents.ON_QUICK_FILTER_CHANGE );
     }
 
     public boolean validateQuickFilter()
     {
-        DLColumnUnitModel columnUnitModel = masterController.getColumnModel().getByName(bindingModel.getKey());
-        if (columnUnitModel != null && columnUnitModel.getColumnType() != null && !StringHelper.isNull(bindingModel.getValue()))
-        {
-            if (columnUnitModel.getFilterCompiler() != null)
-            {
-                columnUnitModel.getFilterCompiler().validateValue(bindingModel.getValue());
-            }
-            else
-            {
-                // validate primitive value with a type (number, date, ...)
-                try
-                {
-                    Classes.coerce(columnUnitModel.getColumnType(), bindingModel.getValue());
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-        }
+        // ZK-164 Validation disabled
+        //   Since 1.4.0 changed on 10. August 2012 the validation
+        //   has been disabled because the quickfilter since now 
+        //   is not interested in a datatype and delegates that 
+        //   responsibility on the filter handler like a database
+        //   or DLFilter implementation
+        //
+        //
+        //    DLColumnUnitModel columnUnitModel = bindingModel.getModel();
+        //    if (columnUnitModel != null && columnUnitModel.getColumnType() != null && !StringHelper.isNull(bindingModel.getValue()))
+        //    {
+        //        if (columnUnitModel.getFilterCompiler() != null)
+        //            columnUnitModel.getFilterCompiler().validateValue(bindingModel.getValue());
+        //        else {
+        //            // validate primitive value with a type (number, date, ...)
+        //            try {
+        //                Classes.coerce(columnUnitModel.getColumnType(), bindingModel.getValue());
+        //            } catch (Exception e) {
+        //                return false;
+        //            }
+        //        }
+        //    }
 
         return true;
     }
@@ -90,14 +93,14 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
      * Prepares model for quick filter from the column model.
      * @return model for the quick filter
      */
-    protected List<Entry<String, String>> getModel() {
-        final List<Entry<String, String>> quickFilterModel = new LinkedList<Entry<String, String>>();
+    protected List<Entry<DLColumnUnitModel, String>> getModel() {
+        final List<Entry<DLColumnUnitModel, String>> quickFilterModel = new LinkedList<Entry<DLColumnUnitModel, String>>();
         for ( final DLColumnUnitModel unit : masterController.getColumnModel().getColumnModels() ) {
             if ( unit.isColumn() && unit.isQuickFilter() && unit.isFilter() ) {
-                quickFilterModel.add( new Entry<String, String>() {
+                quickFilterModel.add( new Entry<DLColumnUnitModel, String>() {
 
-                    public String getKey() {
-                        return unit.getColumn();
+                    public DLColumnUnitModel getKey() {
+                        return unit;
                     }
 
                     public String getValue() {
