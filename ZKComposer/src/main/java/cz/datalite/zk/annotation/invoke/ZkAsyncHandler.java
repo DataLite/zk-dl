@@ -20,8 +20,8 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.utils.ZkCancellable;
 import cz.datalite.zk.annotation.ZkAsync;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.*;
@@ -34,8 +34,9 @@ import org.zkoss.zk.ui.event.*;
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class ZkAsyncHandler extends Handler {
-
-    private final static Logger LOGGER = Logger.getLogger(ZkAsyncHandler.class.getCanonicalName());
+    
+    /** Logger instance */
+    private static final Logger LOGGER = LoggerFactory.getLogger( ZkAsyncHandler.class );
 
     /** used queue name, one queue for all users async requests */
     private final static String QUEUE = "qLongOperations";
@@ -83,7 +84,7 @@ public class ZkAsyncHandler extends Handler {
             busybox.setEventListener(Events.ON_CLOSE, new EventListener() {
 
                 public void onEvent(Event event) throws Exception {
-                    LOGGER.log(Level.FINE, "Async operation was cancelled.");
+                    LOGGER.trace( "Async operation was cancelled." );
                     // race conditions - 2 threads works with interruptor, NPE prevention
                     synchronized (ZkAsyncHandler.this) {
                         if (interruptor != null) {
@@ -102,7 +103,7 @@ public class ZkAsyncHandler extends Handler {
 
         // check for already running
         if (isAsyncRunning()) {
-            LOGGER.log(Level.FINE, "One operation is already running. Request was rejected.");
+            LOGGER.trace( "One operation is already running. Request was rejected." );
         } else {
             // subscribe to listen async events
             subscribe(event, master, controller);
@@ -122,7 +123,7 @@ public class ZkAsyncHandler extends Handler {
     protected void doAfter(Event event, Component master, Object controller) {
         try {
             if (exception != null) {
-                LOGGER.log(Level.SEVERE, "Execution of long running operation failed. Exception has been thrown.");
+                LOGGER.error( "Execution of long running operation failed. Exception has been thrown." );
                 throw new RuntimeException(exception);
             }
 
@@ -176,7 +177,7 @@ public class ZkAsyncHandler extends Handler {
         return new EventListener() {
 
             public void onEvent(Event evt) throws Exception {
-                LOGGER.log(Level.FINE, "Async operation finished.");
+                LOGGER.trace( "Async operation finished." );
                 // clean up queue
                 cleanUp();
 
@@ -195,7 +196,7 @@ public class ZkAsyncHandler extends Handler {
 
             public void onEvent(Event evt) throws Exception { //asynchronous
                 try {
-                    LOGGER.log(Level.FINE, "Starting async operation.");
+                    LOGGER.trace( "Starting async operation." );
 
                     if (cancellable) {
                         // add request to allow cancelling

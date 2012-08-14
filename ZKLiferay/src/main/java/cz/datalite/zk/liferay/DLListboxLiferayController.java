@@ -1,27 +1,19 @@
 package cz.datalite.zk.liferay;
 
-import com.liferay.portal.kernel.dao.orm.Criterion;
-import com.liferay.portal.kernel.dao.orm.Disjunction;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.*;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.helpers.TypeConverter;
 import cz.datalite.zk.components.list.DLListboxGeneralController;
-import cz.datalite.zk.components.list.filter.*;
-import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
+import cz.datalite.zk.components.list.filter.NormalFilterModel;
+import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.UiException.Aide;
 
 /**
@@ -34,8 +26,7 @@ import org.zkoss.zk.ui.UiException.Aide;
 public abstract class DLListboxLiferayController<T> extends DLListboxGeneralController<T> {
 
     final FilterLiferayCompiler compiler;
-    protected static final Logger LOGGER = LoggerFactory.getLogger( DLListboxLiferayController.class );
-
+    
     /**
      * Creates instance of the extended controller which uses Hibernate Criteria
      * @param identifier
@@ -73,7 +64,7 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
         try {
             return loadData(getDefaultDynamicQuery(filter, firstRow, rowCount, sorts));
         } catch (SystemException ex) {
-            java.util.logging.Logger.getLogger(DLListboxLiferayController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error( "Something went wrong.", ex );
             throw Aide.wrap(ex, "Error in Liferay dynamic query (loadData)");
         }
     }
@@ -108,7 +99,7 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
         try {
             return loadData(dQuery);
         } catch (SystemException ex) {
-            java.util.logging.Logger.getLogger(DLListboxLiferayController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error( "Something went wrong.", ex );
             throw Aide.wrap(ex, "Error in Liferay dynamic query (loadData)");
         }
     }

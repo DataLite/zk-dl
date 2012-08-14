@@ -1,7 +1,5 @@
 package cz.datalite.zk.components.list.filter.components;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This implementation of FilterComponentFactory is used when the component
@@ -11,7 +9,7 @@ import java.util.logging.Logger;
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class InstanceFilterComponentFactory implements FilterComponentFactory {
-
+    
     protected final Class<? extends FilterComponent> componentClass;
 
     public InstanceFilterComponentFactory( final String className ) {

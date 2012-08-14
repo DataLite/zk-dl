@@ -26,8 +26,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Composer for MVC development.</p>
@@ -74,6 +74,8 @@ import java.util.logging.Logger;
  */
 public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer implements java.util.Map<String, Object>, DLMasterController<T>, Serializable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( DLComposer.class );
+    
     /** Map model name to field representing this model */
     private final Map<String, Field> zkModels = new java.util.HashMap<String, Field>();
 
@@ -335,7 +337,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
         try {
             return org.zkoss.lang.reflect.Fields.get( this, key );
         } catch ( NoSuchMethodException ex ) {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, ex );
+            LOGGER.error( "Something went wrong.", ex );
             return null;
         }
     }
@@ -356,7 +358,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
                 }
             }
         } catch ( Exception ex ) {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, ex );
+            LOGGER.error( "Something went wrong.", ex );
             return null;
         }
     }
@@ -375,7 +377,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
         } else if ( zkModels.isEmpty() ) {
             putDefault( key, value );
         } else {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, new NoSuchFieldException( "Unknown model for key \"" + key + "\"" ) );
+            LOGGER.error( "Something went wrong.", new NoSuchFieldException( "Unknown model for key \"" + key + "\"" ) );
         }
         return value;
     }

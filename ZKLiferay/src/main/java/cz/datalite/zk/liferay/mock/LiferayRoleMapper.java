@@ -11,10 +11,14 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiferayRoleMapper extends HashMap<String, String> {
 
+    /** Logger instance */
+    private static final Logger LOGGER = LoggerFactory.getLogger( LiferayRoleMapper.class );
+    
     public LiferayRoleMapper(InputStream liferayPortletXml)
     {
         Document document = null;
@@ -31,7 +35,7 @@ public class LiferayRoleMapper extends HashMap<String, String> {
             }
 
         } catch (DocumentException e) {
-            Logger.getLogger(getClass().getName()).warning("Unable to parse WEB-INF/liferay-portlet.xml, role mapper will not be available");
+            LOGGER.warn( "Unable to parse WEB-INF/liferay-portlet.xml, role mapper will not be available" );
         }
     }
 }

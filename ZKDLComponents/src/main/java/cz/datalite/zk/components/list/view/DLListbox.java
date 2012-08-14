@@ -2,9 +2,9 @@ package cz.datalite.zk.components.list.view;
 
 import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ZKBinderHelper;
-import cz.datalite.zk.components.list.DLFilter;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
+import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -12,11 +12,6 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.*;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This component is the extension for the ZK listbox. This component and

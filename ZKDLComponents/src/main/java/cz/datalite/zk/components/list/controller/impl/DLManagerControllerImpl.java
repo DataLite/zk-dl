@@ -10,27 +10,24 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
-import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.zkoss.lang.Strings;
-import org.zkoss.util.media.AMedia;
-import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Messagebox;
-
 import java.util.*;
-import java.util.logging.Level;
 import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
+import org.zkoss.util.media.AMedia;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.UiException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zul.Messagebox;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -200,7 +197,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
             export("report", "data", columnModels, rows);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(DLManagerControllerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error( "Something went wrong.", ex );
         }
     }
 

@@ -1,13 +1,13 @@
 package cz.datalite.zk.liferay.mock;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
-import org.springframework.web.context.ServletContextAware;
-
-import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * Check if Liferay is available and if not, init main services with mock.
@@ -16,6 +16,9 @@ import java.util.logging.Logger;
  */
 public class LiferayMock implements ServletContextAware
 {
+    /** Logger instance */
+    private static final Logger LOGGER = LoggerFactory.getLogger( LiferayMock.class );
+     
     protected ServletContext servletContext;
 
     protected CompanyMockFactory companyMockFactory;
@@ -86,7 +89,7 @@ public class LiferayMock implements ServletContextAware
         InputStream liferayPortletXml = servletContext.getResourceAsStream("/WEB-INF/liferay-portlet.xml");
         if (liferayPortletXml == null)
         {
-            Logger.getLogger(getClass().getName()).warning("The file /WEB-INF/liferay-portlet.xml does not exists, role mapper will not be available");
+            LOGGER.warn( "The file /WEB-INF/liferay-portlet.xml does not exists, role mapper will not be available" );
             liferayRoleMapper = new HashMap<String, String>();
         }
         else

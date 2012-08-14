@@ -2,8 +2,8 @@ package cz.datalite.helpers;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pomocne funkce pro vypocet hashe
@@ -11,6 +11,9 @@ import java.util.logging.Logger;
  * @author Jiri Bubnik
  */
 public class HashCalcHelper {
+    
+    /** Logger instance */
+    private static final Logger LOGGER = LoggerFactory.getLogger( HashCalcHelper.class );
 
     /**
      * Zakoduje zpravu a vrati ji jako string pomoci algoritmu SHA-512
@@ -60,7 +63,7 @@ public class HashCalcHelper {
             md = MessageDigest.getInstance(algorithm);
             return md.digest(buffer);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(HashCalcHelper.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error( "Something went wrong.", ex );
             throw new Error(ex.getLocalizedMessage());
         }
     }

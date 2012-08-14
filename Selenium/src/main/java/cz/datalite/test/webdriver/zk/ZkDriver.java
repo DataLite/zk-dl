@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -27,6 +27,9 @@ import java.util.logging.Logger;
  */
 public class ZkDriver implements WebDriver, Wait<WebDriver> {
 
+    /** Logger instance */
+    private static final Logger LOGGER = LoggerFactory.getLogger( ZkDriver.class );
+    
     /** The webDriver instance. */
     protected WebDriver webDriver;
     /** Wait for instance. */
@@ -87,7 +90,7 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
             try {
                 properties.load( file );
             } catch ( IOException ex ) {
-                Logger.getLogger( ZkDriver.class.getName() ).log( Level.SEVERE, null, ex );
+                LOGGER.error( "Something went wrong.", ex );
                 return;
             }
 
