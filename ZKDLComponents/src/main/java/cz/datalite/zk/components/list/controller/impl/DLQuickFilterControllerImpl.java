@@ -139,7 +139,7 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         // then set the operator to LIKE
         //
         // this allows to override the library attribute by local definition
-        if ( quickFilter.isQuickFilterContainsOnly() == true
+        if ( quickFilter.isQuickFilterContainsOnly() == Boolean.TRUE 
                 || ( quickFilter.isQuickFilterContainsOnly() == null && USE_CONTAINS_IN_QF ) )
             for ( DLColumnUnitModel unit : columnModels ) {
                 unit.setQuickFilterOperator( DLFilterOperator.LIKE );
