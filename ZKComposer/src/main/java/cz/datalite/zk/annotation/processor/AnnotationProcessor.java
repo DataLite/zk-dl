@@ -63,6 +63,7 @@ public class AnnotationProcessor<T> {
         initializers.add(new GeneralInitializerProcessor(ZkEvents.class, MethodInvoker.class));
 
         wrappers.add(new GeneralWrapperProcessor(ZkException.class, ZkExceptionHandler.class));
+        wrappers.add(new GeneralWrapperProcessor(ZkExceptions.class, ZkExceptionHandler.class));
         wrappers.add(new GeneralWrapperProcessor(ZkBinding.class, ZkBindingHandler.class));
         wrappers.add(new GeneralWrapperProcessor(ZkBindings.class, ZkBindingHandler.class));
         wrappers.add(new GeneralWrapperProcessor(ZkConfirm.class, ZkConfirmHandler.class));
