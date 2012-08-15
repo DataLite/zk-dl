@@ -5,7 +5,7 @@ import cz.datalite.dao.DLSearch;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.GenericDAO;
 import org.hibernate.Criteria;
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
 import org.hibernate.criterion.*;
@@ -89,7 +89,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert id != null : INVALID_ARGUMENT_ID_MISSING;
         T entity;
         if ( lock ) {
-            entity = ( T ) getSession().load( getPersistentClass(), id, LockOptions.UPGRADE);
+            entity = ( T ) getSession().load( getPersistentClass(), id, LockMode.UPGRADE);
         } else {
             entity = ( T ) getSession().load( getPersistentClass(), id );
         }
@@ -154,7 +154,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
 
     public void reattach( final T entity ) {
         assert entity != null : INVALID_ARGUMENT_ENTITY_MISSING;
-        getSession().buildLockRequest(LockOptions.NONE).lock(entity);
+        // potrebujeme zpetnou kompatibilitu s JPA 1.0 kvuli OC4J
+        //getSession().buildLockRequest(LockOptions.NONE).lock(entity);
+        getSession().lock( entity, LockMode.NONE );
     }
 
     public T merge( final T entity ) {
