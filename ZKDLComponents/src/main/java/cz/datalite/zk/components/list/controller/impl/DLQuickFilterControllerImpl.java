@@ -11,7 +11,6 @@ import cz.datalite.zk.components.list.view.DLQuickFilter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import org.zkoss.lang.Library;
 
 /**
  * Implementation of the controller for the quick filter component.
@@ -20,8 +19,6 @@ import org.zkoss.lang.Library;
  */
 public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
-    /** property describing behavior of the quick filter - it says to use contains operator only */
-    protected static final boolean USE_CONTAINS_IN_QF = "true".equalsIgnoreCase( Library.getProperty( "zk-dl.filter.quick.use-contains" ) );
     // master controller
     protected final DLListboxExtController masterController;
     // model
@@ -47,7 +44,7 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
     public void onQuickFilter() {
         if ( masterController.isLocked() ) {
             return;
-        }
+        }                       
         model.setValue( bindingModel.getValue() == null ? null : bindingModel.getValue().trim());
         model.setKey( bindingModel.getKey() );
         model.setModel( bindingModel.getModel() );
@@ -101,8 +98,11 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
      */
     protected List<Entry<DLColumnUnitModel, String>> getModel() {
         final List<Entry<DLColumnUnitModel, String>> quickFilterModel = new LinkedList<Entry<DLColumnUnitModel, String>>();
+        final boolean wysiwyg = masterController.getModel().getFilterModel().isWysiwyg();
         for ( final DLColumnUnitModel unit : masterController.getColumnModel().getColumnModels() ) {
             if ( unit.isColumn() && unit.isQuickFilter() && unit.isFilter() ) {
+                // set to use wysiwyg search
+                if ( wysiwyg ) unit.setQuickFilterOperator( DLFilterOperator.LIKE );
                 quickFilterModel.add( new Entry<DLColumnUnitModel, String>() {
 
                     public DLColumnUnitModel getKey() {
@@ -128,21 +128,5 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
     public String getUuid() {
         return quickFilter.getUuid();
-    }
-
-    public void initModel( List<DLColumnUnitModel> columnModels ) {
-        // ZK-164
-        // determine wheather or not the Quick Filter should use operator contains
-        //
-        // if the local atribute is TRUE
-        // or local attribute is NOT DEFINED but the library property is TRUE
-        // then set the operator to LIKE
-        //
-        // this allows to override the library attribute by local definition
-        if ( quickFilter.isQuickFilterContainsOnly() == Boolean.TRUE 
-                || ( quickFilter.isQuickFilterContainsOnly() == null && USE_CONTAINS_IN_QF ) )
-            for ( DLColumnUnitModel unit : columnModels ) {
-                unit.setQuickFilterOperator( DLFilterOperator.LIKE );
-            }
     }
 }

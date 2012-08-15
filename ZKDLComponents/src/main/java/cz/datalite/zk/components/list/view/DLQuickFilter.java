@@ -43,9 +43,6 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     private Hbox parent;
     private Image activateFilter;
 
-    /** ZK-164 It says that the QuickFilter should use the Contains operator for quick filter base comparison */
-    private Boolean quickFilterContainsOnly = null;
-
     public DLQuickFilter() {
         super();
 
@@ -219,14 +216,6 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     public void setFocus(boolean focus)
     {
         textbox.setFocus(focus);
-    }
-
-    void setQuickFilterUseContainsOnly( boolean quickFilterContainsOnly ) {
-        this.quickFilterContainsOnly = quickFilterContainsOnly;
-    }
-
-    public Boolean isQuickFilterContainsOnly() {
-        return quickFilterContainsOnly;
     }
 
     class SelectMenuItemEventListener implements org.zkoss.zk.ui.event.EventListener {

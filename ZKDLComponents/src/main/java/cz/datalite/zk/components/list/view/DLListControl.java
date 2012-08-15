@@ -50,7 +50,7 @@ public class DLListControl extends Hbox
     private boolean inConstruct = true;
 
     /** ZK-164 It says that the QuickFilter should use the Contains operator for quick filter base comparison */
-    private boolean quickFilterContainsOnly;
+    private Boolean wysiwyg = null;
 
     /**
      * Constructor creates all components.
@@ -103,7 +103,6 @@ public class DLListControl extends Hbox
         qFilterComponent.setQuickFilterAll( quickFilterAll );
         qFilterComponent.setQuickFilterDefault( quickFilterDefault );
         qFilterComponent.setQuickFilterButton(quickFilterButton);
-        qFilterComponent.setQuickFilterUseContainsOnly( quickFilterContainsOnly );
     }
 
     private void initPaging()
@@ -245,7 +244,11 @@ public class DLListControl extends Hbox
         this.quickFilterButton = quickFilterButton;
     }
 
-    public void setQuickFilterContainsOnly( boolean quickFilterContainsOnly ) {
-        this.quickFilterContainsOnly = quickFilterContainsOnly;
+    public void setWysiwyg( boolean wysiwyg ) {
+        this.wysiwyg = wysiwyg;
+    }
+
+    public Boolean isWysiwyg() {
+        return wysiwyg;
     }
 }

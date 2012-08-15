@@ -7,6 +7,7 @@ import cz.datalite.zk.components.list.filter.EasyFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
+import org.zkoss.lang.Library;
 
 /**
  * Filter model - groups all filter models.
@@ -14,6 +15,8 @@ import cz.datalite.zk.components.list.filter.QuickFilterModel;
  */
 public class DLFilterModel {
 
+    /** property describing behavior of the quick filter - it says to use contains operator only */
+    protected static final boolean USE_WYSIWYG = "true".equalsIgnoreCase( Library.getProperty( "zk-dl.filter.wysiwyg" ) );
     /** easy filter - binding */
     protected final EasyFilterModel _easy = new EasyFilterModel();
     /** quick filter - component */
@@ -22,6 +25,9 @@ public class DLFilterModel {
     protected final NormalFilterModel _normal = new NormalFilterModel();
     /** default filter - model */
     protected final NormalFilterModel _default = new NormalFilterModel();
+    
+    /** ZK-164 It says that the QuickFilter should use the Contains operator for quick filter base comparison */
+    private Boolean wysiwyg = null;
 
     public NormalFilterModel getDefault() {
         return _default;
@@ -119,5 +125,21 @@ public class DLFilterModel {
 
     public boolean isEmpty() {
         return _quick.isEmpty() && _normal.isEmpty() && _easy.isEmpty();
+    }
+    
+    public boolean isWysiwyg() {
+        // ZK-164
+        // determine wheather or not the Quick Filter should use operator contains
+        //
+        // if the local atribute is TRUE
+        // or local attribute is NOT DEFINED but the library property is TRUE
+        // then set the operator to LIKE
+        //
+        // this allows to override the library attribute by local definition
+        return (wysiwyg == Boolean.TRUE || (wysiwyg == null && USE_WYSIWYG));
+    }
+
+    public void setWysiwyg( final Boolean wysiwyg ) {
+        this.wysiwyg = wysiwyg;
     }
 }

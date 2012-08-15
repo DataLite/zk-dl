@@ -114,6 +114,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             if ( listControl.isPaging() ) {
                 initPaging( listControl.getPagingComponent() );
             }
+            model.getFilterModel().setWysiwyg( listControl.isWysiwyg() );
         } else if ( comp instanceof Paging ) {
             throw new IllegalArgumentException( "If you want to use paging, you have to use DLPaging component. In ZUL file it is called \"dlpaging\"." );
         }
@@ -149,7 +150,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      */
     protected void initQuickFilter( final DLQuickFilter comp ) {
         quickFilterController = new DLQuickFilterControllerImpl( this, model.getFilterModel().getQuick(), comp );
-        quickFilterController.initModel(model.getColumnModel().getColumnModels());
     }
 
     public void onCreate() {

@@ -18,6 +18,12 @@ public class DLColumnModel {
     protected List<DLColumnUnitModel> columnModels = new LinkedList<DLColumnUnitModel>();
     // maximal used index for visible columns
     protected int orderMaxIndex = 0;
+    // reference to master model
+    protected final DLMasterModel master;
+
+    DLColumnModel( DLMasterModel master ) {
+        this.master = master;
+    }
 
     public List<DLColumnUnitModel> getColumnModels() {
         return columnModels;
@@ -152,5 +158,9 @@ public class DLColumnModel {
             }
         }
         return null;
+    }
+
+    public DLMasterModel getMaster() {
+        return master;
     }
 }

@@ -36,7 +36,4 @@ public interface DLQuickFilterController {
      * @return uuid
      */
     String getUuid();
-
-    /** initializes model based on local configuration */
-    void initModel( List<DLColumnUnitModel> columnModels );
 }

@@ -137,6 +137,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         final Map<String, Object> args = new HashMap<String, Object>();
 //        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
         final NormalFilterModel templateModels = new NormalFilterModel();
+        
+        final boolean wysiwyg = masterController.getModel().getFilterModel().isWysiwyg();
 
         for ( int index = 0; index < masterController.getColumnModel().getColumnModels().size(); index++ ) {
             final DLColumnUnitModel unit = masterController.getColumnModel().getColumnModels().get( index );
@@ -144,7 +146,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                 continue;
             }
             if ( (unit.getColumnType() == null || !FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( unit.getColumnType() ))
-                    && !unit.isFilterComponent() && !unit.isFilterOperators() ) {
+                    && !unit.isFilterComponent() && !unit.isFilterOperators() && !wysiwyg ) {
                 LOGGER.debug( "Column '{}' was ignored in filter due to not have the filter component or filter operators.", unit.getColumn() );
                 continue;
             }

@@ -356,6 +356,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                 filterOperators = Collections.singletonList( DLFilterOperator.EQUAL );
             } else if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) { // Is the default configuration known for this type?
                 filterOperators = FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getOperators();
+            } else if ( columnModel.getMaster().getFilterModel().isWysiwyg() ) {
+                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( String.class ).getOperators();
             } else {
                 throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter. For type " + columnType.getCanonicalName() + " have to be defined special filter component." );
             }
@@ -410,6 +412,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
             // Is the default configuration known for this type?
             if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
                 return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType );
+            } else if ( columnModel.getMaster().getFilterModel().isWysiwyg() ) {
+                return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( String.class );
             } else {
                 throw new UnsupportedOperationException( "Unknown datatype was used in listbox filter for column '" + column + "'. For type "
                         + (columnType == null ? "unknown" : columnType.getCanonicalName()) + " have to be defined special filter component." );

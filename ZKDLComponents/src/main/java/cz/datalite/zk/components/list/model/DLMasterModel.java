@@ -10,7 +10,7 @@ import cz.datalite.zk.components.paging.DLPagingModel;
 public class DLMasterModel {
 
     protected DLPagingModel pagingModel = new DLPagingModel();
-    protected DLColumnModel columnModel = new DLColumnModel();
+    protected DLColumnModel columnModel = new DLColumnModel( this );
     protected DLFilterModel filterModel = new DLFilterModel();
 
     public DLColumnModel getColumnModel() {
