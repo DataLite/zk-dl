@@ -17,7 +17,7 @@ public abstract class AbstractFilterComponent<T extends InputElement> implements
 
     protected AbstractFilterComponent( final T component ) {
         this.component = component;
-        component.setWidth( "99%" );
+        component.setHflex(  "1" );
     }
 
     public void addOnChangeEventListener( final EventListener listener ) {
