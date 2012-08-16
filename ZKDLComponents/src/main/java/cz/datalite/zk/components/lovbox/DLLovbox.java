@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.event.OpenEvent;
 
 /**
@@ -47,8 +48,23 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public static final String LOVBOX_CLEAR_IMAGE = "~./dlzklib/img/remove16x16.png";
     /** Pattern to split {@link #labelProperties}/ */
     private static final Pattern PATTERN_LABEL_PROPERTIES = Pattern.compile( "\\s*,\\s*" );
+    /** default component page size */
+    private static final Integer PAGE_SIZE;
+    /** default listbox rows */
+    private static final Integer ROWS;
     /** logger */
     private static final Logger LOGGER = Logger.getLogger( DLLovbox.class );
+    
+    static {
+        // init page size
+        PAGE_SIZE = Library.getIntProperty( "zk-dl.lovbox.pageSize", 10);   
+        LOGGER.debug( "Lovbox default page size is defined as '" + PAGE_SIZE +  "'." );
+        
+        // init rows
+         ROWS = Library.getIntProperty( "zk-dl.lovbox.rows", 10);
+         LOGGER.debug( "Lovbox default number of rows in a listbox is defined as '" + ROWS + "'.");
+    }
+    
     // controller
     protected DLLovboxExtController<T> controller;
     // view
@@ -58,9 +74,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected DLListbox listbox;
     // params
     /** defines page size for paging comonent */
-    protected Integer pageSize = 10;
+    protected Integer pageSize = PAGE_SIZE;
     /** number of rows  shown on the list, default value is same as pageSize to prevent page scrolling */
-    protected Integer rows = pageSize;
+    protected Integer rows = ROWS;
     /** defines listbox width for component in the popup */
     protected String listWidth = "400px";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
@@ -125,7 +141,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             for ( Component child : ( List<Component> ) popup.getChildren() ) {
                 if ( child instanceof DLListbox ) {
                     listbox = ( DLListbox ) child;
-                    if ( listbox.getRows() > -1 ) {
+                    if ( listbox.getRows() > 0 ) {
                         pageSize = listbox.getRows();
                     }
                 } else if ( child instanceof DLQuickFilter ) {
