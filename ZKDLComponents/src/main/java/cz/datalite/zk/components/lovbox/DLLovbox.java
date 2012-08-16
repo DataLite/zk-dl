@@ -58,9 +58,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected DLListbox listbox;
     // params
     /** defines page size for paging comonent */
-    protected Integer pageSize = 12;
+    protected Integer pageSize = 10;
+    /** number of rows  shown on the list, default value is same as pageSize to prevent page scrolling */
+    protected Integer rows = pageSize;
     /** defines listbox width for component in the popup */
-    protected String listWidth;
+    protected String listWidth = "400px";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
     protected String[] labelProperties;
     /** Format for properties */
@@ -174,12 +176,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             listbox.setParent( popup );
         }
 
-        if(popupHeight != null)
-        {
-            Long popupHgt = new Long( popupHeight.substring(0, popupHeight.length()-2) ) - 55;
-            listbox.setHeight( popupHgt.toString() + "px" );
-        }
-        
         if ( filter == null && isCreateQuickFilter()) {
             filter = new DLQuickFilter();
             filter.setQuickFilterAll(quickFilterAll);
@@ -200,10 +196,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             Button button = createClearButton();
             popup.appendChild( button );
         }
-
-        if ( popupHeight != null ) {
-            popup.setHeight( popupHeight );
-        }
     }
 
     /**
@@ -212,40 +204,21 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws Exception
      */
     public void init() throws Exception {
-        if ( listWidth != null ) {
-            listbox.setWidth( listWidth );
-            Long popupWidth = new Long( listWidth.substring(0, listWidth.length()-2) ) + 5;
-            popup.setWidth( popupWidth.toString() + "px" );
-        } else {
-             listbox.setWidth( "98%");
-             popup.setHflex( "1" );
-        }         
+        listbox.setWidth( listWidth );
+        if ( paging != null ) paging.setWidth( listWidth );
          
         if ( paging != null && pageSize != null ) {
             paging.setPageSize( pageSize );            
         }
         if (paging!=null) {
             paging.setStyle("background: none; border: 0;");
-            paging.setWidth( "98%");
         }
         if ( pageSize != null && listbox.getRows() == 0 ) {
-            listbox.setRows( pageSize );
+            listbox.setRows( rows );
         }
         
-        
-        // fix of wrong popup size, automatical detection
-        // the height of row is 21px, so 24 should provide enough space. 
-        // the lovbox component is ment to use low size pages so small 
-        // overhead shouldn't be big deal
-        // the computation is just aproximation before first model loading
-        listbox.setHeight( (pageSize * 20) + "px" );
-        popup.setHeight( (pageSize * 20) + 65 + "px" );
-        
-        // fix to prevent scrollbars in popup window
-        popup.setStyle( "overflow: hidden;;" );
-     
         controller.getListboxExtController().doAfterCompose( filter );
-        controller.getListboxExtController().doAfterCompose(paging);
+        controller.getListboxExtController().doAfterCompose( paging );
         controller.getListboxExtController().doAfterCompose( listbox );
     }
 
@@ -500,9 +473,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @since 1.4.0 replaced by pageSize
      */
     @Override
-    @Deprecated
     public void setRows( final int rows ) {
-        pageSize = rows;
+        this.rows = rows;
     }
 
     /**
@@ -510,6 +482,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * bug of popup. Listbox often overflow from the popup.
      * @param popupHeight popup height
      */
+    @Deprecated
     public void setPopupHeight( final String popupHeight ) {
         this.popupHeight = popupHeight;
     }
@@ -555,23 +528,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             {
                 listboxExtController.refreshDataModel();
                 listboxExtController.setSelectedItem( this.getSelectedItem() );
-                
-                // when the popup is firstly opened then the ZK has wrong 
-                // size of popup. Usually the inner listbox is not visible.
-                // this is the way how to force ZK to redraw component with
-                // listbox with filled model to get correct size and made
-                // data visible. The invalidate is called only once for
-                // each lovbox.
-                
-                listbox.setHeight( null );
-                listbox.setVflex( true);
-                listbox.setRows( pageSize );
-                popup.setHeight( null);
-                popup.setVflex("1");
-                popup.invalidate();
             }
         }
 
+        // paging width is not properly calculated on the first opening
+        // to ensure the correct appearance of the component
+        if ( paging != null )
+            paging.invalidate();
+        
          // default focus on textbox of quickFilter
         if (filter != null)
             filter.setFocus(true);
