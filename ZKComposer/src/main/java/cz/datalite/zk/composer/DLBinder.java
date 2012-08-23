@@ -709,7 +709,7 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      */
     public static void registerZkEvents( final Object ctl, final Component component ) {
         AnnotationProcessor processor = AnnotationProcessor.getProcessor( ctl.getClass() );
-        processor.registerTo( component, ctl );
+        processor.registerZkEventsTo( component, ctl );
     }
 
     /**

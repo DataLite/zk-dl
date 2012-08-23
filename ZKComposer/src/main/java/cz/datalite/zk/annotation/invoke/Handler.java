@@ -19,7 +19,6 @@
 package cz.datalite.zk.annotation.invoke;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
 
 /**
  * <p>Abstract class handler simplifies the implementation of {@link Invoke}
@@ -34,29 +33,22 @@ public abstract class Handler implements Invoke {
     /** Inner (wrapped) object */
     protected final Invoke inner;
 
-    /** source object of invocation */
-    protected Invoke source;
-
     public Handler(Invoke inner) {
         this.inner = inner;
     }
 
-    public final boolean doBeforeInvoke(Event event, Component master, Object controller) {
+    public final boolean doBeforeInvoke(final Context context) {
         // if local doBefore failed, then do not continue, return false and break invocation
-        return doBefore(event, master, controller) && inner.doBeforeInvoke(event, master, controller);
+        return doBefore(context) && inner.doBeforeInvoke(context);
     }
 
-    public final void doAfterInvoke(Event event, Component master, Object controller) {
-        inner.doAfterInvoke(event, master, controller);
-        doAfter(event, master, controller);
+    public final void doAfterInvoke(final Context context) {
+        inner.doAfterInvoke(context);
+        doAfter(context);
     }
 
-    public boolean invoke(Event event, Component master, Object controller) throws Exception {
-        return inner.invoke(event, master, controller);
-    }
-
-    public String getEvent() {
-        return inner.getEvent();
+    public boolean invoke(final Context context) throws Exception {
+        return inner.invoke(context);
     }
 
     public Component bind(Component component) {
@@ -70,7 +62,7 @@ public abstract class Handler implements Invoke {
      *
      * @return TRUE if continue invoking, FALSE for stop propagation
      */
-    protected boolean doBefore(Event event, Component master, Object controller) {
+    protected boolean doBefore(final Context context) {
         return true;
     }
 
@@ -79,7 +71,7 @@ public abstract class Handler implements Invoke {
      *
      * @param event Source event
      */
-    protected void doAfter(Event event, Component master, Object controller) {
+    protected void doAfter(final Context context) {
     }
 
     /**
@@ -88,13 +80,13 @@ public abstract class Handler implements Invoke {
      *
      * @throws Exception something went wrong
      */
-    protected void resumeBeforeInvoke(Event event, Component master, Object controller) throws Exception {
+    protected void resumeBeforeInvoke(final Context context) throws Exception {
         // resumeBeforeInvoke initialization
-        if (inner.doBeforeInvoke(event, master, controller)) {
+        if (inner.doBeforeInvoke(context)) {
             // full invocation
-            if (source.invoke(event, master, controller)) {
+            if (context.getInvoker().invoke(context)) {
                 // full do after
-                source.doAfterInvoke(event, master, controller);
+                context.getInvoker().doAfterInvoke(context);
             }
         }
     }
@@ -105,16 +97,11 @@ public abstract class Handler implements Invoke {
      *
      * @throws Exception something went wrong
      */
-    protected void resumeInvoke(Event event, Component master, Object controller) throws Exception {
+    protected void resumeInvoke(final Context context) throws Exception {
         // resume invocation
-        if (inner.invoke(event, master, controller)) {
+        if (inner.invoke(context)) {
             // full do after
-            source.doAfterInvoke(event, master, controller);
+            context.getInvoker().doAfterInvoke(context);
         }
-    }
-
-    public void setSource(Invoke source) {
-        this.source = source;
-        inner.setSource(source);
     }
 }

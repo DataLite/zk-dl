@@ -19,7 +19,7 @@
 package cz.datalite.zk.annotation.processor;
 
 import cz.datalite.zk.annotation.invoke.Invoke;
-import org.zkoss.zk.ui.Component;
+import cz.datalite.zk.annotation.invoke.ZkEventContext;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 
@@ -31,23 +31,20 @@ import org.zkoss.zk.ui.event.EventListener;
  */
 public class InvokeListener implements EventListener {
 
-    private Invoke invoke;
+    private ZkEventContext context;
 
-    private Object controller;
-
-    private Component master;
-
-    public InvokeListener(Invoke invoke, Component master, Object controller) {
-        this.invoke = invoke;
-        this.controller = controller;
-        this.master = master;
+    public InvokeListener( ZkEventContext context ) {
+        this.context = context;
     }
 
-    public void onEvent(Event event) throws Exception {
-        if (invoke.doBeforeInvoke(event, master, controller)) {
-            if (invoke.invoke(event, master, controller)) {
-                invoke.doAfterInvoke(event, master, controller);
-            }
-        }
+    public void onEvent( Event event ) throws Exception {
+        // clear previous invocation
+        context.clear();
+        // initialize new invocation
+        context.init( event );
+
+        if ( context.getInvoker().doBeforeInvoke( context ) )
+            if ( context.getInvoker().invoke( context ) )
+                context.getInvoker().doAfterInvoke( context );
     }
 }

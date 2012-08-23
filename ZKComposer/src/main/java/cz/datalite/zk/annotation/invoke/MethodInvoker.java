@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.Path;
@@ -40,17 +42,20 @@ import org.zkoss.zk.ui.event.Events;
  */
 public class MethodInvoker implements Invoke {
 
+    /** instance of logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger( MethodInvoker.class );
+    
     /** Target event */
-    private String event;
+    private final String eventName;
 
     /** Id of target component */
-    private String target;
+    private final String target;
 
     /** Target Method */
-    private Method method;
+    private final Method method;
 
     /** Method payload */
-    private int payload;
+    private final int payload;
 
     public static List<Invoke> process(Method method, ZkEvent annotation) {
         // if event starts with ON then it is regular event otherwise it is supposed as HOT KEY definition
@@ -68,25 +73,33 @@ public class MethodInvoker implements Invoke {
     }
 
     public MethodInvoker(Method method, String event, String target, int payload) {
-        this.event = event;
+        this.eventName = event;
         this.method = method;
         this.payload = payload;
         this.target = target;
     }
 
-    public boolean doBeforeInvoke(Event event, Component master, Object controller) {
+    public boolean doBeforeInvoke(Context context) {
         return true;
     }
 
-    public boolean invoke(Event event, Component master, Object controller) throws Exception {
+    public boolean invoke(Context invocationContext) throws Exception {
+        if ( !(invocationContext instanceof ZkEventContext) ) {
+            LOGGER.error( "MethodInvoker is bound to @ZkEvent and takes ZkEventContext only." );
+            throw new IllegalArgumentException( "MethodInvoker is bound to @ZkEvent and takes ZkEventContext only." );
+        }
+        
         try {
+            final ZkEventContext context = (ZkEventContext) invocationContext;
+            final Event event = context.getEvent();
+            
             // unwrap forward event
             final Event unwrappedEvent = (event instanceof org.zkoss.zk.ui.event.ForwardEvent)
                     ? ((org.zkoss.zk.ui.event.ForwardEvent) event).getOrigin() : event;
 
             List<Object> args = buildArgs(event, unwrappedEvent);
 
-            method.invoke(controller, args.toArray());
+            method.invoke(context.getController(), args.toArray());
             return true;
         } catch (IllegalAccessException ex) {
             throw new NoSuchMethodException("Cannot access method \"" + method.getName() + "\". Error " + ex.getMessage());
@@ -95,7 +108,7 @@ public class MethodInvoker implements Invoke {
         }
     }
 
-    public void doAfterInvoke(Event event, Component master, Object controller) {
+    public void doAfterInvoke(Context context) {
     }
 
     private List<Object> buildArgs(Event event, Event unwrappedEvent) throws NoSuchMethodException {
@@ -123,10 +136,6 @@ public class MethodInvoker implements Invoke {
         return args;
     }
 
-    public String getEvent() {
-        return event;
-    }
-
     public Component bind(Component master) {
         // load the component
         final Component source;
@@ -144,6 +153,7 @@ public class MethodInvoker implements Invoke {
         return source;
     }
 
-    public void setSource(Invoke source) {
+    public String getEventName() {
+        return eventName;
     }
 }
