@@ -119,6 +119,19 @@ public class AnnotationProcessor<T> {
             }
         }
     }
+    
+    /**
+     * Returns all command invokers bound to given method including all detected
+     * wrappers. This can be used for example for manual invoking the command
+     *
+     * @param method decorated method
+     */
+    public Invoke getCommandInvoker( final Method method ) {
+        // get the command mapped on the method
+        final Cache command = commands.get( method );
+        // if the command is cached return the invoker
+        return command == null ? null : command.invoker;
+    }
 
     private AnnotationProcessor( Class<T> type ) {
         for ( final Method method : ReflectionHelper.getAllMethods( type ) ) {
