@@ -199,13 +199,8 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         ZkAnnotationUtils.registerZkEvents( this, self );
         //      @ZkComponent
         ZkAnnotationUtils.registerZkComponents( this, self );
-        
-//        Selectors.wireComponents( comp, this, false );
-//        Selectors.wireEventListeners( comp, this ); // first event listener wiring
-//
-//        // register event to wire variables just before component onCreate
-//        comp.addEventListener( 1000, "onCreate", new SelectorComposer.BeforeCreateWireListener() );
-//        comp.addEventListener( "onCreate", new SelectorComposer.AfterCreateWireListener() );
+        //      ZKOSS Selector wiring @Wire and @Listen
+        SelectorUtils.wire( this, self );
     }
 
     @Override
@@ -248,12 +243,12 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         // is no more parent of current class. Defined properties are not present
         // wire all implicit variables
         WireUtils.wireImplicit( this, comp );
-        
+
         // load ZK annotations        
         //      @ZkModel
         //      @ZkController
         ZkAnnotationUtils.init( zkModels, zkControllers, this, self );
-        
+
         // register modified DLBinderImpl to provide the support to Zk annotations
         //  do it only if another binder is not already defined
         final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) comp );
@@ -265,8 +260,6 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
 
         // setup parameters @ZkParameter
         ZkParameterUtils.setupZkParameters( this );
-
-//        ConventionWires.wireController( comp, this );
     }
 
     /** ************************ Master / Detail *************************** */
