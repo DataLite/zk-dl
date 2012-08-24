@@ -159,8 +159,6 @@ public class AnnotationProcessor<T> {
     private void store( final Method method, final List<Invoke> invokers, final List<Invoke> wrapped ) {
         assert invokers.size() == wrapped.size();
                
-        zkEvents.put( method, new HashSet<MethodCache>() );
-        
         for ( int i = 0; i < invokers.size(); ++i ) {
             // core invoker
             final Invoke invoker = invokers.get( i );
@@ -168,7 +166,7 @@ public class AnnotationProcessor<T> {
             final Invoke wrapper = wrapped.get( i );
             
             if ( invoker instanceof MethodInvoker ) {
-                
+                if ( zkEvents.get( method ) == null ) zkEvents.put( method, new HashSet<MethodCache>() );
                 // store method invoker
                 zkEvents.get( method ).add( new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
             } else {
