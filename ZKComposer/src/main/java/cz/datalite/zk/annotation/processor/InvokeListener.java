@@ -18,6 +18,7 @@
  */
 package cz.datalite.zk.annotation.processor;
 
+import cz.datalite.zk.annotation.invoke.Context;
 import cz.datalite.zk.annotation.invoke.Invoke;
 import cz.datalite.zk.annotation.invoke.ZkEventContext;
 import org.zkoss.zk.ui.event.Event;
@@ -42,7 +43,17 @@ public class InvokeListener implements EventListener {
         context.clear();
         // initialize new invocation
         context.init( event );
+        // invoke
+        invoke( context );
+    }
 
+    /**
+     * Invokes {@link Invoke} instances in a proper method invocation order .
+     *
+     * @param context context of invocation
+     * @throws Exception something went wrong
+     */
+    public static void invoke( Context context ) throws Exception {
         if ( context.getInvoker().doBeforeInvoke( context ) )
             if ( context.getInvoker().invoke( context ) )
                 context.getInvoker().doAfterInvoke( context );
