@@ -20,6 +20,7 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkEvent;
 import cz.datalite.zk.annotation.ZkEvents;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,6 +106,11 @@ public class MethodInvoker implements Invoke {
             throw new NoSuchMethodException("Cannot access method \"" + method.getName() + "\". Error " + ex.getMessage());
         } catch (IllegalArgumentException ex) {
             throw new NoSuchMethodException("Invalid arguments for method \"" + method.getName() + "\". Error " + ex.getMessage());
+        } catch (InvocationTargetException ex ) {
+            // try to unwrap the exception. If it it an error then do not unwrap it
+            if ( ex.getTargetException() instanceof Exception )
+                throw ( Exception ) ex.getTargetException();
+            else throw ex;
         }
     }
 

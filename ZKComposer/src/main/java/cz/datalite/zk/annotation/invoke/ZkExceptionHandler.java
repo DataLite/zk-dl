@@ -84,8 +84,8 @@ public class ZkExceptionHandler extends Handler {
     public boolean invoke(final Context context) throws Exception {
         try {
             super.invoke(context);
-        } catch (InvocationTargetException ex) { // catch all            
-            final Throwable throwable = getTypeOf(ex.getTargetException(), type, unwrap);            
+        } catch (Exception ex) { // catch all            
+            final Throwable throwable = getTypeOf(ex, type, unwrap);            
             if (throwable == null) { // is throw instance of catching type?                
                 throw ex; // if not, pass through
             } else {
