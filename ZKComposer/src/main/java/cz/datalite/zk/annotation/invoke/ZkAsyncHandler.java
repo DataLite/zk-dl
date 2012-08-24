@@ -135,6 +135,8 @@ public class ZkAsyncHandler extends Handler {
             Throwable exception = ( Throwable ) context.getParameter( ASYNC_EXCEPTION );
             if (exception != null) {
                 LOGGER.error( "Execution of long running operation failed. Exception has been thrown." );
+                // exception was passed through
+                context.removeParameter( ASYNC_EXCEPTION );
                 throw new RuntimeException(exception);
             }
 
@@ -146,8 +148,6 @@ public class ZkAsyncHandler extends Handler {
             // close shown blocking window
             final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( ASYNC_BUSYBOX );
             busybox.close(context.getRoot());
-            // exception was passed through
-            context.removeParameter( ASYNC_EXCEPTION );
         }
     }
 
