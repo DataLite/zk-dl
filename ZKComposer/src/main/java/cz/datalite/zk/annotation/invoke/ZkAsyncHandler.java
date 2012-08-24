@@ -153,7 +153,7 @@ public class ZkAsyncHandler extends Handler {
 
     /** checks for already running async event. doesn't allow multiple execution */
     private boolean isAsyncRunning() {
-        return EventQueues.exists(QUEUE, EventQueues.SESSION);
+        return EventQueues.exists(QUEUE);
     }
 
     /** subscribes listeners on queue */
@@ -172,12 +172,12 @@ public class ZkAsyncHandler extends Handler {
 
     /** destroys queue to allow simple detection of non-running event */
     private void cleanUp() {
-        EventQueues.remove(QUEUE, EventQueues.SESSION);
+        EventQueues.remove(QUEUE);
     }
 
     /** returns queue for this user. If queue is not exist than it is created */
     private EventQueue findQueue() {
-        return EventQueues.lookup(QUEUE, EventQueues.SESSION, true);
+        return EventQueues.lookup(QUEUE);
     }
 
     /**
