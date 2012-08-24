@@ -78,7 +78,7 @@ public class AnnotationProcessor<T> {
     }
 
     /** List of cached ZkEvents */
-    private Map<Method,MethodCache> zkEvents = new HashMap<Method, MethodCache>();
+    private Map<Method,Set<MethodCache>> zkEvents = new HashMap<Method, Set<MethodCache>>();
     
     /** List of cached Commands */
     private Map<Method,Cache> commands = new HashMap<Method, Cache>();
@@ -108,13 +108,15 @@ public class AnnotationProcessor<T> {
      * @param controller object with given
      */
     public void registerZkEventsTo( Component root, T controller ) {
-        for ( final MethodCache cached : zkEvents.values() ) {
-            // get the target component
-            final Component target = cached.invoker.bind( root );
-            // build the event context
-            final ZkEventContext context = new ZkEventContext( cached.method, cached.invoker, controller, root );
-            // attach listener
-            target.addEventListener( cached.methodInvoker.getEventName(), new InvokeListener( context ) );
+        for ( final Set<MethodCache> set : zkEvents.values() ) {
+            for ( final MethodCache cached : set ) {
+                // get the target component
+                final Component target = cached.invoker.bind( root );
+                // build the event context
+                final ZkEventContext context = new ZkEventContext( cached.method, cached.invoker, controller, root );
+                // attach listener
+                target.addEventListener( cached.methodInvoker.getEventName(), new InvokeListener( context ) );
+            }
         }
     }
 
@@ -143,6 +145,8 @@ public class AnnotationProcessor<T> {
      */
     private void store( final Method method, final List<Invoke> invokers, final List<Invoke> wrapped ) {
         assert invokers.size() == wrapped.size();
+               
+        zkEvents.put( method, new HashSet<MethodCache>() );
         
         for ( int i = 0; i < invokers.size(); ++i ) {
             // core invoker
@@ -151,8 +155,9 @@ public class AnnotationProcessor<T> {
             final Invoke wrapper = wrapped.get( i );
             
             if ( invoker instanceof MethodInvoker ) {
+                
                 // store method invoker
-                zkEvents.put( method, new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
+                zkEvents.get( method ).add( new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
             } else {
                 // store command invoker
                 commands.put( method, new Cache( method, wrapper ) );
