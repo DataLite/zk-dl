@@ -28,8 +28,8 @@ public class CommandContext extends Context {
     /** binder execution invocation parameter */
     protected Set<Property> notifys;
 
-    public CommandContext( final Invoke invoker, final Object controller ) {
-        super( invoker, controller );
+    public CommandContext( final Invoke invoker, final Object controller, final Component root ) {
+        super( invoker, controller, root );
     }
 
     /** initialize the context before invocation */

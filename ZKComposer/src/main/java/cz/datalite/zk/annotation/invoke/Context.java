@@ -1,12 +1,10 @@
 package cz.datalite.zk.annotation.invoke;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
 
 /**
  * Context of current invocation containing stateful data to provide full
@@ -29,29 +27,28 @@ public class Context {
     
     /** instance of controller / view-model */
     protected final Object controller;
+    
+    /** root component in the page, usually the window */
+    protected final Component root;
 
     /** component which was the target */
-    protected Component target;
+    protected Component target;   
 
-    /** root component in the page */
-    protected Component root;
-
-    public Context( Invoke invoker, final Object controller ) {
+    public Context( Invoke invoker, final Object controller, final Component root ) {
         this.invoker = invoker;
         this.controller = controller;
+        this.root = root;
     }
     
     /** initialize the context before invocation */
     public void init( final Component target ) {
         this.target = target;
-        this.root = target == null ? null : target.getRoot();
         
     }
     
     /** clear the context after invocation */
     public void clear() {
         this.target = null;
-        this.root = null;
         this.parameters.clear();
     }
 

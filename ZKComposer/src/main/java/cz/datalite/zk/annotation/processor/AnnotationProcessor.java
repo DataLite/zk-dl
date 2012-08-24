@@ -104,17 +104,17 @@ public class AnnotationProcessor<T> {
      * given controller. Bounds invokes to the components to handle
      * executions.</p>
      *
-     * @param component targeted master component
+     * @param root targeted master component
      * @param controller object with given
      */
-    public void registerZkEventsTo( Component component, T controller ) {
-        for ( final MethodCache cache : zkEvents.values() ) {
+    public void registerZkEventsTo( Component root, T controller ) {
+        for ( final MethodCache cached : zkEvents.values() ) {
             // get the target component
-            final Component target = cache.invoker.bind( component );
+            final Component target = cached.invoker.bind( root );
             // build the event context
-            final ZkEventContext context = new ZkEventContext( cache.method, cache.invoker, controller );
+            final ZkEventContext context = new ZkEventContext( cached.method, cached.invoker, controller, root );
             // attach listener
-            target.addEventListener( cache.methodInvoker.getEventName(), new InvokeListener( context ) );
+            target.addEventListener( cached.methodInvoker.getEventName(), new InvokeListener( context ) );
         }
     }
 

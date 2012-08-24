@@ -20,8 +20,8 @@ public class ZkEventContext extends Context{
     /** invocation initializator */
     private Event event;
 
-    public ZkEventContext( Method method, Invoke invoker, final Object controller ) {
-        super( invoker, controller );
+    public ZkEventContext( Method method, Invoke invoker, final Object controller, final Component root ) {
+        super( invoker, controller, root );
         this.method = method;
     }
     
