@@ -48,6 +48,9 @@ public class ZkAsyncHandler extends Handler {
     
      /** key of the interceptor in context map */
     private static final String ASYNC_INTERCEPTOR = "Async::interceptor";
+    
+     /** key of the interceptor in context map */
+    private static final String ASYNC_QUEUE = "Async::queue";
 
     /** state of general property */
     private final static boolean localizeAll;
@@ -122,7 +125,7 @@ public class ZkAsyncHandler extends Handler {
                     }
                 } );
             busybox.show( context.getRoot() );
-            context.putParameter( ASYNC_BUSYBOX, busybox);
+            context.putParameter( ASYNC_BUSYBOX, busybox );
         }
 
         // invocation is not complete, prevent resuming
@@ -147,7 +150,7 @@ public class ZkAsyncHandler extends Handler {
         } finally {
             // close shown blocking window
             final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( ASYNC_BUSYBOX );
-            busybox.close(context.getRoot());
+            busybox.close(context.getRoot());           
         }
     }
 
@@ -155,19 +158,23 @@ public class ZkAsyncHandler extends Handler {
     private boolean isAsyncRunning() {
         return EventQueues.exists(QUEUE);
     }
-
+    
     /** subscribes listeners on queue */
     private void subscribe(final Context context) {
+        final EventQueue queue = findQueue();
+        context.putParameter( ASYNC_QUEUE, queue );
+        
         // subscribe async listener to handle long operation
-        findQueue().subscribe(
-                createInvokeListener(context),
-                createCallbackToResume(context));
+        queue.subscribe( createInvokeListener( context ), true ); //asynchronous
+
+        // subscribe a normal listener to show the resul to the browser
+        queue.subscribe( createCallbackToResume( context ) ); //synchronous
     }
 
     /** publishes any event to start invocation */
     private void publish() {
         // fire event to start the long operation
-        findQueue().publish(new Event("AsyncEvent"));
+        findQueue().publish(new Event("doAsyncEvent"));
     }
 
     /** destroys queue to allow simple detection of non-running event */
@@ -188,7 +195,10 @@ public class ZkAsyncHandler extends Handler {
         //callback
         return new EventListener() {
 
-            public void onEvent(Event evt) throws Exception {
+            public void onEvent(Event event) throws Exception {
+                // listen for "afterAsyncEvent" only
+                if ( !"afterAsyncEvent".equals( event.getName() ) ) return;
+                
                 LOGGER.trace( "Async operation finished." );
                 // clean up queue
                 cleanUp();
@@ -206,7 +216,10 @@ public class ZkAsyncHandler extends Handler {
     private EventListener createInvokeListener(final Context context) {
         return new EventListener() {
 
-            public void onEvent(Event evt) throws Exception { //asynchronous
+            public void onEvent(Event event) throws Exception { //asynchronous
+                // listen for "doAsyncEvent" only
+                if ( ! "doAsyncEvent".equals( event.getName()) ) return;
+                
                 try {
                     LOGGER.trace( "Starting async operation." );
 
@@ -236,6 +249,10 @@ public class ZkAsyncHandler extends Handler {
                     synchronized (ZkAsyncHandler.this) {
                         context.removeParameter( ASYNC_INTERCEPTOR );
                     }
+                    
+                    // Async event finished, post notification
+                    final EventQueue queue = ( EventQueue ) context.getParameter( ASYNC_QUEUE );
+                    queue.publish( new Event( "afterAsyncEvent" ) );
                 }
             }
         };
