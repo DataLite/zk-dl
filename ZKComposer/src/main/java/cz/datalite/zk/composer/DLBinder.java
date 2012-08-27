@@ -1,139 +1,204 @@
 package cz.datalite.zk.composer;
 
-import cz.datalite.helpers.ReflectionHelper;
-import cz.datalite.helpers.StringHelper;
-import cz.datalite.helpers.ZKHelper;
-import cz.datalite.zk.annotation.*;
-import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
-import cz.datalite.zk.annotation.processor.AnnotationProcessor;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.composer.listener.DLMasterController;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.bind.BindComposer;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.lang.Classes;
-import org.zkoss.lang.SystemException;
-import org.zkoss.xel.VariableResolver;
 import org.zkoss.zk.ui.*;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
-import org.zkoss.zk.ui.select.SelectorComposer;
-import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.sys.ComponentCtrl;
-import org.zkoss.zk.ui.util.ConventionWires;
 
 /**
- * <p>Composer for MVC development.</p>
- * <p>It is like ZK's GenericForwardComposer, but you have to explicitly bound properties and methods with annotations:
- * <ul>
- *   <li>@ZkEvent - register event on component and call annotated method when event fires</li>
- *   <li>@ZkComponent - attach ZUL component to this propery
- *   <li>@ZkController - is accessible from ZUL page whith the {controller}.property name.
- *         Default value for {controller} is "ctl" unless you set it to other value with @Zkcontroller(name="controller") on class level.
- *         Example: @ZkController ListControll listCtl;  ZUL: controller="${ctl.listCtl}" sets controller. Controller is read only.
- *   </li>
- *   <li>@ZkModel - is accessible from ZUL page whith the {model}.property name.
- *         Default value for {model} is "ctl" unless you set it to other value with @ZkModel(name="model") on class level.
- *         Example: @ZkModel String modelProperty = "xx";  ZUL: value="@{ctl.modelProperty}" sets value to "xx". Model is read/write.
- *   </li>
- *   <li>@ZkParameter - checks ZK's parameter maps for parameter name and set field to this value in doBeforeCompose().
- *           It checks these maps: execution.getArg(), execution.getAttributes(), execution.getParameters() and uses first map with this parameter set.
- *   </li>
- *   <li>@ZkBinding - save binding before method invocation and/or load after method invocation.</li>
- *   <li>@ZkConfirm - ask user with question dialog befor method is invoked</li> *
- * </ul>
- *  Check those annotations documentation for more information. Although it extends GenericAutowireComposer it <b>does not</b> wires
- *  custom varibles. It is used solely for implicit objects.
- * <p>
+ * <p>Composer for MVC development.</p> <p>It is like ZK's
+ * GenericForwardComposer, but you have to explicitly bound properties and
+ * methods with annotations: <ul> <li>@ZkEvent - register event on component and
+ * call annotated method when event fires</li> <li>@ZkComponent - attach ZUL
+ * component to this propery <li>@ZkController - is accessible from ZUL page
+ * whith the {controller}.property name. Default value for {controller} is "ctl"
+ * unless you set it to other value with @Zkcontroller(name="controller") on
+ * class level. Example: @ZkController ListControll listCtl; ZUL:
+ * controller="${ctl.listCtl}" sets controller. Controller is read only. </li>
+ * <li>@ZkModel - is accessible from ZUL page whith the {model}.property name.
+ * Default value for {model} is "ctl" unless you set it to other value with
+ * @ZkModel(name="model") on class level. Example: @ZkModel String modelProperty
+ * = "xx"; ZUL: value="@{ctl.modelProperty}" sets value to "xx". Model is
+ * read/write. </li> <li>@ZkParameter - checks ZK's parameter maps for parameter
+ * name and set field to this value in doBeforeCompose(). It checks these maps:
+ * execution.getArg(), execution.getAttributes(), execution.getParameters() and
+ * uses first map with this parameter set. </li> <li>@ZkBinding - save binding
+ * before method invocation and/or load after method invocation.</li>
+ * <li>@ZkConfirm - ask user with question dialog befor method is invoked</li> *
+ * </ul> Check those annotations documentation for more information. Although it
+ * extends GenericAutowireComposer it <b>does not</b> wires custom varibles. It
+ * is used solely for implicit objects. <p>
  *
- * <p>This class implements map interface. This is usefull for map access from ZUL or with binding. In doBeforeComposeChildren, instance of controller
- * is set to component variable as "ctl" (or custom name) and is immediately from ZUL processing - ctl.property will access this map, which
- * will return property mapped by @ZkController or @ZkModel.</p>
+ * <p>This class implements map interface. This is usefull for map access from
+ * ZUL or with binding. In doBeforeComposeChildren, instance of controller is
+ * set to component variable as "ctl" (or custom name) and is immediately from
+ * ZUL processing - ctl.property will access this map, which will return
+ * property mapped by @ZkController or @ZkModel.</p>
  *
- * <p>Similar to GenericAutowireComposer it has basic protected properties like session, requestScope, arg etc., but it doesn't wire all
- *  properties and methods autmatically (because it can be performance bottleneck if you use multiple composers with many methods.)</p>
+ * <p>Similar to GenericAutowireComposer it has basic protected properties like
+ * session, requestScope, arg etc., but it doesn't wire all properties and
+ * methods autmatically (because it can be performance bottleneck if you use
+ * multiple composers with many methods.)</p>
  *
  * <p>Notice that since this composer kept references to the components, single
  * instance object cannot be shared by multiple components.</p>
  *
- * <p>It implements DLMasterController interface, while each controller can be master. Defualt implementation only constructs list of child controllers
- * and resend each message to all children that implements DLDetailController interface.</p>
- * <p>Usage for automatic master/detail setup:<br/>
- * &lt;include src="xx" masterController="${ctl}"&gt;<br/>
- * Include child page into master page and set masterController to this variable. DLComposer will connect master/detail automatically.
- * </p>
+ * <p>It implements DLMasterController interface, while each controller can be
+ * master. Defualt implementation only constructs list of child controllers and
+ * resend each message to all children that implements DLDetailController
+ * interface.</p> <p>Usage for automatic master/detail setup:<br/> &lt;include
+ * src="xx" masterController="${ctl}"&gt;<br/> Include child page into master
+ * page and set masterController to this variable. DLComposer will connect
+ * master/detail automatically. </p>
  *
  * @author Jiri Bubnik - DLComposer
- * @author simonpai    - SelectorComposer
+ * @author simonpai - SelectorComposer
  * @author Karel Cemus <cemus@datalite.cz>
  */
 public class DLBinder<T extends Component, S extends DLMainModel> extends BindComposer<T> implements java.util.Map<String, Object>, DLMasterController<S> {
 
-    /** The view component managed by this view-model */
-    protected T self;
-    
-    /** 
-     * Implicit Object; the arg argument passed to the createComponents method. It is
+    protected final Logger LOGGER = LoggerFactory.getLogger( this.getClass() );
+
+    /**
+     * The view component managed by this view-model provide component reference
+     * to allow to work with UI in inherited controllers. This can be understood
+     * as a feature of backward compatibility. It preserves old usage setup self
+     * in advance - it might be used in composition. Implicit Object; the
+     * applied component itself.
+     *
+     * @since 3.0.7
+     */
+    protected transient T self;
+
+    /** Implicit Object; the space owner of the applied component.
+     *
+     * @since 3.0.7
+     */
+    protected transient IdSpace spaceOwner;
+
+    /** Implicit Object; the page.
+     *
+     * @since 3.0.7
+     */
+    protected transient Page page;
+
+    /** Implicit Object; the desktop.
+     *
+     * @since 3.0.7
+     */
+    protected transient Desktop desktop;
+
+    /** Implicit Object; the session.
+     *
+     * @since 3.0.7
+     */
+    protected transient Session session;
+
+    /** Implicit Object; the web application.
+     *
+     * @since 3.0.7
+     */
+    protected transient WebApp application;
+
+    /** Implicit Object; a map of attributes defined in the applied component.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> componentScope;
+
+    /** Implicit Object; a map of attributes defined in the ID space contains the
+     * applied component.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> spaceScope;
+
+    /** Implicit Object; a map of attributes defined in the page.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> pageScope;
+
+    /** Implicit Object; a map of attributes defined in the desktop.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> desktopScope;
+
+    /** Implicit Object; a map of attributes defined in the session.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> sessionScope;
+
+    /** Implicit Object; a map of attributes defined in the web application.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> applicationScope;
+
+    /** Implicit Object; a map of attributes defined in the request.
+     *
+     * @since 3.0.7
+     */
+    protected transient Map<String, Object> requestScope;
+
+    /** Implicit Object; the current execution.
+     *
+     * @since 3.0.7
+     */
+    protected transient Execution execution;
+
+    /** Implicit Object; the arg argument passed to the createComponents method. It is
      * never null.
-     * 
+     *
      * @since 3.0.8
      */
-    protected transient Map arg;
+    protected transient Map<?, ?> arg;
 
-    /** 
-     * Implicit Object; the param argument passed from the http request.
+    /** Implicit Object; the param argument passed from the http request.
      *
      * @since 3.6.1
      */
-    protected transient Map param;
-    
+    protected transient Map<String, String[]> param;
+
     /** Map model name to field representing this model */
     private final Map<String, Field> zkModels = new java.util.HashMap<String, Field>();
 
     /** Map controller name to field representing this model */
     private final Map<String, Field> zkControllers = new java.util.HashMap<String, Field>();
 
-    /** Master controller for event propagation in master/detail. **/
-    private DLMasterController masterController;
-
-    /** Model in master/detail. **/
+    /** Model in master/detail. * */
     private S masterControllerModel;
 
-    /** List of child controller for master / detail page composition. **/
+    /** List of child controller for master / detail page composition. * */
     private List<DLDetailController> detailControllers = new LinkedList<DLDetailController>();
-    
+
     //    protected final List<VariableResolver> _resolvers;
     public DLBinder() {
         super();
 //        _resolvers = Selectors.newVariableResolvers( getClass(), SelectorComposer.class );
     }
-    
+
     @Override
     public void doAfterCompose( T comp ) throws Exception {
         super.doAfterCompose( comp );
 
-        // read arguments used to create the component
-        
-        
-        // this is not availible since ZK 6 because GenericAutowiredComposer
-        // is no more parent of current class. Defined properties are not present
-        // wire all implicit variables
-        // wireImplicit();
-
-        // @ZkComponent annotation
-        registerZkComponents( this, comp );
-
-        // @ZkEvents annotation
-        registerZkEvents( this, comp );
+        // Process ZK annotations
+        //      check that annotations are correct
+        ZkAnnotationUtils.validMethodAnnotations( this.getClass() );
+        //      @ZkEvent
+        ZkAnnotationUtils.registerZkEvents( this, self );
+        //      @ZkComponent
+        ZkAnnotationUtils.registerZkComponents( this, self );
         
 //        Selectors.wireComponents( comp, this, false );
 //        Selectors.wireEventListeners( comp, this ); // first event listener wiring
@@ -167,201 +232,44 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      */
     @Override
     public void doBeforeComposeChildren( Component comp ) throws Exception {
-        // provide component reference to allow to work with UI  in inherited 
-        // controllers. This can be understood as a feature of backward 
-        // compatibility. It preserves old usage setup self in advance - it
-        // might be used in composition.
-        self = ( T ) comp;
-                
         // initialize the binder and its properties
-        init();
-        
+        init( comp );
+
         // initialize the parent (as well as the @init in children)
         super.doBeforeComposeChildren( comp );
-        
-        
-//        ConventionWires.wireController( comp, this );
-
-        
-
-        // Master / detail 
-        setupMasterController();
-
-        // check that annotations are correct
-        validMethodAnnotations( this.getClass() );
-
-        // setup parameters
-        setupZkParameters();
-
-        // publishes the view model into UI. This is 
-        // for backward compatibility and to allow same usage as it was
-        // before ZK 6.0
-        // publish controller into component namespace. It can be than accessed from ZUL as "ctl.xxx".
-        // defualt value is ctl, but it can be changed with @ZkController annotation on class level
-        comp.setAttribute( loadControllerClass( this.getClass() ), this, Component.COMPONENT_SCOPE );
-
-        // publishes the view model into UI. This is 
-        // for backward compatibility and to allow same usage as it was
-        // before ZK 6.0
-        // the same for model. The default value is same as controller as well. It is more convenient to have only one variable to access controller
-        // however, you can change the value with @ZkModel annotation on class level
-        if ( !loadControllerClass( this.getClass() ).equals( loadModelClass( this.getClass() ) ) ) {
-            comp.setAttribute( loadModelClass( this.getClass() ), this, Component.COMPONENT_SCOPE );
-        }
-
-        // setup model and controller fields and methods.
-        zkModels.putAll( loadModelFields( this.getClass() ) );
-        zkModels.putAll( loadModelMethod( this.getClass() ) );
-        zkControllers.putAll( loadControllerFields( this.getClass() ) );
-        zkControllers.putAll( loadControllerMethod( this.getClass() ) );
     }
-    
-    
+
     /**
      * Initializes the DLBinder to fill stateful attributes available in derived
      * classes like arguments, parameter, desktop, ...
      */
-    private void init() {
+    private void init( final Component comp ) {
+        // this is not availible since ZK 6 because GenericAutowiredComposer
+        // is no more parent of current class. Defined properties are not present
+        // wire all implicit variables
+        WireUtils.wireImplicit( this, comp );
+        
+        // load ZK annotations        
+        //      @ZkModel
+        //      @ZkController
+        ZkAnnotationUtils.init( zkModels, zkControllers, this, self );
+        
         // register modified DLBinderImpl to provide the support to Zk annotations
         //  do it only if another binder is not already defined
-        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) self );
+        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) comp );
         if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
             extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
 
-        // arguments sent through Execution#createComponent
-        arg = Executions.getCurrent().getArg();
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
+        // setup Master / detail relationship
+        MasterDetailUtils.setupMasterController( this, comp );
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        // setup parameters @ZkParameter
+        ZkParameterUtils.setupZkParameters( this );
 
-
-
-    
-    
-    
-
-    /** *********************************************** Master / Detail ************************************************************* */
-    /**
-     * <p>Check masterController variable in attributes / arguments /
-     * parameterMap.</p>
-     *
-     * <p>Usage:<br/> &lt;include src="xx" masterController="${ctl}"&gt;<br/>
-     * Include child page into master page and set masterController to this
-     * variable. This method will connect master/detail automatically. </p>
-     * <p>If this property is defined, but not correctly set up - throws an
-     * exception.</p>
-     */
-    protected void setupMasterController() {
-        // try to find masterController in attributes (e.g. <include src="xx" masterController="${ctl}">)
-        Object ctl = Executions.getCurrent().getAttribute( "masterController" );
-        if ( ctl == null ) {
-            // try to find masterController in arguments (e.g. <macroComponent masterController="${ctl}">)
-            ctl = Executions.getCurrent().getArg().get( "masterController" );
-        }
-        if ( ctl == null ) {
-            // try to find masterController in params (e.g. Executions.createComponents(target,centerPlaceholder,Map("masterController" -> ctl)); )
-            ctl = Executions.getCurrent().getParameterMap().get( "masterController" );
-        }
-
-        if ( ctl != null ) {
-            if ( !(ctl instanceof DLMasterController) ) {
-                throw new UiException( "Attribute masterController has to be of type cz.datalite.composer.DLMasterController, got " + ctl );
-            }
-
-            setMasterController( ( DLComposer ) ctl );
-        }
+//        ConventionWires.wireController( comp, this );
     }
 
-    /**
-     * <p>Convenient method for master to hold model. Implementation will
-     * usually override this method to customize model.</p>
-     *
-     * <p>Child may call this method anytime to get master controller.</p>
-     *
-     * @return model Default implementation will store model from childe and
-     * resend new model to all children.
-     */
-    public S getMasterControllerModel() {
-        return masterControllerModel;
-    }
-
-    public void postEvent( String eventName, Object data ) {
-        Events.postEvent( eventName, self, data );
-    }
-
-    /**
-     * Sets new value of master controller model.
-     *
-     * @param masterControllerModel new value
-     */
-    public void setMasterControllerModel( S masterControllerModel ) {
-        this.masterControllerModel = masterControllerModel;
-    }
-
-    /**
-     * <p>Setup master controller (used by detail).</p>
-     *
-     * <p>If this class implements DLDetailController, it want to recieve master
-     * change events. Method will add this as a child into master controller.
-     * Nastaví novou hodnotu pro Master Controller a pokud jsem instanceof
-     * DLDetailController, přidá se mu jako detail.</p>
-     *
-     * <p>Typically this is set in doBeforeCompose from
-     * execution.getAttribute("masterController") automatically. Use only in
-     * special case./<p>
-     *
-     * @param masterController new value for master controller
-     */
-    protected void setMasterController( final DLMasterController masterController ) {
-        this.masterController = masterController;
-
-        if ( this instanceof DLDetailController ) {
-            masterController.addChildController( ( DLDetailController ) this );
-
-            // and register event on close to automatically remove from master controller
-            final DLDetailController thisAsDetailController = ( DLDetailController ) this;
-            self.addEventListener( Events.ON_CLOSE, new EventListener() {
-
-                public void onEvent( Event event ) throws Exception {
-                    masterController.removeChildController( thisAsDetailController );
-                }
-            } );
-
-        }
-    }
-
-    /**
-     * Returns master controller if is set (used by detail). Typically master
-     * controller is set in doBeforeCompose from
-     * execution.getAttribute("masterController") automatically.
-     *
-     * @return masterController if is defined, null othervise.
-     */
-    public DLMasterController<S> getMasterController() {
-        return masterController;
-    }
-
+    /** ************************ Master / Detail *************************** */
     public void addChildController( DLDetailController detailController ) {
         detailControllers.add( detailController );
     }
@@ -370,51 +278,22 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         detailControllers.remove( detailController );
     }
 
-    /**
-     * Default implementation of master listener automatically calls all
-     * registered children (calls onMasterChanged() on each child).
-     *
-     * @param model new model set by child.
-     */
-    public void onDetailChanged( S model ) {
-        setMasterControllerModel( model );
-
-        // opportunity to modify child model befor resend.
-        S newModel = getMasterControllerModel();
-
-        try {
-            for ( DLDetailController detail : detailControllers ) {
-                detail.onMasterChanged( newModel );
-            }
-        } finally {
-            // we want to clear flags in all cases, because if a flag triggers an error, we need to
-            // clear it to recover from it.
-            newModel.clearRefreshFlags();
-        }
+    public S getMasterControllerModel() {
+        return masterControllerModel;
     }
 
-    /** *********************************************** @ZkModel and @ZkController ******************************************************* */
-    /**
-     * Map interface is used to simulate @ZkModel and @ZkController property as
-     * it is a real public property of controller class.
-     *
-     * If no @ZkModel and @ZkController annotaton is used at all, it asumes
-     * "old" behaviour - get field value directly.
-     *
-     * @param key name of property marked with @ZkModel or @ZkController
-     * @return value of the property
-     */
+    public void postEvent( String eventName, Object data ) {
+        Events.postEvent( eventName, self, data );
+    }
+
+    public void onDetailChanged( S model ) {
+        masterControllerModel = model;
+        MasterDetailUtils.onDetailChanged( detailControllers, model );
+    }
+
+    /** ***************** @ZkModel and @ZkController ********************** */
     public Object get( final Object key ) {
-        if ( zkModels.containsKey( ( String ) key ) ) {
-            return get( ( String ) key, zkModels );
-        } else if ( zkControllers.containsKey( ( String ) key ) ) {
-            return get( ( String ) key, zkControllers );
-        } else if ( zkModels.isEmpty() && zkControllers.isEmpty() ) {
-            return getDefault( ( String ) key );
-        } else {
-            throw new UiException( new NoSuchFieldException( "Composer \"" + getClass().getName()
-                    + "\"doesn't contain @ZkModel or @ZkController property \"" + key + "\"." ) );
-        }
+        return ZkAnnotationUtils.get( key, this, zkModels, zkControllers );
     }
 
     /** Only to implement all Map interface methods. Don't use. */
@@ -424,458 +303,8 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         return true;
     }
 
-    private Object getDefault( final String key ) {
-        try {
-            return org.zkoss.lang.reflect.Fields.get( this, key );
-        } catch ( NoSuchMethodException ex ) {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, ex );
-            return null;
-        }
-    }
-
-    private Object get( final String key, final Map<String, Field> fieldMap ) {
-        try {
-            try {
-                return org.zkoss.lang.reflect.Fields.get( this, key );
-            } catch ( NoSuchMethodException ex ) {
-                final Field field = fieldMap.get( key );
-                if ( field != null ) {
-                    field.setAccessible( true );
-                    final Object value = field.get( this );
-                    field.setAccessible( false );
-                    return value;
-                } else {
-                    throw new NoSuchMethodException( "No such getter or field for key \"" + key + "\"." );
-                }
-            }
-        } catch ( Exception ex ) {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, ex );
-            return null;
-        }
-    }
-
-    /**
-     * Map interface is used to simulate @ZkModel property as it is a real
-     * public propert of controller class.
-     *
-     * If no @ZkModel annotaton is used at all, it asumes "old" behaviour - set
-     * field value directly.
-     *
-     * @param key name of property marked with @ZkModel
-     * @param value new value
-     */
     public Object put( final String key, final Object value ) {
-        if ( zkModels.containsKey( key ) ) {
-            put( key, value, zkModels );
-        } else if ( zkModels.isEmpty() ) {
-            putDefault( key, value );
-        } else {
-            Logger.getLogger( DLComposer.class.getName() ).log( Level.SEVERE, null, new NoSuchFieldException( "Unknown model for key \"" + key + "\"" ) );
-        }
-        return value;
-    }
-
-    private void putDefault( final String key, final Object value ) {
-        try {
-            org.zkoss.lang.reflect.Fields.set( this, key, value, true );
-        } catch ( NoSuchMethodException ex ) {
-            throw SystemException.Aide.wrap( ex );
-        }
-    }
-
-    private void put( final String key, final Object value, final Map<String, Field> fieldMap ) {
-        try {
-            try {
-                org.zkoss.lang.reflect.Fields.set( this, key, value, true );
-            } catch ( NoSuchMethodException ex ) {
-                final Field field = fieldMap.get( key );
-                if ( field != null ) {
-                    field.setAccessible( true );
-                    field.set( this, value );
-                    field.setAccessible( false );
-                } else {
-                    throw new NoSuchMethodException( "No such setter or field for key \"" + key + "\"." );
-                }
-            }
-        } catch ( Exception ex ) {
-            throw SystemException.Aide.wrap( ex );
-        }
-    }
-
-    /**
-     * Traverse all fields and set up parameters according o @ZkParameters
-     * annotation.
-     */
-    protected void setupZkParameters() {
-        for ( Field field : ReflectionHelper.getAllFields( this.getClass() ) ) {
-            for ( Annotation annotation : field.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkParameter ) {
-                    setupZkParameter( ( ZkParameter ) annotation, getName( ( ZkParameter ) annotation, field ), field.getType(), field, null );
-                }
-            }
-        }
-
-        for ( Method method : ReflectionHelper.getAllMethods( this.getClass() ) ) {
-            for ( Annotation annotation : method.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkParameter ) {
-                    String paramName = (( ZkParameter ) annotation).name();
-                    if ( StringHelper.isNull( paramName ) ) {
-                        if ( !method.getName().startsWith( "set" ) ) {
-                            throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p)  (e.g. setParamName). "
-                                    + "Found: " + method.getName() );
-                        }
-                        paramName = getMethodLowerCase( method.getName().substring( 3 ) );
-                    }
-
-                    if ( method.getParameterTypes().length != 1 ) {
-                        throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p), wrong number of parameters. "
-                                + "Actual number of parameters: " + method.getParameterTypes().length );
-                    }
-
-                    setupZkParameter( ( ZkParameter ) annotation, paramName, method.getParameterTypes()[0], null, method );
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Setup parameter accordnig to ZkParameter annotation.
-     *
-     * @param <T> type of field.
-     * @param annot the annotation with parameter definition
-     * @param field the field to set
-     * @param clazz class of the field and parameter
-     */
-    protected <T> void setupZkParameter( ZkParameter annot, String paramName, Class<T> clazz, Field field, Method method ) {
-        T result = null;
-
-        Map[] paramMaps = new Map[]{
-            Executions.getCurrent().getArg(),
-            Executions.getCurrent().getAttributes(),
-            Executions.getCurrent().getParameterMap()
-        };
-
-        Map paramMap = paramMaps[0];
-        for ( Map map : paramMaps ) {
-            if ( map.containsKey( paramName ) ) {
-                paramMap = map;
-                break;
-            }
-        }
-
-        try {
-            if ( annot.required() ) {
-                result = ZKHelper.getRequiredParameter( paramMap, paramName, clazz );
-            } else if ( !paramMap.containsKey( paramName ) ) {
-                return; // optional parameter doesn't do anything
-            } else {
-                result = ZKHelper.getOptionalParameter( paramMap, paramName, clazz, null );
-            }
-        } catch ( IllegalArgumentException ex ) {
-            throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                    + "required=" + (annot.required() ? "true" : "false") + ", "
-                    + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                    + "): " + ex.getLocalizedMessage() );
-        }
-
-        if ( result == null && annot.createIfNull() ) {
-            try {
-                result = ( T ) clazz.newInstance();
-            } catch ( InstantiationException ex ) {
-                throw new InstantiationError( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + (annot.required() ? "true" : "false") + ", "
-                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                        + ") - Parameter is null, unable to create new object with error: " + ex.getLocalizedMessage() );
-            } catch ( IllegalAccessException ex ) {
-                throw new InstantiationError( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + (annot.required() ? "true" : "false") + ", "
-                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                        + ") - Parameter is null, unable to create new object, no public default constructor: " + ex.getLocalizedMessage() );
-            }
-        }
-
-        if ( field != null ) {
-            try {
-                field.setAccessible( true );
-                field.set( this, result );
-                field.setAccessible( false );
-            } catch ( IllegalArgumentException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + (annot.required() ? "true" : "false") + ", "
-                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                        + ") - Unable to set new value of field to '" + result + "': " + ex.getLocalizedMessage() );
-            } catch ( IllegalAccessException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            }
-        }
-        if ( method != null ) {
-            try {
-                method.setAccessible( true );
-                method.invoke( this, new Object[]{ result } );
-                method.setAccessible( false );
-            } catch ( IllegalAccessException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            } catch ( IllegalArgumentException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + (annot.required() ? "true" : "false") + ", "
-                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                        + ") - Unable to set new value of method to '" + result + "': " + ex.getClass() + " - " + ex.getLocalizedMessage() );
-            } catch ( InvocationTargetException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + (annot.required() ? "true" : "false") + ", "
-                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
-                        + ") - Unable to set new value of method to '" + result + "', error in method invocation: "
-                        + ex.getClass() + " - " + (ex.getTargetException() == null ? ex.getLocalizedMessage() : ex.getTargetException().getLocalizedMessage()) );
-            }
-        }
-    }
-
-    private static Map<String, Field> loadModelFields( final Class cls ) {
-        final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Field field : ReflectionHelper.getAllFields( cls ) ) {
-            for ( Annotation annotation : field.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkModel ) {
-                    fields.put( getId( ( ZkModel ) annotation, field ), field );
-                    break;
-                }
-            }
-        }
-        return fields;
-    }
-
-    private static String loadModelClass( final Class cls ) {
-        for ( Annotation annotation : cls.getDeclaredAnnotations() ) {
-            if ( annotation instanceof ZkModel ) {
-                return (( ZkModel ) annotation).name().length() == 0 ? "ctl" : (( ZkModel ) annotation).name();
-            }
-        }
-        return loadControllerClass( cls );
-    }
-
-    private static Map<String, Field> loadModelMethod( final Class cls ) {
-        final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Method method : ReflectionHelper.getAllMethods( cls ) ) {
-            for ( Annotation annotation : method.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkModel ) {
-                    fields.put( getId( ( ZkModel ) annotation, method ), null );
-                    break;
-                }
-            }
-        }
-        return fields;
-    }
-
-    private static Map<String, Field> loadControllerFields( final Class cls ) {
-        final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Field field : ReflectionHelper.getAllFields( cls ) ) {
-            for ( Annotation annotation : field.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkController ) {
-                    fields.put( getId( ( ZkController ) annotation, field ), field );
-                    break;
-                }
-            }
-        }
-        return fields;
-    }
-
-    private static String loadControllerClass( final Class cls ) {
-        for ( Annotation annotation : cls.getDeclaredAnnotations() ) {
-            if ( annotation instanceof ZkController ) {
-                return (( ZkController ) annotation).name().length() == 0 ? "ctl" : (( ZkController ) annotation).name();
-            }
-        }
-        return "ctl";
-    }
-
-    private static Map<String, Field> loadControllerMethod( final Class cls ) {
-        final Map<String, Field> fields = new java.util.HashMap<String, Field>();
-        for ( Method method : ReflectionHelper.getAllMethods( cls ) ) {
-            for ( Annotation annotation : method.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkController ) {
-                    fields.put( getId( ( ZkController ) annotation, method ), null );
-                    break;
-                }
-            }
-        }
-        return fields;
-    }
-
-    private static String getId( final ZkModel annotation, final Field field ) {
-        return "".equals( annotation.name() ) ? field.getName() : annotation.name();
-    }
-
-    private static String getId( final ZkController annotation, final Field field ) {
-        return "".equals( annotation.name() ) ? field.getName() : annotation.name();
-    }
-
-    private static String getId( final ZkComponent annotation, final Field field ) {
-        return "".equals( annotation.id() ) ? field.getName() : annotation.id();
-    }
-
-    private static String getName( final ZkParameter annotation, final Field field ) {
-        return "".equals( annotation.name() ) ? field.getName() : annotation.name();
-    }
-
-    private static String getId( final ZkModel annotation, final Method method ) {
-        return "".equals( annotation.name() ) ? getMethodNameWithoutGetSet( method.getName() ) : annotation.name();
-    }
-
-    private static String getId( final ZkController annotation, final Method method ) {
-        return "".equals( annotation.name() ) ? getMethodNameWithoutGetSet( method.getName() ) : annotation.name();
-    }
-
-    private static String getMethodNameWithoutGetSet( final String name ) {
-        if ( name.startsWith( "get" ) ) {
-            return getMethodLowerCase( name.substring( 3 ) );
-        } else if ( name.startsWith( "set" ) ) {
-            return getMethodLowerCase( name.substring( 3 ) );
-        } else if ( name.startsWith( "is" ) ) {
-            return getMethodLowerCase( name.substring( 2 ) );
-        } else {
-            return name;
-        }
-    }
-
-    protected static String getMethodLowerCase( final String name ) {
-        return name.substring( 0, 1 ).toLowerCase() + name.substring( 1 );
-    }
-
-    /**
-     * Checks each method for @ZkEvent(s) annotation and registers all events
-     * with DLZKEvent class.
-     *
-     * @param ctl controller
-     * @param component master component
-     */
-    public static void registerZkEvents( final Object ctl, final Component component ) {
-        AnnotationProcessor processor = AnnotationProcessor.getProcessor( ctl.getClass() );
-        processor.registerZkEventsTo( component, ctl );
-    }
-
-    /**
-     * Check all fields in ctl object for annotation @ZkComponent. For each
-     * property get id from annotation (or property name if not set) and find
-     * fellow component of component by this id. If not found or not correct
-     * type, throws exception. If everythnig is ok, set the property to new
-     * value of the fellow component
-     *
-     * @param ctl controller with @ZkComponent annotations
-     * @param component master component to find fellow components in
-     */
-    public static void registerZkComponents( final DLBinder ctl, final Component component ) {
-        for ( final Field field : ReflectionHelper.getAllFields( ctl.getClass() ) ) {
-            for ( Annotation annot : field.getDeclaredAnnotations() ) {
-                if ( annot instanceof ZkComponent ) {
-                    String id = getId( ( ZkComponent ) annot, field );
-                    Component target = component.getFellowIfAny( id );
-
-                    if ( target == null ) {
-                        if ( (( ZkComponent ) annot).mandatory() ) {
-                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
-                                    + "Component not found in idspace of composer self component '" + component.getId() + "'." );
-                        }
-                    } else {
-                        try {
-                            field.setAccessible( true );
-                            field.set( ctl, target );
-                            field.setAccessible( false );
-                        } catch ( IllegalArgumentException ex ) {
-                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
-                                    + "Component is of different class: '" + target.getClass().getName() + "'." );
-                        } catch ( IllegalAccessException ex ) {
-                            throw SystemException.Aide.wrap( ex );
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * It is possible to add @ZkConfirm or @ZkBinding annotations to any method
-     * in composer. However they may be processed only together with @ZkEvent
-     * annotation, while in event invocation phase. It is similar to Spring
-     * proxy invocation - it handles only calls from outside.
-     *
-     * It thorws exception if invalid annotation combination is met.
-     *
-     * @param clazz class to check.
-     */
-    public static void validMethodAnnotations( final Class clazz ) {
-        for ( Method method : ReflectionHelper.getAllMethods( clazz ) ) {
-            boolean zkEvent = false;
-            boolean zkConfirm = false;
-            boolean zkBinding = false;
-            for ( Annotation annot : method.getDeclaredAnnotations() ) {
-                if ( annot instanceof ZkEvent || annot instanceof ZkEvents ) {
-                    zkEvent = true;
-                    continue;
-                } else if ( annot instanceof ZkConfirm ) {
-                    zkConfirm = true;
-                    continue;
-                } else if ( annot instanceof ZkBinding || annot instanceof ZkBindings ) {
-                    zkBinding = true;
-                    continue;
-                }
-            }
-
-            if ( !zkEvent && (zkConfirm || zkBinding) ) {
-                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" ZkEvent is required." );
-            }
-        }
-    }
-    // unfortunettly, ZK makes everything private and doesn't allow to reuse if from outside.
-
-    private static final Set IMPLICIT_NAMES = new HashSet();
-
-    static {
-        IMPLICIT_NAMES.add( "application" );
-        IMPLICIT_NAMES.add( "applicationScope" );
-        IMPLICIT_NAMES.add( "arg" );
-        IMPLICIT_NAMES.add( "componentScope" );
-        IMPLICIT_NAMES.add( "desktop" );
-        IMPLICIT_NAMES.add( "desktopScope" );
-        IMPLICIT_NAMES.add( "execution" );
-        IMPLICIT_NAMES.add( "event" ); //since 3.6.1, #bug 2681819: normal page throws exception after installed zkspring
-        IMPLICIT_NAMES.add( "self" );
-        IMPLICIT_NAMES.add( "session" );
-        IMPLICIT_NAMES.add( "sessionScope" );
-        IMPLICIT_NAMES.add( "spaceOwner" );
-        IMPLICIT_NAMES.add( "spaceScope" );
-        IMPLICIT_NAMES.add( "page" );
-        IMPLICIT_NAMES.add( "pageScope" );
-        IMPLICIT_NAMES.add( "requestScope" );
-        IMPLICIT_NAMES.add( "param" );
-    }
-
-    /**
-     * We want to maintain implicit objects like GenericAutowireComposer does,
-     * however it is not possible to reuse part of Components class while it is
-     * private. This code uses Components.getImplicit() method.
-     */
-    protected void wireImplicit() {
-        for ( final Iterator it = IMPLICIT_NAMES.iterator(); it.hasNext(); ) {
-            final String fdname = ( String ) it.next();
-            //we cannot inject event proxy because it is not an Interface
-            if ( "event".equals( fdname ) ) {
-                continue;
-            }
-            final Object argVal = Components.getImplicit( self, fdname );
-            try {
-                final Field field = Classes.getAnyField( this.getClass(), fdname );
-                field.setAccessible( true );
-                field.set( this, argVal );
-                field.setAccessible( false );
-            } catch ( IllegalArgumentException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            } catch ( IllegalAccessException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            } catch ( NoSuchFieldException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            }
-        }
+        return ZkAnnotationUtils.put( key, value, this, zkModels, zkControllers );
     }
 
     /** Only to implement all Map interface methods. Don't use. */
@@ -911,7 +340,8 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
     /** Only to implement all Map interface methods. Don't use. */
     public int size() {
         //throw new UnsupportedOperationException( "Not supported yet." );
-        // unsupport exception causes problems while debuging in netbeans, which tries to show in variables window this as Map()
+        // unsupport exception causes problems while debuging in netbeans, 
+        // which tries to show in variables window this as Map()
         return 0;
     }
 
