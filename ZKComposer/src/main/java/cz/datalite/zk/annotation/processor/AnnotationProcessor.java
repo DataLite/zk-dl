@@ -23,6 +23,7 @@ import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.annotation.invoke.*;
 import java.lang.reflect.Method;
 import java.util.*;
+import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
 
@@ -60,6 +61,7 @@ public class AnnotationProcessor<T> {
     private static boolean cache = true;
 
     static {
+        initializers.add( new GeneralInitializerProcessor( Command.class, CommandInvoker.class ) );
         initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
         initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
 
@@ -77,6 +79,9 @@ public class AnnotationProcessor<T> {
 
     /** List of cached ZkEvents */
     private Map<Method,MethodCache> zkEvents = new HashMap<Method, MethodCache>();
+    
+    /** List of cached Commands */
+    private Map<Method,Cache> commands = new HashMap<Method, Cache>();
 
     /**
      * Returns AnnotationProcessor for existing class
@@ -148,6 +153,9 @@ public class AnnotationProcessor<T> {
             if ( invoker instanceof MethodInvoker ) {
                 // store method invoker
                 zkEvents.put( method, new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
+            } else {
+                // store command invoker
+                commands.put( method, new Cache( method, wrapper ) );
             }            
         }
     }
