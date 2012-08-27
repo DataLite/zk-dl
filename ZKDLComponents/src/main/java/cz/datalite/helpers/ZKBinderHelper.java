@@ -17,9 +17,11 @@ import org.zkoss.zul.impl.XulElement;
 
 /**
  * Pomocne metody pro praci s ZK plus bindingem
- *
+ * 
  * @author Jiri Bubnik
+ * @since ZK-DL 1.4.0 replaced by {@link cz.datalite.zk.bind.ZKBinderHelper}
  */
+@Deprecated
 public abstract class ZKBinderHelper {
 
     /**
@@ -41,12 +43,12 @@ public abstract class ZKBinderHelper {
     }
 
     /**
-     * Vraci anotaci pro binding
+     * Returns binding annotation
      *
-     * @param comp komponenta pro kterou se zjistuje
-     * @param attribute nazev atributu komponenty
-     * @param annotation nazev anotace (zjistuje se v skupine "default-bind")
-     * @return anotaci pokud najde nebo null
+     * @param comp annotated component
+     * @param attribute name of component's attribute
+     * @param annotation annotation name (searched in group "default-bind")
+     * @return annotation if exists otherwise null
      */
     public static String getBindingAnnotation( Component comp, String attribute, String annotation ) {
         if ( !(comp instanceof XulElement) ) {
@@ -62,12 +64,12 @@ public abstract class ZKBinderHelper {
     }
 
     /**
-     * Vraci anotaci pro default
+     * Returns annotation from group "default"
      *
-     * @param comp komponenta pro kterou se zjistuje
-     * @param attribute nazev atributu komponenty
-     * @param annotation nazev anotace (zjistuje se v skupine "default")
-     * @return anotaci pokud najde nebo null
+     * @param comp annotated component
+     * @param attribute name of component's attribute
+     * @param annotation annotation name (searched in group "default")
+     * @return annotation if exists otherwise null
      */
     public static String getDefaultAnnotation( Component comp, String attribute, String annotation ) {
         if ( !(comp instanceof XulElement) ) {
@@ -191,12 +193,15 @@ public abstract class ZKBinderHelper {
     }
 
     /**
-     * Pro UI kolekci (Grid, Listbox) nalezne souseda v rámci řádku (row, listitem) podle vestavěného ID.
-     * Interně nejprve najde nadrizeny listitem nebo row a od nej potom dolu hleda komponentu, ktera konci na #ID
+     * For UI collections (Grid, Listbox) it finds the sibling in the context of
+     * current row, listitem, etc. based on the inner ID. Internally finds the
+     * parent item at first and then it looks for the component ending with
+     * given #id.
      *
-     * @param comp komponenta se seznamem dětí loadovaných přes binding např. &lt;listitem self="@{each=lst}"&gt;
-     * @param id ZK id komponenty pro nalezení
-     * @return nalezenou komponentu nebo null
+     * @param comp component containing the list of children loaded by
+     * databinding eg.: &lt;listitem self="@{each=lst}"&gt;
+     * @param id identifier of ZK component to be found
+     * @return found component or null
      */
     public static Component getBindingSibling( Component comp, String id ) {
         String suffix = "#" + id;
