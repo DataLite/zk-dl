@@ -1,7 +1,7 @@
 package cz.datalite.zk.components.list.view;
 
 import cz.datalite.helpers.EqualsHelper;
-import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import org.zkoss.lang.Strings;
@@ -113,6 +113,7 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
         this.controller = controller;
         setAttribute( getUuid() + "_model", controller, Component.COMPONENT_SCOPE);
         ZKBinderHelper.registerAnnotation( textbox, "value", "value", getUuid() + "_model.bindingModel.value" );
+        ZKBinderHelper.registerAnnotation( textbox, "value", "bind", getUuid() + "_model.bindingModel.value" );
     }
 
     public void fireChanges() {

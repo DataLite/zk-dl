@@ -1,6 +1,6 @@
 package cz.datalite.zk.components.cascade;
 
-import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -65,8 +65,8 @@ public class CascadeUtil<T> {
             return;
 
         Component parent = component.getFellowIfAny( component.getParentCascadeId() );
-        if ( parent == null && ZKBinderHelper.getBinder( component ) != null )
-            parent = ZKBinderHelper.getBindingSibling( component, component.getParentCascadeId() );
+        if ( parent == null && ZKBinderHelper.hasBinder( component ) )
+            parent = component.getFellow( component.getParentCascadeId() );
 
         if ( parent == null )
             throw new UiException( "parentComboId component not found for component: " + component );
@@ -75,7 +75,7 @@ public class CascadeUtil<T> {
 
 
         // ensure controller is loaded
-        if ( ZKBinderHelper.getBinder( parent ) != null )
+        if ( ZKBinderHelper.hasBinder( parent ) )
             ZKBinderHelper.loadComponentAttribute( parent, "controller" );
 
         addParent( ( (CascadableComponent) parent ).getCascadableController(), component.getParentCascadeColumn() );

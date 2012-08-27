@@ -1,6 +1,6 @@
 package cz.datalite.zk.components.lovbox;
 
-import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
@@ -191,6 +191,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
             listbox.setParent( popup );
         }
+        
+        listbox.setSelectFirstRow( false );
 
         if ( filter == null && isCreateQuickFilter()) {
             filter = new DLQuickFilter();
@@ -470,7 +472,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     protected void createCell( final String field ) {
         final Listcell cell = new Listcell();
-        ZKBinderHelper.registerAnnotation( cell, "label", "value", "row" + getUuid() + "." + field );
+        ZKBinderHelper.helper( this ).registerAnnotation( cell, "label", "value", "row" + getUuid() + "." + field );
         listbox.getLastChild().appendChild( cell );
 
         // header
