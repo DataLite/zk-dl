@@ -4,6 +4,7 @@ import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKHelper;
 import cz.datalite.zk.annotation.*;
+import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
 import cz.datalite.zk.annotation.processor.AnnotationProcessor;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMainModel;
@@ -27,6 +28,7 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.sys.ComponentCtrl;
 import org.zkoss.zk.ui.util.ConventionWires;
 
 /**
@@ -117,6 +119,8 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         arg= Executions.getCurrent().getArg();
     }
 
+    
+    
     @Override
     public void doAfterCompose( T comp ) throws Exception {
         super.doAfterCompose( comp );
@@ -167,6 +171,13 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      */
     @Override
     public void doBeforeComposeChildren( Component comp ) throws Exception {
+        
+        // register modified DLBinderImpl to provide the support to Zk annotations
+        //  do it only if another binder is not already defined
+        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) comp );
+        if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
+            extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
+        
         super.doBeforeComposeChildren( comp );
 //        ConventionWires.wireController( comp, this );
 
