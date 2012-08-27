@@ -4,6 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility pro praci s objekty
@@ -11,6 +14,8 @@ import java.util.*;
 public abstract class ReflectionHelper
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( ReflectionHelper.class );
+    
     /**
      * @param value Testovany objekt
      * @return true pokud je objekt NULL
@@ -178,23 +183,86 @@ public abstract class ReflectionHelper
      * @throws InvocationTargetException Chyba vyvolani setteru
      * @throws IllegalAccessException    Chyba pristupu
      */
-    public static Object getFieldValue(Field destinationField, Object source) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
-    {
-        if (source == null) {
+    public static <T> T getFieldValue( Field destinationField, Object source ) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if ( source == null )
             return null;
-        }
 
-        if (destinationField.isAccessible()) {
-            return destinationField.get(source);
-        } else {
-            Method getter = getFieldGetter(source.getClass(), destinationField);
+        if ( destinationField.isAccessible() )
+            return ( T ) destinationField.get( source );
+        else {
+            Method getter = getFieldGetter( source.getClass(), destinationField );
 
-            if (getter != null) {
-                return getter.invoke(source);
-            }
+            if ( getter != null )
+                return ( T ) getter.invoke( source );
         }
 
         return null;
+    }
+    
+     /**
+     * Get field value no matter of security. The security will be supressed for
+     * method invocation. The method calls getter first, after that takes the
+     * value directly.
+     * 
+     * @param <T> type of field
+     * @param destinationField field name
+     * @param source instance of object with given field
+     * @return value of that field
+     * @throws NoSuchFieldException  the given instance doesn't contain such field
+     */
+    public static <T> T getForcedFieldValue( String name, Object source ) throws NoSuchFieldException, InvocationTargetException {
+        // ToDo dott notation
+        // if the instance doesn't exists return null
+        if ( source == null ) {
+            return null;
+        }
+
+        // get field
+        Field field = null;
+        Class type = source.getClass();
+        do {
+            try {
+                // try to read field
+                field = type.getDeclaredField( name );
+            } catch ( NoSuchFieldException ex ) {
+                // if the field doesn't exists in current class
+                // try to look up in a parent class
+                type = type.getSuperclass();
+            }
+            // continue looking up until field is found or there is no more parents
+        } while ( field == null && !Object.class.equals(type) );
+
+        if ( field == null )
+            throw new NoSuchElementException( String.format( "Field '%1$s' is not present in '%1$s' class.", name, source.getClass() ) );
+
+        try {
+            // try existence of getter
+            Method getter = getFieldGetter( source.getClass(), field );
+            if ( getter == null ) {
+                // getter doesn't exists,
+                // try direct access to field
+
+                boolean accessible = field.isAccessible();
+                field.setAccessible( true );
+                T value = ( T ) field.get( source );
+                field.setAccessible( accessible );
+                return value;
+            } else {
+                // getter exists, use it
+
+                boolean accessible = getter.isAccessible();
+                getter.setAccessible( true );
+                T value = ( T ) getter.invoke( source );
+                getter.setAccessible( accessible );
+                return value;
+            }
+        } catch ( IllegalArgumentException ex ) {
+            LOGGER.error( "Field couldn't be read.", ex );
+            throw new RuntimeException( ex );
+        } catch ( IllegalAccessException ex ) {
+            LOGGER.error( "Field couldn't be read.", ex );
+            throw new RuntimeException( ex );
+        }
     }
 
     /**
