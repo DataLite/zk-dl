@@ -78,20 +78,23 @@ import org.zkoss.zk.ui.util.ConventionWires;
  */
 public class DLBinder<T extends Component, S extends DLMainModel> extends BindComposer<T> implements java.util.Map<String, Object>, DLMasterController<S> {
 
+    /** The view component managed by this view-model */
     protected T self;
     
-    /** Implicit Object; the arg argument passed to the createComponents method. It is
+    /** 
+     * Implicit Object; the arg argument passed to the createComponents method. It is
      * never null.
-     *
+     * 
      * @since 3.0.8
      */
     protected transient Map arg;
 
-//    /** Implicit Object; the param argument passed from the http request.
-//     *
-//     * @since 3.6.1
-//     */
-//    protected transient Map param;
+    /** 
+     * Implicit Object; the param argument passed from the http request.
+     *
+     * @since 3.6.1
+     */
+    protected transient Map param;
     
     /** Map model name to field representing this model */
     private final Map<String, Field> zkModels = new java.util.HashMap<String, Field>();
@@ -107,19 +110,12 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
 
     /** List of child controller for master / detail page composition. **/
     private List<DLDetailController> detailControllers = new LinkedList<DLDetailController>();
-
-//    protected final List<VariableResolver> _resolvers;
+    
+    //    protected final List<VariableResolver> _resolvers;
     public DLBinder() {
         super();
 //        _resolvers = Selectors.newVariableResolvers( getClass(), SelectorComposer.class );
     }
-    
-    @Init
-    public final void initDLBinder() {
-        arg= Executions.getCurrent().getArg();
-    }
-
-    
     
     @Override
     public void doAfterCompose( T comp ) throws Exception {
@@ -171,22 +167,22 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      */
     @Override
     public void doBeforeComposeChildren( Component comp ) throws Exception {
+        // provide component reference to allow to work with UI  in inherited 
+        // controllers. This can be understood as a feature of backward 
+        // compatibility. It preserves old usage setup self in advance - it
+        // might be used in composition.
+        self = ( T ) comp;
+                
+        // initialize the binder and its properties
+        init();
         
-        // register modified DLBinderImpl to provide the support to Zk annotations
-        //  do it only if another binder is not already defined
-        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) comp );
-        if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
-            extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
-        
+        // initialize the parent (as well as the @init in children)
         super.doBeforeComposeChildren( comp );
+        
+        
 //        ConventionWires.wireController( comp, this );
 
-        // provide component reference to allow to work with UI
-        // in inherited controllers. This can be understood 
-        // as a feature of backward compatibility. It preserves old
-        // usage
-        // setup self in advance - it might be used in composition.
-        self = ( T ) comp;
+        
 
         // Master / detail 
         setupMasterController();
@@ -219,6 +215,51 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         zkControllers.putAll( loadControllerFields( this.getClass() ) );
         zkControllers.putAll( loadControllerMethod( this.getClass() ) );
     }
+    
+    
+    /**
+     * Initializes the DLBinder to fill stateful attributes available in derived
+     * classes like arguments, parameter, desktop, ...
+     */
+    private void init() {
+        // register modified DLBinderImpl to provide the support to Zk annotations
+        //  do it only if another binder is not already defined
+        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) self );
+        if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
+            extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
+
+        // arguments sent through Execution#createComponent
+        arg = Executions.getCurrent().getArg();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+    
+    
+    
 
     /** *********************************************** Master / Detail ************************************************************* */
     /**
