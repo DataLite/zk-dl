@@ -20,9 +20,10 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.Keys;
 import cz.datalite.zk.annotation.ZkEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
-import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.KeyEvent;
 import org.zkoss.zul.impl.XulElement;
 
@@ -38,6 +39,9 @@ import org.zkoss.zul.impl.XulElement;
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class KeyEventHandler extends Handler {
+    
+    /** instance of logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger( MethodInvoker.class );
 
     /** has to be used ctrl or not */
     private final boolean ctrl;
@@ -51,9 +55,7 @@ public class KeyEventHandler extends Handler {
     /** ascii code of key */
     private final int code;
 
-    private final String event;
-
-    private Keys key = null;
+    private final Keys key;
 
     public static Invoke process( Invoke inner, ZkEvent annotation ) {
         if ( annotation.event().startsWith( "on" ) ) { // this is not definition of keyEvent
@@ -66,29 +68,36 @@ public class KeyEventHandler extends Handler {
     private KeyEventHandler( Invoke inner, String event ) {
         super( inner );
 
-        this.event = event;
-
         final String[] haystack = event.split( "\\+" );
         ctrl = find( "CTRL", haystack );
         alt = find( "ALT", haystack );
         shift = find( "SHIFT", haystack );
 
         int ascii;
+        Keys keys = null;
         try {
-            key = Keys.valueOf( haystack[haystack.length - 1] );
-            ascii = key.getCode();
+            keys = Keys.valueOf( haystack[haystack.length - 1] );
+            ascii = keys.getCode();
         } catch ( IllegalArgumentException ex ) {
             ascii = haystack[haystack.length - 1].charAt( 0 );
         }
+        key = keys;
         code = ascii;
     }
 
     @Override
-    protected boolean doBefore( Event event, Component master, Object controller ) {
+    protected boolean doBefore(final Context invocationContext) {
+        if ( !(invocationContext instanceof ZkEventContext) ) {
+            LOGGER.error( "MethodInvoker is bound to @ZkEvent and takes ZkEventContext only." );
+            throw new IllegalArgumentException( "MethodInvoker is bound to @ZkEvent and takes ZkEventContext only." );
+        }
+        
+        final ZkEventContext context = ( ZkEventContext ) invocationContext;
+        
         if ( code == -1 ) {
             return true;
-        } else if ( event instanceof KeyEvent ) {
-            final KeyEvent keyEvent = ( KeyEvent ) event;
+        } else if ( context.getEvent() instanceof KeyEvent ) {
+            final KeyEvent keyEvent = ( KeyEvent ) context.getEvent();
             // conditions check
             return keyEvent.isAltKey() == alt
                     && keyEvent.isCtrlKey() == ctrl

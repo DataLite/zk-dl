@@ -36,12 +36,21 @@ public class ZkBlockingHandler extends Handler {
 
     /** name of echo event */
     private static final String EVENT = "onEchoEvent";
+    
+    /** key of the exception in context map */
+    private static final String BLOCKING_BUSYBOX = "Blocking::busybox";
 
     /** state of general property */
-    private static boolean localizeAll;
-
-    /** opened busy window */
-    private BusyBoxHandler busybox;
+    private static final boolean localizeAll;
+    
+    /** message to be shown */
+    private final String message;
+    
+    /** use localization */
+    private final boolean i18n;
+    
+    /** parent component */
+    private final String component;
 
     static {
         /** Reads default configuration for library */
@@ -60,35 +69,42 @@ public class ZkBlockingHandler extends Handler {
 
     public ZkBlockingHandler(Invoke inner, final String message, final boolean i18n, final String component) {
         super(inner);
-        busybox = new BusyBoxHandler(message, i18n, false, component);
+        this.message = message;
+        this.i18n = i18n;
+        this.component = component;
     }
 
     @Override
-    public boolean invoke(final Event sourceEvent, final Component master, final Object controller) throws Exception {
-
+    public boolean invoke(final Context context) throws Exception {
+        final Component root = context.getRoot();
+        
         // echo event handler
-        master.addEventListener(EVENT, new EventListener() {
+        root.addEventListener(EVENT, new EventListener() {
 
             public void onEvent(Event event) throws Exception {
                 // handler used, remove itself
-                master.removeEventListener(EVENT, this);
+                root.removeEventListener(EVENT, this);
 
                 // user was informed, resumeBeforeInvoke in execution
-                resumeInvoke(event, master, controller);
+                resumeInvoke(context);
             }
         });
         // fire echo event
-        Events.echoEvent(EVENT, master, null);
+        Events.echoEvent(EVENT, root, null);
 
         // invokes status window informing user about operation
-        busybox.show(master);
+        final BusyBoxHandler busybox = new BusyBoxHandler(message, i18n, false, component);
+        busybox.show(root);
+        context.putParameter( BLOCKING_BUSYBOX, busybox );
 
         // invocation is not complete, prevent resuming
         return false;
     }
 
     @Override
-    protected void doAfter(Event event, Component master, Object controller) {
-        busybox.close(master);
+    protected void doAfter(final Context context) {
+        final Component root = context.getRoot();
+        final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( BLOCKING_BUSYBOX );
+        busybox.close(root);
     }
 }

@@ -23,7 +23,6 @@ import cz.datalite.zk.annotation.ZkAsync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.*;
 
 /**
@@ -40,6 +39,18 @@ public class ZkAsyncHandler extends Handler {
 
     /** used queue name, one queue for all users async requests */
     private final static String QUEUE = "qLongOperations";
+    
+    /** key of the exception in context map */
+    private static final String ASYNC_EXCEPTION = "Async::exception";
+    
+    /** key of the busybox in context map */
+    private static final String ASYNC_BUSYBOX = "Async::busybox";
+    
+     /** key of the interceptor in context map */
+    private static final String ASYNC_INTERCEPTOR = "Async::interceptor";
+    
+     /** key of the interceptor in context map */
+    private static final String ASYNC_QUEUE = "Async::queue";
 
     /** state of general property */
     private final static boolean localizeAll;
@@ -47,17 +58,17 @@ public class ZkAsyncHandler extends Handler {
     /** name of event fired after async long operation is done */
     private final String eventAfter;
 
-    /** opened busy window */
-    private final BusyBoxHandler busybox;
-
-    /** something went wrong */
-    private Exception exception;
-
     /** if operation is cancellable */
     private final boolean cancellable;
-
-    /** instance of interruptor object to interrupt running thread */
-    private ZkCancellable interruptor;
+    
+    /** message to be shown */
+    private final String message;
+    
+    /** use localization */
+    private final boolean i18n;
+    
+    /** parent component */
+    private final String component;
 
     static {
         /** Reads default configuration for library */
@@ -76,43 +87,45 @@ public class ZkAsyncHandler extends Handler {
 
     public ZkAsyncHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable, final String component, final String eventAfter) {
         super(inner);
-        busybox = new BusyBoxHandler(message, i18n, cancellable, component);
+        this.message = message;
+        this.i18n = i18n;
+        this.component = component;
         this.cancellable = cancellable;
         this.eventAfter = eventAfter;
-
-        if (cancellable) { // listen for request to cancel
-            busybox.setEventListener(Events.ON_CLOSE, new EventListener() {
-
-                public void onEvent(Event event) throws Exception {
-                    LOGGER.trace( "Async operation was cancelled." );
-                    // race conditions - 2 threads works with interruptor, NPE prevention
-                    synchronized (ZkAsyncHandler.this) {
-                        if (interruptor != null) {
-                            interruptor.cancel();
-                        }
-                    }
-                    // prevent window closing
-                    event.stopPropagation();
-                }
-            });
-        }
     }
 
     @Override
-    public boolean invoke(final Event event, final Component master, final Object controller) throws Exception {
+    public boolean invoke(final Context context) throws Exception {
 
         // check for already running
         if (isAsyncRunning()) {
             LOGGER.trace( "One operation is already running. Request was rejected." );
         } else {
             // subscribe to listen async events
-            subscribe(event, master, controller);
+            subscribe(context);
 
             // publish event to start async operation
             publish();
 
             // invokes status window informing user about operation
-            busybox.show(master);
+            final BusyBoxHandler busybox = new BusyBoxHandler( message, i18n, cancellable, component );
+            if ( cancellable ) // listen for request to cancel
+                busybox.setEventListener( Events.ON_CLOSE, new EventListener() {
+
+                    public void onEvent( Event event ) throws Exception {
+                        LOGGER.trace( "Async operation was cancelled." );
+                        // race conditions - 2 threads works with interruptor, NPE prevention
+                        synchronized ( ZkAsyncHandler.this ) {
+                            final ZkCancellable interruptor = ( ZkCancellable ) context.getParameter( ASYNC_INTERCEPTOR );
+                            if ( interruptor != null )
+                                interruptor.cancel();
+                        }
+                        // prevent window closing
+                        event.stopPropagation();
+                    }
+                } );
+            busybox.show( context.getRoot() );
+            context.putParameter( ASYNC_BUSYBOX, busybox );
         }
 
         // invocation is not complete, prevent resuming
@@ -120,70 +133,79 @@ public class ZkAsyncHandler extends Handler {
     }
 
     @Override
-    protected void doAfter(Event event, Component master, Object controller) {
+    protected void doAfter(final Context context) {
         try {
+            Throwable exception = ( Throwable ) context.getParameter( ASYNC_EXCEPTION );
             if (exception != null) {
                 LOGGER.error( "Execution of long running operation failed. Exception has been thrown." );
+                // exception was passed through
+                context.removeParameter( ASYNC_EXCEPTION );
                 throw new RuntimeException(exception);
             }
 
             // in there is not exception, invoke event after
             // async processing is done, fire notification to process rest
-            Events.postEvent(eventAfter, master, null);
+            Events.postEvent(eventAfter, context.getRoot(), null);
 
         } finally {
             // close shown blocking window
-            busybox.close(master);
-            // exception was passed through
-            exception = null;
+            final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( ASYNC_BUSYBOX );
+            busybox.close(context.getRoot());           
         }
     }
 
     /** checks for already running async event. doesn't allow multiple execution */
     private boolean isAsyncRunning() {
-        return EventQueues.exists(QUEUE, EventQueues.SESSION);
+        return EventQueues.exists(QUEUE);
     }
-
+    
     /** subscribes listeners on queue */
-    private void subscribe(final Event event, final Component master, final Object controller) {
+    private void subscribe(final Context context) {
+        final EventQueue queue = findQueue();
+        context.putParameter( ASYNC_QUEUE, queue );
+        
         // subscribe async listener to handle long operation
-        findQueue().subscribe(
-                createInvokeListener(event, master, controller),
-                createCallbackToResume(event, master, controller));
+        queue.subscribe( createInvokeListener( context ), true ); //asynchronous
+
+        // subscribe a normal listener to show the resul to the browser
+        queue.subscribe( createCallbackToResume( context ) ); //synchronous
     }
 
     /** publishes any event to start invocation */
     private void publish() {
         // fire event to start the long operation
-        findQueue().publish(new Event("AsyncEvent"));
+        findQueue().publish(new Event("doAsyncEvent"));
     }
 
     /** destroys queue to allow simple detection of non-running event */
     private void cleanUp() {
-        EventQueues.remove(QUEUE, EventQueues.SESSION);
+        EventQueues.remove(QUEUE);
     }
 
     /** returns queue for this user. If queue is not exist than it is created */
     private EventQueue findQueue() {
-        return EventQueues.lookup(QUEUE, EventQueues.SESSION, true);
+        return EventQueues.lookup(QUEUE);
     }
 
     /**
      * Creates event listener to resume running events this listener serves to
      * sync callback
      */
-    private EventListener createCallbackToResume(final Event event, final Component master, final Object controller) {
+    private EventListener createCallbackToResume(final Context context) {
         //callback
         return new EventListener() {
 
-            public void onEvent(Event evt) throws Exception {
+            public void onEvent(Event event) throws Exception {
+                // listen for "afterAsyncEvent" only
+                if ( !"afterAsyncEvent".equals( event.getName() ) ) return;
+                
                 LOGGER.trace( "Async operation finished." );
                 // clean up queue
                 cleanUp();
 
                 // invocation is done
                 // do doAfterInvoke on all objects
-                source.doAfterInvoke(event, master, controller);
+                context.getInvoker().doAfterInvoke(context);
             }
         };
     }
@@ -191,10 +213,13 @@ public class ZkAsyncHandler extends Handler {
     /**
      * Async event listener to execute long running operation
      */
-    private EventListener createInvokeListener(final Event event, final Component master, final Object controller) {
+    private EventListener createInvokeListener(final Context context) {
         return new EventListener() {
 
-            public void onEvent(Event evt) throws Exception { //asynchronous
+            public void onEvent(Event event) throws Exception { //asynchronous
+                // listen for "doAsyncEvent" only
+                if ( ! "doAsyncEvent".equals( event.getName()) ) return;
+                
                 try {
                     LOGGER.trace( "Starting async operation." );
 
@@ -204,25 +229,30 @@ public class ZkAsyncHandler extends Handler {
                         ZkCancellable.setCancellable();
                         // race conditions - 2 threads works with interruptor, NPE prevention
                         synchronized (ZkAsyncHandler.this) {
-                            interruptor = ZkCancellable.get();
+                            final ZkCancellable interruptor = ZkCancellable.get();
+                            context.putParameter( ASYNC_INTERCEPTOR, interruptor );
                         }
                     }
 
                     // resume invoking inner methods
-                    inner.invoke(event, master, controller);
+                    inner.invoke(context);
                 } catch (Exception ex) {
                     // if an exception is caught, that it has to be rethrown 
                     // in a synchronnous event to allow simple displaying 
                     // displayingin UI
-                    exception = ex;
+                    context.putParameter( ASYNC_EXCEPTION, ex);
                 } finally {
                     // clean up current thread. 
                     // This is not to be cancellable any more
                     ZkCancellable.clean();
                     // race conditions - 2 threads works with interruptor, NPE prevention
                     synchronized (ZkAsyncHandler.this) {
-                        interruptor = null;
+                        context.removeParameter( ASYNC_INTERCEPTOR );
                     }
+                    
+                    // Async event finished, post notification
+                    final EventQueue queue = ( EventQueue ) context.getParameter( ASYNC_QUEUE );
+                    queue.publish( new Event( "afterAsyncEvent" ) );
                 }
             }
         };

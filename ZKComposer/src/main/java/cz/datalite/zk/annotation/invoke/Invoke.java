@@ -19,7 +19,6 @@
 package cz.datalite.zk.annotation.invoke;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
 
 /**
  * <p>Interface defines functionality of invokable object. These objects wrap
@@ -45,7 +44,7 @@ public interface Invoke {
      *
      * @return TRUE if continue invoking, FALSE for stop propagation
      */
-    boolean doBeforeInvoke(Event event, Component master, Object controller);
+    boolean doBeforeInvoke(Context context);
 
     /**
      * Invoke the desired method including additional functionality
@@ -58,34 +57,22 @@ public interface Invoke {
      *
      * @throws Exception Any exception has occured.
      */
-    boolean invoke(Event event, Component master, Object controller) throws Exception;
+    boolean invoke(Context context) throws Exception;
 
     /**
      * Additional functionality appended after method invocation.
      *
      * @param event Source event
      */
-    void doAfterInvoke(Event event, Component master, Object controller);
+    void doAfterInvoke(Context context);
 
     /**
      * Binds to the component. Sets up component's properties according to the
      * handler's requirements
      *
+     * @param root root component
+     * 
      * @return observed component
      */
-    Component bind(Component master);
-
-    /**
-     * Targeted event which the invoke object should listen
-     *
-     * @return listened event
-     */
-    String getEvent();
-
-    /**
-     * sets outer wrapper of invocation object to allow resume execution
-     *
-     * @param source source of execution
-     */
-    void setSource(Invoke source);
+    Component bind(Component root);
 }

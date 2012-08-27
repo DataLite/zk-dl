@@ -21,7 +21,6 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.zk.annotation.ZkConfirm;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
@@ -37,13 +36,13 @@ import org.zkoss.zul.Messagebox;
 public class ZkConfirmHandler extends Handler {
 
     /** question message */
-    private String message;
+    private final String message;
 
     /** window title */
-    private String title;
+    private final String title;
 
     /** available buttons */
-    private int buttons;
+    private final int buttons;
 
     /** button of accept */
     private final int accessButton;
@@ -51,7 +50,7 @@ public class ZkConfirmHandler extends Handler {
     /** type of box */
     private final String icon;
 
-    private static boolean localizeAll;
+    private final static boolean localizeAll;
 
     static {
         /** Reads default configuration for library */
@@ -72,17 +71,17 @@ public class ZkConfirmHandler extends Handler {
     }
 
     @Override
-    protected boolean doBefore(final Event event, final Component master, final Object controller) {
+    protected boolean doBefore(final Context context) {
         if (message == null) {
             return true; // continue
         } else {
             // prompt question
             Messagebox.show( message, title, buttons, icon, new EventListener() {
 
-                public void onEvent( final Event msgEvent ) throws Exception {
-                    if ( ( Integer ) msgEvent.getData() == accessButton ) {
+                public void onEvent( final Event event ) throws Exception {
+                    if ( ( Integer ) event.getData() == accessButton ) {
                         // correct answer, resumeBeforeInvoke executing
-                        resumeBeforeInvoke( event, master, controller );
+                        resumeBeforeInvoke( context );
                     }
                 }
             } );

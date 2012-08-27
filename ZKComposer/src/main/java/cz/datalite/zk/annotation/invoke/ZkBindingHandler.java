@@ -20,28 +20,29 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zkplus.databind.DataBinder;
 
 /**
  * <p>Handles binding request before and after method invocation. For
  * all registered component executes load or safe based on annotation's
  * properties.</p>
+ * 
+ * <p><strong>Usable with databinding v1.0 only</strong></p>
  *
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class ZkBindingHandler extends Handler {
 
     /** Components to be saved before */
-    private List<String> saveBefore;
+    private final List<String> saveBefore;
 
     /** Components to be load after */
-    private List<String> loadAfter;
+    private final List<String> loadAfter;
 
     public static Invoke process( Invoke inner, ZkBinding annotation ) {
         List<String> loadAfter = annotation.loadAfter() ? Collections.singletonList( annotation.component() ) : Collections.EMPTY_LIST;
@@ -66,24 +67,24 @@ public class ZkBindingHandler extends Handler {
 
     public ZkBindingHandler( Invoke inner, List<String> saveBefore, List<String> loadAfter ) {
         super( inner );
-        this.saveBefore = saveBefore;
-        this.loadAfter = loadAfter;
+        this.saveBefore = Collections.unmodifiableList( saveBefore );
+        this.loadAfter = Collections.unmodifiableList( loadAfter );
     }
 
     @Override
-    protected boolean doBefore( Event event, Component master, Object controller ) {
+    protected boolean doBefore( final Context context ) {
         for ( String id : saveBefore ) {
-            Component component = getComponent( id, master );
-            getBinder( component ).saveComponent( component );
+            Component component = getComponent( id, context.getRoot() );
+            ZKBinderHelper.helper( component ).saveComponent( component );
         }
         return true;
     }
 
     @Override
-    protected void doAfter( Event event, Component master, Object controller ) {
+    protected void doAfter( final Context context ) {
         for ( String id : loadAfter ) {
-            Component component = getComponent( id, master );
-            getBinder( component ).loadComponent( component );
+            Component component = getComponent( id, context.getRoot() );
+            ZKBinderHelper.helper( component ).loadComponent( component );
         }
     }
 
@@ -93,14 +94,5 @@ public class ZkBindingHandler extends Handler {
         } catch ( ComponentNotFoundException ex ) {
             throw new ComponentNotFoundException( "ZkBinding could not be registered on component \"" + id + "\" because component wasn\'t found.", ex );
         }
-    }
-
-    /**
-     * Vraci odkaz na binder
-     * @param comp komponenta podle ktere ho urci
-     * @return odkaz na binder
-     */
-    private static DataBinder getBinder( Component comp ) {
-        return ( DataBinder ) comp.getAttributeOrFellow( "binder", true );
     }
 }

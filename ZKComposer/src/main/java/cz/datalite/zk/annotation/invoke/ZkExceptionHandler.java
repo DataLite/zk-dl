@@ -21,14 +21,11 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkException;
 import cz.datalite.zk.annotation.ZkExceptions;
+import java.lang.reflect.InvocationTargetException;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Messagebox;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * <p>Handles exceptions thrown by invocated methods. It the thrown type is
@@ -38,23 +35,23 @@ import java.lang.reflect.InvocationTargetException;
  * @author Karel Čemus <cemus@datalite.cz>
  */
 public class ZkExceptionHandler extends Handler {
+    
+     /** key of the exception in context map */
+    private static final String EXCEPTION_EXCEPTION = "Exception::exception";
 
-    private String title;
+    private final String title;
 
-    private String message;
+    private final String message;
 
-    private Class type;
+    private final Class type;
 
-    private boolean localize;
+    private final boolean localize;
 
-    private boolean unwrap;
+    private final boolean unwrap;
 
-    /** exception caught, there is message to be shown */
-    private Throwable target;
+    private final static boolean localizeAll;
 
-    private static boolean localizeAll = false;
-
-    private static boolean unwrapAll = false;
+    private final static boolean unwrapAll;
 
     static {
         /** Reads default configuration for library */
@@ -80,42 +77,38 @@ public class ZkExceptionHandler extends Handler {
         this.type = type;
         this.localize = localize;
         this.unwrap = unwrap;
-
-        if (localize) {
-            this.title = Labels.getLabel(title);
-        }
-
-        if (this.title == null) {
-            this.title = title;
-        }
-
+        this.title = localize ? Labels.getLabel(title) : title;
     }
 
     @Override
-    public boolean invoke(Event event, Component master, Object controller) throws Exception {
+    public boolean invoke(final Context context) throws Exception {
         try {
-            super.invoke(event, master, controller);
-        } catch (InvocationTargetException ex) { // catch all
-            target = getTypeOf(ex.getTargetException(), type, unwrap);
-            if (target == null) { // is throw instance of catching type?
+            super.invoke(context);
+        } catch (Exception ex) { // catch all            
+            final Throwable throwable = getTypeOf(ex, type, unwrap);            
+            if (throwable == null) { // is throw instance of catching type?                
                 throw ex; // if not, pass through
+            } else {
+                // the exception is a type of throwable
+                // register it in the context
+                context.putParameter( EXCEPTION_EXCEPTION, throwable );
             }
         }
         return true;
     }
 
     @Override
-    protected void doAfter(Event event, Component master, Object controller) {
-        if (target != null) { // is there message to be show?
+    protected void doAfter(final Context context) {
+        final Throwable throwable = ( Throwable ) context.getParameter( EXCEPTION_EXCEPTION );
+        if (throwable != null) { // is there message to be show?
             // show message instead
-            String msg = StringHelper.isNull( message ) ? target.getMessage() : message;
+            String msg = StringHelper.isNull( message ) ? throwable.getMessage() : message;
             if ( localize ) { // error message localization
                 msg = Labels.getLabel( msg, msg );
             }
             Clients.clearBusy();
             Messagebox.show( msg, title, Messagebox.OK, Messagebox.ERROR );
             // message processed
-            target = null;
         }
     }
 

@@ -654,7 +654,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
      */
     public static void registerZkEvents( final Object ctl, final Component component ) {
         AnnotationProcessor processor = AnnotationProcessor.getProcessor( ctl.getClass() );
-        processor.registerTo( component, ctl );
+        processor.registerZkEventsTo( component, ctl );
     }
 
     /**
