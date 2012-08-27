@@ -34,9 +34,9 @@
         </dependency>
         
         <dependency>
-            <groupId>org.zkoss.zk</groupId>
-            <artifactId>zkplus</artifactId>
-            <version>${org.zkframework.version}</version>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>DLBind</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
 
         <dependency>

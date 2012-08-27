@@ -1,0 +1,245 @@
+package cz.datalite.zk.bind;
+
+import java.util.*;
+import org.slf4j.LoggerFactory;
+import org.zkoss.bind.AnnotateBinder;
+import org.zkoss.bind.BindUtils;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Page;
+import org.zkoss.zk.ui.UiException;
+import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.impl.XulElement;
+
+/**
+ * Pomocne metody pro praci s ZK plus bindingem
+ *
+ * @author Jiri Bubnik
+ */
+public abstract class ZKBinderHelper {
+
+    /**
+     * Vraci odkaz na binder
+     *
+     * @param comp komponenta podle ktere ho urci
+     * @return odkaz na binder
+     */
+    public static AnnotateBinder getBinder( Component comp ) {
+        return ( AnnotateBinder ) comp.getAttributeOrFellow( "binder", true );
+    }
+
+    /**
+     * Vraci odkaz na binder
+     *
+     * @param page stranka podle ktere ho urci
+     * @return odkaz na binder
+     */
+    public static AnnotateBinder getBinder( Page page ) {
+        return ( AnnotateBinder ) page.getAttributeOrFellow( "binder", true );
+    }
+
+    /**
+     * Vraci anotaci pro binding
+     *
+     * @param comp komponenta pro kterou se zjistuje
+     * @param attribute nazev atributu komponenty
+     * @param annotation nazev anotace (zjistuje se v skupine "default-bind")
+     * @return anotaci pokud najde nebo null
+     */
+    public static String getBindingAnnotation( Component comp, String attribute, String annotation ) {
+        if ( !(comp instanceof XulElement) )
+            return null;
+
+        org.zkoss.zk.ui.metainfo.Annotation annot = (( XulElement ) comp).getAnnotation( attribute, "default-bind" );
+        if ( annot != null )
+            return annot.getAttribute( annotation );
+        else
+            return null;
+    }
+
+    /**
+     * Vraci anotaci pro default
+     *
+     * @param comp komponenta pro kterou se zjistuje
+     * @param attribute nazev atributu komponenty
+     * @param annotation nazev anotace (zjistuje se v skupine "default")
+     * @return anotaci pokud najde nebo null
+     */
+    public static String getDefaultAnnotation( Component comp, String attribute, String annotation ) {
+        if ( !(comp instanceof XulElement) )
+            return null;
+
+        org.zkoss.zk.ui.metainfo.Annotation annot = (( XulElement ) comp).getAnnotation( attribute, "default" );
+        if ( annot != null )
+            return annot.getAttribute( annotation );
+        else
+            return null;
+    }
+
+    /**
+     * Nahraje vsechny atributy z komponenty
+     *
+     * @param comp komponenta k nastaveni
+     */
+    public static void loadComponent( Component comp ) {
+        if ( comp.getAttributeOrFellow( "binder", true ) instanceof AnnotateDataBinder )
+            (( AnnotateDataBinder ) comp.getAttributeOrFellow( "binder", true )).loadComponent( comp );//, false 
+        else Binder.getBinder( comp ).loadComponent( comp );
+    }
+
+    /**
+     * Nahraje atribut z komponenty
+     *
+     * @param comp komponenta k nastaveni
+     * @param attribute pozadovany atribut
+     */
+    public static void loadComponentAttribute( Component comp, String attribute ) {
+        Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
+    }
+
+    /**
+     * Ulozi komponentu pres binding
+     *
+     * @param comp
+     */
+    public static void saveComponent( Component comp ) {
+        Binder.getBinder( comp ).saveComponent( comp );
+    }
+
+    /**
+     * Vlozi atribut do komponenty
+     *
+     * @param comp komponenta k nastaveni
+     * @param attribute pozadovany atribut
+     */
+    @Deprecated
+    public static void saveComponentAttribute( Component comp, String attribute ) {
+        Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
+    }
+
+    /** undefined binding version */
+    public static final int VERSION_UNDEFINED = 0;
+
+    /** version of data binding */
+    public static final int VERSION_1 = 1;
+
+    /** version of data binding */
+    public static final int VERSION_2 = 2;
+
+    public static int version( Component component ) {
+        final Object binder = component.getAttribute( "binder", true );
+        if ( binder == null ) {
+            LoggerFactory.getLogger( ZKBinderHelper.class ).debug( "Cannot determine binding version. No binder is set." );
+            return VERSION_UNDEFINED;
+        } else if ( binder instanceof AnnotateDataBinder )
+            return VERSION_1;
+        else
+            return VERSION_2;
+    }
+
+    /**
+     *
+     * Nahraje atributy z komponenty
+     *
+     * @param comp komponenta k nastaveni
+     * @param attributes seznam pozadovanych atributu
+     */
+    public static void loadComponentAttributes( Component comp, String[] attributes ) {
+        for ( String attr : attributes ) {
+            loadComponentAttribute( comp, attr );
+        }
+    }
+
+    /**
+     * Pro komponentu nastavi default anotaci pro hodnotu (volani napr.
+     * setValueAnnotation(comp, "model", "aaa") odpovida nastaveni
+     * model="@{aaa}")
+     *
+     * @param comp pro kterou komponentu
+     * @param propName nazev vlastnosti (atributu)
+     * @param annot anotace
+     */
+    public static void setValueAnnotation( XulElement comp, String propName, String annot ) {
+        System.out.println( "set" );
+//        DataBinder binder = getBinder( comp );
+//
+//        // odebrani puvodniho pokud existuje
+//        if ( binder.existBinding( comp, propName ) ) {
+//            binder.removeBinding( comp, propName );
+//        }
+//
+//        // pridani noveho
+//        Map attrs = new HashMap();
+//        attrs.put( "value", annot );
+//        binder.addBinding( comp, propName, annot );
+//
+//        // pokud je prvni bean fellow, tak ho pro jistotu zaregistruji (pokud nebyl pouzit jinde, tak neni zaregistrovany)
+//        String bean = annot;
+//        if ( bean.contains( "." ) ) {
+//            bean = bean.split( "\\." )[0];
+//        }
+//        Component fellowBean = comp.getFellowIfAny( bean );
+//        if ( fellowBean != null ) {
+//            binder.bindBean( bean, fellowBean );
+//        }
+//
+//        // a hned nastavime hodnotu
+//        loadComponentAttribute( comp, propName );
+    }
+
+    /**
+     * Přidá na komponentu anotaci do klíče "default" struktura bude comp ->
+     * property -> "default" -> annotName -> value
+     *
+     * @param component
+     * @param property
+     * @param annotName
+     * @param value
+     * @author Karel Čemus
+     */
+    public static void registerAnnotation( final org.zkoss.zk.ui.AbstractComponent component, final String property, final String annotName, final String value ) {
+        component.addAnnotation( property, annotName, Collections.singletonMap( "value", new String[]{ value } ) );
+    }
+
+    /**
+     * Pro UI kolekci (Grid, Listbox) nalezne souseda v rámci řádku (row,
+     * listitem) podle vestavěného ID. Interně nejprve najde nadrizeny listitem
+     * nebo row a od nej potom dolu hleda komponentu, ktera konci na #ID
+     *
+     * @param comp komponenta se seznamem dětí loadovaných přes binding např.
+     * &lt;listitem self="@{each=lst}"&gt;
+     * @param id ZK id komponenty pro nalezení
+     * @return nalezenou komponentu nebo null
+     */
+    public static Component getBindingSibling( Component comp, String id ) {
+        String suffix = "#" + id;
+
+        Component parent = comp;
+        while ( parent != null && !((parent instanceof Listitem)
+                || (parent instanceof Row)) ) {
+            parent = parent.getParent();
+        }
+
+        if ( parent == null )
+            throw new UiException( "Method getBindingSibling is supported only for component under Listitem." );
+
+        Queue<Component> comps = new LinkedList();
+        comps.add( parent );
+
+        while ( !comps.isEmpty() ) {
+            Component compare = comps.poll();
+            if ( compare.getId().endsWith( suffix ) )
+                return compare;
+            for ( Component child : ( List<Component> ) compare.getChildren() ) {
+                comps.add( child );
+            }
+        }
+
+        return null;
+    }
+
+    public static void notifyChange( Object bean, String model ) {
+        BindUtils.postNotifyChange( null, null, bean, model );
+    }
+}
