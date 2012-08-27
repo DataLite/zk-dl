@@ -20,12 +20,12 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
-import org.zkoss.zkplus.databind.DataBinder;
 
 /**
  * <p>Handles binding request before and after method invocation. For
@@ -75,7 +75,7 @@ public class ZkBindingHandler extends Handler {
     protected boolean doBefore( final Context context ) {
         for ( String id : saveBefore ) {
             Component component = getComponent( id, context.getRoot() );
-            getBinder( component ).saveComponent( component );
+            ZKBinderHelper.helper( component ).saveComponent( component );
         }
         return true;
     }
@@ -84,7 +84,7 @@ public class ZkBindingHandler extends Handler {
     protected void doAfter( final Context context ) {
         for ( String id : loadAfter ) {
             Component component = getComponent( id, context.getRoot() );
-            getBinder( component ).loadComponent( component );
+            ZKBinderHelper.helper( component ).loadComponent( component );
         }
     }
 
@@ -94,14 +94,5 @@ public class ZkBindingHandler extends Handler {
         } catch ( ComponentNotFoundException ex ) {
             throw new ComponentNotFoundException( "ZkBinding could not be registered on component \"" + id + "\" because component wasn\'t found.", ex );
         }
-    }
-
-    /**
-     * Vraci odkaz na binder
-     * @param comp komponenta podle ktere ho urci
-     * @return odkaz na binder
-     */
-    private static DataBinder getBinder( Component comp ) {
-        return ( DataBinder ) comp.getAttributeOrFellow( "binder", true );
     }
 }
