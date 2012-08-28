@@ -546,6 +546,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             {
                 listboxExtController.refreshDataModel();
                 listboxExtController.setSelectedItem( this.getSelectedItem() );
+                listboxExtController.setSelectedItems( Collections.singleton( this.getSelectedItem() ) );
             }
         }
 
