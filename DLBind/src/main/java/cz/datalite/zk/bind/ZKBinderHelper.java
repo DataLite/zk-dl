@@ -23,14 +23,19 @@ public abstract class ZKBinderHelper {
     /** returns proper instance of binder helper based on binding version */
     public static BinderHelper helper( Component component ) {
         final Object binder = component.getAttribute( "binder", true );
+        
+        final boolean hasBinderId = component.getRoot().getAttribute( "$BINDER_ID$" ) != null;
+        
+        final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
 
-        if ( binder == null )
+        // if it has none or both, then that is the problem
+        if ( binder == null && ( !hasComposer ^ hasBinderId ) )
             throw new IllegalArgumentException( "Component doesn't have assigned any binder." );
 
-        if ( binder instanceof AnnotateDataBinder )
+        if ( ( binder != null && binder instanceof AnnotateDataBinder ) || hasComposer )
             return BinderHelperV1.INSTANCE;
 
-        if ( binder instanceof Binder )
+        if ( ( binder != null && binder instanceof Binder ) || hasBinderId )
             return BinderHelperV2.INSTANCE;
 
         throw new UnsupportedOperationException( "Component has attached unsupported version of data binder." );
@@ -38,7 +43,15 @@ public abstract class ZKBinderHelper {
 
     /** Returns wheather or not the component has attached any binder instance */
     public static boolean hasBinder( Component component ) {
-        return component != null && component.getAttribute( "binder", true ) != null;
+        if ( component == null ) return false;
+        
+        final Object binder = component.getAttribute( "binder", true );
+        
+        final boolean hasBinderId = component.getRoot().getAttribute( "$BINDER_ID$" ) != null;
+        
+        final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
+
+        return binder != null || ( hasComposer ^ hasBinderId );
     }
 
     /** @see BinderHelper#loadComponent */
