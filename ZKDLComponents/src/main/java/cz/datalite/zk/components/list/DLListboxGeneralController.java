@@ -30,6 +30,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.Paging;
 
 /**
@@ -134,6 +135,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      */
     protected void initListbox( final DLListbox comp ) {
         listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp, autoinit );
+
+        // test if the component is written using new databinding
+        // if so, initiate it properly
+        Template template = comp.getTemplate( "model" );
+        if ( template != null )
+            getListboxController().setRendererTemplate( template );
     }
 
     /**

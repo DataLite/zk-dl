@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.bind.BindContext;
+import org.zkoss.bind.Converter;
+import org.zkoss.zkplus.databind.TypeConverter;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -281,15 +284,28 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         this.converter = converter;
     }
 
-    public void setConverter( final String converter, final Component comp ) {
+    public void setConverter( String converter, final Component comp ) {
         try {
             if ( converter == null || converter.length() == 0 ) {
                 setConverter( null );
                 return;
             }
+                   
+            // trim the quotes if any
+            if (converter.startsWith( "'") && converter.endsWith( "'")) {
+                converter = converter.substring( 1, converter.length()-1 );
+            }
 
             try {
-                setConverter( Class.forName( converter ).getMethod( "coerceToUi", Object.class, Component.class ) );
+                Class converterInstance = Class.forName( converter );
+                
+                // if it is the converter for ZK5--                
+                if ( TypeConverter.class.isAssignableFrom( converterInstance) )
+                    setConverter( converterInstance.getMethod( "coerceToUi", Object.class, Component.class ) );
+                // else if it is the converter for ZK6++
+                else if ( Converter.class.isAssignableFrom( converterInstance) )
+                    setConverter( Class.forName( converter ).getMethod( "coerceToUi", Object.class, Component.class, BindContext.class ) );
+
                 return;
             } catch ( Exception ex ) {
                 if ( converter.contains( "." ) ) {
@@ -314,8 +330,10 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                     }
                 }
             }
-
-            throw new IllegalArgumentException( "Unsupported class type in converter. org.zkoss.zkplus.databind.TypeConverter is required instead of " + converter );
+            throw new IllegalArgumentException( "Unsupported class type in converter. "
+                    + "'org.zkoss.zkplus.databind.TypeConverter' of "
+                    + "'org.zkoss.bind.Converter' is required instead "
+                    + "of given '" + converter + "'." );
         } catch ( Exception ex ) {
             throw new IllegalArgumentException( ex );
         }
