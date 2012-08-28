@@ -45,7 +45,7 @@ public abstract class ZKBinderHelper {
     public static void loadComponent( Component comp ) {
         if ( hasBinder( comp ) ) helper( comp ).loadComponent( comp );
         else
-            LOGGER.warn( "Attempt to load a component but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to load a component but it is null or has not attached any binder." );
     }
 
     /** @see BinderHelper#loadComponentAttribute */
@@ -54,14 +54,14 @@ public abstract class ZKBinderHelper {
         if ( hasBinder( comp ) )
             helper( comp ).loadComponentAttribute( comp, attribute );
         else
-            LOGGER.warn( "Attempt to load a component's attribute but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to load a component's attribute but it is null or has not attached any binder." );
     }
 
     /** @see BinderHelper#saveComponent */
     public static void saveComponent( Component comp ) {
         if ( hasBinder( comp ) ) helper( comp ).saveComponent( comp );
         else
-            LOGGER.warn( "Attempt to save a component but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to save a component but it is null or has not attached any binder." );
     }
 
     /** @see BinderHelper#saveComponentAttribute */
@@ -70,7 +70,7 @@ public abstract class ZKBinderHelper {
         if ( hasBinder( comp ) )
             helper( comp ).saveComponentAttribute( comp, attribute );
         else
-            LOGGER.warn( "Attempt to save a component's attribute but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to save a component's attribute but it is null or has not attached any binder." );
     }
 
     /** @see BinderHelper#loadComponentAttributes */
@@ -79,7 +79,7 @@ public abstract class ZKBinderHelper {
         if ( hasBinder( comp ) )
             helper( comp ).loadComponentAttributes( comp, attributes );
         else
-            LOGGER.warn( "Attempt to load a component's attributes but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to load a component's attributes but it is null or has not attached any binder." );
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class ZKBinderHelper {
         if ( hasBinder( component ) )
             helper( component ).registerAnnotation( component, property, annotName, value );
         else
-            LOGGER.warn( "Attempt to load a component but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to register an annotation on the component but it has not attached any binder." );
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class ZKBinderHelper {
     public static void notifyChange( Component comp, Object bean, String model ) {
         if ( hasBinder( comp ) ) helper( comp ).notifyChange( bean, model );
         else
-            LOGGER.warn( "Attempt to load a component but it has null or has not attached any binder." );
+            LOGGER.warn( "Attempt to load a component but it is null or has not attached any binder." );
     }
     
     /** unrecognized version number */
