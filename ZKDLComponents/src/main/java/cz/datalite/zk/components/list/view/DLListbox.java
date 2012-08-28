@@ -62,28 +62,6 @@ public class DLListbox extends Listbox {
         }
     }
 
-//    /**
-//     * <p>Sets selected index and optionaly send event onSelect.
-//     * Acceptable values are -1 for null and from 0 to model.size()</p>
-//     *
-//     * <p>This method can be used to reset selected item. For example
-//     * it can be called from {@link cz.datalite.zk.components.list.DLListboxGeneralController#loadData(java.util.List, int, int, java.util.List) .}
-//     * and its implementations like {@link cz.datalite.zk.components.list.DLListboxSimpleController#loadData(java.util.List, int, int, java.util.List)}
-//     * and {@link cz.datalite.zk.components.list.DLListboxCriteriaController#loadData(cz.datalite.dao.DLSearch)}.</p>
-//     * when m
-//     * @param index new selected index
-//     * @param sendOnSelect send onSelect event
-//     */
-//    public void setSelectedIndex( final int index, final boolean sendOnSelect ) {
-//        if ( getSelectedIndex() == index ) {
-//            return;
-//        }
-//        setSelectedIndex( index );
-//        if ( sendOnSelect ) {
-//            Events.postEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems() ) );
-//        }
-//    }
-
     @Override
     public void setSelectedIndex( int jsel ) {
         if ( !EqualsHelper.isEqualsNull( jsel, getSelectedIndex() ) && getModel().getSize() > jsel ) {

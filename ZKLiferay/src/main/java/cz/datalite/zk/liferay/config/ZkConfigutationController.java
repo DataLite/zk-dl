@@ -9,11 +9,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
-import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.stereotype.Autowired;
 import cz.datalite.stereotype.Controller;
 import cz.datalite.zk.annotation.ZkModel;
 import cz.datalite.zk.annotation.ZkParameter;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.composer.DLComposer;
 import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.liferay.DLLiferayService;
@@ -265,7 +265,7 @@ public class ZkConfigutationController<T extends DLMainModel> extends DLComposer
 
 
             // load all bindings
-            ZKBinderHelper.getBinder(self).loadAll();
+            ZKBinderHelper.loadComponent( self );
             
         } catch (ReadOnlyException e) {
             throw new LiferayOperationDenied("Preferences are read only, cannot reset.", e);
