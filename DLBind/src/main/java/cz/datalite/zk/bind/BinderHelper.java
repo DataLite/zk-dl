@@ -72,4 +72,11 @@ public interface BinderHelper {
      * @since ZK-DL 1.4.0 and ZK 6, binding 2.0
      */
     void notifyChange( Object bean, String model );
+
+    /**
+     * Returns the version of data binding what the helper supports
+     *
+     * @return version of data binding
+     */
+    int version();
 }

@@ -57,6 +57,10 @@ import org.zkoss.zkplus.databind.DataBinder;
         throw new UnsupportedOperationException( "Not supported in this version of databinding. Please use binding 2.0 or later." );
     }
 
+    public int version() {
+        return 1;
+    }
+
     protected DataBinder getBinder( Component comp ) {
         return ( DataBinder ) comp.getAttributeOrFellow( "binder", true );
     }
