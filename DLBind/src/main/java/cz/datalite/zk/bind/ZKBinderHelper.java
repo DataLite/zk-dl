@@ -103,4 +103,13 @@ public abstract class ZKBinderHelper {
         else
             LOGGER.warn( "Attempt to load a component but it has null or has not attached any binder." );
     }
+    
+    /** unrecognized version number */
+    public static final int NOT_DEFINED = -1;
+
+    /** @see BinderHelper#version */
+    public static int version( Component comp ) {
+        if ( hasBinder( comp ) ) return helper( comp ).version();
+        else return NOT_DEFINED;
+    }
 }
