@@ -10,7 +10,9 @@ import org.zkoss.zk.ui.util.Composer;
  *
  * @param <T> main combobox entity
  * @author Karel Čemus <cemus@datalite.cz>
+ * @deprecated since 1.4.0, ZK 6, databinding 2. This component is not usable anymore
  */
+@Deprecated
 public interface DLComboboxController<T> extends Composer, Cascadable<T> {
 
     /**

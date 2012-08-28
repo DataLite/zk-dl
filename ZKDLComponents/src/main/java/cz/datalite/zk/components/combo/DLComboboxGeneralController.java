@@ -23,7 +23,9 @@ import java.util.Collections;
  * on the follower and that is all.
  * @param <T> main entity in the combobox
  * @author Karel Čemus <cemus@datalite.cz>
+ * @deprecated since 1.4.0, ZK 6, databinding 2. This component is not usable anymore
  */
+@Deprecated
 public abstract class DLComboboxGeneralController<T> implements DLComboboxExtController<T>, Composer {
 
     // cascade

@@ -1,6 +1,6 @@
 package cz.datalite.zk.components.list.controller.impl;
 
-import cz.datalite.helpers.ZKBinderHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;

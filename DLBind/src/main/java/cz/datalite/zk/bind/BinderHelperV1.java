@@ -1,5 +1,6 @@
 package cz.datalite.zk.bind;
 
+import java.util.Collections;
 import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zkplus.databind.Binding;
@@ -48,13 +49,15 @@ import org.zkoss.zkplus.databind.DataBinder;
     }
 
     public void registerAnnotation( AbstractComponent component, String property, String annotName, String value ) {
-        final java.util.Map<String, String[]> map = new java.util.HashMap<String, String[]>();
-        map.put( annotName, new String[]{ value } );
-        component.addAnnotation( property, "default", map );
+        component.addAnnotation( property, "default", Collections.singletonMap( annotName, new String[]{ value } ) );
     }
 
     public void notifyChange( Object bean, String model ) {
         throw new UnsupportedOperationException( "Not supported in this version of databinding. Please use binding 2.0 or later." );
+    }
+
+    public int version() {
+        return 1;
     }
 
     protected DataBinder getBinder( Component comp ) {

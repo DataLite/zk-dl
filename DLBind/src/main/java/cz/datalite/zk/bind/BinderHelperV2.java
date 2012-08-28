@@ -48,4 +48,8 @@ import org.zkoss.zk.ui.Component;
     public void notifyChange( Object bean, String model ) {
         BindUtils.postNotifyChange( null, null, bean, model );
     }
+
+    public int version() {
+        return 2;
+    }
 }

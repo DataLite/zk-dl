@@ -8,6 +8,7 @@ import org.zkoss.zul.Listitem;
 
 import java.util.List;
 import java.util.Set;
+import org.zkoss.zk.ui.util.Template;
 
 /**
  * Interface for the listbox component controller which reacts
@@ -59,9 +60,23 @@ public interface DLListboxComponentController<T> {
 
     /**
      * Sets renderer template.
+     *
      * @param item renderer template
+     * @deprecated since ZK 6 and databinding 2.0. This method worked in
+     * Databinding 1.0
      */
+    @Deprecated
     void setRendererTemplate( Listitem item );
+    
+    /**
+     * Sets renderer template which come with Databinding 2.0
+     *
+     * @param item renderer template
+     *
+     * @since ZK 6
+     */
+    void setRendererTemplate( Template template );
+
 
     /**
      * Refreshes all binding.
@@ -78,6 +93,7 @@ public interface DLListboxComponentController<T> {
      * Sets selected item to the component.
      * @param selectedItem selected item
      */
+    @Deprecated
     void setSelectedItem( T selectedItem );
 
     /**
@@ -90,12 +106,14 @@ public interface DLListboxComponentController<T> {
      * Sets seltected items to the listbox
      * @param selectedItems selected items
      */
+    @Deprecated
     void setSelectedItems(Set<T> selectedItems);
 
     /**
      * Sets selected index to the component.
      * @param selectedIndex index of the selected item
      */
+    @Deprecated
     void setSelectedIndex( int selectedIndex );
 
     /**
@@ -158,4 +176,31 @@ public interface DLListboxComponentController<T> {
      * @return listbox uuid, paging uuid, qf uuid
      */
     String getUuidsForTest();
+    
+    /**
+     * Updates the listitem to reflect desired column order as is defined in the
+     * model. This approach is used since ZK 6 because in this version the
+     * Listbox template is share accross all the users and the sessions so there
+     * is no possible to change the template directly. Instead of that the
+     * renderer asks the controller for each listitem to "fix" the column order.
+     * 
+     * This methos is intended to be called from the renderer only.
+     *
+     * @param item freshly rendered listitem
+     */
+    void updateListItem( Listitem item );
+    
+    /**
+     * Sets selected item to the listbox
+     *
+     * @param selectedItems selected items
+     */
+    void setSelected( final T selectedItem );
+
+    /**
+     * Sets selected items to the listbox
+     *
+     * @param selectedItems selected items
+     */
+    void setSelected( final T selectedItem, final Set<T> selectedItems );
 }
