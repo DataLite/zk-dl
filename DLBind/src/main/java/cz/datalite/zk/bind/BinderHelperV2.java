@@ -1,6 +1,8 @@
 package cz.datalite.zk.bind;
 
 import java.util.Collections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Component;
@@ -15,24 +17,39 @@ import org.zkoss.zk.ui.Component;
 
     /* package */ static final BinderHelperV2 INSTANCE = new BinderHelperV2();
 
+    /** logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger( BinderHelperV2.class );
+
     protected BinderHelperV2() {
         // inner library class, singleton
     }
 
     public void loadComponent( Component comp ) {
-        Binder.getBinder( comp ).loadComponent( comp );
+        if ( Binder.getBinder( comp ) == null )
+            LOGGER.debug( "Binding on the component '{}' cannot be loaded, the component is detached.", comp.getId() );
+        else
+            Binder.getBinder( comp ).loadComponent( comp );
     }
 
     public void loadComponentAttribute( Component comp, String attribute ) {
-        Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
+        if ( Binder.getBinder( comp ) == null )
+            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be loaded, the component is detached.", attribute, comp.getId() );
+        else
+            Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
     }
 
     public void saveComponent( Component comp ) {
-        Binder.getBinder( comp ).saveComponent( comp );
+        if ( Binder.getBinder( comp ) == null )
+            LOGGER.debug( "Binding on the component '{}' cannot be saved, the component is detached.", comp.getId() );
+        else
+            Binder.getBinder( comp ).saveComponent( comp );
     }
 
     public void saveComponentAttribute( Component comp, String attribute ) {
-        Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
+        if ( Binder.getBinder( comp ) == null )
+            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be saved, the component is detached.", attribute, comp.getId() );
+        else
+            Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
     }
 
     public void loadComponentAttributes( Component comp, String[] attributes ) {
