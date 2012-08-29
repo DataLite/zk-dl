@@ -75,7 +75,7 @@ public class ZkBindingHandler extends Handler {
     protected boolean doBefore( final Context context ) {
         for ( String id : saveBefore ) {
             Component component = getComponent( id, context.getRoot() );
-            ZKBinderHelper.helper( component ).saveComponent( component );
+            ZKBinderHelper.saveComponent( component );
         }
         return true;
     }
@@ -84,7 +84,7 @@ public class ZkBindingHandler extends Handler {
     protected void doAfter( final Context context ) {
         for ( String id : loadAfter ) {
             Component component = getComponent( id, context.getRoot() );
-            ZKBinderHelper.helper( component ).loadComponent( component );
+            ZKBinderHelper.loadComponent( component );
         }
     }
 
