@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.util.resource.Labels;
 
 /**
  * Pomocne funkce pro ZK framework
@@ -22,6 +25,9 @@ import java.util.Map;
 public class ZKHelper
 {
 
+    /** logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger( ZKHelper.class );
+    
     /**
      * Checks, if parameter exists in arg map and returns its value (it might be null) or the default value.
      * Target class is required for type safety, result type is checked and if not matched, exception is thrown.
@@ -336,7 +342,10 @@ public class ZKHelper
     {
         return openDetailWindow(master, uri, args, refreshEvent, null);
     }
-
+    
+    /** flag attribute to detect the pages with already opened the detail */
+    private static final String DETAIL_WINDOW = "detail.window";
+    
     /**
      * Create new window with Executions.createComponents() and opens it in highlighted mode.
      * It registers ZkEvents.ON_REFRESH to master window - refresh after detail calls ZkEvents.ON_REFRESH_PARENT.
@@ -347,8 +356,22 @@ public class ZKHelper
      * @param refreshEvent custom refresh event name - it must start with on (line onMyEvent)
      * @return created window
      */
-    public static Window openDetailWindow(Component master, String uri, Map args, String refreshEvent, EventListener eventListener)
+    public static Window openDetailWindow(final Component master, String uri, Map args, String refreshEvent, EventListener eventListener)
     {
+        // if the detail is already opened, prevent the reopening 
+        if ( master.getAttribute( DETAIL_WINDOW ) != null ) {
+            // get the UUID of the last created detail
+            final String uuid = (String) master.getAttribute( DETAIL_WINDOW );
+            // try if still exists
+            if ( master.getDesktop().getComponentByUuidIfAny( uuid ) != null ) {
+                // if so, report and close it
+                LOGGER.warn( "Detail window is already opened. Opening of the another one was forbidden." );
+                Messagebox.show( Labels.getLabel( "zkcomposer.detail.opened.message" ), Labels.getLabel( "zkcomposer.detail.opened.title" ), Messagebox.OK, Messagebox.INFORMATION );
+                return ( Window ) master.getAttribute( DETAIL_WINDOW );
+            }
+        }
+        
+        
         Component comp = Executions.createComponents(uri, null, args);
         assert comp instanceof Window : "Bad ZUL file for ZkHelper.openDetail function. ZUL must contain one root componente with type Window.";
 
@@ -363,6 +386,8 @@ public class ZKHelper
         {
             detail.addEventListener(ZkEvents.ON_REFRESH_PARENT, eventListener);
         }
+        
+        master.setAttribute( DETAIL_WINDOW, detail.getUuid() );
 
         detail.doHighlighted();
 
