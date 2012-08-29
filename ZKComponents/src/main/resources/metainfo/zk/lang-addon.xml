@@ -23,7 +23,7 @@
     <version>
         <version-class>metainfo.zk.Version</version-class>
         <version-uid>5.0.0</version-uid>
-        <zk-version>5.0.1</zk-version><!-- or later -->
+        <zk-version>6.0.2</zk-version><!-- or later -->
     </version>
 
     <zscript language="Java">
