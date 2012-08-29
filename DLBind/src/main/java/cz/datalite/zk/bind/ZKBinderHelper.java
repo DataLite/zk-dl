@@ -40,6 +40,20 @@ public abstract class ZKBinderHelper {
 
         throw new UnsupportedOperationException( "Component has attached unsupported version of data binder." );
     }
+    
+    /** Returns wheather or not the binder is detectable and is supposed to be
+     * attached in the future */
+    public static boolean hasDetachedBinder( Component component ) {
+        if ( component == null ) return false;
+
+        final Object binder = component.getAttribute( "binder", true );
+
+        final boolean hasBinderId = component.getRoot().getAttribute( "$BINDER_ID$" ) != null;
+
+        final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
+
+        return binder != null || (hasComposer ^ hasBinderId);
+    }
 
     /** Returns wheather or not the component has attached any binder instance */
     public static boolean hasBinder( Component component ) {
@@ -47,13 +61,9 @@ public abstract class ZKBinderHelper {
         
         final Object binder = component.getAttribute( "binder", true );
         
-        final boolean hasBinderId = component.getRoot().getAttribute( "$BINDER_ID$" ) != null;
-        
-        final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
-
-        return binder != null || ( hasComposer ^ hasBinderId );
+        return binder != null; // || ( hasComposer ^ hasBinderId );
     }
-
+    
     /** @see BinderHelper#loadComponent */
     public static void loadComponent( Component comp ) {
         if ( hasBinder( comp ) ) helper( comp ).loadComponent( comp );
@@ -100,7 +110,7 @@ public abstract class ZKBinderHelper {
      * binding and also the component to be annotated
      * @see BinderHelper#registerAnnotation */
     public static void registerAnnotation( final AbstractComponent component, final String property, final String annotName, final String value ) {
-        if ( hasBinder( component ) )
+        if ( hasDetachedBinder( component ) )
             helper( component ).registerAnnotation( component, property, annotName, value );
         else
             LOGGER.warn( "Attempt to register an annotation on the component but it has not attached any binder." );
@@ -112,7 +122,7 @@ public abstract class ZKBinderHelper {
      * @see BinderHelper#notifyChange
      */
     public static void notifyChange( Component comp, Object bean, String model ) {
-        if ( hasBinder( comp ) ) helper( comp ).notifyChange( bean, model );
+        if ( hasDetachedBinder( comp ) ) helper( comp ).notifyChange( bean, model );
         else
             LOGGER.warn( "Attempt to load a component but it is null or has not attached any binder." );
     }
@@ -122,7 +132,7 @@ public abstract class ZKBinderHelper {
 
     /** @see BinderHelper#version */
     public static int version( Component comp ) {
-        if ( hasBinder( comp ) ) return helper( comp ).version();
+        if ( hasDetachedBinder( comp ) ) return helper( comp ).version();
         else return NOT_DEFINED;
     }
 }
