@@ -14,7 +14,7 @@
 	<!-- The name of this addon. It must be unique -->
     <addon-name>ZKDLComponents</addon-name>
 	<!-- Specifies what other addon this depends -->
-    <depends>databind,zkplus,zkex,zkmax</depends>
+    <depends>databind,zkplus,zkbind</depends>
 
 	<!-- Which language this addon will be added to -->
     <language-name>xul/html</language-name>
@@ -221,38 +221,6 @@ e%3D0%3B
             <attribute>
                 <attribute-name>converter</attribute-name>
                 <attribute-value>cz.datalite.zk.databinder.SelectedItemsConverter</attribute-value>
-            </attribute>
-        </annotation>
-        <annotation>
-            <annotation-name>ZKBIND</annotation-name>
-            <property-name>selectedItem</property-name>
-            <attribute>
-                <attribute-name>SAVE_EVENT</attribute-name>
-                <attribute-value>onSelect</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>LOAD_EVENT</attribute-name>
-                <attribute-value>onAfterRender</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>ACCESS</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-        </annotation>
-        <annotation>
-            <annotation-name>ZKBIND</annotation-name>
-            <property-name>selectedItems</property-name>
-            <attribute>
-                <attribute-name>SAVE_EVENT</attribute-name>
-                <attribute-value>onSelect</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>LOAD_EVENT</attribute-name>
-                <attribute-value>onAfterRender</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>ACCESS</attribute-name>
-                <attribute-value>both</attribute-value>
             </attribute>
         </annotation>
     </component>
