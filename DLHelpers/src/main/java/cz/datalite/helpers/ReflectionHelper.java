@@ -580,6 +580,17 @@ public abstract class ReflectionHelper
 
         return clazz.getDeclaredField(name);
     }
+    
+    public static boolean hasField(Class clazz, String name) {
+        try {
+            getDeclaredField( clazz, name );
+            return true;
+        } catch ( NoSuchFieldException ex ) {
+            return false;
+        } catch ( NoSuchElementException ex ) {
+            return false;
+        }
+    }
 
     /**
      * Ziskani getteru dane polozky
