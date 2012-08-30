@@ -247,7 +247,8 @@ public class DLListbox extends Listbox {
     }
     
     /** package */ void updateListItem( Listitem item ) {
-        controller.updateListItem( item );
+        if ( controller != null)
+            controller.updateListItem( item );
     }
 
     class OnCreateListener implements EventListener<Event> {
