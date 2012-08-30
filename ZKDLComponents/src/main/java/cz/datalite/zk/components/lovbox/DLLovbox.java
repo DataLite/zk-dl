@@ -159,25 +159,29 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             final Listhead head = new DLListhead(); // create lishead and listitem
             listbox.appendChild( head );
 
-            final Listitem item = new Listitem();
-            listbox.appendChild( item );
-            // add renderer annotation
-            item.addAnnotation( null, "default", Collections.singletonMap( "each", new String[]{ "row" + getUuid() } ) );
+            if ( this.labelProperties == null )
+                    throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
+            
+            if ( ZKBinderHelper.version( this ) == 1 ) {
+                // binding template for databinding version 1.0
+                final Listitem item = new Listitem();
+                listbox.appendChild( item );
+                // add renderer annotation
+                item.addAnnotation( null, "default", Collections.singletonMap( "each", new String[]{ "row" + getUuid() } ) );
 
-            if ( this.labelProperties == null ) {
-                throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
-            }
+                //int i = 0;
+                for ( String property : this.labelProperties ) {
+                    //String hflex = hflexes == null ? null : hflexes.length >= i ? null : hflexes[i++];
+                    this.createCell( property ); // create columns with properties
+                }
 
-            int i=0;
-            for ( String property : this.labelProperties ) {
-                String hflex = hflexes == null ? null : hflexes.length >= i ? null : hflexes[i++];
-                this.createCell( property); // create columns with properties
+                if ( descriptionProperty != null ) // if it is defined create description column
+                    createCell( descriptionProperty );
+            } else if (ZKBinderHelper.version( this ) == 2 ) {
+                // binding template for databinding version 2.0
+                listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty ) );
             }
-
-            if ( descriptionProperty != null ) // if it is defined create description column
-            {
-                createCell( descriptionProperty );
-            }
+            
             if ( filterCompiler != null ) {
                 (( DLListheader ) listbox.getFirstChild().getFirstChild()).setFilterCompiler( filterCompiler );
             }

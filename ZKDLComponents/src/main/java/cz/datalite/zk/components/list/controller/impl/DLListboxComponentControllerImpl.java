@@ -312,6 +312,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
     
     private void updateListhead() {
+        // model is not initialized
+        if ( listheaderTemplates.isEmpty() ) return;
+        
         final Listhead listhead = listbox.getListhead();
         // remove all children
         listhead.getChildren().clear();
@@ -330,6 +333,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     /** updates the listitem (order of cells) when it uses the new databinding */
     public void updateListItem( Listitem item ) {
+        // test wheather the listcell indicies is initialized
+        if (listcellIndicies.size() == 1 ) return;
+        
         listcellBuffer.addAll( item.getChildren() );
 
         final List<Component> listcells = item.getChildren();
@@ -362,6 +368,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             this.listbox.setAttribute( "cmpCtl", DLListboxComponentControllerImpl.this );
             ZKBinderHelper.registerAnnotation( listbox, "model", "load", "cmpCtl.listboxModel" );
 
+            if (!ReflectionHelper.hasField( template.getClass(), "_tempInfo" ) ) return;
             TemplateInfo info = ( TemplateInfo ) ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
             
             List<NodeInfo> nodes = info.getChildren();
