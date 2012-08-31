@@ -368,7 +368,19 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             this.listbox.setAttribute( "cmpCtl", DLListboxComponentControllerImpl.this );
             ZKBinderHelper.registerAnnotation( listbox, "model", "load", "cmpCtl.listboxModel" );
 
-            if (!ReflectionHelper.hasField( template.getClass(), "_tempInfo" ) ) return;
+            if (!ReflectionHelper.hasField( template.getClass(), "_tempInfo" ) ) {
+                // listbox doesn't have a template but it can has some configuration on listheaders
+                // try to determine data types based on listheader configuration
+                for( DLColumnUnitModel unit : columnModel.getColumnModels() ) {
+                    if ( unit.isColumn() && unit.getColumnType() == null ) {
+                        unit.setColumnType( getFieldType( masterController.getEntityClass(), unit.getColumn() ) );
+                    }
+                }
+                
+                return;
+            }
+            
+            
             TemplateInfo info = ( TemplateInfo ) ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
             
             List<NodeInfo> nodes = info.getChildren();
@@ -403,10 +415,15 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             ComponentInfo info = ( ComponentInfo ) cell;
 
             String bindingText = null;
-            if ( info.getAnnotationMap() != null )
+            if ( info.getAnnotationMap() != null ) {
                 bindingText = info.getAnnotationMap().getAnnotation( "label", "load" ) != null
                         ? info.getAnnotationMap().getAnnotation( "label", "load" ).getAttribute( "value" )
                         : null;
+                
+                bindingText = info.getAnnotationMap().getAnnotation( "label", "bind" ) != null
+                        ? info.getAnnotationMap().getAnnotation( "label", "bind" ).getAttribute( "value" )
+                        : bindingText;
+            }
 
             String converter = null;
 

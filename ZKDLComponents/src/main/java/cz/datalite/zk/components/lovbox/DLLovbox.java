@@ -180,6 +180,21 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             } else if (ZKBinderHelper.version( this ) == 2 ) {
                 // binding template for databinding version 2.0
                 listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty ) );
+                
+                for ( String property : this.labelProperties ) {
+                    // header
+                    final DLListheader header = new DLListheader();
+                    header.setColumn( property );
+                    head.appendChild( header );
+                }
+                
+                if ( searchProperty != null ) // if search property is defined create search column
+                    ( ( DLListheader ) head.getFirstChild() ).setColumn( searchProperty );
+                if (descriptionProperty != null) {
+                    final DLListheader header = new DLListheader();
+                    header.setColumn( descriptionProperty );
+                    head.appendChild( header );
+                }
             }
             
             if ( filterCompiler != null ) {
