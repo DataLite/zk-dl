@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.SystemException;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
@@ -324,7 +325,7 @@ public final class ZkAnnotationUtils {
             boolean zkConfirm = false;
             boolean zkBinding = false;
             for ( Annotation annot : method.getDeclaredAnnotations() ) {
-                if ( annot instanceof ZkEvent || annot instanceof ZkEvents ) {
+                if ( annot instanceof ZkEvent || annot instanceof ZkEvents || annot instanceof Command ) {
                     zkEvent = true;
                     continue;
                 } else if ( annot instanceof ZkConfirm ) {
