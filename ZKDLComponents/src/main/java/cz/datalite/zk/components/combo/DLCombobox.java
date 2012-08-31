@@ -1,5 +1,7 @@
 package cz.datalite.zk.components.combo;
 
+import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
@@ -12,11 +14,16 @@ import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.Constraint;
 
-import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
 import cz.datalite.zk.components.constraint.DLConstraint;
+import java.util.Collections;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zk.ui.metainfo.ComponentInfo;
+import org.zkoss.zk.ui.metainfo.NodeInfo;
+import org.zkoss.zk.ui.metainfo.TemplateInfo;
+import org.zkoss.zk.ui.util.Template;
 
 /**
  * <p>Extended combobox which allows loading data from the datastore on the onOpen
@@ -143,14 +150,18 @@ public class DLCombobox<T> extends Combobox implements CascadableComponent {
      * @param model new combobox model
      */
     protected void setListModel( final List<T> model ) {
-        setModel( new BindingListModelList( model, true ) );
+         if ( ZKBinderHelper.version( this ) == 1 )
+            setModel( new BindingListModelList( model, true ) );
     }
 
     /**
      * Notifies combobox that model changed so model load is required
      */
     public void fireModelChanges() {
-        setListModel( controller.getModel() );
+        if ( ZKBinderHelper.version( this ) == 1 )
+            setListModel( controller.getModel() );
+        else if ( ZKBinderHelper.version( this ) == 2 )
+            ZKBinderHelper.notifyChange( this, controller, "innerModel" );
     }
 
     /**
@@ -192,6 +203,9 @@ public class DLCombobox<T> extends Combobox implements CascadableComponent {
      */
     public void registerController( final DLComboboxExtController<T> controller ) {
         this.controller = controller;
+        setAttribute( "cmpCtl", controller );
+        if (ZKBinderHelper.version( this ) == 2 )
+            ZKBinderHelper.registerAnnotation( this, "model", "load", "cmpCtl.innerModel" );
     }
 
     @Override
@@ -266,15 +280,57 @@ public class DLCombobox<T> extends Combobox implements CascadableComponent {
     public CascadableExt getCascadableController() {
         return controller;
     }
+    
+     /** logger */
+    protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLCombobox.class );
 
+    @Override
+    public Template setTemplate( String name, Template template ) {
+
+        if ( ReflectionHelper.hasField( template.getClass(), "_tempInfo" ) )
+            try {
+                TemplateInfo info = ( TemplateInfo ) ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
+
+                List<NodeInfo> nodes = info.getChildren();
+                NodeInfo comboitem = nodes.get( 0 );
+                
+                ComponentInfo componentInfo = ( ComponentInfo ) comboitem;
+
+                if ( componentInfo.getAnnotationMap() != null ) {
+                    label = componentInfo.getAnnotationMap().getAnnotation( "label", "load" ) != null
+                            ? componentInfo.getAnnotationMap().getAnnotation( "label", "load" ).getAttribute( "value" )
+                            : null;
+                    label = componentInfo.getAnnotationMap().getAnnotation( "label", "bind" ) != null
+                            ? componentInfo.getAnnotationMap().getAnnotation( "label", "bind" ).getAttribute( "value" )
+                            : label;
+                }
+              
+                if ( label != null && label.indexOf( '.' ) > -1 )
+                    label = label.substring( label.indexOf( '.' ) + 1 );
+                else
+                    label = null;
+
+            } catch ( Exception ex ) {
+                LOGGER.error( "Template couldn't be loaded from the databinding.", ex );
+                throw new RuntimeException( "Template couldn't be loaded from the databinding.", ex );
+            }
+        return super.setTemplate( name, template );
+    }
+
+    
+    
     @Override
     public void setItemRenderer( final ComboitemRenderer renderer ) {
         super.setItemRenderer( renderer );
+        
+        // children is not set, it means, that the old binding v1.0 is not used
+        if (getChildren().isEmpty()) return;
+        
         final Comboitem template = getItemAtIndex( 0 );
         if ( template == null ) {
             return;
         }
-        label = ZKBinderHelper.getDefaultAnnotation( template, "label", "value" );
+        label = cz.datalite.helpers.ZKBinderHelper.getDefaultAnnotation( template, "label", "value" );
 
         if ( label != null && label.indexOf( '.' ) > -1 ) {
             label = label.substring( label.indexOf( '.' ) + 1 );

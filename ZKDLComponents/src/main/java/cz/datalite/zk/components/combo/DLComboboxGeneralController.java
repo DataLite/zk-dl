@@ -43,6 +43,8 @@ public abstract class DLComboboxGeneralController<T> implements DLComboboxExtCon
     protected static final int SELECT_NO_CHANGE = 0;
     /** defines if the first row should be automatically selected */
     protected boolean selectFirstOnCascade;
+    /** inner model used since ZK 6 */
+    protected List<T> innerModel = Collections.emptyList();
 
     public DLComboboxGeneralController() {
         cascadeUtil = new CascadeUtil<T>( this );
@@ -91,7 +93,8 @@ public abstract class DLComboboxGeneralController<T> implements DLComboboxExtCon
      * Loads data from the database and refreshes model
      */
     protected void refreshModel() {
-        model.setModel( ( List<T> ) (model.getFilters().values().contains( null ) ? Collections.emptyList() : loadData( combobox.getLabel(), model.getFilters() )) );
+        innerModel = ( List<T> ) ( model.getFilters().values().contains( null ) ? Collections.emptyList() : loadData( combobox.getLabel(), model.getFilters() ) );
+        model.setModel( innerModel );
         model.setSelectedIndex( DLComboboxModel.UNKNOWN );
         combobox.fireModelChanges();
         loaded = true;
@@ -188,5 +191,9 @@ public abstract class DLComboboxGeneralController<T> implements DLComboboxExtCon
                 cascadeUtil.dofireParentChanges();
             }
         }
+    }
+
+    public List<T> getInnerModel() {
+        return innerModel;
     }
 }

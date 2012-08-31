@@ -136,23 +136,6 @@ e%3D0%3B
                 <attribute-value>both</attribute-value>
             </attribute>
         </annotation>
-        <annotation>
-            <annotation-name>ZKBIND</annotation-name>
-            <property-name>selectedItem</property-name>
-            <attribute>
-                <attribute-name>SAVE_EVENT</attribute-name>
-                <attribute-value>onSelect</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>LOAD_EVENT</attribute-name>
-                <attribute-value>onAfterRender</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>ACCESS</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-        </annotation>
-
     </component>
 
     <component>
