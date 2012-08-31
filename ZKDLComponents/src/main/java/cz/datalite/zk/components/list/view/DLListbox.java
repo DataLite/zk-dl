@@ -64,7 +64,7 @@ public class DLListbox extends Listbox {
 
     @Override
     public void setSelectedIndex( int jsel ) {
-        if ( !EqualsHelper.isEqualsNull( jsel, getSelectedIndex() ) && getModel().getSize() > jsel ) {
+        if ( !EqualsHelper.isEqualsNull( jsel, getSelectedIndex() ) && (controller == null || getModel().getSize() > jsel )) {
             super.setSelectedIndex( jsel );
             Events.postEvent( DLListboxEvents.ON_SELECTED_SHOW, this, null );
         }
