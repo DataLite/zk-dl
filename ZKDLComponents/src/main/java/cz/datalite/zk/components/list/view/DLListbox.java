@@ -264,7 +264,7 @@ public class DLListbox extends Listbox {
             if ( controller != null ) controller.onCreate();
             
             // new data binding uses the special renderer
-            if (ZKBinderHelper.version(DLListbox.this) == 2)
+            if (ZKBinderHelper.version(DLListbox.this) == 2 && controller != null)
                 setItemRenderer( new DLListitemRenderer() );
         }
     }

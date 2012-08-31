@@ -42,10 +42,10 @@ public class ListitemTemplate implements Template {
 
         // for each label column define the cell
         for ( final String property : labels ) {
-            createCell( parent, property );
+            createCell( listitem, property );
         }
 
-        if ( description != null ) createCell( parent, description );
+        if ( description != null ) createCell( listitem, description );
 
         return new Component[]{ listitem };
     }
