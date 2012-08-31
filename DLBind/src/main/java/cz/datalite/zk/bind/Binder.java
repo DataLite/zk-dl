@@ -3,6 +3,7 @@ package cz.datalite.zk.bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.AnnotateBinder;
+import org.zkoss.bind.Converter;
 import org.zkoss.bind.impl.BindingKey;
 import org.zkoss.zk.ui.Component;
 
@@ -45,4 +46,17 @@ public class Binder extends AnnotateBinder {
     public static Binder getBinder( Component comp ) {
         return ( Binder ) comp.getAttribute( "$BINDER$", true );
     }
+
+    @Override
+    public Converter getConverter( String name ) {
+        try {
+            return super.getConverter( name );
+        } catch(org.zkoss.zk.ui.UiException ex) {
+            // this allows to use method converters
+            // syntax is then like 'ctl.coerceToValue'
+            return new MethodTypeConverter( name, ex.getMessage() );
+        }
+    }
+    
+    
 }
