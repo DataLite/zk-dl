@@ -5,7 +5,9 @@ import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Execution;
@@ -13,6 +15,7 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -112,13 +115,21 @@ public class DLListbox extends Listbox {
      * @return true if the first is selected, false if list is empty
      */
     public boolean selectFirstRow() {
-        if ( getModel().getSize() > 0 ) {
-            setSelectedIndex( 0 );
-            Events.postEvent( Events.ON_SELECT, this, Collections.singleton( getModel().getElementAt( getSelectedIndex() ) ) );
-            return true;
-        } else {
-            return false;
-        }
+        if ( controller == null && isSelectFirstRow() && getModel() != null && getModel() instanceof Selectable )
+            if ( getModel().getSize() > 0 ) {
+                if ( getSelectedItems().isEmpty() ) {
+                    final Selectable model = ( Selectable ) getModel();
+                    model.clearSelection();
+                    model.addToSelection( getModel().getElementAt( 0 ) );
+                    Set selected = Collections.singleton( getModel().getElementAt( 0 ) );
+                    Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, getSelectedItems(), selected, DLListbox.this, null, 0 ) );
+                }
+                return true;
+            } else {
+                Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, Collections.emptySet(), Collections.emptySet(), DLListbox.this, null, 0 ) );
+                return false;
+            }
+        return false;
     }
 
     /**
@@ -207,20 +218,22 @@ public class DLListbox extends Listbox {
         super.onInitRender();
 
         // controller doesn't support multiple select item. Setup selected index only if controller has selected item
-        if ( controller != null && getModel().getSize() > 0 )
-            if ( getModel() instanceof Selectable ) {
-                final Selectable model = ( Selectable ) getModel();
-                model.clearSelection();
-                for ( Object selected : controller.getSelectedItems() ) {
-                    model.addToSelection( selected );
-                }
-                onInitRender = true;
-                Events.sendEvent( Events.ON_SELECT, this, controller.getSelectedItems() );
-                onInitRender = false;
-            } else
-                LOGGER.warn( "Model wasn't recognized, the first row was not selected." );
-        else
-            Events.postEvent( DLListboxEvents.ON_SELECTED_HIDE, this, null );
+        if ( controller != null ) {
+            if ( getModel().getSize() > 0 )
+                if ( getModel() instanceof Selectable ) {
+                    final Selectable model = ( Selectable ) getModel();
+                    model.clearSelection();
+                    for ( Object selected : controller.getSelectedItems() ) {
+                        model.addToSelection( selected );
+                    }
+                    onInitRender = true;
+                    Events.sendEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems(), controller.getSelectedItems(), this, null, 0 ) );
+                    onInitRender = false;
+                } else
+                    LOGGER.warn( "Model wasn't recognized, the first row was not selected." );
+            else
+                Events.postEvent( DLListboxEvents.ON_SELECTED_HIDE, this, null );
+        } else selectFirstRow();
     }
 
     public boolean isOnInitRender() {
@@ -261,11 +274,12 @@ public class DLListbox extends Listbox {
         public void onEvent( Event event ) throws Exception {
 
             // if the controller is defined, init it
-            if ( controller != null ) controller.onCreate();
-            
-            // new data binding uses the special renderer
-            if (ZKBinderHelper.version(DLListbox.this) == 2 && controller != null)
-                setItemRenderer( new DLListitemRenderer() );
+            if ( controller != null ) {
+                controller.onCreate();
+                // new data binding uses the special renderer
+                if ( ZKBinderHelper.version( DLListbox.this ) == 2 )
+                    setItemRenderer( new DLListitemRenderer() );
+            }
         }
     }
 

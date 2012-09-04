@@ -19,6 +19,7 @@ import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.metainfo.NodeInfo;
 import org.zkoss.zk.ui.metainfo.TemplateInfo;
@@ -526,7 +527,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         setSelectedItems( selectedItems );        
           
         if (notifyOnSelect) // if the notification is enabled
-            Events.postEvent( Events.ON_SELECT, listbox, selectedItems );
+            Events.postEvent( new SelectEvent ( Events.ON_SELECT, listbox, listbox.getSelectedItems(), selectedItems, listbox, null, 0 ) );
     }    
 
     public void setSelectedItem( final T selectedItem ) {
