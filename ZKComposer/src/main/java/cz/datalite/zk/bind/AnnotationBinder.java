@@ -30,7 +30,7 @@ public class AnnotationBinder extends Binder {
         // annotated method to be invoked
         final Method method = getCommandMethod( type, command );
         if ( method == null ) {
-            LOGGER.error( "Binder caught request for '{}' command but ZK BinderImpl doesn't know the mapping method. Execution failed.", command );
+            LOGGER.debug( "Binder caught request for '{}' command but ZK BinderImpl doesn't know the mapping method. Execution failed.", command );
             return;
         }
 
