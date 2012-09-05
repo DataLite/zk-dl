@@ -234,6 +234,12 @@ public class DLListbox extends Listbox {
             else
                 Events.postEvent( DLListboxEvents.ON_SELECTED_HIDE, this, null );
         } else selectFirstRow();
+        
+        // update disabled status on rerender
+        // by default we suppose that the items are enabled
+        // so it needs to be updated only when disabled
+        if ( !getItems().isEmpty() && isDisabled() )
+            setDisabled( true );
     }
 
     public boolean isOnInitRender() {
@@ -282,5 +288,15 @@ public class DLListbox extends Listbox {
             }
         }
     }
+
+    @Override
+    public void setDisabled( boolean disabled ) {
+        super.setDisabled( disabled );
+        
+        for( Listitem item : getItems() ) 
+            item.setDisabled( disabled );
+    }
+    
+    
 
 }
