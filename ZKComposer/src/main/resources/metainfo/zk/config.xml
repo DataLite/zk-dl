@@ -1,0 +1,17 @@
+
+<config>
+    <!-- used to resolve dependency -->
+    <config-name>ZkComposer</config-name>
+    
+    <!-- label locator added since ZK 6 to keep working file i3-label -->
+    <listener>
+        <decription>Imports localization from ZKComposer library</decription>
+        <listener-class>cz.datalite.zk.composer.LabelLocator</listener-class>
+    </listener>
+
+    <!-- defines default behaviour of annotation processor -->
+    <library-property>
+        <name>zk-dl.annotation.cache</name>
+        <value>true</value>
+    </library-property>
+</config>

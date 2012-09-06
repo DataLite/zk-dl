@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ # Copyright 2012 (c) DataLite, spol. s r.o. All rights reserved.
+ # Web: http://www.datalite.cz    Mail: info@datalite.cz
+ -->
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window class="z-loading" border="none" closable="${arg.cancellable}" position="center center" mode="modal" style="padding: 3px; text-align: center;">
+            <div class="z-loading-indicator" style="margin: 3px 30px auto; border: none;">
+                <span class="z-loading-icon"></span>
+                <span id="busy-box-label">${arg.message}</span>
+            </div>
+            <button  style="margin: 5px auto;" visible="${arg.cancellable}" forward="onClose">${labels.zkcomposer.cancel}</button>
+    </window>
+
+</zk>

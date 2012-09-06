@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" root="taskDetailWindow" validator="${validator}"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window id="taskDetailWindow" border="normal" title="Task detail" closable="true" width="700px"
+            apply="${taskDetailController}">
+
+        <grid>
+            <rows>
+                <row>
+                    <label value="Name"/>
+                    <textbox value="@{ctl.task.name}" hflex="1"/>
+                </row>
+                <row>
+                    <label value="Description"/>
+                    <textbox value="@{ctl.task.description}" rows="5" hflex="1"/>
+                </row>
+                <row>
+                    <label value="Due"/>
+                    <datebox value="@{ctl.task.taskDue}" format="M/d/yy HH:mm" width="120px"/>
+                </row>
+                <row>
+                    <label value="Priority"/>
+                    <lovbox apply="${ctl.lovboxPriorityCtl}" mold="rounded"
+                        createQuickFilter="false" createPaging="false" clearButton="false"
+                        selectedItem="@{ctl.task.priority}"
+                        labelProperty="name"/>
+
+                </row>
+                <row>
+                    <label value="Category"/>
+                    <lovbox apply="${ctl.lovboxCategoryCtl}" mold="rounded" hflex="1"
+                        selectedItem="@{ctl.task.idCategory}"
+                        labelProperty="name" descriptionProperty="description"/>
+
+                </row>
+                <row>
+                    <label value="Done"/>
+                    <checkbox checked="@{ctl.task.done}"/>
+                </row>
+
+            </rows>
+        </grid>
+
+        <hbox>
+            <button id="saveTaskButton" label="Save"/>
+            <button id="cancelTaskButton" label="Cancel"/>
+        </hbox>
+
+    </window>
+
+</zk>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>ToDo</display-name>
+    <description>ToDo</description>
+
+    <!-- Basic Spring configuration. -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/*.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- Open Session In View design pattern. Persistence context is open for whole request (lazy loading i view layer) -->
+    <filter>
+        <filter-name>JpaFilter</filter-name>
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>JpaFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- ZK cleanup session after timeout -->
+    <listener>
+        <description>ZK listener for session cleanup</description>
+        <listener-class>org.zkoss.zk.ui.http.HttpSessionListener</listener-class>
+    </listener>
+
+    <!-- Main ZK servlet for page load-->
+    <servlet>
+        <description>ZK loader for ZUML pages</description>
+        <servlet-name>zkLoader</servlet-name>
+        <servlet-class>org.zkoss.zk.ui.http.DHtmlLayoutServlet</servlet-class>
+        <init-param>
+            <param-name>update-uri</param-name>
+            <param-value>/zkau</param-value>
+        </init-param>
+        <!-- Optional. Specifies the default log level: OFF, ERROR, WARNING, INFO, DEBUG and FINER. If not specified, the system default is used.
+        <init-param>
+            <param-name>log-level</param-name>
+            <param-value>OFF</param-value>
+        </init-param>
+        -->
+        <load-on-startup>1</load-on-startup>
+        <!-- Must -->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>zkLoader</servlet-name>
+        <url-pattern>*.zul</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>zkLoader</servlet-name>
+        <url-pattern>*.zhtml</url-pattern>
+    </servlet-mapping>
+
+    <!-- Special richlets, all on address /zk/ - mapped in zk.xml -->
+    <servlet-mapping>
+        <servlet-name>zkLoader</servlet-name>
+        <url-pattern>/zk/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Helper ZK servlet for AJAX requests -->
+    <servlet>
+        <description>The asynchronous update engine for ZK</description>
+        <servlet-name>auEngine</servlet-name>
+        <servlet-class>org.zkoss.zk.au.http.DHtmlUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>auEngine</servlet-name>
+        <url-pattern>/zkau/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Welcome page -->
+    <welcome-file-list>
+        <welcome-file>index.zul</welcome-file>
+    </welcome-file-list>
+
+    <!-- Session timeoutu. For ZK Ajax check zk.xml as well -->
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
+
+    <!-- Database resources -->
+    <resource-ref>
+        <description>Database connection</description>
+        <res-ref-name>jdbc/ToDoDB</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <persistence-unit-ref>
+        <persistence-unit-ref-name>persistence/ToDoPU</persistence-unit-ref-name>
+        <persistence-unit-name>ToDoPU</persistence-unit-name>
+    </persistence-unit-ref>
+</web-app>

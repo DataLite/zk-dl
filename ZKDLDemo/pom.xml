@@ -1,0 +1,280 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cz.datalite.zk-dl</groupId>
+    <artifactId>ZKDLDemo</artifactId>
+    <packaging>war</packaging>
+    <version>1.1</version>
+    <name>ZKDLDemo</name>
+    <url>http://zk.datalite.cz</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+        <org.springframework.security.version>3.0.3.RELEASE</org.springframework.security.version>
+        <org.zkoss.zk.version>5.0.6</org.zkoss.zk.version>
+        <cz.datalite.zk-dl.version>1.3.0</cz.datalite.zk-dl.version>
+        <org.junit.version>4.8.1</org.junit.version>
+        <netbeans.hint.deploy.server>liferay</netbeans.hint.deploy.server>
+    </properties>
+
+    <dependencies>
+        <!-- Basic spring dependency. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <!-- Object-to-Relation-Mapping (ORM) integration with Hibernate, JPA,
+                and iBatis. (depends on core, beans, context, transaction) Define this if
+                you need ORM (org.springframework.orm.*) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+
+
+        <!-- ZK libraries -->
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zk</artifactId>
+            <version>${org.zkoss.zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zul</artifactId>
+            <version>${org.zkoss.zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zhtml</artifactId>
+            <version>${org.zkoss.zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.common</groupId>
+            <artifactId>zcommon</artifactId>
+            <version>${org.zkoss.zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.common</groupId>
+            <artifactId>zweb</artifactId>
+            <version>${org.zkoss.zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.zkforge.el</groupId>
+            <artifactId>zcommons-el</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+
+
+        <!-- DataLite extension libraries - see http://zk.datalite.cz -->
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKComposer</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKDLComponents</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>SpringService</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKDLComponentsHibernateExt</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKComponents</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+
+        <!-- Liferay integration - every app can run as a Liferay portlet.-->
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKLiferay</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>portal-service</artifactId>
+            <version>6.0.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- Optinal library - http://zk.datalite.cz/wiki/-/wiki/Main/ZKStatistics+-+Performance+Monitoring+of+ZK+Applicaiton .-->
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>ZKStatistics</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+
+
+        <!-- Test libraries / JUnit, Spring Test for unit test and Selenium/WebDriver
+                for integration tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${org.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- Jetty/Tomcat libraries -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.26</version>
+                <configuration>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <!-- Runtime port - change here -->
+                            <port>9090</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                </configuration>
+            </plugin>
+
+            <!-- You need to setup your application server for use with JRebel. For maven+jetty setup see http://zk.datalite.cz -->
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.0.7</version>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Run the demo on Liferay -->
+            <plugin>
+                <groupId>com.liferay.maven.plugins</groupId>
+                <artifactId>liferay-maven-plugin</artifactId>
+                <version>6.0.5</version>
+                <configuration>
+                    <liferayVersion>6.0.5</liferayVersion>
+                    <autoDeployDir>c:\liferay\bundles\deploy</autoDeployDir>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- ZK is not in maven central -->
+    <repositories>
+       <repository>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+           <id>jboss</id>
+           <name>JBoss</name>
+           <url>http://repository.jboss.com/maven2</url>
+       </repository>
+
+        <repository>
+           <snapshots>
+               <enabled>false</enabled>
+           </snapshots>
+            <id>ZK CE</id>
+            <url>http://mavensync.zkoss.org/maven2</url>
+        </repository>
+
+        <repository>
+            <id>ZK-DL</id>
+            <url>http://zk-dl.googlecode.com/svn/maven2-repo/</url>
+        </repository>
+    </repositories>
+
+</project>

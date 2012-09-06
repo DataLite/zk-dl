@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- lang-addon.xml
+	Purpose:
+
+	Description:
+
+	History:
+            2008-10-02 DTL J. Bubnik - Created
+            2010-04-28 DTL J. Bubnik - Moved to ZK 5
+-->
+
+<language-addon>
+	<!-- The name of this addon. It must be unique -->
+    <addon-name>ZKDLComponents</addon-name>
+	<!-- Specifies what other addon this depends -->
+    <depends>databind,zkplus,zkbind</depends>
+
+	<!-- Which language this addon will be added to -->
+    <language-name>xul/html</language-name>
+
+
+    <version>
+        <version-class>metainfo.zk.Version</version-class>
+        <version-uid>5.0.0</version-uid>
+        <zk-version>6.0.2</zk-version><!-- or later -->
+    </version>
+
+    <zscript language="Java">
+	  import cz.datalite.zk.components.*;
+          import cz.datalite.zk.util.*;
+    </zscript>
+
+    <component>
+        <component-name>lovbox</component-name>
+        <component-class>cz.datalite.zk.components.lovbox.DLLovbox</component-class>
+        <extends>bandbox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedItem</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>ZKBIND</annotation-name>
+            <property-name>selectedItem</property-name>
+            <attribute>
+                <attribute-name>SAVE_EVENT</attribute-name>
+                <attribute-value>onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>LOAD_EVENT</attribute-name>
+                <attribute-value>onAfterRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>ACCESS</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>dlcombobox</component-name>
+        <component-class>cz.datalite.zk.components.combo.DLCombobox</component-class>
+        <extends>combobox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>model</property-name>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>org.zkoss.zkplus.databind.ListModelConverter</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedItem</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+                <!--
+                  There is a problem when using stict - value cannot be deleted
+
+http://www.zkoss.org/forum/index.zul#path%3Dsearch%3Bquery%3Dcombobox%20select%20first%3BcategoryId%3D0%3BsearchTyp
+e%3D0%3B
+                -->
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRenderLater</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>cz.datalite.zk.components.combo.DLSelectedComboitemConverter</attribute-value>
+                <!-- org.zkoss.zkplus.databind.SelectedComboitemConverter -->
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedIndex</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRenderLater</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>listbox</component-name>
+        <extends>listbox</extends>
+        <component-class>cz.datalite.zk.components.list.view.DLListbox</component-class>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>model</property-name>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>org.zkoss.zkplus.databind.ListModelConverter</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedItem</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>org.zkoss.zkplus.databind.SelectedItemConverter</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedIndex</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>selectedItems</property-name>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onSelect</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>load-when</attribute-name>
+                <attribute-value>self.onInitRender</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>cz.datalite.zk.databinder.SelectedItemsConverter</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>dlpaging</component-name>
+        <component-class>cz.datalite.zk.components.paging.DLPaging</component-class>
+        <extends>hbox</extends>
+    </component>
+
+    <component>
+        <component-name>listControl</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLListControl</component-class>
+        <extends>hbox</extends>
+    </component>
+
+    <component>
+        <component-name>listheader</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLListheader</component-class>
+        <extends>listheader</extends>
+    </component>
+
+    <component>
+        <component-name>listhead</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLListhead</component-class>
+        <extends>listhead</extends>
+    </component>
+
+    <component>
+        <component-name>listitem</component-name>
+        <extends>listitem</extends>
+    </component>
+
+    <component>
+        <component-name>listcell</component-name>
+        <extends>listcell</extends>
+    </component>
+
+    <component>
+        <component-name>listboxmanager</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLListboxManager</component-class>
+        <extends>hbox</extends>
+    </component>
+
+    <component>
+        <component-name>quickfilter</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLQuickFilter</component-class>
+        <extends>hbox</extends>
+    </component>
+
+</language-addon>

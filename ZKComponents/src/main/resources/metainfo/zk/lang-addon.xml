@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- lang-addon.xml
+	Purpose:
+		
+	Description:
+		
+	History:
+            2008-10-02 DTL J. Bubnik - Vytvoreno
+            2010-04-28 DTL J. Bubnik - Prevedeno pod ZK 5
+-->
+
+<language-addon>
+	<!-- The name of this addon. It must be unique -->
+    <addon-name>ZKComponents</addon-name>
+	<!-- Specifies what other addon this depends -->
+	<depends>databind,zkplus,zkex,zkmax</depends>
+
+	<!-- Which language this addon will be added to -->
+    <language-name>xul/html</language-name>
+
+
+    <version>
+        <version-class>metainfo.zk.Version</version-class>
+        <version-uid>5.0.0</version-uid>
+        <zk-version>6.0.2</zk-version><!-- or later -->
+    </version>
+
+    <zscript language="Java">
+	  import cz.datalite.zk.components.*;
+          import cz.datalite.zk.util.*;
+    </zscript>
+
+    <component>
+        <component-name>textbox</component-name>
+        <component-class>cz.datalite.zk.components.textbox.DLTextbox</component-class>
+        <extends>textbox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>readonly</property-name>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>image</component-name>
+        <component-class>cz.datalite.zk.components.image.DLImage</component-class>
+        <extends>image</extends>
+    </component>
+    
+    <component>
+        <component-name>intbox</component-name>
+        <component-class>cz.datalite.zk.components.intbox.DLIntbox</component-class>
+        <extends>intbox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>row</component-name>
+        <extends>row</extends>
+        
+    </component>
+
+    <component>
+        <component-name>bigDecimalbox</component-name>
+        <component-class>cz.datalite.zk.components.doublebox.DLBigDecimalbox</component-class>
+        <extends>doublebox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>doublebox</component-name>
+        <component-class>cz.datalite.zk.components.doublebox.DLDoublebox</component-class>
+        <extends>doublebox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>datebox</component-name>
+        <component-class>cz.datalite.zk.components.datebox.DLDatebox</component-class>
+        <extends>datebox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onChange</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>checkbox</component-name>
+        <component-class>cz.datalite.zk.components.check.DLCheckbox</component-class>
+        <extends>checkbox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>checked</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>objectValue</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>checkboxAN</component-name>
+        <component-class>cz.datalite.zk.components.check.DLCheckboxAN</component-class>
+        <extends>checkbox</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>checked</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>objectValue</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>both</attribute-value>
+            </attribute>
+            <attribute>
+                <attribute-name>save-when</attribute-name>
+                <attribute-value>self.onCheck</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>grid</component-name>
+        <extends>grid</extends>
+        <component-class>cz.datalite.zk.components.grid.DLGrid</component-class>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>model</property-name>
+            <attribute>
+                <attribute-name>converter</attribute-name>
+                <attribute-value>org.zkoss.zkplus.databind.ListModelConverter</attribute-value>
+            </attribute>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>label</component-name>
+        <component-class>cz.datalite.zk.components.label.DLLabel</component-class>
+        <extends>label</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>bean</property-name>
+            <attribute>
+                <attribute-name>access</attribute-name>
+                <attribute-value>read</attribute-value>
+            </attribute>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>value</property-name>
+        </annotation>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>visible</property-name>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>button</component-name>
+        <component-class>cz.datalite.zk.components.button.DLButton</component-class>
+        <extends>button</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>visible</property-name>
+        </annotation>
+    </component>
+    
+    <component>
+        <component-name>toolbarbutton</component-name>
+        <component-class>cz.datalite.zk.components.button.DLToolbarButton</component-class>
+        <extends>toolbarbutton</extends>
+        <annotation>
+            <annotation-name>default-bind</annotation-name>
+            <property-name>visible</property-name>
+        </annotation>
+    </component>
+
+    <component>
+        <component-name>window</component-name>
+        <component-class>cz.datalite.zk.components.window.DLWindow</component-class>
+        <extends>window</extends>
+    </component>
+
+</language-addon>

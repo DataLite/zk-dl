@@ -1,0 +1,32 @@
+
+<zk>
+    <listener>
+        <decription>Imports localization from ZKDLComponents library</decription>
+         <listener-class>cz.datalite.zk.components.LabelLocator</listener-class>
+    </listener>
+
+    <listener>
+        <description>For Selenium Testing</description>
+        <listener-class>cz.datalite.zk.components.selenium.InitListener</listener-class>
+    </listener>
+
+	<library-property>
+		<name>org.zkoss.zk.portlet.PageRenderPatch.class</name>
+		<value>org.zkoss.zkplus.liferay.JQueryRenderPatch</value>
+	</library-property>
+
+    <richlet>
+        <richlet-name>ZKMonitor</richlet-name>
+        <richlet-class>cz.datalite.zkspring.monitor.ZKMonitorRichlet</richlet-class>
+    </richlet>
+
+    <richlet-mapping>
+        <richlet-name>ZKMonitor</richlet-name>
+        <url-pattern>/ZKMonitor</url-pattern>
+    </richlet-mapping>
+
+     <listener>
+        <description>ZK performance monitor</description>
+         <listener-class>cz.datalite.zkspring.monitor.ZKPerformanceMeter</listener-class>
+    </listener>
+</zk>

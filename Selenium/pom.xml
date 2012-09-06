@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>1.4.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>cz.datalite.zk-dl</groupId>
+    <artifactId>Selenium</artifactId>
+    <version>1.4.0-SNAPSHOT</version>
+    <name>Selenium</name>
+    <description>Integration tests with Selenium 2.0 (WebDriver) - PageObjects pattern (still in beta)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>DLHelpers</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.20.0</version>
+            <exclusions>
+                <exclusion>
+                    <!-- Problem with surfire when TestNG is on classpath -->
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                </exclusion>
+                 <!-- exclude apache logging, zk-dl uses SLF4J -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        
+    </dependencies>
+
+</project>

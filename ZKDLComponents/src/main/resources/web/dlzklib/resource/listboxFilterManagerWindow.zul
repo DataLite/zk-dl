@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" arg0="winListboxManager"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+<?page title="Listbox manager"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="740px" id="winListboxManager" closable="true" border="normal" self="@{define(content)}"
+        apply="cz.datalite.zk.components.list.window.controller.ListboxFilterManagerController" >
+
+        <hbox style="margin: 10px;">
+            <image src="~./dlzklib/img/filter_big.png" />
+            <label style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.filterManager.title')}" />
+        </hbox>
+        <grid width="700px" model="@{ctl.rows}" style="margin: 10px 10px 0;">
+            <columns sizable="false">
+                <column label="${c:l('listbox.filterManager.column')}"/>
+                <column label="${c:l('listbox.filterManager.operator')}" width="20%"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="20%"/>
+                <column label="${c:l('listbox.filterManager.value')}" width="20%"/>
+                <column label="" width="40px" style="text-align: center;" />
+            </columns>
+            <rows>
+                <row self="@{each=expression}" value="@{expression}" onRenderComponents="ctl.onRenderComponents(self)">
+                    <combobox constraint="strict" onAfterRender="ctl.onRenderComponents(self)" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" hflex="1">
+                        <comboitem self="@{each=template}" label="@{template.label}" value="@{template}"/>
+                    </combobox>
+                    <combobox constraint="strict" onSelect="ctl.onSelectOperator(self)" selectedItem="@{expression.model.operator}" model="@{expression.model.operators}" hflex="1">
+                        <comboitem self="@{each=operator}" label="@{operator.label}" value="@{operator}"/>
+                    </combobox>
+                    <space />
+                    <space />
+                    <image style="cursor: pointer; margin-left: 4px;" tooltiptext="${c:l('listbox.filterManager.removeOne')}" src="~./dlzklib/img/remove16x16.png" onClick="ctl.onRemove(self.parent)"/>
+                </row>
+            </rows>
+        </grid>
+        <hbox style="margin: 10px 10px 10px auto;">
+            <button label="${c:l('listbox.filterManager.add')}" forward="onAdd" />
+            <button label="${c:l('listbox.filterManager.removeAll')}" forward="onRemoveAll"/>
+            <space width="50px"/>
+            <button label="${c:l('listbox.ok')}" forward="onOk" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+        </hbox>
+    </window>
+</zk>

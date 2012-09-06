@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" root="taskOverviewWindow"?>
+
+<?page title="Task Overview" id="taskPage"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window id="taskOverviewWindow" self="@{define(content)}" height="400px" apply="${taskOverviewController}">
+
+        <borderlayout>
+            <north>
+                <listControl apply="${ctl.listCtl}">
+                    <button id="newButton" label="Create new task"/>
+                    <button id="openDetailButton" label="Open selected task"/>
+                    <button id="deleteButton" label="Delete selected task"/>
+                    <textbox id="textboxSelected"/>
+                </listControl>
+            </north>
+            <center>
+                <listbox id="taskList" apply="${ctl.listCtl}" vflex="true" selectedItem="@{ctl.task}"
+                         selectFirstRow="true" fixedLayout="true"
+                         selectedItems="@{ctl.tasks}" checkmark="true" multiple="true">
+                    <listhead>
+                        <listheader label="Name" sort="db()"/>
+                        <listheader label="Description" sort="db()"/>
+                        <listheader label="Due" sort="db()"/>
+                        <listheader label="Priority" column="priority" sort="db()"
+                            filterComponent="${ctl.priorityFilterComponent}"
+                            filterCompiler="${ctl.priorityFilterCompiler}"
+                            filterOperators="eq,neq"
+                         />
+                        <listheader label="Category" sort="db()"/>
+                        <listheader label="Done" width="100px" column="done" sort="db()"
+                            filterComponent="cz.datalite.zk.components.list.filter.components.BooleanFilterComponent"
+                            filterCompiler="cz.datalite.zk.components.list.filter.compilers.BooleanCriterionCompiler"
+                            filterOperators="eq"/>
+
+                    </listhead>
+                    <listitem id="listitem" self="@{each=listEach}" style="@{listEach.done, converter='ctl.coerceDone'}">
+                        <listcell label="@{listEach.name}"/>
+                        <listcell label="@{listEach.description}"/>
+                        <listcell label="@{listEach.taskDue}"/>
+                        <listcell label="@{listEach.priority, converter='ctl.coercePriority'}"/>
+                        <listcell label="@{listEach.idCategory.name}"/>
+                        <listcell><checkbox checked="@{listEach.done}" readonly="true"/></listcell>
+                    </listitem>
+                </listbox>
+            </center>
+            <south>
+                <dlpaging apply="${ctl.listCtl}" pageSize="50" autohide="true"/>
+            </south>
+        </borderlayout>
+
+    </window>
+
+</zk>

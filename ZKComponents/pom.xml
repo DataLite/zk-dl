@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>1.4.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>cz.datalite.zk-dl</groupId>
+    <artifactId>ZKComponents</artifactId>
+    <version>1.4.0-SNAPSHOT</version>
+    <name>ZKComponents</name>
+    <description>Other imporvements of basic ZK components - please check the documentation for each overriden component.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zul</artifactId>
+            <version>${org.zkframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zkplus</artifactId>
+            <version>${org.zkframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>DLHelpers</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
+    </dependencies>
+</project>

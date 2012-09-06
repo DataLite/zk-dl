@@ -1,0 +1,22 @@
+<zk>
+
+    <!-- Compatibility with  Springem and Hibernate, they use ThreadLocal variables. -->
+    <system-config>
+      <disable-event-thread/>
+    </system-config>
+
+    <listener>
+        <decription>Imports localization from ZKDLComponents library</decription>
+         <listener-class>cz.datalite.zk.components.LabelLocator</listener-class>
+    </listener>
+	<library-property>
+		<name>org.zkoss.zk.portlet.PageRenderPatch.class</name>
+		<value>org.zkoss.zkplus.liferay.JQueryRenderPatch</value>
+	</library-property>
+	<library-property>
+		<name>org.zkoss.zkplus.liferary.jQueryPatch</name>
+		<value>500</value>
+	</library-property>
+
+
+</zk>
