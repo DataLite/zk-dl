@@ -13,13 +13,11 @@ import org.zkoss.zk.ui.Component;
 
 /**
  * Binder extension providing support ZK-DL for annotation processing
- * 
+ *
  * @author Karel Cemus <cemus@datalite.cz>
  */
-
-
 public class AnnotationBinder extends Binder {
-    
+
     @Override
     protected void doExecute( Component comp, String command, Map<String, Object> commandArgs, BindContext ctx, Set<Property> notifys ) {
         // class of view-model instance
@@ -52,6 +50,10 @@ public class AnnotationBinder extends Binder {
         try {
             // invoke the command
             InvokeListener.invoke( context );
+        } catch ( RuntimeException ex ) {
+            // rethrow runtime exception
+            // to let them be properly handled by ZK
+            throw ex;
         } catch ( Exception ex ) {
             // something has happened, log it
             LOGGER.error( "Binder invoked command '{}' on the method '{}' but it failed.", new Object[]{ command, method.getName(), ex } );
