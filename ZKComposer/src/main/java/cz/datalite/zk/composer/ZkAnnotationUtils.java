@@ -338,7 +338,7 @@ public final class ZkAnnotationUtils {
             }
 
             if ( !zkEvent && ( zkConfirm || zkBinding ) )
-                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" ZkEvent is required." );
+                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" @ZkEvent or @Command is required." );
         }
     }
 }
