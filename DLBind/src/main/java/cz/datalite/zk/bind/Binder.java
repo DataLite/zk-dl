@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.AnnotateBinder;
 import org.zkoss.bind.Converter;
+import org.zkoss.bind.Validator;
 import org.zkoss.bind.impl.BindingKey;
 import org.zkoss.zk.ui.Component;
 
@@ -57,6 +58,15 @@ public class Binder extends AnnotateBinder {
             return new MethodTypeConverter( name, ex.getMessage() );
         }
     }
-    
-    
+
+    @Override
+    public Validator getValidator( String name ) {
+         try {
+            return super.getValidator( name );
+        } catch(org.zkoss.zk.ui.UiException ex) {
+            // this allows to use method converters
+            // syntax is then like 'ctl.coerceToValue'
+            return new MethodValidator( name, ex.getMessage() );
+        }
+    }
 }
