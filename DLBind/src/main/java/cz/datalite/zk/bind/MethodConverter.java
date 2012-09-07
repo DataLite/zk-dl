@@ -17,7 +17,7 @@ import org.zkoss.zkplus.databind.TypeConverter;
  *
  * @author Jiri Bubnik
  */
-public class MethodTypeConverter implements TypeConverter, Converter
+public class MethodConverter implements TypeConverter, Converter
 {
     // Converter definition (like "ctl.myConverter")
     private String converter;
@@ -30,7 +30,7 @@ public class MethodTypeConverter implements TypeConverter, Converter
     private Method coerceMethod = null;
     private Object controllerObj = null;
 
-    public MethodTypeConverter(String converter, String errorDesc)
+    public MethodConverter(String converter, String errorDesc)
     {
         this.errorDesc = errorDesc;
         this.converter = converter;

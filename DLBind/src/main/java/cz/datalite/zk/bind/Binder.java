@@ -6,7 +6,10 @@ import org.zkoss.bind.AnnotateBinder;
 import org.zkoss.bind.Converter;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.impl.BindingKey;
+import org.zkoss.zel.impl.util.Classes;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.UiException;
+import org.zkoss.zkplus.databind.TypeConverter;
 
 /**
  * DataLite's implementation of ZK Binder to add the support for annotations
@@ -52,18 +55,42 @@ public class Binder extends AnnotateBinder {
     public Converter getConverter( String name ) {
         try {
             return super.getConverter( name );
-        } catch(org.zkoss.zk.ui.UiException ex) {
+        } catch ( ClassCastException ex ) {
+            // converter found but class doesn't meet requirements
+            // try to find adapter
+            return resolveConverterAdapter( name );
+        } catch ( UiException ex ) {
             // this allows to use method converters
             // syntax is then like 'ctl.coerceToValue'
-            return new MethodTypeConverter( name, ex.getMessage() );
+            return new MethodConverter( name, ex.getMessage() );
+        }
+    }
+
+    /** Support for TypeConverter and MethodConverter */
+    private Converter resolveConverterAdapter( String name ) {
+        try {
+            Class converter = Classes.forNameByThread( name );
+            if ( TypeConverter.class.isAssignableFrom( converter ) ) {
+                LOGGER.debug( "Converter '{}' is not directly support in ZK 6 and later. You should consider conversion to 'org.zkoss.bind.Converter'.", converter.getClass() );
+                return new TypeConverterAdapter( ( TypeConverter ) converter.newInstance() );
+            } else
+                throw new ClassNotFoundException( "Convertor has to implement 'Converter' or 'TypeConverter' interface." );
+        } catch ( InstantiationException ex ) {
+            LOGGER.error( "Converter adapter couldn't be created.", ex );
+            throw new UiException( ex );
+        } catch ( IllegalAccessException ex ) {
+            LOGGER.error( "Converter adapter couldn't be created.", ex );
+            throw new UiException( ex );
+        } catch ( ClassNotFoundException ex ) {
+            throw new UiException( ex );
         }
     }
 
     @Override
     public Validator getValidator( String name ) {
-         try {
+        try {
             return super.getValidator( name );
-        } catch(org.zkoss.zk.ui.UiException ex) {
+        } catch ( org.zkoss.zk.ui.UiException ex ) {
             // this allows to use method converters
             // syntax is then like 'ctl.coerceToValue'
             return new MethodValidator( name, ex.getMessage() );
