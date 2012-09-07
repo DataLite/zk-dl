@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 
 /**
  * Controller for the export manager
@@ -70,17 +73,25 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     protected Map<String, Object> prepareMap(final Map<String, Object> map) {
         return new java.util.HashMap<String, Object>(map);
     }
+    
+    public void onExport() {
+        try {
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put( "filename", fileName );
+            args.put( "sheetname", sheetName );
+            args.put( "model", usedModel );
+            args.put( "rows", rows );
+
+            Events.postEvent( new org.zkoss.zk.ui.event.Event( "onSave", self, args ) );
+            self.detach();
+        } finally {
+            Clients.clearBusy();
+        }
+    }
 
     public void onOk() throws FileNotFoundException, IOException {
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put("filename", fileName);
-        args.put("sheetname", sheetName);
-        args.put("model", usedModel);
-        args.put("rows", rows);
-
-        org.zkoss.zk.ui.event.Events.postEvent(new org.zkoss.zk.ui.event.Event(
-                "onSave", self, args));
-        self.detach();
+        Clients.showBusy( Labels.getLabel( "listbox.exportManager.wait") );
+        Events.echoEvent( "onExport", self, null);
     }
 
     public void onStorno() {
