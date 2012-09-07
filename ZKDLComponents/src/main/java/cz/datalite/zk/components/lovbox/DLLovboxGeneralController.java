@@ -68,12 +68,15 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
     @SuppressWarnings( "unchecked" )
     public void doAfterCompose( final Component comp ) throws Exception {
-        lovbox = ( DLLovbox<T> ) comp;
-        lovbox.registerController( this );
+        if ( comp instanceof DLLovbox ) {
+            lovbox = ( DLLovbox<T> ) comp;
+            lovbox.registerController( this );
 
-        // initialize component - set atributes and controllers
-        lovbox.init();
-        cascadeUtil.addDefaultParent( lovbox );
+            // initialize component - set atributes and controllers
+            lovbox.init();
+            cascadeUtil.addDefaultParent( lovbox );
+        } else
+            throw new IllegalAccessException( "DLLovboxGeneralController is applicable only on DLLovbox component." );
     }
 
     public DLListboxExtController<T> getListboxExtController() {
