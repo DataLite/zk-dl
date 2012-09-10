@@ -205,7 +205,7 @@ public class DLListbox extends Listbox {
         super.setItemRenderer( renderer );
         if ( controller != null ) {
             // it contains the one listheader and one listitem which is the template
-            if ( ZKBinderHelper.version( this ) == 1 && getChildren().size() == 2 )
+            if ( ZKBinderHelper.version( this ) == 1 && getItems().size() == 1 )
                 controller.setRendererTemplate( getItemAtIndex( 0 ) );
         }
     }
