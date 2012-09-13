@@ -1,5 +1,6 @@
 package cz.datalite.zk.composer;
 
+import cz.datalite.zk.bind.DLBeanValidator;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.composer.listener.DLMasterController;
@@ -251,7 +252,7 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
 
         // register modified DLBinderImpl to provide the support to Zk annotations
         //  do it only if another binder is not already defined
-        final ComponentCtrl extendedComponent = ( ( ComponentCtrl ) comp );
+        final ComponentCtrl extendedComponent = (( ComponentCtrl ) comp);
         if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
             extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
 
@@ -260,6 +261,9 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
 
         // setup parameters @ZkParameter
         ZkParameterUtils.setupZkParameters( this );
+
+        // set up bean validator
+        self.setAttribute( "dlBeanValidator", new DLBeanValidator() );
     }
 
     /** ************************ Master / Detail *************************** */
