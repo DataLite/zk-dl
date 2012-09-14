@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.button;
 
-import cz.datalite.zk.help.DLI18n;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -20,7 +19,7 @@ import org.zkoss.zul.Toolbarbutton;
  *
  * @author Michal Pavlusek
  */
-public class DLToolbarButton extends Toolbarbutton implements DLI18n {
+public class DLToolbarButton extends Toolbarbutton  {
 
     public DLToolbarButton() {
         setAutodisable( "self" );
@@ -59,21 +58,6 @@ public class DLToolbarButton extends Toolbarbutton implements DLI18n {
      * well.
      */
     private boolean disabledOnReadonly;
-
-    /**
-     * Identifikator pro nalezeni helpu v databazi
-     */
-    private String helpId;
-
-    /**
-     * Text pro zobrazeni helpu (popup okno)
-     */
-    private String helpText;
-
-    /**
-     * Identifikator pro internacionalizaci (property file)
-     */
-    private String languageId;
 
     /**
      * Identifier of listbox which direct enabling/disabling of button
@@ -188,30 +172,5 @@ public class DLToolbarButton extends Toolbarbutton implements DLI18n {
                 } );
             }
         } );
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public void setHelpId( String helpId ) {
-        this.helpId = helpId;
-    }
-
-    public String getHelpId() {
-        return helpId;
-    }
-
-    public void getHelpText( String helpText ) {
-        this.helpText = helpText;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public void setLanguageId( String languageId ) {
-        this.languageId = languageId;
-    }
-
-    public String getLanguageId() {
-        return languageId;
     }
 }

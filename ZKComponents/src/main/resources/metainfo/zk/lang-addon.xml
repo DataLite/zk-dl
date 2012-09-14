@@ -32,78 +32,14 @@
     </zscript>
 
     <component>
-        <component-name>textbox</component-name>
-        <component-class>cz.datalite.zk.components.textbox.DLTextbox</component-class>
-        <extends>textbox</extends>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
-            <attribute>
-                <attribute-name>access</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onChange</attribute-value>
-            </attribute>
-        </annotation>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>readonly</property-name>
-        </annotation>
-    </component>
-
-    <component>
         <component-name>image</component-name>
         <component-class>cz.datalite.zk.components.image.DLImage</component-class>
         <extends>image</extends>
     </component>
     
     <component>
-        <component-name>intbox</component-name>
-        <component-class>cz.datalite.zk.components.intbox.DLIntbox</component-class>
-        <extends>intbox</extends>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
-            <attribute>
-                <attribute-name>access</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onChange</attribute-value>
-            </attribute>
-        </annotation>
-    </component>
-
-    <component>
-        <component-name>row</component-name>
-        <extends>row</extends>
-        
-    </component>
-
-    <component>
         <component-name>bigDecimalbox</component-name>
         <component-class>cz.datalite.zk.components.doublebox.DLBigDecimalbox</component-class>
-        <extends>doublebox</extends>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
-            <attribute>
-                <attribute-name>access</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onChange</attribute-value>
-            </attribute>
-        </annotation>
-    </component>
-
-    <component>
-        <component-name>doublebox</component-name>
-        <component-class>cz.datalite.zk.components.doublebox.DLDoublebox</component-class>
         <extends>doublebox</extends>
         <annotation>
             <annotation-name>default-bind</annotation-name>
@@ -212,28 +148,6 @@
     </component>
 
     <component>
-        <component-name>label</component-name>
-        <component-class>cz.datalite.zk.components.label.DLLabel</component-class>
-        <extends>label</extends>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>bean</property-name>
-            <attribute>
-                <attribute-name>access</attribute-name>
-                <attribute-value>read</attribute-value>
-            </attribute>
-        </annotation>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>value</property-name>
-        </annotation>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>visible</property-name>
-        </annotation>
-    </component>
-
-    <component>
         <component-name>button</component-name>
         <component-class>cz.datalite.zk.components.button.DLButton</component-class>
         <extends>button</extends>
@@ -251,12 +165,6 @@
             <annotation-name>default-bind</annotation-name>
             <property-name>visible</property-name>
         </annotation>
-    </component>
-
-    <component>
-        <component-name>window</component-name>
-        <component-class>cz.datalite.zk.components.window.DLWindow</component-class>
-        <extends>window</extends>
     </component>
 
 </language-addon>

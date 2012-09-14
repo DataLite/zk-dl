@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.button;
 
-import cz.datalite.zk.help.DLI18n;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -20,7 +19,7 @@ import org.zkoss.zul.Button;
  *
  * @author Jiri Bubnik
  */
-public class DLButton extends Button implements DLI18n {
+public class DLButton extends Button  {
 
     public DLButton() {
         setAutodisable("self");
@@ -56,21 +55,6 @@ public class DLButton extends Button implements DLI18n {
      * If you set readonly for whole page (or component tree) via ZKHelper.setReadonly(), this will check if button has to be disabled as well.
      */
     private boolean disabledOnReadonly;
-
-    /**
-     * Identifikator pro nalezeni helpu v databazi
-     */
-    private String helpId;
-
-    /**
-     * Text pro zobrazeni helpu (popup okno)
-     */
-    private String helpText;
-
-    /**
-     * Identifikator pro internacionalizaci (property file)
-     */
-    private String languageId;
 
     /**
      * Identifier of listbox which direct enabling/disabling of button
@@ -179,30 +163,5 @@ public class DLButton extends Button implements DLI18n {
                 } );
             }
         } );
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public void setHelpId( String helpId ) {
-        this.helpId = helpId;
-    }
-
-    public String getHelpId() {
-        return helpId;
-    }
-
-    public void getHelpText( String helpText ) {
-        this.helpText = helpText;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public void setLanguageId( String languageId ) {
-        this.languageId = languageId;
-    }
-
-    public String getLanguageId() {
-        return languageId;
     }
 }
