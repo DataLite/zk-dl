@@ -73,11 +73,13 @@ public class ZkBindingHandler extends Handler {
 
     @Override
     protected boolean doBefore( final Context context ) {
+        boolean success = true;
+        
         for ( String id : saveBefore ) {
             Component component = getComponent( id, context.getRoot() );
-            ZKBinderHelper.saveComponent( component );
+            success &= ZKBinderHelper.saveComponent( component );
         }
-        return true;
+        return success;
     }
 
     @Override

@@ -54,7 +54,7 @@ public class MethodValidator implements Validator {
      * Find the coerce method in composer
      *
      * @param comp component for the context
-     * @return
+     * @return method with validation implementation
      */
     public Method getValidationMethod( Component comp ) {
         if ( coerceMethod == null ) {

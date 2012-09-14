@@ -50,7 +50,7 @@ public class MethodConverter implements TypeConverter, Converter
      * Find the coerce method in composer
      * @param comp component for the context
      * @param valueClass to which class it should be converted
-     * @return
+     * @return method with converter
      */
     public Method getCoerceMethod(Component comp, Class valueClass)
     {

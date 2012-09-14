@@ -117,7 +117,7 @@ public class ZkExceptionHandler extends Handler {
      *
      * @param exception param type
      *
-     * @return
+     * @return unwrapped exception or null
      */
     protected Throwable getTypeOf(Throwable exception, Class type, boolean recursively) {
         if (exception == null) {

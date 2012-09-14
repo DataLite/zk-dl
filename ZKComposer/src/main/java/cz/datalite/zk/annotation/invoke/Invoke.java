@@ -40,7 +40,7 @@ public interface Invoke {
     /**
      * Additional functionality appended before method invocation
      *
-     * @param event source event
+     * @param context context of invocation
      *
      * @return TRUE if continue invoking, FALSE for stop propagation
      */
@@ -49,9 +49,7 @@ public interface Invoke {
     /**
      * Invoke the desired method including additional functionality
      *
-     * @param event      source event
-     * @param master     master component of controller
-     * @param controller controller object
+     * @param context context of invocation
      *
      * @return TRUE if continue invoking, FALSE for stop propagation
      *
@@ -62,7 +60,7 @@ public interface Invoke {
     /**
      * Additional functionality appended after method invocation.
      *
-     * @param event Source event
+     * @param context context of invocation
      */
     void doAfterInvoke(Context context);
 

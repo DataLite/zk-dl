@@ -26,7 +26,7 @@ import org.zkoss.zk.ui.sys.ComponentCtrl;
  * controller="${ctl.listCtl}" sets controller. Controller is read only. </li>
  * <li>@ZkModel - is accessible from ZUL page whith the {model}.property name.
  * Default value for {model} is "ctl" unless you set it to other value with
- * @ZkModel(name="model") on class level. Example: @ZkModel String modelProperty
+ * &#0064;ZkModel(name="model") on class level. Example: @ZkModel String modelProperty
  * = "xx"; ZUL: value="@{ctl.modelProperty}" sets value to "xx". Model is
  * read/write. </li> <li>@ZkParameter - checks ZK's parameter maps for parameter
  * name and set field to this value in doBeforeCompose(). It checks these maps:
@@ -220,8 +220,8 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      *
      * DLComposer extension here: <ul> <li>sets "self" variable to master
      * component</li> <li>calls setupMasterController() - if </li> <li>validates
-     * @ZkXXX annotations - e.g. @ZkBinding can be used only with @ZkEvent</li>
-     * <li>loads all @ZkXXX annotations</li> </ul>
+     * &#0064;ZkXXX annotations - e.g. &#0064;ZkBinding can be used only with &#0064;ZkEvent</li>
+     * <li>loads all &#0064;ZkXXX annotations</li> </ul>
      *
      * @param comp master component
      * @throws Exception
@@ -288,7 +288,7 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         MasterDetailUtils.onDetailChanged( detailControllers, model );
     }
 
-    /** ***************** @ZkModel and @ZkController ********************** */
+    /** ***************** &#0064;ZkModel and @ZkController ********************** */
     public Object get( final Object key ) {
         return ZkAnnotationUtils.get( key, this, zkModels, zkControllers );
     }

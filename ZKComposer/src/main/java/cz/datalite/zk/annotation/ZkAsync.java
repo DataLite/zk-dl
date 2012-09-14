@@ -103,7 +103,7 @@ public @interface ZkAsync {
      * If user is allowed to abort a running operation. Default is true
      *
      * Cancellable operations are executed in <strong>asynchronnous</strong>
-     * event which prevents from working with desktop bound object. Look at {@link #eventAfter
+     * event which prevents from working with desktop bound object. Look at {@link #doAfter
      * } to let things done correctly.
      *
      * @return cancellable operation

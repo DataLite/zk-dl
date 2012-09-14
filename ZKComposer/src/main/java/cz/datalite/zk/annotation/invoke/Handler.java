@@ -58,7 +58,7 @@ public abstract class Handler implements Invoke {
     /**
      * Additional functionality appended before method invocation
      *
-     * @param event source event
+     * @param context context of invocation
      *
      * @return TRUE if continue invoking, FALSE for stop propagation
      */
@@ -69,7 +69,7 @@ public abstract class Handler implements Invoke {
     /**
      * Additional functionality appended after method invocation.
      *
-     * @param event Source event
+     * @param context context of invocation
      */
     protected void doAfter(final Context context) {
     }
