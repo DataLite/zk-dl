@@ -30,16 +30,20 @@ import org.zkoss.zkplus.databind.DataBinder;
             bind.loadAttribute( comp );
     }
 
-    public void saveComponent( Component comp ) {
+    public boolean saveComponent( Component comp ) {
         getBinder( comp ).saveComponent( comp );
+        return true;
     }
 
-    public void saveComponentAttribute( Component comp, String attribute ) {
+    public boolean saveComponentAttribute( Component comp, String attribute ) {
         if ( getBinder( comp ) != null ) {
             Binding bind = getBinder( comp ).getBinding( comp, attribute );
-            if ( bind != null )
+            if ( bind != null ) {
                 bind.saveAttribute( comp );
-        }
+                return true;
+            }
+        }        
+        return false;
     }
 
     public void loadComponentAttributes( Component comp, String[] attributes ) {

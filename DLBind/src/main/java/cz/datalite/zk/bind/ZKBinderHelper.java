@@ -81,19 +81,21 @@ public abstract class ZKBinderHelper {
     }
 
     /** @see BinderHelper#saveComponent */
-    public static void saveComponent( Component comp ) {
-        if ( hasBinder( comp ) ) helper( comp ).saveComponent( comp );
+    public static boolean saveComponent( Component comp ) {
+        if ( hasBinder( comp ) ) return helper( comp ).saveComponent( comp );
         else
             LOGGER.warn( "Attempt to save a component but it is null or has not attached any binder." );
+        return false;
     }
 
     /** @see BinderHelper#saveComponentAttribute */
     @Deprecated
-    public static void saveComponentAttribute( Component comp, String attribute ) {
+    public static boolean saveComponentAttribute( Component comp, String attribute ) {
         if ( hasBinder( comp ) )
-            helper( comp ).saveComponentAttribute( comp, attribute );
+            return helper( comp ).saveComponentAttribute( comp, attribute );
         else
             LOGGER.warn( "Attempt to save a component's attribute but it is null or has not attached any binder." );
+        return false;
     }
 
     /** @see BinderHelper#loadComponentAttributes */

@@ -38,18 +38,21 @@ import org.zkoss.zk.ui.Component;
             Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
     }
 
-    public void saveComponent( Component comp ) {
-        if ( Binder.getBinder( comp ) == null )
+    public boolean saveComponent( Component comp ) {
+        if ( Binder.getBinder( comp ) == null ) {
             LOGGER.debug( "Binding on the component '{}' cannot be saved, the component is detached.", comp.getId() );
-        else
-            Binder.getBinder( comp ).saveComponent( comp );
+            return false;
+        } else {
+            return Binder.getBinder( comp ).saveComponent( comp );
+        }
     }
 
-    public void saveComponentAttribute( Component comp, String attribute ) {
-        if ( Binder.getBinder( comp ) == null )
+    public boolean saveComponentAttribute( Component comp, String attribute ) {
+        if ( Binder.getBinder( comp ) == null ) {
             LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be saved, the component is detached.", attribute, comp.getId() );
-        else
-            Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
+            return false;
+        } else
+            return Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
     }
 
     public void loadComponentAttributes( Component comp, String[] attributes ) {

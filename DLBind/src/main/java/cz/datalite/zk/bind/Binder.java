@@ -25,9 +25,9 @@ public class Binder extends AnnotateBinder {
     /** instance of looger */
     protected static final Logger LOGGER = LoggerFactory.getLogger( Binder.class );
 
-    public void saveComponent( Component comp ) {
+    public boolean saveComponent( Component comp ) {
         LOGGER.trace( "Saving the component '{}'.", comp.getClass() );
-        saveAllBindings( comp );
+        return saveAllBindings( comp );
     }
 
     public void loadComponent( Component comp ) {
@@ -42,9 +42,9 @@ public class Binder extends AnnotateBinder {
     }
 
     @Deprecated
-    public void saveComponentAttribute( Component comp, String attribute ) {
+    public boolean saveComponentAttribute( Component comp, String attribute ) {
         LOGGER.trace( "Saving the attribute '{}' on the component '{}'.", attribute, comp.getClass() );
-        saveBinding( comp, new BindingKey( comp, attribute ) );
+        return saveBinding( comp, new BindingKey( comp, attribute ) );
     }
 
     public static Binder getBinder( Component comp ) {

@@ -28,9 +28,6 @@ public class DLBeanValidator extends BeanValidator {
         // automaticke nastvani chyby na komponentu 
         if ( ctx.isValid() )
             Clients.clearWrongValue( component );
-        else {
-//        Clients.wrongValue(component, ctx.); 
-        }
     }
 
     @Override

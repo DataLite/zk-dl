@@ -32,17 +32,21 @@ public interface BinderHelper {
      * Stores the component using databinding
      *
      * @param comp comopnent to be stored
+     * 
+     * @return whether all related bindings was saved successfully
      */
-    void saveComponent( Component comp );
+    boolean saveComponent( Component comp );
 
     /**
      * Saves the attribute of the component
      *
      * @param comp component to be saved
      * @param attribute attribute to be saved
+     * 
+     * @return whether the binding was saved successfully
      */
     @Deprecated
-    void saveComponentAttribute( Component comp, String attribute );
+    boolean saveComponentAttribute( Component comp, String attribute );
 
     /**
      * Load given attributes on the given component
@@ -60,7 +64,6 @@ public interface BinderHelper {
      * @param property property of the component
      * @param annotName annotation name
      * @param value annotation value
-     * @author Karel Cemus
      */
     void registerAnnotation( final AbstractComponent component, final String property, final String annotName, final String value );
 
