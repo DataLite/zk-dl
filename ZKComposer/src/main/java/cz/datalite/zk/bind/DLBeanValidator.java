@@ -22,7 +22,12 @@ public class DLBeanValidator extends BeanValidator {
         if ( validateValue != null && validateValue instanceof String && validateValue.toString().trim().length() == 0 )
             (( PropertyImpl ) ctx.getProperty()).setValue( null );
 
-        super.validate( ctx );
+        try {
+            super.validate( ctx );
+        } catch( IllegalArgumentException ignored ) {
+            // drop argument exception because it tries to validate 
+            // everything, event "virtual" fields of maps etc.
+        }
 
         final Component component = ctx.getBindContext().getComponent();
         // automaticke nastvani chyby na komponentu 
