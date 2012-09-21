@@ -28,17 +28,17 @@ public abstract class ZKBinderHelper {
         
         final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
 
-        // if it has none or both, then that is the problem
-        if ( binder == null && ( !hasComposer ^ hasBinderId ) )
+        // if binder is not assigned and neither the composer it means that the binding is not initialized yet.
+        if ( binder == null && !hasComposer )
             throw new IllegalArgumentException( "Component doesn't have assigned any binder." );
 
-        if ( ( binder != null && binder instanceof AnnotateDataBinder ) || hasComposer )
+        if ( binder != null && binder instanceof AnnotateDataBinder )
             return BinderHelperV1.INSTANCE;
 
-        if ( ( binder != null && binder instanceof Binder ) || hasBinderId )
+        if ( binder != null && binder instanceof Binder )
             return BinderHelperV2.INSTANCE;
-
-        throw new UnsupportedOperationException( "Component has attached unsupported version of data binder." );
+        
+        return hasBinderId ? BinderHelperV2.INSTANCE : BinderHelperV1.INSTANCE;
     }
     
     /** Returns wheather or not the binder is detectable and is supposed to be
@@ -48,11 +48,9 @@ public abstract class ZKBinderHelper {
 
         final Object binder = component.getAttribute( "binder", true );
 
-        final boolean hasBinderId = component.getRoot().getAttribute( "$BINDER_ID$" ) != null;
-
         final boolean hasComposer = component.getRoot().getAttribute( "$composer" ) != null;
 
-        return binder != null || (hasComposer ^ hasBinderId);
+        return binder != null || hasComposer;
     }
 
     /** Returns wheather or not the component has attached any binder instance */

@@ -48,7 +48,7 @@ public class Binder extends AnnotateBinder {
     }
 
     public static Binder getBinder( Component comp ) {
-        return ( Binder ) comp.getAttribute( "$BINDER$", true );
+        return ( Binder ) comp.getAttribute( "binder", true );
     }
 
     @Override
