@@ -1,4 +1,4 @@
-package cz.datalite.zk.bind;
+package cz.datalite.zk.converter;
 
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.Converter;
@@ -9,7 +9,7 @@ import org.zkoss.zkplus.databind.TypeConverter;
  * TypeConverterAdapter to support converters defined in ZK 5 or prior. Since ZK6
  * there is new interface it has to implement.
  * 
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus <cemuskar@fel.cvut.cz>
  */
 
 

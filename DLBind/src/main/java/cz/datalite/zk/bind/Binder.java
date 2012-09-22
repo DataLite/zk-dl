@@ -1,5 +1,7 @@
 package cz.datalite.zk.bind;
 
+import cz.datalite.zk.converter.MethodConverter;
+import cz.datalite.zk.converter.TypeConverterAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.AnnotateBinder;
