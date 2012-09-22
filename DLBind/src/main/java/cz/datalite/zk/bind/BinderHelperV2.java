@@ -72,4 +72,8 @@ import org.zkoss.zk.ui.Component;
     public int version() {
         return 2;
     }
+
+    public Object resolveConverter( String converter, Component component ) {
+        return Binder.getBinder( component ).getConverter( converter );
+    }
 }

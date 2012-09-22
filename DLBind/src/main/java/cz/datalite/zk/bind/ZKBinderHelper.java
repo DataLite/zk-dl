@@ -135,4 +135,9 @@ public abstract class ZKBinderHelper {
         if ( hasDetachedBinder( comp ) ) return helper( comp ).version();
         else return NOT_DEFINED;
     }
+    
+    public static Object resolveConverter( final String converter, final Component component ) {
+        if ( hasBinder( component ) ) return helper( component ).resolveConverter( converter, component );
+        else return null;
+    }
 }

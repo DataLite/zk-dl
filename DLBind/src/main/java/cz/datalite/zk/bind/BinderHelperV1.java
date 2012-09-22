@@ -1,6 +1,10 @@
 package cz.datalite.zk.bind;
 
+import java.lang.reflect.Constructor;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zkplus.databind.Binding;
@@ -14,6 +18,8 @@ import org.zkoss.zkplus.databind.DataBinder;
  */
 /* package */ class BinderHelperV1 implements BinderHelper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger( BinderHelper.class );
+    
     /* package */ static final BinderHelperV1 INSTANCE = new BinderHelperV1();
 
     protected BinderHelperV1() {
@@ -42,7 +48,7 @@ import org.zkoss.zkplus.databind.DataBinder;
                 bind.saveAttribute( comp );
                 return true;
             }
-        }        
+        }
         return false;
     }
 
@@ -66,5 +72,21 @@ import org.zkoss.zkplus.databind.DataBinder;
 
     protected DataBinder getBinder( Component comp ) {
         return ( DataBinder ) comp.getAttributeOrFellow( "binder", true );
+    }
+
+    public Object resolveConverter( String converter, Component component ) {
+        try {
+            // create instance of binding, constructor is package-friendly
+            Constructor<Binding> bindingConstructor = Binding.class.getDeclaredConstructor( DataBinder.class, Component.class, String.class, String.class, LinkedHashSet.class, LinkedHashSet.class, String.class, String.class );
+            bindingConstructor.setAccessible( true );
+            Binding binding = bindingConstructor.newInstance( component.getAttribute( "binder", true ), component, null, null, null, null, null, converter );
+
+            // return resolved constructor
+            return binding.getConverter();
+
+        } catch ( Exception ex ) {
+            LOGGER.warn( "Converter '{}' wasn't resolved.", converter, ex);
+            return null;
+        }
     }
 }

@@ -82,4 +82,13 @@ public interface BinderHelper {
      * @return version of data binding
      */
     int version();
+    
+    /**
+     * Resolves converter name in the context of current binding
+     * 
+     * @param converter converter name, class or method
+     * @param component component with converter
+     * @return 
+     */
+    Object resolveConverter( final String converter, final Component component );
 }
