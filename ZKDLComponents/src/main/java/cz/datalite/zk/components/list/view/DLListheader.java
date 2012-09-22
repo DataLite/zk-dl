@@ -11,6 +11,7 @@ import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.zkoss.lang.Strings;
 import org.zkoss.zk.ui.WrongValueException;
@@ -63,7 +64,7 @@ public class DLListheader extends Listheader {
         model.setVisible( isVisible() );
         model.setColumn( column );
         model.setColumnType( columnType );
-        model.setConverter( converter, this );
+        model.setConverter( converter, this, Collections.<String,String>emptyMap() );
         model.setQuickFilter( quickFilter );
         model.setFilter( filter );
         model.setFilterOperators( operators );

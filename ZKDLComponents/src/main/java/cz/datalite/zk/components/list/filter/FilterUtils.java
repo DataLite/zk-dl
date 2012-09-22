@@ -36,14 +36,7 @@ public class FilterUtils {
         if ( columnModel != null && columnModel.isConverter() ) {
 
             try {
-                if ( columnModel.getController() == null ) {
-                    // converter defined as a class
-                    final Object converter = columnModel.getConverter().getDeclaringClass().newInstance();
-                    return columnModel.getConverter().invoke( converter, value, null );
-                } else {
-                    // converter defined as 'ctl.coerce...'
-                    return columnModel.getConverter().invoke( columnModel.getController(), value );
-                }
+                return columnModel.getConverter().convertToView( value );
             } catch ( Exception ex ) {
                 LOGGER.warn( "Conversion in DLFilter failed!", ex );
             }

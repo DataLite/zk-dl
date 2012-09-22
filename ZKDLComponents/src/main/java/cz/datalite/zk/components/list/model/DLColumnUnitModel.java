@@ -6,17 +6,16 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
+import cz.datalite.zk.converter.ConverterResolver;
+import cz.datalite.zk.converter.ZkConverter;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zkoss.bind.BindContext;
-import org.zkoss.bind.Converter;
-import org.zkoss.zkplus.databind.TypeConverter;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -31,7 +30,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     // column data type - used for conversion in the filters
     protected Class columnType;
     // converter for the modifying value
-    protected Method converter;
+    protected ZkConverter converter;
     // instance of controller to allow to use convertors defined as "ctl.coerce..."
     protected Composer controller;
     // column label
@@ -276,67 +275,16 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         return converter != null;
     }
 
-    public Method getConverter() {
+    public ZkConverter getConverter() {
         return converter;
     }
 
-    public void setConverter( final Method converter ) {
+    public void setConverter( final ZkConverter converter ) {
         this.converter = converter;
     }
 
-    public void setConverter( String converter, final Component comp ) {
-        try {
-            if ( converter == null || converter.length() == 0 ) {
-                setConverter( null );
-                return;
-            }
-                   
-            // trim the quotes if any
-            if (converter.startsWith( "'") && converter.endsWith( "'")) {
-                converter = converter.substring( 1, converter.length()-1 );
-            }
-
-            try {
-                Class converterInstance = Class.forName( converter );
-                
-                // if it is the converter for ZK5--                
-                if ( TypeConverter.class.isAssignableFrom( converterInstance) )
-                    setConverter( converterInstance.getMethod( "coerceToUi", Object.class, Component.class ) );
-                // else if it is the converter for ZK6++
-                else if ( Converter.class.isAssignableFrom( converterInstance) )
-                    setConverter( Class.forName( converter ).getMethod( "coerceToUi", Object.class, Component.class, BindContext.class ) );
-
-                return;
-            } catch ( Exception ex ) {
-                if ( converter.contains( "." ) ) {
-                    final String ctl = converter.split( "\\." )[0];
-                    final String methodName = converter.split( "\\." )[1];
-
-                    controller = ( Composer ) comp.getAttribute(ctl, true);
-
-                    if ( controller != null ) {
-                        // set the controller to component scope for future use (e.g. reset filters)
-                        // if the component is removed because of visibility, the controller is not available
-                        // through normal reference
-                        comp.setAttribute(ctl, controller, Component.COMPONENT_SCOPE);
-
-                        for ( Method method : controller.getClass().getDeclaredMethods() ) {
-                            if ( methodName.equals( method.getName() ) ) {
-                                setConverter( method );
-                                return;
-                            }
-                        }
-                        throw new NoSuchMethodException( "No such method for converter " + converter );
-                    }
-                }
-            }
-            throw new IllegalArgumentException( "Unsupported class type in converter. "
-                    + "'org.zkoss.zkplus.databind.TypeConverter' of "
-                    + "'org.zkoss.bind.Converter' is required instead "
-                    + "of given '" + converter + "'." );
-        } catch ( Exception ex ) {
-            throw new IllegalArgumentException( ex );
-        }
+    public void setConverter( final String converter, final Component comp, final Map<String,String> attributes ) {
+        this.converter = ConverterResolver.resolve( converter, comp, controller, attributes );
     }
 
     public void setQuickFilter( final boolean quickFilter ) {

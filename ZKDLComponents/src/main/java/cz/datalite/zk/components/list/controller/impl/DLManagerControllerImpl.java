@@ -10,6 +10,7 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
+import cz.datalite.zk.converter.ZkConverter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -433,13 +434,10 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                     }
 
                     if ((Boolean) unit.get("isConverter")) {
-                        value = convert(value, (Method) unit.get("converter"));
+                        ZkConverter converter = (ZkConverter) unit.get("converter");
+                        value = converter.convertToView( value );
                     }
                     cells.add(new DataCell(row, value, heads.get(column)));
-                } catch (InvocationTargetException ex) {
-                    throw new RuntimeException(ex);
-                } catch (InstantiationException ex) {
-                    throw new RuntimeException(ex);
                 } catch (Exception ex) { // ignore
                     LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
                 }
@@ -450,39 +448,4 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         return cells;
     }
 
-    protected Object convert(final Object value, final Method converter) throws InvocationTargetException, InstantiationException {
-        if ("coerceToUi".equals(converter.getName())) {
-            return convertWithTypeConverter(value, converter);
-        } else {
-            return convertWithClt(value, converter);
-        }
-    }
-
-    protected Object convertWithClt(final Object value, final Method converter) throws InvocationTargetException {
-        try {
-            if (converter.getGenericParameterTypes().length == 2) {
-                // two parameter converter - add component (usually there is a no parameter public constructor)
-                Object component = converter.getGenericParameterTypes()[1].getClass().newInstance();
-                return converter.invoke(masterController.getWindowCtl(), value, component);
-            } else {
-                return converter.invoke(masterController.getWindowCtl(), value);
-            }
-        } catch (IllegalAccessException ex) {
-            return value;
-        } catch (IllegalArgumentException ex) {
-            return value;
-        } catch (InstantiationException e) {
-            return value;
-        }
-    }
-
-    protected Object convertWithTypeConverter(final Object value, final Method converter) throws InvocationTargetException, InstantiationException {
-        try {
-            return converter.invoke(converter.getDeclaringClass().newInstance(), new Object[]{value, null});
-        } catch (IllegalAccessException ex) {
-            return value;
-        } catch (IllegalArgumentException ex) {
-            return value;
-        }
-    }
 }

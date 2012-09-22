@@ -427,11 +427,20 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
 
             String converter = null;
+            Map<String,String> converterArgs = Collections.<String,String>emptyMap();
 
-            if ( info.getAnnotationMap() != null )
+            if ( info.getAnnotationMap() != null && info.getAnnotationMap().getAnnotation( "label", "converter" ) != null ) {
                 converter = info.getAnnotationMap().getAnnotation( "label", "converter" ) != null
                         ? info.getAnnotationMap().getAnnotation( "label", "converter" ).getAttribute( "value" )
                         : null;
+                converterArgs = new HashMap<String, String>();
+                Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation( "label", "converter" ).getAttributes();
+                for ( String key : attrs.keySet() ) {
+                    if ( attrs.get( key ).length > 0 )
+                        // strip quotes
+                        converterArgs.put( key, attrs.get( key )[0].replaceAll( "^'(.*)'$", "$1") );
+                }
+            }
 
             if ( columnMap.get( header ).getColumn() == null && bindingText != null ) // set column from binding
             
@@ -441,7 +450,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                     columnMap.get( header ).setColumn( bindingText.substring( bindingText.indexOf( '.' ) + 1 ) );
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
             
-                columnMap.get( header ).setConverter( converter, listbox );
+                columnMap.get( header ).setConverter( converter, listbox, converterArgs );
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
             
                 columnMap.get( header ).setColumnType( getFieldType( masterController.getEntityClass(), columnMap.get( header ).getColumn() ) );
@@ -474,7 +483,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
             {
-                columnMap.get( header ).setConverter( converter, listbox );
+                columnMap.get( header ).setConverter( converter, listbox, Collections.<String,String>emptyMap() );
             }
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
             {
