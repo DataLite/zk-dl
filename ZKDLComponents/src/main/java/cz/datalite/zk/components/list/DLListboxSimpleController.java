@@ -9,7 +9,7 @@ import java.util.List;
  * operate over the list without database. Useful tool for this controller is
  * Filter which can sort and filter data.
  * @param <T> 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class DLListboxSimpleController<T> extends DLListboxGeneralController<T> {
 

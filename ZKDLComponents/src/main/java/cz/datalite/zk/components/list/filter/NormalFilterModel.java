@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * class makes code much simpler.
  *
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class NormalFilterModel extends LinkedList<NormalFilterUnitModel> implements Cloneable {
 

@@ -30,7 +30,7 @@ import org.zkoss.zk.ui.Component;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class CommandInvoker implements Invoke {
     

@@ -17,7 +17,7 @@ import org.zkoss.zul.Messagebox;
  * <p>Default is question with button with Yes and No and accessButton
  * is Yes.</p>
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )

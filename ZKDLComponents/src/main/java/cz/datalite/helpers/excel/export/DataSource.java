@@ -6,7 +6,7 @@ import java.util.List;
  * <p>Abstraktní třída pro definoci datového zdroje pro list. Definuje 
  * seznam buňek, které mají být zapsány.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class DataSource {
 

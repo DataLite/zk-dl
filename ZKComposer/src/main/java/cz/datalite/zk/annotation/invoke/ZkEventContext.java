@@ -10,7 +10,7 @@ import org.zkoss.zk.ui.event.Event;
  * handlers to be completely stateless. All statefull configuration will be
  * brought with the invocation.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkEventContext extends Context{
 

@@ -13,7 +13,7 @@ import org.openqa.selenium.internal.FindsById;
 /**
  * Factory class for creating seach criteria
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class By extends org.openqa.selenium.By {
 

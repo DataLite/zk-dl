@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of Combobox
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Combobox extends InputElement {
 

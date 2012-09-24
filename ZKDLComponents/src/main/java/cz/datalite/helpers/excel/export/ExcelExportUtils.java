@@ -13,7 +13,7 @@ import org.zkoss.util.media.AMedia;
  * <p>Metoda usnadňuje exportování dat do excelu, soubor XLS. Využívá ke své práci
  * knihovnu jExcelApi. Umožňuje uivateli využí zcela automatický exportSimple stejně jako
  * použít pouze pomocné metody a celkový postup si udělat dle sebe.</p>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public final class ExcelExportUtils {
 

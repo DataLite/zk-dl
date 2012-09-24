@@ -8,7 +8,7 @@ import java.util.List;
  * total length. If row count isn't required, this container can be
  * created by user only with data.
  * @param <T> entity in result list
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLResponse<T> {
 

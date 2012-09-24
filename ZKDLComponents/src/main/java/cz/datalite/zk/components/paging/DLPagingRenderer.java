@@ -10,7 +10,7 @@
 // * {@link org.zkoss.zul.Paging}'s default mold.
 // *
 // * @author Jeff Liu
-// * @author Karel Čemus <cemus@datalite.cz> created  10.8.2009, last edit 28.8.2009
+// * @author Karel Cemus created  10.8.2009, last edit 28.8.2009
 // * @since 3.0.0
 // */
 //public class DLPagingRenderer implements ComponentRenderer{

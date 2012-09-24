@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
  * These components can be filled by special methods or by autofill. Autofill
  * writes to the component some constant valid data.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class InputElement extends ZkElement {
 

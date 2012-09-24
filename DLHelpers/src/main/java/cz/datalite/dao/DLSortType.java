@@ -2,7 +2,7 @@ package cz.datalite.dao;
 
 /**
  * Enumeration defines sortTypes like ascending, descending and natural
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public enum DLSortType {
 

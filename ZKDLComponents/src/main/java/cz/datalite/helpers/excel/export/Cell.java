@@ -6,7 +6,7 @@ import jxl.write.WritableFont;
 /**
  * <p>Rozhraní udává, že se jedná o buňku zapsatelnou do sešitu v excelu.
  * Definuje možnosti jako font styl, pozice a hodnota.</p>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface Cell {
 

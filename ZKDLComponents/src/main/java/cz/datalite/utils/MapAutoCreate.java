@@ -9,7 +9,7 @@ import java.util.Set;
  * @param <K> key
  * @param <V> value
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface MapAutoCreate<K, V> extends Map<K, V> {
 

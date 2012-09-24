@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface for the listbox component which provides
  * many utils and tools for the combobox.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLManagerController {
 

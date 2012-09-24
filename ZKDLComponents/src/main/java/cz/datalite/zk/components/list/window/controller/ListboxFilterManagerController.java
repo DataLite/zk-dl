@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Controller for the listbox filter manager which allows advanced settings for
  * filtering.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ListboxFilterManagerController extends GenericAutowireComposer {
 

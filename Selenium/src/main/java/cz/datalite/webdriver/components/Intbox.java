@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of ZK Intbox component
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Intbox extends InputElement {
 

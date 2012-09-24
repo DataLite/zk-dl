@@ -22,7 +22,7 @@ import java.util.Set;
  * exception is thrown and test fails. Also this class
  * looks for login page and tries to log in.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class SeleniumUnitTest {
 

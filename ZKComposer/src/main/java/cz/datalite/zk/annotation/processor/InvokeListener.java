@@ -28,7 +28,7 @@ import org.zkoss.zk.ui.event.EventListener;
  * <p>Invocation listener is bound to components and listens on required event.
  * When it is called then the {@link Invoke} object is executed.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class InvokeListener implements EventListener {
 

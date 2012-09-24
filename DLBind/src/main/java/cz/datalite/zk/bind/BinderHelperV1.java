@@ -14,7 +14,7 @@ import org.zkoss.zkplus.databind.DataBinder;
  * Implementation of Binding utils for databinding in version 1.0 what came with
  * ZK in the project beginning.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 /* package */ class BinderHelperV1 implements BinderHelper {
 

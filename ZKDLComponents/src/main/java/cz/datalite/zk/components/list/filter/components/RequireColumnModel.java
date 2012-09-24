@@ -4,7 +4,7 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface RequireColumnModel {
 

@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
  *
  * This class handles messageboxes, standard popup windows.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class MessageBox {
 

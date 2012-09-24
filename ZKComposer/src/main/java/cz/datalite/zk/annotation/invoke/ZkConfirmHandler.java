@@ -31,7 +31,7 @@ import org.zkoss.zul.Messagebox;
  * up instead. When positive answer comes then the event propagation goes
  * on.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkConfirmHandler extends Handler {
 

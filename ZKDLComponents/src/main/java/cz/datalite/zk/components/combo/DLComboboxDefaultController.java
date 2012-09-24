@@ -13,7 +13,7 @@ import org.zkoss.zk.ui.Component;
  * user wants to use default ZK combobox. This implementation is required
  * because of MVC architecture which isn't supported by ZK framework.
  * @param <T> 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLComboboxDefaultController<T> implements DLComboboxExtController<T> {
 

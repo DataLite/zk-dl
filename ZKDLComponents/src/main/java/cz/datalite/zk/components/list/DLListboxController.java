@@ -16,7 +16,7 @@ import java.util.Set;
  * relies on the user which type he will choose.
  *
  * @param <T> main entity
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLListboxController<T> {
 

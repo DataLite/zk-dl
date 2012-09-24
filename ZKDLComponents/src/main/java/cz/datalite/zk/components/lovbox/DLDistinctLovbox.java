@@ -12,7 +12,7 @@ import org.zkoss.zkplus.databind.AnnotateDataBinder;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLDistinctLovbox extends DLLovbox<Box> {
 

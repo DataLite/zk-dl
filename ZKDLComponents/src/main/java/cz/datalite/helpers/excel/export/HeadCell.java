@@ -8,7 +8,7 @@ import jxl.write.WritableFont;
  * o hlavičkovou buňku. Tento objekt se využívá pro práci s
  * {@link cz.datalite.helpers.excel.export.ExcelExportUtils} 
  * využívající knihovnu jExcelApi<p>
- * @author Karel Čemus
+ * @author Karel Cemus
  */
 public class HeadCell implements Cell {
 

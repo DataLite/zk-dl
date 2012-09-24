@@ -29,7 +29,7 @@ import org.zkoss.zk.ui.event.*;
  * required record more quickly.</p>
  * <p>One of the disadvantages is unsupported intellisense. </p>
  * @param <T> main entity class in this component
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 

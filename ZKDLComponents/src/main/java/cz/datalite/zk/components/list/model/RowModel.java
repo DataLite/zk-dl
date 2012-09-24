@@ -11,7 +11,7 @@ import org.zkoss.zul.Space;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class RowModel {
 

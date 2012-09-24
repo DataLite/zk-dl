@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.event.Events;
 /**
  * Utils for initialization and using of the Master-Detail window composition.
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public final class MasterDetailUtils {
 

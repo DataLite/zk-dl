@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Easy filter unit model - groups key and values for the each
  * operator.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class EasyFilterMapKeyValue extends HashMap<String, Object> {
 

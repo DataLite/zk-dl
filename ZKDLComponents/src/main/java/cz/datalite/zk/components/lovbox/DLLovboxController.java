@@ -9,7 +9,7 @@ import org.zkoss.zk.ui.event.EventListener;
  * This bandbox substitudes combobox but in contrast to it this object can
  * quickly operate with huge data models.
  * @param <T> main entity in the bandbox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLLovboxController<T> extends Cascadable<T> {
 

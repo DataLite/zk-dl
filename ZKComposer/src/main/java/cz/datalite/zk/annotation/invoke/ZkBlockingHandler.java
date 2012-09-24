@@ -30,7 +30,7 @@ import org.zkoss.zk.ui.event.Events;
  * registered component executes load or safe based on annotation's
  * properties.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkBlockingHandler extends Handler {
 

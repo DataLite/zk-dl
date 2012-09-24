@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
  * signature without compile-time controll. These
  * methods are invoked via reflection.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class GeneralWrapperProcessor<T> implements Wrapper {
 

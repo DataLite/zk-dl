@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Default implementation of controller. It is used because of
  * back compatibility.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLDefaultManagerControllerImpl implements DLManagerController {
 

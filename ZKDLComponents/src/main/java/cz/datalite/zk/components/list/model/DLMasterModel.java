@@ -5,7 +5,7 @@ import cz.datalite.zk.components.paging.DLPagingModel;
 
 /**
  * Master component model - groups all models used in the components.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLMasterModel {
 

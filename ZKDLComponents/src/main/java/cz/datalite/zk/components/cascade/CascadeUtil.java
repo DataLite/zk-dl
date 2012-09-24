@@ -12,7 +12,7 @@ import org.zkoss.zk.ui.UiException;
  * Utility methods for cascading.
  * 
  * @param <T> 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class CascadeUtil<T> {
 

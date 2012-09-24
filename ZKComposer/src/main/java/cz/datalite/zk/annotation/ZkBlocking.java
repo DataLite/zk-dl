@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * <p>Do <strong>NOT</strong> use this annotation with {@link ZkAsync}. Both
  * annotations are considered to provide similar effect in different ways.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

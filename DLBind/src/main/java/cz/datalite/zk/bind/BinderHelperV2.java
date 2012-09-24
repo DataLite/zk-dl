@@ -11,7 +11,7 @@ import org.zkoss.zk.ui.Component;
  * Binder helper implementation for databinding in version 2.0 which came with
  * ZK 6.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 /* package */ class BinderHelperV2 implements BinderHelper {
 

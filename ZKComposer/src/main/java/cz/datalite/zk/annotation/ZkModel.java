@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * is defined in this annotation then getter and setter has to have name like
  * definition in the annotation, no like a property name. Getter and setter
  * needn't be defined both.</p>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( { ElementType.FIELD, ElementType.METHOD, ElementType.TYPE } )

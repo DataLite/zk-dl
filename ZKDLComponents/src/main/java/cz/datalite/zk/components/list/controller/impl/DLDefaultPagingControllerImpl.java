@@ -6,7 +6,7 @@ import cz.datalite.zk.components.paging.DLPagingController;
 /**
  * Default implementation of controller. It is used because of
  * back compatibility.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLDefaultPagingControllerImpl implements DLPagingController {
 

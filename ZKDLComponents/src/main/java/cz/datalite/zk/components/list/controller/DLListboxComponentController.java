@@ -15,7 +15,7 @@ import org.zkoss.zk.ui.util.Template;
  * on event invoked on the component and needen't be served by
  * the master controller.
  * @param <T> main entity
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLListboxComponentController<T> {
 

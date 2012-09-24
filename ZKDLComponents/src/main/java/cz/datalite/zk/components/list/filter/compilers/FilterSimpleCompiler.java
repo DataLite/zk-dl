@@ -10,7 +10,7 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
  * extended compile method here on in its parent.
  * <p>
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @author xmedeko (new implementation which works with null values)
  */
 public class FilterSimpleCompiler extends AbstractFilterCompiler {

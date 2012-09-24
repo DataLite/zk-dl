@@ -41,7 +41,7 @@ import org.zkoss.zk.ui.event.OpenEvent;
  * also quickly loaded. One of the disadvantages is intellisense,
  * which isn't supported in contrast to combobox.
  * @param <T>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComponent {
 

@@ -13,7 +13,7 @@ import java.util.List;
  * using back-doors there is sent query to server to get paging and 
  * query uuids.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Listbox extends ZkElement {
 

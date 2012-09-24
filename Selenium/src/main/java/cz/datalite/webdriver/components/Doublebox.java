@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 
 /**
  * Mirror of Doublebox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Doublebox extends InputElement {
 

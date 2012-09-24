@@ -9,7 +9,7 @@ import org.zkoss.zul.impl.InputElement;
  * This class implements FilterComponent interface and defines a standard
  * behaviour of majority of the methods. Every method can be overriden to define
  * a specific implementation.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class AbstractFilterComponent<T extends InputElement> implements CloneableFilterComponent {
 

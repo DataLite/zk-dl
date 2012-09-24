@@ -14,7 +14,7 @@ import cz.datalite.zk.components.list.filter.compilers.AbstractFilterCompiler;
  * and extended the compile method with additional case here or in the parent
  * class.
  *
- * @author Karel ÄŚemus <cemus@datalite.cz>
+ * @author Karel ÄŚemus
  */
 public class FilterLiferayCompiler extends AbstractFilterCompiler {
 

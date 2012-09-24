@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  * is assembled from this part and file name.</em></li>
  * </ul>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @since version 3, 9.9.2010
  */
 public class ZkDriver {

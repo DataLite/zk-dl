@@ -7,7 +7,7 @@ import cz.datalite.zk.components.list.filter.EasyFilterModel;
 
 /**
  * Implementation of the controller for the easy filter.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLEasyFilterControllerImpl implements DLEasyFilterController {
 

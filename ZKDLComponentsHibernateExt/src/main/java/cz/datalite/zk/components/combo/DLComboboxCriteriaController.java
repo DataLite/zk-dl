@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
 /**
  * Implementation of the ComboboxController which is using Hibernate Criterions
  * @param <T> main entity in the combobox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class DLComboboxCriteriaController<T> extends DLComboboxGeneralController<T> {
 

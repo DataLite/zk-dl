@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 /**
  * This is mirror of ZK Paging component
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Paging extends ZkElement {
 

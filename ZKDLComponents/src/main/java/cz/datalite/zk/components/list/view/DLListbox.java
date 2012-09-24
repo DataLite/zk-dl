@@ -27,7 +27,7 @@ import org.zkoss.zul.ext.Selectable;
  * other utils allows user to use sorting, paging, filtering, exporting
  * and some other tools. This component supports MVC architecture.
  * @author Jiri Bubnik
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLListbox extends Listbox {
     

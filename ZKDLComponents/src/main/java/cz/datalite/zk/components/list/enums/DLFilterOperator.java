@@ -13,7 +13,7 @@ import org.zkoss.util.resource.Labels;
  * arity is 2. For extension this value have to be redesigned NormalFilter form,
  * inner implementation of NormalFilterUnitModel and few calls, because their are
  * based on exact enumeration of desired values instead of eg. List.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public enum DLFilterOperator {
 

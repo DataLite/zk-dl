@@ -13,7 +13,7 @@ import org.zkoss.zk.ui.event.EventListener;
  *{@link cz.datalite.zk.components.list.filter.components.AbstractFilterComponent}
  * which offers few implemented methods so there needn't be everything redefined.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface FilterComponent<T> {
 

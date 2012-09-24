@@ -9,7 +9,7 @@ import java.util.Set;
  * is setted throw databinding. This value needn't be in the
  * listbox model.
  * @param <T> entity for which one is bandbox created
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLLovboxModel<T> {
 

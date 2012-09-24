@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.Component;
 /**
  * Binder extension providing support ZK-DL for annotation processing
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class AnnotationBinder extends Binder {
 

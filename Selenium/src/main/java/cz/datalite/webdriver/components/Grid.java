@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of Grid
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Grid extends ZkElement {
 

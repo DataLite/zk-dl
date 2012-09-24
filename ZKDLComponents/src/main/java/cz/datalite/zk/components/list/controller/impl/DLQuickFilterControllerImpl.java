@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 /**
  * Implementation of the controller for the quick filter component.
  * It is quick and simple tool for searching in the model.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 

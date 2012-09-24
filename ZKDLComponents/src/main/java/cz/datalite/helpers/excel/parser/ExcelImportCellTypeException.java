@@ -2,7 +2,7 @@ package cz.datalite.helpers.excel.parser;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ExcelImportCellTypeException extends ExcelImportException {
 

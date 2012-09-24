@@ -6,7 +6,7 @@ import org.zkoss.zul.Intbox;
 /**
  * Standard implementation of the filter component for intboxes. There are
  * no validation additions, each of restrictions comes from the component.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class IntegerFilterComponent extends AbstractFilterComponent<Intbox> {
 

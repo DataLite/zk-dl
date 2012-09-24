@@ -6,7 +6,7 @@ package cz.datalite.zk.components.list.filter.components;
  * is defined by class name. This class is reproduced by its constructor without
  * parameters. 
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class InstanceFilterComponentFactory implements FilterComponentFactory {
     

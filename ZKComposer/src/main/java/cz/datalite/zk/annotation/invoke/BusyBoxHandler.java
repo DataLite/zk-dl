@@ -30,7 +30,7 @@ import org.zkoss.zul.Window;
 /**
  * BusyBoxHandler allows to show modal blocking window on client. This window is considered to be used to inform user about blocking operation.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class BusyBoxHandler {
 

@@ -33,7 +33,7 @@ import org.zkoss.zk.ui.Component;
  * interface
  * {@link java.io.InputStream}</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface Invoke {
 

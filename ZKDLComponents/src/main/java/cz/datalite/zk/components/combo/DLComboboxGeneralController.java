@@ -22,7 +22,7 @@ import java.util.Collections;
  * There is automatically implemented cascade of comboboxes. In this case parent must be registered
  * on the follower and that is all.
  * @param <T> main entity in the combobox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @deprecated since 1.4.0, ZK 6, databinding 2. This component is not usable anymore
  */
 @Deprecated

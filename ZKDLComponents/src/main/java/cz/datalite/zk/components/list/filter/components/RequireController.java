@@ -4,7 +4,7 @@ import cz.datalite.zk.components.list.controller.DLListboxExtController;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface RequireController<T> {
 

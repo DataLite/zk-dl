@@ -27,7 +27,7 @@ import java.util.List;
  * implement. The main method says that the result of on annotation doent
  * have to be only one method invoker, it can be more.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface Initializer {
 

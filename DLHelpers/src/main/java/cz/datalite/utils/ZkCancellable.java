@@ -36,7 +36,7 @@ import java.util.Set;
  * current instance. Usually the first instance has empty implementation and
  * exists just to be detectable as a request.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkCancellable {
 

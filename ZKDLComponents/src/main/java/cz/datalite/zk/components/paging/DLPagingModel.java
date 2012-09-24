@@ -5,7 +5,7 @@ import org.zkoss.zk.ui.WrongValueException;
 /**
  * Model useable for component {@link cz.datalite.zk.components.paging.DLPaging}.
  * This supports MVC architecture.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLPagingModel {
 

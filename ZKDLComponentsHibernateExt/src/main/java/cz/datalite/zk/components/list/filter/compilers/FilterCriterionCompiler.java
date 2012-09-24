@@ -13,7 +13,7 @@ import org.hibernate.criterion.Restrictions;
  * and extended the compile method with additional case here or in the parent
  * class.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class FilterCriterionCompiler extends AbstractFilterCompiler {
 

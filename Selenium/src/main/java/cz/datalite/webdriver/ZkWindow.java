@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * according to it the test prepares the page
  * in browser.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( { ElementType.TYPE } )

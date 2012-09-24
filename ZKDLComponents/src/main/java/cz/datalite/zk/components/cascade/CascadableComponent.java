@@ -5,7 +5,7 @@ import org.zkoss.zk.ui.Component;
 /**
  * Cascadable component has to implement these methods to set up cascade relations.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface CascadableComponent extends Component {
 

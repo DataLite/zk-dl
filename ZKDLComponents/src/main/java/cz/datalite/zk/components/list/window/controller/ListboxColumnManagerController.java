@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Controller for the column manager which allows to move and hide some columns
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ListboxColumnManagerController extends GenericAutowireComposer {
 

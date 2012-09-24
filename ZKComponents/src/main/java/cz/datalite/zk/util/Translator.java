@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public final class Translator {
 

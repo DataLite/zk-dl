@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * Criteria. This controller can be used also for the paging, quick filter and
  * manager component.
  * @param <T> main entity type
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralController<T> {
 

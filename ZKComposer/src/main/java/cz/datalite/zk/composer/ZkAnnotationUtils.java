@@ -17,7 +17,7 @@ import org.zkoss.zk.ui.UiException;
 /**
  * Util class for ZK-DL annotations like {@link ZkModel} and {@link ZkController}.
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public final class ZkAnnotationUtils {
 

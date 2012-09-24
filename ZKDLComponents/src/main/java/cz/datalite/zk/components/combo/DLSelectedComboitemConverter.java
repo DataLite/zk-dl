@@ -9,7 +9,7 @@ import org.zkoss.zkplus.databind.TypeConverter;
  * item from component. Because this component allows to set selected
  * item which isn't in the combobox model. There is added
  * the option to add that item and refresh list model.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLSelectedComboitemConverter extends SelectedComboitemConverter implements TypeConverter, java.io.Serializable {
 

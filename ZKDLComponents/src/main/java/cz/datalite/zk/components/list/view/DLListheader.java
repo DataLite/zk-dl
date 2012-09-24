@@ -22,7 +22,7 @@ import org.zkoss.zul.ListitemComparator;
  * ZK component DLListheader is extended component from standard Listheader
  *
  * @author Jiri Bubnik
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLListheader extends Listheader {
 

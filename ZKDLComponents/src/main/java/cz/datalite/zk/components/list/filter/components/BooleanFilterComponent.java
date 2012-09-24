@@ -10,7 +10,7 @@ import org.zkoss.zul.Checkbox;
 /**
  * Standard implementation of the filter component for boolean boxes. There are
  * no validation additions, each of restrictions comes from the component.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class BooleanFilterComponent implements FilterComponent {
 

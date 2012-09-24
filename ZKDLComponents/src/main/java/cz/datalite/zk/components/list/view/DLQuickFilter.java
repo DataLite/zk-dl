@@ -19,7 +19,7 @@ import java.util.Map.Entry;
 
 /**
  * Component for tool which allows user to quickly filter in the listbox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLQuickFilter extends org.zkoss.zul.Hbox {
 

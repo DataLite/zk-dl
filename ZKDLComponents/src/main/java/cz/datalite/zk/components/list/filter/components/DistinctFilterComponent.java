@@ -16,7 +16,7 @@ import org.zkoss.zk.ui.event.Events;
  * This filter component servers to provide user the list of values which are
  * available for this column. Usually this model is filled from database. As
  * a connection provider there are DataLoader which is defined in window controller.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DistinctFilterComponent extends AbstractFilterComponent<DLDistinctLovbox> implements RequireController, RequireColumnModel {
 

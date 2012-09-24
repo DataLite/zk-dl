@@ -6,7 +6,7 @@ package cz.datalite.zk.components.list.filter.components;
  * the component is based on cloneComponent method which has to be implemented
  * in the template component.
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class CloneFilterComponentFactory implements FilterComponentFactory {
 

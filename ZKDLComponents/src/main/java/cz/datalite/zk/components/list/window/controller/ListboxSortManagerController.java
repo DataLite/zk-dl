@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 /**
  * Controller for the manager which allows user to set advanced configuration for
  * sorting.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ListboxSortManagerController extends GenericAutowireComposer {
 

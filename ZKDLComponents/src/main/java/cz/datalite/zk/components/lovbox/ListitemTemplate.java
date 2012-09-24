@@ -13,7 +13,7 @@ import org.zkoss.zul.Listitem;
 /**
  * Simple template for lovboxes without specified inner listbox.
  * 
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ListitemTemplate implements Template {
 

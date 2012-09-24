@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * <p>Field can be published with its own property name or with pseudonym
  * defined in this annotation. If pseudonym is defined, getter also has to
  * used this pseudonum, no native property name.</p>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( { ElementType.FIELD, ElementType.METHOD, ElementType.TYPE } )

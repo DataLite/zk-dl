@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of ZK Button
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Button extends ZkElement {
 

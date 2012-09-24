@@ -23,7 +23,7 @@ import org.zkoss.mesg.MCommon;
  * <p>
  * Prins HACK: sort null values, too. Optimalization.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @author xmedeko
  */
 public final class DLFilter {

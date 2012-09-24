@@ -15,7 +15,7 @@ import java.util.Map;
  * which is shown in the default case in the normal filter. This configuration
  * can be overwritten by filter component.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactory {
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Register binding listeners
  * Listeners are defined in the array with {@link cz.datalite.zk.annotation.ZkBinding}.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )

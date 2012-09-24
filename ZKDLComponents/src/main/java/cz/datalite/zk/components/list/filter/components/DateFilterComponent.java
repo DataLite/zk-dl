@@ -5,7 +5,7 @@ import org.zkoss.zul.Datebox;
 /**
  * Standard implementation of the filter component for dateboxes. There are
  * no validation additions, each of restrictions comes from the component.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DateFilterComponent extends AbstractFilterComponent<Datebox> {
 

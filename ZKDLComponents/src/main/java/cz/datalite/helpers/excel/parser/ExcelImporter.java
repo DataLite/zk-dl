@@ -17,7 +17,7 @@ import org.zkoss.util.media.Media;
 /**
  *
  * @param <T>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @SuppressWarnings( "unchecked" )
 public class ExcelImporter<T extends ExcelImportStructure> {

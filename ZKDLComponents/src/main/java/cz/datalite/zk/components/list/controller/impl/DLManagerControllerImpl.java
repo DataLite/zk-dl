@@ -34,7 +34,7 @@ import org.zkoss.zul.Messagebox;
  * Implementation of the controller for the Listbox manager which
  * provides extended tools.
  * @param <T> type of the main entity in the listbox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLManagerControllerImpl<T> implements DLManagerController {
 
@@ -248,7 +248,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 //            if ( !unit.isColumn() ) {
 //                continue;
 //            }
-//            modified by Karel Čemus on Ondřej Medek's suggestion
+//            modified by Karel Cemus on Ondřej Medek's suggestion
 //            on 17.8.2010 due to cells with full entity binding
 //            without specified field. eg.: value="@{listEach,converter=....}"
 //            

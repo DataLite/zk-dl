@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Interface for the master listbox controller. This is private api.
  * @param <T> main entity type
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLListboxExtController<T> extends DLListboxController<T>, Composer {
 

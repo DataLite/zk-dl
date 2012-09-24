@@ -8,7 +8,7 @@ import org.zkoss.zk.ui.Component;
  * implement to properly work with databinding. This interface is designed based
  * the GoF pattern strategy to support multiple versions for binding.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface BinderHelper {
 

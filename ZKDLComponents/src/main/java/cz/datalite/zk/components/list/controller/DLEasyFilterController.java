@@ -5,7 +5,7 @@ import cz.datalite.zk.components.list.filter.EasyFilterModel;
 /**
  * This controller manage easyFilter, which is used to filter model using
  * data which are setted throw data binding.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLEasyFilterController {
 

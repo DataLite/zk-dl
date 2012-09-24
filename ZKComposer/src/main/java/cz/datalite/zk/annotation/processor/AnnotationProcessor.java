@@ -40,7 +40,7 @@ import org.zkoss.zk.ui.Component;
  * Then the class would create templates which would be cloned and bound to the
  * specific instance.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class AnnotationProcessor<T> {
 

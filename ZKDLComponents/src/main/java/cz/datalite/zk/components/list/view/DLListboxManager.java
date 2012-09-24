@@ -13,7 +13,7 @@ import org.zkoss.zul.Separator;
 /**
  * Bar with advanced tools for managing the listbox.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @author Ondrej Medek <xmedeko@gmail.com>
  */
 public class DLListboxManager extends Hbox {

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * and load-after. Binding can by applied on whole page or on the specific
  * component defined in the @component.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )

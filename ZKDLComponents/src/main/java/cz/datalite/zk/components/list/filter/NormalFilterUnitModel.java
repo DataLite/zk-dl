@@ -20,7 +20,7 @@ import java.util.Collections;
  * that model which make simpler extension in the future. To make this extension
  * there is needed to add only getter and thats all.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class NormalFilterUnitModel implements Cloneable {
 

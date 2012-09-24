@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.Executions;
 
 /**
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public final class ZkParameterUtils {
 

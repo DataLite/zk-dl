@@ -9,7 +9,7 @@ import org.zkoss.zk.ui.util.Composer;
  * against interface. It defines method which is called from other classes
  * but shouldn't be call by the user.
  * @param <T>  Main entity in the bandbox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLLovboxExtController<T> extends Composer, DLLovboxController<T>, CascadableExt<T> {
 

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Column model - model for the listheader in the listbox - it
  * is used like a model for whole col.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 

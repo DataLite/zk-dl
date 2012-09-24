@@ -2,7 +2,7 @@ package cz.datalite.zk.components.lovbox;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Box {
 

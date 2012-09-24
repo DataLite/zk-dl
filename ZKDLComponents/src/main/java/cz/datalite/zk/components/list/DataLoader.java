@@ -10,7 +10,7 @@ import java.util.List;
  * Load distinct values from controller (usefull especially for filters).
  * This is not mandatory interface, because for large data it can be really slow.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DataLoader {
 

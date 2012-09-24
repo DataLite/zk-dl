@@ -28,7 +28,7 @@ package cz.datalite.utils;
  *
  * <p>This command interrupts the thread to be bound with.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface ZkCancelCommand {
 

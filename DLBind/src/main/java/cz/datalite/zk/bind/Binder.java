@@ -20,7 +20,7 @@ import org.zkoss.zkplus.databind.TypeConverter;
  * usage there is needed to intercept the method with execution to attach
  * another logic.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Binder extends AnnotateBinder {
 

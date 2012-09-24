@@ -6,7 +6,7 @@ package cz.datalite.zk.components.list.filter.components;
  * for CloneFilterComponentFactory which creating the components from
  * the template using clone method.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface CloneableFilterComponent<T> extends FilterComponent<T> {
 

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * implemented standard function for find elements as well as static
  * functions which handles login page, errors, takes screenshot etc.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkElement {
 

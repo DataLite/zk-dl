@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Interface for the quickfilter component controller.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLQuickFilterController {
 

@@ -2,7 +2,7 @@ package cz.datalite.zk.components.list.enums;
 
 /**
  * Enumeration defines available filter types;
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public enum DLFiterType {
 

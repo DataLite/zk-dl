@@ -7,7 +7,7 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
  * the operator. All needed methods are defined as abstract and have to be
  * implemented in child classes. This compiler needn't be used. It can be
  * skipped using new redefinition of FilterCompiler interface.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 abstract public class AbstractFilterCompiler implements FilterCompiler {
 

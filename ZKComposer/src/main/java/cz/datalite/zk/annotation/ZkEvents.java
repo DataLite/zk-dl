@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Register event listeners on the component with identifier @id.
  * Listener are defined in the array with {@link cz.datalite.zk.annotation.ZkEvent}.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )

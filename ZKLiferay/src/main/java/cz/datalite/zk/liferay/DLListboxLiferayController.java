@@ -21,7 +21,7 @@ import org.zkoss.zk.ui.UiException.Aide;
  * Criteria. This controller can be used also for the paging, quick filter and
  * manager component.
  * @param <T> main entity type
- * @author Karel ÄŚemus <cemus@datalite.cz>
+ * @author Karel ÄŚemus
  */
 public abstract class DLListboxLiferayController<T> extends DLListboxGeneralController<T> {
 

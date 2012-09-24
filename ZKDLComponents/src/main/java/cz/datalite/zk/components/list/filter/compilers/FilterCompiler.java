@@ -12,7 +12,7 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
  * specification is according to the substitution principle of Barbara Liskov. 
  *
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface FilterCompiler {
 

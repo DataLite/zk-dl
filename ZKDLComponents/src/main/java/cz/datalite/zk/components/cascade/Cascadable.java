@@ -4,7 +4,7 @@ package cz.datalite.zk.components.cascade;
  *
  *
  * @param <T> 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface Cascadable<T> {
 

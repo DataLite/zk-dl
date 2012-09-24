@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Master column model - groups column unit models and makes global changes.
  * This component also caches counts of the sorted and visible columns.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLColumnModel {
 

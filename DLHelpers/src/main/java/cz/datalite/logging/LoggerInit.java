@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * settings and sets the given handler instead as the handler of root logger. It
  * can be used for example to redirect JUL logs to SLF4J.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class LoggerInit {
 

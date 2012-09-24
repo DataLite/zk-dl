@@ -15,7 +15,7 @@ import org.hibernate.criterion.Projection;
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
  * <p>This class is using Hibernate utils.</p>
  * @param <T> root class in definition hierarchy
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLSearch<T> {
 

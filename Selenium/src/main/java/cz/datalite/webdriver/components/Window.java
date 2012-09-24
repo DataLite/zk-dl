@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
  * Window element is the main component of each page. This is the most common
  * parent of other components and is used as base line in unit test.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Window extends ZkElement {
 

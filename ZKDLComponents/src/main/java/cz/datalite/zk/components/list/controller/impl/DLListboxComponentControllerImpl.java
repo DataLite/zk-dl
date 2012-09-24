@@ -32,7 +32,7 @@ import org.zkoss.zul.Listitem;
 /**
  *  Implementation of the listbox controller.
  * @param <T> master entity type
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLListboxComponentControllerImpl<T> implements DLListboxComponentController<T> {
 

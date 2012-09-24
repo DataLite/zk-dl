@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  * <dt>onEvent( int payload )</dt>
  *     <dd>payload specified in this annotation (default is ZkEvents.EVENT_DEFAULT)</dd>
  * </dl>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )

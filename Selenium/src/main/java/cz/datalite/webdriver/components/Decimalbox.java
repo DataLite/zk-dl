@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of Zk Decimalbox
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Decimalbox extends InputElement {
 

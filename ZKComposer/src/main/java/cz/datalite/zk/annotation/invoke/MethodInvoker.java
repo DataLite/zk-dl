@@ -39,7 +39,7 @@ import org.zkoss.zk.ui.event.Events;
  * target. This class provides desired functionality of {@link cz.datalite.zk.annotation.ZkEvent}.
  * After all decorations are handled then the target method is invoked.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class MethodInvoker implements Invoke {
 

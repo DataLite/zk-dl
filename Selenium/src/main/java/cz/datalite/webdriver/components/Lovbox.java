@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
  * If there are no records then no value is selected.
  *
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Lovbox extends InputElement {
 

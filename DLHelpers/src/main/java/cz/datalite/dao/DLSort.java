@@ -3,7 +3,7 @@ package cz.datalite.dao;
 /**
  * This class is only containter for data about sort. It contains
  * column name (using dot notation) and sortType ({@link cz.datalite.dao.DLSortType})
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLSort {
 

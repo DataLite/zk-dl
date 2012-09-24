@@ -11,7 +11,7 @@ import org.zkoss.zul.Label;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class InitListener implements org.zkoss.zk.ui.util.DesktopInit {
 

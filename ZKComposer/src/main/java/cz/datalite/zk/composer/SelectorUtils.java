@@ -13,7 +13,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
  * class and to its derivates.
  *
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public class SelectorUtils {
 

@@ -9,7 +9,7 @@ import java.util.Map;
  * Model for comboboxes in the MVC architecture. There is stored information
  * about selectedItem, selected index etc.
  * @param <T> main entity in the combobox
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLComboboxModel<T> {
 

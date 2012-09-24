@@ -184,7 +184,7 @@ public abstract class ZKBinderHelper {
      * @param property
      * @param annotName
      * @param value
-     * @author Karel Čemus
+     * @author Karel Cemus
      */
     public static void registerAnnotation( final org.zkoss.zk.ui.AbstractComponent component, final String property, final String annotName, final String value ) {
         final java.util.Map<String, String[]> map = new java.util.HashMap<String, String[]>();

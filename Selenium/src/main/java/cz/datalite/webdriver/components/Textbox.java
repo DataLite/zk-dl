@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 /**
  * This component is the mirror of ZK Textbox element.
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Textbox extends InputElement {
 

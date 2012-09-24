@@ -31,7 +31,7 @@ import java.util.List;
  * signature without compile-time controll. These
  * methods are invoked via reflection.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class GeneralInitializerProcessor<T> implements Initializer {
 

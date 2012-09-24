@@ -41,7 +41,7 @@ import org.zkoss.zul.Paging;
  * toplink or simply list. To specify implementation you must use on of special
  * implementation.
  * @param <T> main entity
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class DLListboxGeneralController<T> implements DLListboxExtController<T> {
 

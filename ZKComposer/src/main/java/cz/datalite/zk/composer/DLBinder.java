@@ -62,7 +62,7 @@ import org.zkoss.zk.ui.sys.ComponentCtrl;
  *
  * @author Jiri Bubnik - DLComposer
  * @author simonpai - SelectorComposer
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLBinder<T extends Component, S extends DLMainModel> extends BindComposer<T> implements java.util.Map<String, Object>, DLMasterController<S> {
 

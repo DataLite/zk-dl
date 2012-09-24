@@ -3,7 +3,7 @@ package cz.datalite.zk.components.paging;
 /**
  * Class which implements this interface is usable for affecting DLPagingModel
  * when PagingEvents are posted from DLPaging.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface DLPagingController {
 

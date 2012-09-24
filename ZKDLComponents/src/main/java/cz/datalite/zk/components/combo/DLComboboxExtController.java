@@ -7,7 +7,7 @@ import org.zkoss.zk.ui.util.Composer;
 /**
  * Extended controller for the combobox
  * @param <T> řídící entita controlleru
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  * @deprecated since 1.4.0, ZK 6, databinding 2. This component is not usable anymore
  */
 @Deprecated

@@ -21,7 +21,7 @@ import java.util.List;
  * {@link cz.datalite.zk.components.list.filter.NormalFilterModel#ALL} option
  * based on given column model with column definition.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class FilterByAllCompiler implements FilterCompiler {
 

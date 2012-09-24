@@ -13,7 +13,7 @@ import java.text.ParseException;
  *  <li>{@link String}</li>
  *  <li>{@link java.util.Date}</li>
  * </ul>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 final public class TypeConverter {
 

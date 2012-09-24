@@ -12,7 +12,7 @@ import org.zkoss.zk.ui.Component;
  * handlers to be completely stateless. All statefull configuration will be
  * brought with the invocation.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Context {
 

@@ -36,7 +36,7 @@ import org.zkoss.zul.impl.XulElement;
  * method, payload etc.) so there has to be key filter.
  * Otherwise user would need to filter it himself.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class KeyEventHandler extends Handler {
     

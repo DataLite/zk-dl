@@ -4,7 +4,7 @@ package cz.datalite.zk.components.list.filter.components;
  * This factory produces the components which are shown in a normal filter.
  * These components are derived from the class name or existing instance.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface FilterComponentFactory {
 

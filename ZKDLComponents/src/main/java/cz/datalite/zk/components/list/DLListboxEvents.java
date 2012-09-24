@@ -3,7 +3,7 @@ package cz.datalite.zk.components.list;
 /**
  * There are defined events posted by filters in the DLListbox
  * 
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLListboxEvents {
 

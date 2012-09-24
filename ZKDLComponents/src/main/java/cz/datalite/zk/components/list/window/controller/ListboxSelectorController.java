@@ -12,7 +12,7 @@ import org.zkoss.zul.Listitem;
 /**
  * Controller for component consists from two listboxes which can move items
  * between each other.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @SuppressWarnings( "unchecked" )
 public class ListboxSelectorController {

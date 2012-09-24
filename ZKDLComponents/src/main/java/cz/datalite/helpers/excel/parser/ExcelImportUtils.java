@@ -17,7 +17,7 @@ import jxl.WorkbookSettings;
  * <p>Třída pomáhá importovat soubory z MS Excel. Využívá k tomu
  * knihovnu jExcelApi. Jedná se o knihovní třídu pouze se statickými
  * metodami.</p>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public final class ExcelImportUtils {
 

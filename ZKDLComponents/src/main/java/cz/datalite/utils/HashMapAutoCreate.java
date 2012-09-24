@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * tak vytvoří novou instanci a uloží. Také eviduje seznam použitých klíčů
  * @param <K>
  * @param <V>
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class HashMapAutoCreate<K, V> extends HashMap<K, V> implements MapAutoCreate<K, V> {
 

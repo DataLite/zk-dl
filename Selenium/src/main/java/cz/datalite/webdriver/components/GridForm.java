@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * styled in grid. There are methods which can detect and fill these components
  *
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class GridForm extends Grid {
 

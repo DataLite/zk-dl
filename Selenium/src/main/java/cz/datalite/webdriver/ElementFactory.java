@@ -12,7 +12,7 @@ import org.openqa.selenium.WebElement;
  * according to the style of element.
  *
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ElementFactory {
 

@@ -9,7 +9,7 @@ import org.zkoss.lang.reflect.Fields;
  *
  * Class defining utils used mostly by DLFilter
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public class FilterUtils {
 

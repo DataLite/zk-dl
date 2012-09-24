@@ -26,7 +26,7 @@ import org.zkoss.zk.ui.Component;
  * provides basic functionality like delegation getters and keeping the the
  * order of invocated methods.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public abstract class Handler implements Invoke {
 

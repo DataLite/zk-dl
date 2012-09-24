@@ -10,7 +10,7 @@ import org.zkoss.zk.ui.util.Clients;
  * Extension for ZK BeanValidator adding some fixes and enhancement to allow UI
  * validation based on model validation constraints.
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLBeanValidator extends BeanValidator {
 

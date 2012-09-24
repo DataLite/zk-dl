@@ -11,7 +11,7 @@ import org.zkoss.zk.ui.Components;
 
 /**
  *
- * @author Karel Čemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 public class WireUtils {
 

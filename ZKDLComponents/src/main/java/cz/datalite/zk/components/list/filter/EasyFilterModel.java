@@ -6,7 +6,7 @@ import org.zkoss.lang.Strings;
 
 /**
  * Model for the easy filter - it has to be accessible from the zul file.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class EasyFilterModel extends HashMapAutoCreate<DLFilterOperator, EasyFilterMapKeyValue> {
 

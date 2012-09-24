@@ -16,7 +16,7 @@ import org.zkoss.zul.ListModelList;
  * Component for normal filter when the model is enumeration type.
  * This component displays a combobox with appropriate values.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class EnumFilterComponent extends AbstractFilterComponent<Combobox> {
 

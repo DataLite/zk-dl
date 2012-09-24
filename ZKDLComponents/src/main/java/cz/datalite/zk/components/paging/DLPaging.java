@@ -14,7 +14,7 @@ import org.zkoss.zul.ext.Paginated;
  * Component like {@link org.zkoss.zul.Paging}. It's usable for model
  * when we have huge data.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLPaging extends Hbox implements Pageable {
 

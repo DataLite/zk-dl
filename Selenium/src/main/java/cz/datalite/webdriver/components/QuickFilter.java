@@ -10,7 +10,7 @@ import java.util.List;
  * <p>This component is mirror of DLZK component - QuickFilter. It allows to 
  * fill it, to clear it etc. This is usuallly bind to other component.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class QuickFilter extends ZkElement {
 

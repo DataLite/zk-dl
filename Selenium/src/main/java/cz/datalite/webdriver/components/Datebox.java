@@ -8,7 +8,7 @@ import java.util.Calendar;
 /**
  * Mirror of Datebox
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Datebox extends InputElement {
 

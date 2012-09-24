@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Mirror of Checkbox
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class Checkbox extends InputElement {
 

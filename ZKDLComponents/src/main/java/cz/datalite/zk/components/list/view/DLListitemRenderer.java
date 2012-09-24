@@ -6,7 +6,7 @@ import org.zkoss.zul.Listitem;
 
 /**
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLListitemRenderer extends BindListitemRenderer {
 

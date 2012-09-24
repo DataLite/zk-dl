@@ -3,7 +3,7 @@ package cz.datalite.zk.annotation;
 /**
  * <p>Definition of function keys.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public enum Keys {
 

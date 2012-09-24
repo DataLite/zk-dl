@@ -28,7 +28,7 @@ import java.util.List;
  * to the inner invocation object but they not invoke targeted method
  * themself.
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public interface Wrapper {
 

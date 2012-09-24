@@ -34,7 +34,7 @@ import org.zkoss.zk.ui.ComponentNotFoundException;
  * 
  * <p><strong>Usable with databinding v1.0 only</strong></p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkBindingHandler extends Handler {
 

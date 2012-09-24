@@ -18,7 +18,7 @@ import org.zkoss.zk.ui.util.Clients;
 
 /**
  * Controller for the export manager
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @SuppressWarnings( "unchecked" )
 public class ListboxExportManagerController extends GenericAutowireComposer {

@@ -9,7 +9,7 @@ import org.zkoss.zkplus.databind.TypeConverter;
  * TypeConverterAdapter to support converters defined in ZK 5 or prior. Since ZK6
  * there is new interface it has to implement.
  * 
- * @author Karel Cemus <cemuskar@fel.cvut.cz>
+ * @author Karel Cemus
  */
 
 

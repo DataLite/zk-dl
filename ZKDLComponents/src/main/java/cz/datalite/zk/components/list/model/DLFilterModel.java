@@ -11,7 +11,7 @@ import org.zkoss.lang.Library;
 
 /**
  * Filter model - groups all filter models.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLFilterModel {
 

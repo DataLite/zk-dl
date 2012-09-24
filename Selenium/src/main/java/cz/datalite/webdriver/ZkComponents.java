@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
  * and ElementFactory.
  *
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public enum ZkComponents {
 

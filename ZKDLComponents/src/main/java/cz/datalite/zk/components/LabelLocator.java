@@ -11,7 +11,7 @@ import org.zkoss.zk.ui.util.WebAppInit;
 
 /**
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class LabelLocator implements WebAppInit {
 

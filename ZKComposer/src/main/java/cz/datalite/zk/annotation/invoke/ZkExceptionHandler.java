@@ -32,7 +32,7 @@ import org.zkoss.zul.Messagebox;
  * defined in annotation, then the exception is caught and messagebox is shown
  * instead.</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class ZkExceptionHandler extends Handler {
     

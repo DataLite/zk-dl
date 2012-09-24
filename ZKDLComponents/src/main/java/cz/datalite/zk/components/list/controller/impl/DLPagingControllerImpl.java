@@ -8,7 +8,7 @@ import cz.datalite.zk.components.paging.DLPagingModel;
 
 /**
  * Implementation of the cotntroller for the paging component.
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class DLPagingControllerImpl implements DLPagingController {
 

@@ -18,7 +18,7 @@ import org.zkoss.zk.ui.UiException;
  * public void validateSomething( ValidationContext ctx ) throws WrongValueException;
  *
  *
- * @author Karel Cemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 public class MethodValidator implements Validator {
 

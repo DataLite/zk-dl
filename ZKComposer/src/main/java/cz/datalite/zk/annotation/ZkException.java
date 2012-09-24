@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * user. The message can be defined in an
  * attribute or the exception message is used</p>
  *
- * @author Karel Čemus <cemus@datalite.cz>
+ * @author Karel Cemus
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.METHOD )
