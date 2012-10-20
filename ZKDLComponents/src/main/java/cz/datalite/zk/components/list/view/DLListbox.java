@@ -49,7 +49,9 @@ public class DLListbox extends Listbox {
 
     @Deprecated
     public void setListModel( final List model ) {
-        setModel( new org.zkoss.zkplus.databind.BindingListModelList( model, true ) );
+        org.zkoss.zkplus.databind.BindingListModelList bindingModel = new org.zkoss.zkplus.databind.BindingListModelList(model,true);
+        bindingModel.setMultiple( isMultiple() );
+        setModel( bindingModel );
     }
 
     @Override
@@ -59,7 +61,7 @@ public class DLListbox extends Listbox {
         exec.removeAttribute( "zkoss.Listbox.deferInitModel_" + getUuid() ); // TODO problems with ROD - Listbox#2482
 
         super.setModel( model );
-
+        
          if ( getSelectedItem() == null ) {
             Events.postEvent( "onDeselect", this, null );
         }
