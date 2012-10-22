@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import org.zkoss.lang.Strings;
 import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.ListitemComparator;
 
@@ -172,6 +173,16 @@ public class DLListheader extends Listheader {
             super.onSort();
         }
 
+    }
+
+    @Override
+    public void onSort(SortEvent event) {
+        if ( isController() ) {
+            getController().onSort( this );
+        }
+        else {
+            super.onSort(event);
+        }
     }
 
     @Override

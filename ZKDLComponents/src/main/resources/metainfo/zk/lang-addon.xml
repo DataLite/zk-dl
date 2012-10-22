@@ -23,7 +23,7 @@
     <version>
         <version-class>metainfo.zk.Version</version-class>
         <version-uid>5.0.0</version-uid>
-        <zk-version>6.0.2</zk-version><!-- or later -->
+        <zk-version>6.5.0</zk-version><!-- or later -->
     </version>
 
     <zscript language="Java">
@@ -78,7 +78,7 @@
             <property-name>model</property-name>
             <attribute>
                 <attribute-name>converter</attribute-name>
-                <attribute-value>org.zkoss.zkplus.databind.ListModelConverter</attribute-value>
+                <attribute-value>org.zkoss.zkplus.databind.CombboxListModelConverter</attribute-value>
             </attribute>
         </annotation>
         <annotation>
@@ -86,13 +86,13 @@
             <property-name>selectedItem</property-name>
             <attribute>
                 <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onSelect</attribute-value>
-                <!--
-                  There is a problem when using stict - value cannot be deleted
-
-http://www.zkoss.org/forum/index.zul#path%3Dsearch%3Bquery%3Dcombobox%20select%20first%3BcategoryId%3D0%3BsearchTyp
-e%3D0%3B
-                -->
+                <!-- bug #2966241, since 5.0, combobox changes the sequence to fire onChange
+                then onSelect event when end user select an item from the drop down list(In 3.x,
+                it used to fire onSelect then onChange). This could cause the currently selected
+                bean to be modified in onChange event if we still trigger binding of the
+                selectedItem with onSelect event. Thus we change this to be triggered when "onChange" event
+                 -->
+                <attribute-value>self.onChange</attribute-value>
             </attribute>
             <attribute>
                 <attribute-name>load-when</attribute-name>
@@ -104,8 +104,7 @@ e%3D0%3B
             </attribute>
             <attribute>
                 <attribute-name>converter</attribute-name>
-                <attribute-value>cz.datalite.zk.components.combo.DLSelectedComboitemConverter</attribute-value>
-                <!-- org.zkoss.zkplus.databind.SelectedComboitemConverter -->
+                <attribute-value>org.zkoss.zkplus.databind.SelectedComboitemConverter</attribute-value>
             </attribute>
         </annotation>
         <annotation>
@@ -147,7 +146,7 @@ e%3D0%3B
             <property-name>model</property-name>
             <attribute>
                 <attribute-name>converter</attribute-name>
-                <attribute-value>org.zkoss.zkplus.databind.ListModelConverter</attribute-value>
+                <attribute-value>org.zkoss.zkplus.databind.ListboxListModelConverter</attribute-value>
             </attribute>
         </annotation>
         <annotation>
@@ -184,26 +183,6 @@ e%3D0%3B
             <attribute>
                 <attribute-name>access</attribute-name>
                 <attribute-value>both</attribute-value>
-            </attribute>
-        </annotation>
-        <annotation>
-            <annotation-name>default-bind</annotation-name>
-            <property-name>selectedItems</property-name>
-            <attribute>
-                <attribute-name>save-when</attribute-name>
-                <attribute-value>self.onSelect</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>load-when</attribute-name>
-                <attribute-value>self.onInitRender</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>access</attribute-name>
-                <attribute-value>both</attribute-value>
-            </attribute>
-            <attribute>
-                <attribute-name>converter</attribute-name>
-                <attribute-value>cz.datalite.zk.databinder.SelectedItemsConverter</attribute-value>
             </attribute>
         </annotation>
     </component>
