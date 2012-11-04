@@ -345,6 +345,8 @@ public class ZKHelper
     
     /** flag attribute to detect the pages with already opened the detail */
     private static final String DETAIL_WINDOW = "detail.window";
+    /** in detail window save actual uri to check */
+    private static final String DETAIL_WINDOW_URI = "detail.window.uri";
     
     /**
      * Create new window with Executions.createComponents() and opens it in highlighted mode.
@@ -362,8 +364,9 @@ public class ZKHelper
         if ( master.getAttribute( DETAIL_WINDOW ) != null ) {
             // get the UUID of the last created detail
             final String uuid = (String) master.getAttribute( DETAIL_WINDOW );
-            // try if still exists
-            if ( master.getDesktop().getComponentByUuidIfAny( uuid ) != null ) {
+            // try if still exists && contains appropriate attribute (UUID are recycled)
+            Component oldDetail = master.getDesktop().getComponentByUuidIfAny( uuid );
+            if ( oldDetail != null && uri.equals(oldDetail.getAttribute( DETAIL_WINDOW_URI ))) {
                 // if so, report and close it
                 LOGGER.warn( "Detail window is already opened. Opening of the another one was forbidden." );
                 Messagebox.show( Labels.getLabel( "zkcomposer.detail.opened.message" ), Labels.getLabel( "zkcomposer.detail.opened.title" ), Messagebox.OK, Messagebox.INFORMATION );
@@ -388,6 +391,7 @@ public class ZKHelper
         }
         
         master.setAttribute( DETAIL_WINDOW, detail.getUuid() );
+        detail.setAttribute( DETAIL_WINDOW_URI, uri);
 
         detail.doHighlighted();
 
