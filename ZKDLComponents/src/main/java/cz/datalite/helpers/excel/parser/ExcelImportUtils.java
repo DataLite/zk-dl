@@ -92,7 +92,7 @@ public final class ExcelImportUtils {
         if ( CellType.LABEL.equals( cell.getType() ) )
             return ( (LabelCell) cell ).getString();
         if ( CellType.NUMBER.equals( cell.getType() ) )
-            return new Double(( (NumberCell) cell ).getValue()).toString();
+            return cell.getContents();
         if ( CellType.STRING_FORMULA.equals( cell.getType() ) )
             return ( (StringFormulaCell) cell ).getString();
         if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )

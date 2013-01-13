@@ -49,7 +49,9 @@ public class DLListbox extends Listbox {
 
     @Deprecated
     public void setListModel( final List model ) {
-        setModel( new org.zkoss.zkplus.databind.BindingListModelList( model, true ) );
+        org.zkoss.zkplus.databind.BindingListModelList bindingModel = new org.zkoss.zkplus.databind.BindingListModelList(model,true);
+        bindingModel.setMultiple( isMultiple() );
+        setModel( bindingModel );
     }
 
     @Override
