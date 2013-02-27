@@ -191,6 +191,9 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
 
     @Override
     public void doAfterCompose( T comp ) throws Exception {
+        // wire components and then let it call on the children
+        super.doAfterCompose( comp );
+
         // Process ZK annotations
         //      check that annotations are correct
         ZkAnnotationUtils.validMethodAnnotations( this.getClass() );
@@ -200,8 +203,6 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         ZkAnnotationUtils.registerZkComponents( this, self );
         //      ZKOSS Selector wiring @Wire and @Listen
         SelectorUtils.wire( this, self );
-        // wire components and then let it call on the children
-        super.doAfterCompose( comp );
     }
 
     @Override
