@@ -26,13 +26,17 @@ public class NormalFilterUnitModel implements Cloneable {
 
     /** column configuration */
     protected DLColumnUnitModel columnModel;
+    
     /** can be defined instead of column model */
     protected String property;
+    
     /** filter operator */
     protected DLFilterOperator operator;
+    
     /** filter values */
     protected Object value1;
     protected Object value2;
+    
     /** defines selected template in the filter. It is used to looking for 
      * selected value in filter comboboxes. */
     protected NormalFilterUnitModel template;
@@ -44,7 +48,7 @@ public class NormalFilterUnitModel implements Cloneable {
      * which has not columnModel and need specialized compiler.
      */
     protected FilterCompiler compiler;
-
+    
     public NormalFilterUnitModel() {
         // creates new empty unit
     }
@@ -63,7 +67,7 @@ public class NormalFilterUnitModel implements Cloneable {
 
     public NormalFilterUnitModel( final DLColumnUnitModel columnModel ) {
         this.columnModel = columnModel;
-        this.property = columnModel.getColumn();
+        this.property = (columnModel.getFilterColumn() != null) ? columnModel.getFilterColumn() : columnModel.getColumn();
     }
 
     public NormalFilterUnitModel( final String property ) {

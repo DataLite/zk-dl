@@ -25,45 +25,70 @@ import org.slf4j.LoggerFactory;
 public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
     // ************* MAIN ************* //
-    // column name in the database - loaded throw data binding or attribute
+    /** column name in the database - loaded throw data binding or attribute */
     protected String column;
-    // column data type - used for conversion in the filters
-    protected Class columnType;
-    // converter for the modifying value
+    
+    /** column data type - used for conversion in the filters */
+    protected Class<?> columnType;
+    
+    /** converter for the modifying value */
     protected ZkConverter converter;
-    // instance of controller to allow to use convertors defined as "ctl.coerce..."
-    protected Composer controller;
-    // column label
+    
+    /** instance of controller to allow to use convertors defined as "ctl.coerce..." */
+    protected Composer<?> controller;
+    
+    /** column label */
     protected String label;
-    // column order - 1 starts, 0 turned off, hidden
+    
+    /** column order - 1 starts, 0 turned off, hidden */
     protected Integer order = 0;
-    // is visible
+    
+    /** is visible */
     protected boolean visible = true;
-    // main component
+    
+    /** main component */
     protected final DLColumnModel columnModel;
+    
     // ************* SORT ************* //
-    // sort order - 1 start, 0 not sorted
+    /** sort order - 1 start, 0 not sorted */
     protected Integer sortOrder = 0;
-    // actual sort type
-    protected DLSortType sortType = DLSortType.NATURAL;
-    // column name for the sorting
+    
+    /** actual sort type */
+    protected DLSortType sortType = DLSortType.NATURAL; 
+    
+    /** column name for the sorting */
     protected String sortColumn;
-    // definition if is used default zk sort od database sort
+    
+    /** definition if is used default zk sort od database sort */
     protected boolean sortZk = false;
-    // is possible to sort by this column
+    
+    /** is possible to sort by this column */
     protected boolean sortable = false;
-    /** defines participation of this column in the quick filter */
+    
+    /** defines participation of this column in the quick filter */   
     protected boolean quickFilter;
+    
     /** defines quick filter operator */
     protected DLFilterOperator quickFilterOperator;
-    /** defines if this column can participate in normal filter*/
+    
+    /** defines if this column can participate in normal filter */
     protected boolean filter;
+    
+    /** column is enabled for export */
+    protected boolean exportable;
+    
     /** redefines filter operators for this column */
     protected List<DLFilterOperator> filterOperators;
+    
     /** redefines filter component which is used in normal filter for this column */
     protected FilterComponentFactory filterComponentFactory;
+    
+    /** column name for filtering */
+    private String filterColumn;
+        
     /** redefines filter compiler which is used to compile filter operators */
     private FilterCompiler filterCompiler;
+    
     /** logger */
     protected final static Logger LOGGER = LoggerFactory.getLogger( DLColumnUnitModel.class );
 
@@ -143,11 +168,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         return this.column != null && this.column.length() > 0;
     }
 
-    public Class getColumnType() {
+    public Class<?> getColumnType() {
         return columnType;
     }
 
-    public void setColumnType( final Class columnType ) {
+    public void setColumnType( final Class<?> columnType ) {
         if ( this.columnType == null ) {
             this.columnType = columnType;
         }
@@ -357,7 +382,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
     }
 
-    public FilterComponent createFilterComponent() {
+    public FilterComponent<?> createFilterComponent() {
         return getFilterComponentFactory().createFilterComponent();
     }
 
@@ -365,7 +390,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         return filterComponentFactory != null || (columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ));
     }
 
-    public Class getTypeOfFilterComponent() {
+    public Class<?> getTypeOfFilterComponent() {
         return getFilterComponentFactory().getComponentClass();
     }
 
@@ -409,11 +434,27 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
     }
 
-    public Composer getController() {
+    public Composer<?> getController() {
         return controller;
     }
 
     public void setQuickFilterOperator( DLFilterOperator filterOperator ) {
         this.quickFilterOperator = filterOperator;
     }
+
+	public boolean isExportable() {
+		return exportable;
+	}
+
+	public void setExportable(boolean exportable) {
+		this.exportable = exportable;
+	}
+
+	public String getFilterColumn() {
+		return filterColumn;
+	}
+
+	public void setFilterColumn(String filterColumn) {
+		this.filterColumn = filterColumn;
+	}   
 }
