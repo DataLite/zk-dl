@@ -67,7 +67,7 @@ public class NormalFilterUnitModel implements Cloneable {
 
     public NormalFilterUnitModel( final DLColumnUnitModel columnModel ) {
         this.columnModel = columnModel;
-        this.property = (columnModel.getFilterColumn() != null) ? columnModel.getFilterColumn() : columnModel.getColumn();
+        this.property = columnModel.getColumn();
     }
 
     public NormalFilterUnitModel( final String property ) {

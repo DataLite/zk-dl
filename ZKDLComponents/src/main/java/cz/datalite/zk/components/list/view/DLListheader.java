@@ -35,7 +35,7 @@ public class DLListheader extends Listheader {
     /** column name in the database which coresponds to this col - for sorting */
     protected String sortColumn = "";
     
-    /** will be used default zk sort od database sort */
+    /** will be used default zk sort or database sort */
     protected boolean sortZk;
     
     /** is column sortable - false disables sorting */
@@ -44,8 +44,8 @@ public class DLListheader extends Listheader {
     /** column name in the database which coresponds to this col */
     protected String column;
     
-    /** column name used to override filter behavior */
-    protected String filterColumn;
+    /** column name used to override default behavior of xls export */
+    protected String exportColumn;
     
     /** data type of this column */
     protected Class<?> columnType;
@@ -85,7 +85,7 @@ public class DLListheader extends Listheader {
         model.setSortColumn( sortColumn );
         model.setVisible( isVisible() );
         model.setColumn( column );
-        model.setFilterColumn( filterColumn );
+        model.setExportColumn( exportColumn );
         model.setColumnType( columnType );
         model.setConverter( converter, this, Collections.<String,String>emptyMap() );
         model.setQuickFilter( quickFilter );
@@ -296,8 +296,8 @@ public class DLListheader extends Listheader {
 		this.exportable = exportable;
 	}
     
-    public void setFilterColumn(String filterColumn) {
-		this.filterColumn = filterColumn;
+    public void setExportColumn(String exportColumn) {
+		this.exportColumn = exportColumn;
 	}
 
 	public void setFilterOperators( final String ops ) {

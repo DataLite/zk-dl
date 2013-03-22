@@ -35,12 +35,13 @@ public final class ExcelExportUtils {
      * @return výsledná hodnota
      */
     private static int convertStringIndexToIntRecurs( final String strIndex ) {
-        if ( strIndex.length() > 1 ) {
-            return convertStringIndexToInt( strIndex.substring( 1 ) ) + convertStringIndexToInt( strIndex.substring( 0, 0 ) );
-        } else {
-            return ( int ) strIndex.charAt( 0 ) - 'A' + 1;
-        }
+    	if ( strIndex.length() > 1 ) {
+    		return convertStringIndexToIntRecurs( strIndex.substring( 1 ) ) + convertStringIndexToIntRecurs( strIndex.substring( 0, 1 ) ) * 26;
+    	} else {
+    		return (int) strIndex.charAt( 0 ) - 'A' + 1;
+    	}
     }
+    
 
     /**
      * <p>Převede řetězec, kterým se v Excelu identifikují sloupce na číslo.</p>

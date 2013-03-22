@@ -83,8 +83,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     /** redefines filter component which is used in normal filter for this column */
     protected FilterComponentFactory filterComponentFactory;
     
-    /** column name for filtering */
-    private String filterColumn;
+    /** column name for exporting */
+    private String exportColumn;
         
     /** redefines filter compiler which is used to compile filter operators */
     private FilterCompiler filterCompiler;
@@ -450,11 +450,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 		this.exportable = exportable;
 	}
 
-	public String getFilterColumn() {
-		return filterColumn;
+	public String getExportColumn() {
+		return exportColumn;
 	}
 
-	public void setFilterColumn(String filterColumn) {
-		this.filterColumn = filterColumn;
+	public void setExportColumn(String exportColumn) {
+		this.exportColumn = exportColumn;
 	}   
 }
