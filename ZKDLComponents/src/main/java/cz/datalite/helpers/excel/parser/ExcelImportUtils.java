@@ -34,10 +34,11 @@ public final class ExcelImportUtils {
      * @return převedený řetězec začínající od 1
      */
     private static int convertStringIndexToIntRecurs( final String strIndex ) {
-        if ( strIndex.length() > 1 )
-            return convertStringIndexToIntRecurs( strIndex.substring( 1 ) ) * 26 + convertStringIndexToIntRecurs( strIndex.substring( 0, 1 ) );
-        else
+    	if ( strIndex.length() > 1 ) {
+            return convertStringIndexToIntRecurs( strIndex.substring( 1 ) ) + convertStringIndexToIntRecurs( strIndex.substring( 0, 1 ) ) * 26;
+    	} else {
             return (int) strIndex.charAt( 0 ) - 'A' + 1;
+    	}
     }
 
     /**

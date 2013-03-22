@@ -29,9 +29,11 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     protected Integer rows;
     protected String sheetName = "data";
     protected String fileName = "report";
+    
     // view
     DLListbox usedListbox;
     DLListbox unusedListbox;
+    
     // controller
     protected ListboxSelectorController selector;
     protected DLListboxExtController masterController;
@@ -53,11 +55,14 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
         final List<Map<String, Object>> columnModels = ( List<Map<String, Object>> ) arg.get( "columnModels" );
 
         for ( Map<String, Object> map : columnModels ) {
-            if ( ( Boolean ) map.get( "visible" ) ) {
-                usedModel.add( prepareMap( map ) );
-            } else {
-                unusedModel.add( prepareMap( map ) );
-            }
+        	// add columns to export model settings (only exportable)
+        	if ((Boolean) map.get("exportable")) {
+        	 	if ((Boolean) map.get("visible") ) {
+        			usedModel.add( prepareMap( map ) );
+        		} else {
+        			unusedModel.add( prepareMap( map ) );
+        		}
+        	}
         }
 
         java.util.Collections.sort( usedModel, new java.util.Comparator<Map<String, Object>>() {

@@ -17,12 +17,16 @@ public class DLFilterModel {
 
     /** property describing behavior of the quick filter - it says to use contains operator only */
     protected static final boolean USE_WYSIWYG = "true".equalsIgnoreCase( Library.getProperty( "zk-dl.filter.wysiwyg" ) );
+    
     /** easy filter - binding */
     protected final EasyFilterModel _easy = new EasyFilterModel();
-    /** quick filter - component */
+    
+    /** quick filter - component based on hbox */
     protected final QuickFilterModel _quick = new QuickFilterModel();
-    /** normal filter - model window */
+    
+    /** normal filter - modal window */
     protected final NormalFilterModel _normal = new NormalFilterModel();
+    
     /** default filter - model */
     protected final NormalFilterModel _default = new NormalFilterModel();
     
@@ -94,7 +98,7 @@ public class DLFilterModel {
         if ( quickFilter.getValue() == null || quickFilter.getValue().length() == 0 ) {
             return new NormalFilterModel();
         }
-
+        
         final DLColumnUnitModel column =  quickFilter.getModel();
         final NormalFilterUnitModel unit = column == null ? new NormalFilterUnitModel( quickFilter.getKey() ) : new NormalFilterUnitModel( column );
         if ( QuickFilterModel.CONST_ALL.equals( quickFilter.getKey() ) ) { // quickfilter key == ALL 

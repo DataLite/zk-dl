@@ -264,10 +264,11 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
             final Map<String, Object> unitMap = new HashMap<String, Object>();
             unitMap.put( "label", unit.getLabel() );
-            unitMap.put( "column", unit.getColumn() );
+            unitMap.put( "column", (unit.getExportColumn() != null) ? unit.getExportColumn() : unit.getColumn() );
             unitMap.put( "index", index );
             unitMap.put( "order", unit.getOrder() );
             unitMap.put( "visible", unit.isVisible() );
+            unitMap.put( "exportable", unit.isExportable() );
             unitMap.put( "isConverter", unit.isConverter() );
             unitMap.put( "converter", unit.getConverter() );
 

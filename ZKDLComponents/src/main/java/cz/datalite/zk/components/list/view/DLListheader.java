@@ -27,33 +27,54 @@ import org.zkoss.zul.ListitemComparator;
  */
 public class DLListheader extends Listheader {
 
-    // should be this column sorted in the default
+	private static final long serialVersionUID = 5081334044887334444L;
+
+	/** should be this column sorted in the default */
     protected DLSortType defaultSort = DLSortType.NATURAL;
-    // column name in the database which coresponds to this col - for sorting
+    
+    /** column name in the database which coresponds to this col - for sorting */
     protected String sortColumn = "";
-    // will be used default zk sort od database sort
+    
+    /** will be used default zk sort or database sort */
     protected boolean sortZk;
-    // is column sortable - false disables sorting
+    
+    /** is column sortable - false disables sorting */
     protected boolean sortable = false;
-    // column name in the database which coresponds to this col
+    
+    /** column name in the database which coresponds to this col */
     protected String column;
-    // data type of this column
-    protected Class columnType;
-    // is enabled for quick filter
+    
+    /** column name used to override default behavior of xls export */
+    protected String exportColumn;
+    
+    /** data type of this column */
+    protected Class<?> columnType;
+    
+    /** column is enabled for quick filter */
     protected boolean quickFilter = true;
+    
+    /** column is enabled for export */
+    protected boolean exportable = true;
+    
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
+    
     /** defines class which generates default component for filter value in normal filter */
     protected FilterComponentFactory filterComponentFactory;
+    
     /** defines own filter compiler for this column */
     protected FilterCompiler filterCompiler;
-    // is enabled for all filters
+    
+    /** is enabled for all filters */
     protected boolean filter = true;
-    // converter
+    
+    /** converter */
     protected String converter;
-    // model
+    
+    /** model */
     protected DLColumnUnitModel model;
-    // controller
+    
+    /** controller */
     protected DLListboxComponentController controller;
 
     public void initModel() {
@@ -64,10 +85,12 @@ public class DLListheader extends Listheader {
         model.setSortColumn( sortColumn );
         model.setVisible( isVisible() );
         model.setColumn( column );
+        model.setExportColumn( exportColumn );
         model.setColumnType( columnType );
         model.setConverter( converter, this, Collections.<String,String>emptyMap() );
         model.setQuickFilter( quickFilter );
         model.setFilter( filter );
+        model.setExportable( exportable );
         model.setFilterOperators( operators );
         model.setFilterComponentFactory( filterComponentFactory );
         model.setFilterCompiler( filterCompiler );
@@ -131,7 +154,7 @@ public class DLListheader extends Listheader {
      * If header doesn't containt tooltiptext, label is default tooltip.
      * Usefull for long header names.
      * 
-     * @return toolitp text
+     * @return tooltip text
      */
     @Override
     public String getTooltiptext() {
@@ -268,8 +291,16 @@ public class DLListheader extends Listheader {
     public void setFilter( final boolean filter ) {
         this.filter = filter;
     }
+    
+    public void setExportable(boolean exportable) {
+		this.exportable = exportable;
+	}
+    
+    public void setExportColumn(String exportColumn) {
+		this.exportColumn = exportColumn;
+	}
 
-    public void setFilterOperators( final String ops ) {
+	public void setFilterOperators( final String ops ) {
         operators = new ArrayList<DLFilterOperator>();
         if ( Strings.isEmpty( ops ) ) {
             return;
