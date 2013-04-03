@@ -31,6 +31,8 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Paging;
 
 /**
@@ -374,7 +376,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /**
      * Returns distinct values in this column. Rows have to corespond to
      * filter criterias.
-     * @deprecated since 2.9.2010 - for distinct components there are {@link cz.datalite.zk.components.list.filter.components.DataLoader}
+     * @deprecated since 2.9.2010 - for distinct components there are {@link cz.datalite.zk.components.list.filter.components.DistinctFilterComponent}
      * @param column column name with distinct
      * @param filter criterias
      * @return coresponding model
@@ -540,6 +542,18 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void setSelectedItems( final Set<T> selecteItems ) {
         getListboxController().setSelectedItems( selecteItems );
+    }
+
+    public void updateItem(T item) {
+        boolean found = getListboxController().updateItem(item);
+
+        // update paging (+1 row)
+        if (!found)
+        {
+            model.getPagingModel().setTotalSize(model.getPagingModel().getTotalSize()+1,
+                    getListboxController().getListbox().getRows());
+            pagingController.fireChanges();
+        }
     }
 
     public DLEasyFilterController getEasyFilterController() {

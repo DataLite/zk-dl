@@ -1,15 +1,12 @@
 package cz.datalite.dao;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
+import org.hibernate.sql.JoinType;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -216,8 +213,29 @@ public class DLSearch<T> {
      * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
      * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
      * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
+     * @deprecated as of Hibernate 4  use JoinType object
      */
+    @Deprecated
     public void addAlias( final String path, final String alias, final int joinType ) {
+       addAlias(path, alias, JoinType.parse(joinType));
+    }
+
+    /**
+     * <p>Adds alias name for your property. If alias is already defined
+     * nothing is done. Else your entered alias is added.</p>
+     * <p>Notes: <br/>Alias must containt EXACTLY one dot.<br/>Alias name
+     * mustn't be same like some field name.</p>
+     * <h2>Example:</h2>
+     * <i>path:</i> human.hobby<br/>
+     * <i>alias:</i> hobby<br/>
+     * <h2>Example:</h2>
+     * <i>path:</i> hobby.type<br/>
+     * <i>alias:</i> typeAlias<br/>
+     * @param path table address - contains exactly one dot
+     * @param alias pseudonym for the path
+     * @param joinType {@link JoinType#FULL_JOIN}, {@link JoinType#LEFT_OUTER_JOIN} {@link JoinType#INNER_JOIN}
+     */
+    public void addAlias( final String path, final String alias, final JoinType joinType ) {
         String fullPath = path.lastIndexOf( '.' ) == -1 ? "" : path.substring( 0, path.lastIndexOf( '.' ) );
         Alias parent = null;
         if ( fullPath.length() > 0 ) {
@@ -248,10 +266,22 @@ public class DLSearch<T> {
      * <p>Adds alias name for your property. If alias is already defined
      * nothing is done. Else your entered alias is added. Calls addAlias(path, path, joinType).</p>
      * @param path table address - contains exactly one dot
+     * @param joinType {@link JoinType#FULL_JOIN}, {@link JoinType#LEFT_OUTER_JOIN} {@link JoinType#INNER_JOIN}
+     */
+    public void addAlias( final String path, final JoinType joinType ) {
+        addAlias( path, path, joinType );
+    }
+
+    /**
+     * <p>Adds alias name for your property. If alias is already defined
+     * nothing is done. Else your entered alias is added. Calls addAlias(path, path, joinType).</p>
+     * @param path table address - contains exactly one dot
      * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
      * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
      * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
+     * @deprecated as of Hibernate 4 use JPA JoinType
      */
+    @Deprecated
     public void addAlias( final String path, final int joinType ) {
         addAlias( path, path, joinType );
     }
@@ -272,7 +302,7 @@ public class DLSearch<T> {
      * @param alias pseudonym for the path
      */
     public void addAlias( final String path, final String alias ) {
-        addAlias( path, alias, Criteria.INNER_JOIN );
+        addAlias( path, alias, JoinType.INNER_JOIN );
     }
 
     /**
@@ -305,7 +335,19 @@ public class DLSearch<T> {
      * @param fullPath full field path
      */
     public void addAlias( final String fullPath ) {
-        addAliases( fullPath, Criteria.INNER_JOIN );
+        addAliases( fullPath, JoinType.INNER_JOIN );
+    }
+
+    /**
+     * Adds all aliases for this full field path.
+     * If aliases already exists nothing is done
+     * @param fullPath full field path
+     * @param joinType type of the join in SQL {@link org.hibernate.criterion.CriteriaSpecification}
+     * @deprecated as of hibernate 4
+     */
+    @Deprecated
+    public void addAliases( final String fullPath, final int joinType ) {
+        addAliases(fullPath, JoinType.parse(joinType));
     }
 
     /**
@@ -314,7 +356,7 @@ public class DLSearch<T> {
      * @param fullPath full field path
      * @param joinType type of the join in SQL {@link org.hibernate.criterion.CriteriaSpecification}
      */
-    public void addAliases( final String fullPath, final int joinType ) {
+    public void addAliases( final String fullPath, final JoinType joinType ) {
         final List<String> parts = DLSearch.getAliasesForWholePath( fullPath );
         for ( int i = -1; i < parts.size() - 1; i++ ) {
             // aliases.get(i) = sth
@@ -392,9 +434,21 @@ public class DLSearch<T> {
         protected String _fullPath;
         protected String _path;
         protected String _alias;
-        protected int _joinType;
 
+        protected JoinType _joinType;
+
+        /**
+         * @deprecated as of Hibernate 4 user JoinType
+         */
+        @Deprecated
         public Alias( final String fullPath, final String path, final String alias, final int joinType ) {
+            this._fullPath = fullPath;
+            this._path = path;
+            this._alias = alias;
+            this._joinType = JoinType.parse(joinType);
+        }
+
+        public Alias( final String fullPath, final String path, final String alias, final JoinType joinType ) {
             this._fullPath = fullPath;
             this._path = path;
             this._alias = alias;
@@ -409,12 +463,35 @@ public class DLSearch<T> {
             this._alias = alias;
         }
 
-        public int getJoinType() {
+        /**
+         * @deprecated as of Hibernate 4 user JoinType
+         */
+        @Deprecated
+        public int getJoinTypeCriteria() {
+            switch (_joinType) {
+                case INNER_JOIN: return Criteria.INNER_JOIN;
+                case LEFT_OUTER_JOIN: return Criteria.LEFT_JOIN;
+                case FULL_JOIN:return Criteria.FULL_JOIN;
+
+                default: throw new IllegalStateException("JoinType not supported: " + _joinType);
+            }
+
+        }
+
+        /**
+         * @deprecated as of Hibernate 4 user JoinType
+         */
+        @Deprecated
+        public void setJoinTypeCriteria( final int joinType ) {
+            this._joinType = JoinType.parse(joinType);
+        }
+
+        public JoinType getJoinType() {
             return _joinType;
         }
 
-        public void setJoinType( final int joinType ) {
-            this._joinType = joinType;
+        public void setJoinType(JoinType joinTypeJpa) {
+            this._joinType = joinTypeJpa;
         }
 
         public String getPath() {

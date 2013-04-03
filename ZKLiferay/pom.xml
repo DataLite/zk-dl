@@ -4,12 +4,12 @@
     <parent>
         <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>        
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKLiferay</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>ZKLiferay</name>
 
     <dependencies>
@@ -125,14 +125,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>3.0.5.RELEASE</version>
+            <version>${org.springframework.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc-portlet</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <version>${org.springframework.version}</version>
             <optional>true</optional>
         </dependency>
 

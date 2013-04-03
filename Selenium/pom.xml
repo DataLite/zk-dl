@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>Selenium</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>Selenium</name>
     <description>Integration tests with Selenium 2.0 (WebDriver) - PageObjects pattern (still in beta)</description>
 
@@ -42,12 +42,14 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.1</version>
+            <optional>true</optional>
         </dependency>
         
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+            <optional>true</optional>
         </dependency>
         
     </dependencies>

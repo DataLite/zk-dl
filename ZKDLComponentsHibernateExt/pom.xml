@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLComponentsHibernateExt</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>ZKDLComponentsHibernateExt</name>
     <description>The actual interface between ZKComponents and HibernateDAO. It contains mainly DLListboxCriteriaController.</description>
     

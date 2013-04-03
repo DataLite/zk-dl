@@ -80,11 +80,14 @@ public interface GenericDAO<T, ID extends Serializable>
     void makeTransient(T entity);
 
     /**
-     * Attach entity to entity manager. It is
-     * useful for lazy-loading between user requests
+     * Attach entity to persistence context. It is useful for lazy-loading between user requests.
+     * If the persistence context already contains the entity, it merges the detached entity and returns
+     * the instance from persistence context. Otherwise the detached instance is attached
+     * with getSession().buildLockRequest(LockOptions.NONE).lock(entity);
+     *
      * @param entity entity to attach
      */
-    void reattach(T entity);
+    T reattach(T entity);
 
     /**
      * <p>Merge entity with entity manager. It is

@@ -21,6 +21,30 @@ public class DLResponse<T> {
     @SuppressWarnings("unchecked")
     public static DLResponse EMPTY_RESPONSE = new DLResponse(Collections.EMPTY_LIST, 0);
 
+    /** Empty response for a request. */
+    @SuppressWarnings("unchecked")
+    public static <T> DLResponse<T> emptyResponse() {
+        return EMPTY_RESPONSE;
+    }
+
+    /**
+     * Create un-full-filled container. Total length is set on 0, disabled paging
+     * or not countPages in paging is recommended.
+     * @param data result list
+     */
+    public static <T> DLResponse<T> response(List<T> data) {
+        return new DLResponse<T>(data);
+    }
+
+    /**
+     * Create filled container
+     * @param data result list
+     * @param rows total length
+     */
+    public static <T> DLResponse<T> response(List<T> data, final Integer rows) {
+        return new DLResponse<T>(data, rows);
+    }
+
     /**
      * Create filled container
      * @param data result list

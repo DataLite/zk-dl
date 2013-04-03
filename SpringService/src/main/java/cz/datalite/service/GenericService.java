@@ -87,22 +87,26 @@ public interface GenericService<T, ID extends Serializable> {
 
     /**
      * Metoda upraví nebo uloží záznam v databázi.
-     * @param cisAdresa upravený nebo nový záznam pro odeslání do databáze.
+     * @param T upravený nebo nový záznam pro odeslání do databáze.
      */
     void save(T entity);
 
     /**
-     * Metoda smaže záznam z databáze.
-     * @param cisAdresa záznam kola na smazání z databáze.
+     * Delete the entity from database.
+     * @param entity entity to delete.
      */
     void delete(T entity);
 
 
     /**
-     * Metoda obnoví spojení objektu cisAdresa s jeho záznamem v databázi.<br />
-     * Používá se kvůli lazy inicialize, kdy dodatečně dohráváme kolekci
-     * komponent v jiném requestu. Má smysl pouze s nastaveným OpenEntityManagerInView na klientovi.
-     * @param cisAdresa objekt CisAdresa na znovupropojení s databází
+     * <p>Reattach the entity to the persistence context (without hitting the database).</p>
+     * <p>Typical use is when you have entity instance from an old request (hence dettached) and
+     * you want it to allow lazy load subseqent entities. Without reattach you will get
+     * LazyInitializationException: could not initialize proxy - no Session.</p>
+     * <p>If the another entity with the same ID is already in the persistence context, this method
+     * uses merge (and the new entity is returned). Otherwise this entity is only attached, no query executed.</p>
+     * @param entity entity to reattach.
+     * @return the same object(rettached) or new entity representing same database object (if it was part of persistence context already)
      */
-    void attachPersistenceContext(T entity);
+    T attachPersistenceContext(T entity);
 }

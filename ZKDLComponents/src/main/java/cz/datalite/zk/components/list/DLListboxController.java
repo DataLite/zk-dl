@@ -237,6 +237,14 @@ public interface DLListboxController<T> {
     void setSelectedItems(Set<T> selectedItems);
 
     /**
+     * <p>Update an item in the data model with a new value.</p>
+     * <p>Typical scenario is after entity update in a detail window refresh the row in the listbox.</p>
+     * <p>The item to update is found by equals method (using indexof on listbox data model). If not found,
+     * the item is added as a first item in listbox and selected.</p>
+     */
+    void updateItem(T item);
+
+    /**
      * <p>Locks model - since this time method refreshData model is disable.
      * Also events which can modify model are disabled.</p>
      */

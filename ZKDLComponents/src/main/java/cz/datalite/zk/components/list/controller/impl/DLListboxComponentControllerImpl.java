@@ -25,9 +25,7 @@ import org.zkoss.zk.ui.metainfo.NodeInfo;
 import org.zkoss.zk.ui.metainfo.TemplateInfo;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.Listcell;
-import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listitem;
+import org.zkoss.zul.*;
 
 /**
  *  Implementation of the listbox controller.
@@ -572,6 +570,35 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
              setSelected( null );
         } else {
             setSelected( listboxModel.get( selectedIndex ) );
+        }
+    }
+
+    public boolean updateItem(T item) {
+
+        // we need to set new value directly via ListModelList (or subclass), because it calls the internal
+        // event on Listbox to rerender new value. If we use underlying getListboxModel() directly, there is no
+        // public accessor to call the event.
+        if (!(getListbox().getModel() instanceof ListModelList))
+            throw new IllegalStateException("updateItem can be used only if the listbox model is of type ListModelList " +
+                    "(it is true for normal use with <listbox apply='listboxController'>). For special use, " +
+                    "you have to manage the model manually.");
+
+        ListModelList<T> listboxModel = (ListModelList<T>) getListbox().getModel();
+
+
+        int index = listboxModel.indexOf(item);
+
+        if (index == -1)
+        {
+            // add a new row and select it
+            listboxModel.add(0, item);
+            setSelected(item);
+            return false;
+        }
+        else
+        {
+            listboxModel.set(index, item);
+            return true;
         }
     }
 

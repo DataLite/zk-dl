@@ -3,12 +3,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>DLHelpers</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>DLHelpers</name>
     <description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and use anything you want.</description>
     

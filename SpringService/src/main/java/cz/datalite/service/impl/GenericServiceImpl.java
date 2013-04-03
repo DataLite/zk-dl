@@ -138,7 +138,7 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
     }
 
     @Transactional
-    public void attachPersistenceContext(T entity) {
-        defaultDAO.reattach(entity);
+    public T attachPersistenceContext(T entity) {
+        return defaultDAO.reattach(entity);
     }
 }

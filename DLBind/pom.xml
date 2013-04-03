@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>DLBind</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>DLBind</name>
     <description>Binder module provides additional functionality to ZKBind.</description>
     

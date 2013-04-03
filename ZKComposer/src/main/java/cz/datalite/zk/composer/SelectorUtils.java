@@ -26,8 +26,32 @@ public class SelectorUtils {
      * @param self master view component
      */
     public static void wire( final Object composer, final Component self ) {
+        wireComponents(composer, self);
+        wireListeners(composer, self);
+    }
+
+    /**
+     * Wires the properies with annotations {@link Wire}
+     *
+     * Look at http://books.zkoss.org/wiki/Small_Talks/2012/January/MVVM_Extension:_Access_UI_Components_Inside_ViewModel
+     *
+     * @param composer view-model with annotated properties
+     * @param self master view component
+     */
+    public static void wireComponents( final Object composer, final Component self ) {
         // wire component @Wire
         Selectors.wireComponents( self, composer, false );
+    }
+
+    /**
+     * Wires the properies with annotations {@link Listen}
+     *
+     * Look at http://books.zkoss.org/wiki/Small_Talks/2012/January/MVVM_Extension:_Access_UI_Components_Inside_ViewModel
+     *
+     * @param composer view-model with annotated properties
+     * @param self master view component
+     */
+    public static void wireListeners( final Object composer, final Component self ) {
         // first event listener wiring @Listen
         Selectors.wireEventListeners( self, composer );
 

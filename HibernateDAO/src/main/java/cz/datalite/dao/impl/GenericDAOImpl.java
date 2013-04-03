@@ -4,11 +4,9 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSearch;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.GenericDAO;
-import org.hibernate.Criteria;
-import org.hibernate.LockMode;
-import org.hibernate.Session;
-import org.hibernate.TransientObjectException;
+import org.hibernate.*;
 import org.hibernate.criterion.*;
+import org.hibernate.sql.JoinType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -89,7 +87,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert id != null : INVALID_ARGUMENT_ID_MISSING;
         T entity;
         if ( lock ) {
-            entity = ( T ) getSession().load( getPersistentClass(), id, LockMode.UPGRADE);
+            entity = ( T ) getSession().load( getPersistentClass(), id, LockOptions.UPGRADE);
         } else {
             entity = ( T ) getSession().load( getPersistentClass(), id );
         }
@@ -127,6 +125,10 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     public void makeTransient( final T entity ) {
         assert entity != null : INVALID_ARGUMENT_ENTITY_MISSING;
 
+        // JPA forbids deletion of detached object (although in Hibernate itself it is legal).
+        if (!getSession().contains( entity ))
+            reattach(entity);
+
         getSession().delete( entity );
     }
 
@@ -152,11 +154,21 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         return crit.list();
     }
 
-    public void reattach( final T entity ) {
+    public T reattach( final T entity ) {
         assert entity != null : INVALID_ARGUMENT_ENTITY_MISSING;
-        // potrebujeme zpetnou kompatibilitu s JPA 1.0 kvuli OC4J
-        //getSession().buildLockRequest(LockOptions.NONE).lock(entity);
-        getSession().lock( entity, LockMode.NONE );
+
+        try
+        {
+            // attach the persistence context - Hibernate will presume, that the entity is NOT modified.
+            getSession().buildLockRequest(LockOptions.NONE).lock(entity);
+            return entity;
+        }
+        catch (NonUniqueObjectException e)
+        {
+            // It would be cleaner to check if the entity is in already in the persistence context
+            // unfortunatelly, there is no public method that I am aware of.
+            return (T) getSession().merge(entity);
+        }
     }
 
     public T merge( final T entity ) {
@@ -177,9 +189,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     /**
      * Add firstResult/maxResults and distinct flags and executes the query.
      *
-     * @param executable
-     * @param search
-     * @return
+     * @param executable the criterias
+     * @param search search object
+     * @return result
      */
     protected List<T> search( final Criteria executable, final DLSearch<T> search ) {
 
@@ -239,7 +251,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         if (result instanceof Long)
             return (( Long ) cnt.get( 0 )).intValue();
         else
-            return (( Integer ) cnt.get( 0 )).intValue();
+            return (Integer) cnt.get(0);
     }
 
     /**
@@ -257,7 +269,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // add sort aliases
         for ( final Iterator<DLSort> it = search.getSorts(); it.hasNext(); ) {
             final DLSort sort = it.next();
-            search.addAliases( sort.getColumn(), Criteria.LEFT_JOIN );
+            search.addAliases( sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
         }
 
         // write aliasses
