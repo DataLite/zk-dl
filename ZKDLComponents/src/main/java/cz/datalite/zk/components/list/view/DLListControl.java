@@ -12,9 +12,10 @@ import org.zkoss.zul.Separator;
  *
  * @author Michal Pavlusek
  */
-public class DLListControl extends Hbox
-{
-    // constants
+public class DLListControl extends Hbox {
+  private static final long serialVersionUID = -3323491094746695460L;
+
+	// constants
     private static final int CONST_PAGE_SIZE = 100;
     
     // basic display settings
@@ -45,8 +46,7 @@ public class DLListControl extends Hbox
     /** First separator of content. */
     private final Separator separator1;
 
-    /** Just constructing the component
-     * (to recognize own child components and user added components). */
+    /** Just constructing the component (to recognize own child components and user added components). */
     private boolean inConstruct = true;
 
     /** ZK-164 It says that the QuickFilter should use the Contains operator for quick filter base comparison */
@@ -55,9 +55,9 @@ public class DLListControl extends Hbox
     /**
      * Constructor creates all components.
      */
-    public DLListControl()
-    {
+    public DLListControl() {
         super();
+        
         setClass("z-paging");
         setWidth("100%");
 
@@ -91,21 +91,18 @@ public class DLListControl extends Hbox
         inConstruct = false;
     }
 
-    public void init()
-    {
+    public void init() {    	
         initPaging();
         initQuickFilter();
     }
 
-    private void initQuickFilter()
-    {
-        qFilterComponent.setQuickFilterAll( quickFilterAll );
-        qFilterComponent.setQuickFilterDefault( quickFilterDefault );
+    private void initQuickFilter() {    	
+        qFilterComponent.setQuickFilterAll(quickFilterAll);
+        qFilterComponent.setQuickFilterDefault(quickFilterDefault);
         qFilterComponent.setQuickFilterButton(quickFilterButton);
     }
 
-    private void initPaging()
-    {
+    private void initPaging() {
         pagingComponent.setPageSize( pageSize );
         pagingComponent.setAutohide( autohide );
         pagingComponent.setCountPages( countPages );
@@ -117,23 +114,19 @@ public class DLListControl extends Hbox
      * @return additionalContent.appendChild(child).
      */
     @Override
-    public boolean appendChild(Component child)
-    {
-        if (inConstruct)
+    public boolean appendChild(Component child) {
+        if (inConstruct) {
             return super.appendChild(child);
-        else
+        } else {
             return additionalContent.appendChild(child);
+        }
     }
 
     @Override
-    public boolean insertBefore(Component newChild, Component refChild)
-    {
-        if (inConstruct)
-        {
+    public boolean insertBefore(Component newChild, Component refChild) {
+        if (inConstruct) {
             return super.insertBefore(newChild, refChild);
-        }
-        else
-        {
+        } else {
             additionalContent.setHflex("1");
             separator1.setHflex("0");
             return additionalContent.insertBefore(newChild, refChild);
@@ -142,7 +135,6 @@ public class DLListControl extends Hbox
 
 
     /************************** SETTERS & GETTERS *****************************/
-
     public boolean isPaging() {
         return paging;
     }

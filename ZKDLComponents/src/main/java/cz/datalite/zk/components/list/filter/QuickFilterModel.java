@@ -67,4 +67,10 @@ public class QuickFilterModel {
         value = null;
         model = null;
     }
+
+	@Override
+	public String toString() {
+		return "QuickFilterModel [key=" + key + ", value=" + value + ", model=" + model + "]";
+	} 
+    
 }
