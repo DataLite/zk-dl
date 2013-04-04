@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
-            <version>[${org.zkframework.version}.1-DATALITE,${org.zkframework.version}.100-DATALITE)</version>
+            <version>6.5.2.1-DATALITE</version>
         </dependency>
         
         <dependency>
