@@ -1,11 +1,12 @@
 package cz.datalite.zk.bind;
 
-import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Component;
+
+import java.util.Collections;
 
 /**
  * Binder helper implementation for databinding in version 2.0 which came with
@@ -62,7 +63,7 @@ import org.zkoss.zk.ui.Component;
     }
 
     public void registerAnnotation( AbstractComponent component, String property, String annotName, String value ) {
-        component.addAnnotation( property, annotName, Collections.singletonMap( "value", new String[]{ value } ) );
+        component.addAnnotation( property, annotName, Collections.singletonMap("value", new String[]{value}) );
     }
 
     public void notifyChange( Object bean, String model ) {

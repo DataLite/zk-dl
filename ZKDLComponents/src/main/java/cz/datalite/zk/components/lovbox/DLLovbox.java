@@ -10,6 +10,8 @@ import cz.datalite.zk.components.list.view.DLListhead;
 import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
+import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Library;
 import org.zkoss.lang.Objects;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
@@ -20,6 +22,7 @@ import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.OpenEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.*;
@@ -29,9 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import org.slf4j.LoggerFactory;
-import org.zkoss.lang.Library;
-import org.zkoss.zk.ui.event.OpenEvent;
 
 /**
  * Component simulating combobox behaviour. It is usable for huge
@@ -80,7 +80,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** defines listbox width for component in the popup */
     protected String listWidth = "400px";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
-    protected String[] labelProperties;
+    protected String[] labelProperties = new String[] {};
     /** Format for properties */
     private String labelFormat;
     /** defines name of property, which is searched in database. */
@@ -159,10 +159,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             final Listhead head = new DLListhead(); // create lishead and listitem
             listbox.appendChild( head );
 
-            if ( this.labelProperties == null )
-                    throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
-            
             if ( ZKBinderHelper.version( this ) == 1 ) {
+                // version 1 does not support lovbox on a object
+                if ( this.labelProperties.length == 0 )
+                    throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
+
                 // binding template for databinding version 1.0
                 final Listitem item = new Listitem();
                 listbox.appendChild( item );
@@ -179,8 +180,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                     createCell( descriptionProperty );
             } else if (ZKBinderHelper.version( this ) == 2 ) {
                 // binding template for databinding version 2.0
+                // labelProperties and descriptionProperty may be null - then only one cell is created
+                // and it will contain model value (i.e. toString() ).
                 listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty ) );
-                
+
                 for ( String property : this.labelProperties ) {
                     // header
                     final DLListheader header = new DLListheader();
@@ -421,6 +424,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected String getDispalyValueForModel(T model) {
 
         final int size = this.labelProperties.length;
+
+        // special case without labelProperties -> just return toString().
+        if (size == 0)
+            return model == null ? "" : model.toString();
+
         Object[] values = new Object[ size ]; // values of properties
         for ( int i = 0; i < size; i++ ) {
             try {
