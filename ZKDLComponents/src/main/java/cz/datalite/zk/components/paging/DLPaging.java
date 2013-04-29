@@ -53,28 +53,28 @@ public class DLPaging extends Hbox implements Pageable {
         setClass("z-paging");
         setWidth("100%");
 
-        first.setZclass("z-paging-first");
+        first.setZclass("z-paging-first"); first.setSclass("z-paging-btn");
         first.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
                 setActivePage(0);
             }
         });
-        previous.setZclass("z-paging-prev");
+        previous.setZclass("z-paging-prev"); previous.setSclass("z-paging-btn");
         previous.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
                 setActivePage(getActivePage()-1);
             }
         });
-        next.setZclass("z-paging-next");
+        next.setZclass("z-paging-next"); next.setSclass("z-paging-btn");
         next.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
                 setActivePage(getActivePage()+1);
             }
         });
-        last.setZclass("z-paging-last");
+        last.setZclass("z-paging-last");  last.setSclass("z-paging-btn");
         last.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) throws Exception
             {
