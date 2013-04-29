@@ -167,7 +167,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         {
             // It would be cleaner to check if the entity is in already in the persistence context
             // unfortunatelly, there is no public method that I am aware of.
-            return (T) getSession().merge(entity);
+            return (T) getSession().get(entity.getClass(), e.getIdentifier());
         }
     }
 
@@ -313,7 +313,17 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
 
     public DLResponse<T> searchAndCount( final DLSearch<T> search ) {
         assert search != null : INVALID_ARGUMENT_SEARCH_OBJECT_MISSING;
-        return new DLResponse<T>( search( search ), count( search ) );
+
+        List<T> result = search( search );
+        int cnt;
+
+        // if page size < actual results, we can use results, othewise go to the database
+        if (search.getRowCount() - search.getFirstRow() < result.size())
+            cnt = result.size();
+        else
+            cnt = count( search );
+
+        return new DLResponse<T>( result, cnt );
     }
 
     /**

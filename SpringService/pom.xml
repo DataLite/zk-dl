@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>SpringService</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.1.1</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
 

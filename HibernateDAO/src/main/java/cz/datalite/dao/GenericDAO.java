@@ -1,9 +1,10 @@
 package cz.datalite.dao;
 
+import org.hibernate.Session;
+
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityManager;
-import org.hibernate.Session;
 
 /**
  * Generic DAO design pattern.
@@ -81,7 +82,7 @@ public interface GenericDAO<T, ID extends Serializable>
 
     /**
      * Attach entity to persistence context. It is useful for lazy-loading between user requests.
-     * If the persistence context already contains the entity, it merges the detached entity and returns
+     * If the persistence context already contains the entity, it returns
      * the instance from persistence context. Otherwise the detached instance is attached
      * with getSession().buildLockRequest(LockOptions.NONE).lock(entity);
      *

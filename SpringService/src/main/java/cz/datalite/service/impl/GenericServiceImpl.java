@@ -7,13 +7,14 @@ import cz.datalite.dao.impl.GenericDAOFactory;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.service.GenericService;
 import cz.datalite.stereotype.Autowired;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generic service to communicate with Generic DAO layer. It will resolve DAO class from generic type DAO and try to find
@@ -137,7 +138,7 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         defaultDAO.makeTransient(entity);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public T attachPersistenceContext(T entity) {
         return defaultDAO.reattach(entity);
     }
