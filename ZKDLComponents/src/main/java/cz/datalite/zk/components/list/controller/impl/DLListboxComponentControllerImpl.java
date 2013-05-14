@@ -10,8 +10,6 @@ import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
-import java.lang.reflect.Method;
-import java.util.*;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.ComponentNotFoundException;
@@ -25,7 +23,13 @@ import org.zkoss.zk.ui.metainfo.NodeInfo;
 import org.zkoss.zk.ui.metainfo.TemplateInfo;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.*;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listitem;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  *  Implementation of the listbox controller.
@@ -593,11 +597,21 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             // add a new row and select it
             listboxModel.add(0, item);
             setSelected(item);
+
+            // if the listbox model is not live (i.e. holds only copy of original list), we need to modify it as well
+            if (listboxModel.getInnerList() != getListboxModel())
+                getListboxModel().add(0, item);
+
             return false;
         }
         else
         {
             listboxModel.set(index, item);
+
+            // if the listbox model is not live (i.e. holds only copy of original list), we need to update it as well
+            if (listboxModel.getInnerList() != getListboxModel())
+                getListboxModel().set(index, item);
+
             return true;
         }
     }

@@ -80,8 +80,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 		open.setTooltiptext(Labels.getLabel("quickFilter.tooltip.openFilter"));
 		open.setSrc(CONST_DEFAULT_ICON_PATH + "open.png");
 		open.setStyle(CONST_POINTER_STYLE);
-		open.setWidth("10px");
-		open.setHeight(CONST_IMAGE_SIZE);
+		open.setWidth("16px");
+		open.setHeight("10px");
 		open.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 			public void onEvent(final Event event) {
 				popup.open(selector);
