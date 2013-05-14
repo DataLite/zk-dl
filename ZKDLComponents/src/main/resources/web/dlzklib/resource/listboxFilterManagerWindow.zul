@@ -22,12 +22,12 @@
             </columns>
             <rows>
                 <row self="@{each=expression}" value="@{expression}" onRenderComponents="ctl.onRenderComponents(self)">
-                    <combobox constraint="strict" onAfterRender="ctl.onRenderComponents(self)" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" hflex="1">
+                    <dlcombobox constraint="strict" onAfterRender="ctl.onRenderComponents(self)" onSelect="ctl.onSelectColumn(self)" selectedItem="@{expression.template}" model="@{ctl.modelTemplates}" hflex="1">
                         <comboitem self="@{each=template}" label="@{template.label}" value="@{template}"/>
-                    </combobox>
-                    <combobox constraint="strict" onSelect="ctl.onSelectOperator(self)" selectedItem="@{expression.model.operator}" model="@{expression.model.operators}" hflex="1">
+                    </dlcombobox>
+                    <dlcombobox constraint="strict" onSelect="ctl.onSelectOperator(self)" selectedItem="@{expression.model.operator}" model="@{expression.model.operators}" hflex="1">
                         <comboitem self="@{each=operator}" label="@{operator.label}" value="@{operator}"/>
-                    </combobox>
+                    </dlcombobox>
                     <space />
                     <space />
                     <image style="cursor: pointer; margin-left: 4px;" tooltiptext="${c:l('listbox.filterManager.removeOne')}" src="~./dlzklib/img/remove16x16.png" onClick="ctl.onRemove(self.parent)"/>
