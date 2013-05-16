@@ -44,8 +44,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     // master controller
     protected final DLListboxExtController masterController;
     // model
-    /** data model */
-    protected List<T> listboxModel = Collections.emptyList();
+    /** data model - empty list on start */
+    protected List<T> listboxModel = new ArrayList<T>();
     /** listheader models */
     protected final DLColumnModel columnModel;
     /** listheader - listheader model map */
@@ -612,23 +612,24 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         if (index == -1)
         {
-            // add a new row and select it
-            listboxModel.add(0, item);
-            setSelected(item);
-
             // if the listbox model is not live (i.e. holds only copy of original list), we need to modify it as well
             if (listboxModel.getInnerList() != getListboxModel())
                 getListboxModel().add(0, item);
+
+            // add a new row and select it
+            listboxModel.add(0, item);
+            setSelected(item);
 
             return false;
         }
         else
         {
-            listboxModel.set(index, item);
-
             // if the listbox model is not live (i.e. holds only copy of original list), we need to update it as well
             if (listboxModel.getInnerList() != getListboxModel())
                 getListboxModel().set(index, item);
+
+            // update the value
+            listboxModel.set(index, item);
 
             return true;
         }
