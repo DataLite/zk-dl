@@ -328,7 +328,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
 
         // if page size < actual results, we can use results, othewise go to the database
         if (search.getRowCount() - search.getFirstRow() < result.size())
-            cnt = result.size();
+            cnt = search.getFirstRow() + result.size();
         else
             cnt = count( search );
 

@@ -14,7 +14,7 @@ public class DLResponse<T> {
 
     /** result list */
     private final List<T> data;
-    /** total length */
+    /** total length - if null, total size is not known */
     private final Integer rows;
 
     /** Empty response for a request. */
@@ -56,13 +56,17 @@ public class DLResponse<T> {
     }
 
     /**
-     * Create un-full-filled container. Total length is set on 0, disabled paging
-     * or not countPages in paging is recommended.
+     * Create un-full-filled container. Total length is not set.
+     *
+     * <p>Implementation of paging - total pages should be unknown until
+     * data.size() < requested pageSize. Than we can infer, that end of data
+     * is reached.
+     * </p>
      * @param data result list
      */
     public DLResponse( final List<T> data ) {
         this.data = data;
-        this.rows = 0;
+        this.rows = null;
     }
 
     public List<T> getData() {

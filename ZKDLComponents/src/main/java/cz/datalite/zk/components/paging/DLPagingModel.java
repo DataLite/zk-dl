@@ -23,7 +23,9 @@ public class DLPagingModel {
     protected Integer pageSize = NOT_PAGING;
     // Total size - count total items
     protected Integer totalSize = UNKNOWN_TOTAL_SIZE;
+
     // Uses total size
+    @Deprecated // value is infered from totalSize value (null or not null)
     protected boolean countPages = true;
 
     public Integer getActualPage() {
@@ -58,7 +60,7 @@ public class DLPagingModel {
     }
 
     public void setTotalSize( final Integer totalItems, final int rowsOnThisPage ) {
-        if ( !countPages ) {
+        if ( totalItems == null || !countPages ) {
             if ( pageSize >= rowsOnThisPage )
                 totalSize = actualPage * pageSize + rowsOnThisPage;
         }
@@ -76,10 +78,12 @@ public class DLPagingModel {
         totalSize = UNKNOWN_TOTAL_SIZE;
     }
 
+    @Deprecated
     public boolean isCountPages() {
         return countPages;
     }
 
+    @Deprecated
     public void setCountPages( final boolean countPages ) {
         this.countPages = countPages;
     }

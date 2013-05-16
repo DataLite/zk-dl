@@ -549,7 +549,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     @Override
     public void setReadonly( final boolean readonly ) {
         this.readonly = readonly;
-        this.setDisabled( readonly );
+
+        setAutodrop(!readonly);
+        setButtonVisible(!readonly);
     }
 
     /**
