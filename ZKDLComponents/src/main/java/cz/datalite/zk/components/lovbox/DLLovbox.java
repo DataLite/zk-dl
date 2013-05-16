@@ -90,6 +90,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** defines name of description property which is used whed
     one-row lovbox is defined. This property is used as the second
     column to specifie first {main) column with label. */
+    @Deprecated // use labelProperty comma seperated values
     protected String descriptionProperty;
     /** defines popup height because of display bug */
     protected String popupHeight;
@@ -599,6 +600,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
             public void onEvent( final Event event ) throws Exception {
                 controller.setSelectedItem( null );
+                // deselect listbox
+                controller.getListboxController().setSelected( null );
             }
         } );
 

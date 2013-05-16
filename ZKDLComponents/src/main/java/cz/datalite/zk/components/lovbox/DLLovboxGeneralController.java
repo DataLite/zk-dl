@@ -112,7 +112,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             lovbox.onOpen( new OpenEvent( Events.ON_OPEN, lovbox, true ) );
         }
 
-        listboxController.setSelected( selectedItem );
+        listboxController.setSelectedItem( selectedItem );
 
         onSelect( true );
     }
