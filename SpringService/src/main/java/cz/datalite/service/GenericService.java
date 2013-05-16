@@ -21,6 +21,18 @@ public interface GenericService<T, ID extends Serializable> {
     T get( ID id );
 
     /**
+     * Get entity by instance. Typical usage is to get attached instance for detached entity.
+     * <p>This is convenience method - same result would be get(entity.getId())</p>
+     * <p>Typical usage is to referesh current state in new request -> entity = get(entity);
+     * The method is null safe - if  null, than nothing is done and null returned.</p>
+     *
+     * @param entity object identifier or null
+     *
+     * @return same object or the attached instance. Null for null input.
+     */
+    T get( T entity );
+
+    /**
      * Find entity by Id using optimistic or pesimistic lock.
      * This method may return proxy to not existing object -> fail later in lazy loading.
      *
@@ -86,8 +98,8 @@ public interface GenericService<T, ID extends Serializable> {
     DLResponse<T> searchAndCount( DLSearch<T> search );
 
     /**
-     * Metoda upraví nebo uloží záznam v databázi.
-     * @param T upravený nebo nový záznam pro odeslání do databáze.
+     * Save or update the entity in database
+     * @param entity entity to store
      */
     void save(T entity);
 

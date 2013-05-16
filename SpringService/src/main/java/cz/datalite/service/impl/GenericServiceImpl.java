@@ -87,6 +87,13 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
     public T get(ID id) {
         return defaultDAO.get(id);
     }
+
+    @Transactional(readOnly=true)
+    public T get( T entity ) {
+        if (entity == null)
+            return null;
+        return defaultDAO.get(entity);
+    }
     
     @Transactional(readOnly=true)
     public T findById(ID id, boolean lock) {

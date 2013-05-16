@@ -4,6 +4,8 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSearch;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.GenericDAO;
+import cz.datalite.dao.support.JpaEntityInformation;
+import cz.datalite.dao.support.JpaEntityInformationSupport;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
@@ -31,6 +33,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     private static final String INVALID_ARGUMENT_SEARCH_OBJECT_MISSING = "Invalid argument in GenericDAO. Search object is missing";
     private final Class<T> persistentClass;
     private EntityManager entityManager;
+    private JpaEntityInformation<T, ?> entityInformation;
 
 
     /**
@@ -59,6 +62,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     @PersistenceContext
     public void setEntityManager( final EntityManager entityManager ) {
         this.entityManager = entityManager;
+        this.entityInformation = JpaEntityInformationSupport.getMetadata(persistentClass, entityManager);
     }
 
     public EntityManager getEntityManager() {
@@ -76,6 +80,11 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     public T get( final ID id ) {
         assert id != null : INVALID_ARGUMENT_ID_MISSING;
         return ( T ) getSession().get( getPersistentClass(), id );
+    }
+
+    public T get( final T entity ) {
+        assert entity != null : INVALID_ARGUMENT_ID_MISSING;
+        return ( T ) getSession().get( getPersistentClass(), entityInformation.getId(entity) );
     }
 
     public T findById( final ID id ) {

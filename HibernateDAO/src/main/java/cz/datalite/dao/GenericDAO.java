@@ -46,6 +46,15 @@ public interface GenericDAO<T, ID extends Serializable>
     T get(ID id);
 
     /**
+     * Return current state of the entity. If the entity is detached, another attached instance is returned,
+     * otherwise the same instance. This is convenience method - same result would be get(entity.getId()).
+     *
+     * @param entity attached or detached entity.
+     * @return a persistent instance or null
+     */
+    T get(T entity);
+
+    /**
      * Find all entities in this table
      * @return all exist entities
      */
