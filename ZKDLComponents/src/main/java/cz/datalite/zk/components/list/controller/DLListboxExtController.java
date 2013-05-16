@@ -124,6 +124,13 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
     void onSelect();
 
     /**
+     * Sets selected item to the listbox and send select event (if enabled).
+     *
+     * @param selectedItem selected item
+     */
+    void setSelected( final T selectedItem );
+
+    /**
      * Sets selected item.
      * @param selectedItem selected item
      */

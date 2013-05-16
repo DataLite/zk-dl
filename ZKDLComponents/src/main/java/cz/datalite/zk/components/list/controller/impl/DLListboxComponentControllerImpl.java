@@ -535,10 +535,28 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     
     public void setSelected( final T selectedItem, final Set<T> selectedItems ) {
         setSelectedItem( selectedItem );
-        setSelectedItems( selectedItems );        
-          
-        if (notifyOnSelect) // if the notification is enabled
+        setSelectedItems( selectedItems );
+
+        if (notifyOnSelect) { // if the notification is enabled
+
+            // synchronize listbox component
+            for (T sel : selectedItems) {
+                int index = listboxModel.indexOf(sel);
+                if (index == -1)
+                    throw new IllegalArgumentException("Item " + sel + " for selection not found in the model.");
+                listbox.addItemToSelection(listbox.getItemAtIndex(index));
+            }
+            if (selectedItem == null)
+                listbox.clearSelection();
+            else {
+                int index = listboxModel.indexOf(selectedItem);
+                if (index == -1)
+                    throw new IllegalArgumentException("selectedItem " + selectedItem + " not found in the model.");
+                listbox.setSelectedIndex( index );
+            }
+
             Events.postEvent( new SelectEvent ( Events.ON_SELECT, listbox, listbox.getSelectedItems(), selectedItems, listbox, null, 0 ) );
+        }
     }    
 
     public void setSelectedItem( final T selectedItem ) {

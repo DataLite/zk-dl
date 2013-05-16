@@ -7,19 +7,15 @@ import cz.datalite.zk.components.cascade.CascadeUtil;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.SelectEvent;
+import org.zkoss.zk.ui.event.*;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.zkoss.zk.ui.event.*;
 
 /**
  * <p>Controller for new lovbox which can substitude combobox. Main advantage is
@@ -116,7 +112,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             lovbox.onOpen( new OpenEvent( Events.ON_OPEN, lovbox, true ) );
         }
 
-        listboxController.setSelectedItem( selectedItem );
+        listboxController.setSelected( selectedItem );
 
         onSelect( true );
     }

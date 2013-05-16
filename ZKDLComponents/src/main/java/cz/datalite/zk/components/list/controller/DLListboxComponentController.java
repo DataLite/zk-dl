@@ -4,11 +4,11 @@ import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.Listitem;
 
 import java.util.List;
 import java.util.Set;
-import org.zkoss.zk.ui.util.Template;
 
 /**
  * Interface for the listbox component controller which reacts
@@ -71,7 +71,7 @@ public interface DLListboxComponentController<T> {
     /**
      * Sets renderer template which come with Databinding 2.0
      *
-     * @param item renderer template
+     * @param template renderer template
      *
      * @since ZK 6
      */
@@ -92,6 +92,8 @@ public interface DLListboxComponentController<T> {
     /**
      * Sets selected item to the component.
      * @param selectedItem selected item
+     *
+     * @deprecated this method directly sets selected item without notifications. Use setSelected() instead.
      */
     @Deprecated
     void setSelectedItem( T selectedItem );
@@ -105,6 +107,7 @@ public interface DLListboxComponentController<T> {
     /**
      * Sets seltected items to the listbox
      * @param selectedItems selected items
+     * @deprecated this method directly sets selected item without notifications. Use setSelected() instead.
      */
     @Deprecated
     void setSelectedItems(Set<T> selectedItems);
@@ -112,6 +115,8 @@ public interface DLListboxComponentController<T> {
     /**
      * Sets selected index to the component.
      * @param selectedIndex index of the selected item
+     *
+     * @deprecated this method directly sets selected item without notifications. Use setSelected() instead.
      */
     @Deprecated
     void setSelectedIndex( int selectedIndex );
@@ -191,14 +196,14 @@ public interface DLListboxComponentController<T> {
     void updateListItem( Listitem item );
     
     /**
-     * Sets selected item to the listbox
+     * Sets selected item to the listbox and send select event (if enabled).
      *
-     * @param selectedItems selected items
+     * @param selectedItem selected item
      */
     void setSelected( final T selectedItem );
 
     /**
-     * Sets selected items to the listbox
+     * Sets selected items to the listbox and send select event (if enabled).
      *
      * @param selectedItems selected items
      */

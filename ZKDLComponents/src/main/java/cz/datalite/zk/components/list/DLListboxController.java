@@ -219,7 +219,14 @@ public interface DLListboxController<T> {
     T getSelectedItem();
 
     /**
-     * Sets selected item to the listbox.
+     * Sets selected item to the listbox and send select event (if enabled for the listnbox).
+     *
+     * @param selectedItem selected item
+     */
+    void setSelected( final T selectedItem );
+
+    /**
+     * Sets selected item to the listbox (without notification)
      * @param selectedItem selected item
      */
     void setSelectedItem( T selectedItem );
