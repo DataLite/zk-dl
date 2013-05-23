@@ -22,6 +22,8 @@ import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
 import cz.datalite.zk.components.paging.DLPagingModel;
 import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -644,7 +646,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         managerController.exportCurrentView();
     }
     
-    
+    public AMedia exportDirect() throws IOException {
+        return managerController.directExportCurrentView();
+    }
 
     public static class EventListeners extends LinkedList<EventListener> {
     }

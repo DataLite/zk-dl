@@ -12,8 +12,6 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
 import cz.datalite.zk.converter.ZkConverter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
@@ -56,7 +54,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      * @param args arguments
      * @param listener on close listner
      */
-    protected void showPage( final String page, final Map<String, Object> args, final EventListener listener ) {
+    protected void showPage( final String page, final Map<String, Object> args, final EventListener<Event> listener ) {
         args.put( "master", masterController );
         final String uri = "~./dlzklib/resource/" + page;
         final org.zkoss.zul.Window win = ( org.zkoss.zul.Window ) org.zkoss.zk.ui.Executions.createComponents( uri, null, args );
@@ -64,6 +62,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         win.doHighlighted();
     }
 
+    @Override
     public void onColumnManager() {
         if ( isLocked() ) {
             return;
@@ -85,8 +84,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         }
 
         args.put( "columnModels", columnModels );
-        final EventListener listener = new EventListener() {
-
+        final EventListener<Event> listener = new EventListener<Event>() {
             @SuppressWarnings( "unchecked" )
             public void onEvent( final Event event ) {
                 masterController.onColumnManagerOk( ( List<Map<String, Object>> ) event.getData() );
@@ -95,6 +93,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         showPage( "listboxColumnManagerWindow.zul", args, listener );
     }
 
+    @Override
     public void onSortManager() {
         if ( isLocked() ) {
             return;
@@ -121,15 +120,16 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         }
 
         args.put( "columnModels", columnModels );
-        final EventListener listener = new EventListener() {
-
-            public void onEvent( final Event event ) {
+        final EventListener<Event> listener = new EventListener<Event>() {
+            @SuppressWarnings("unchecked")
+			public void onEvent( final Event event ) {
                 masterController.onSortManagerOk( ( List<Map<String, Object>> ) event.getData() );
             }
         };
         showPage( "listboxSortManagerWindow.zul", args, listener );
     }
 
+    @Override
     public void onFilterManager() {
         if ( isLocked() ) {
             return;
@@ -170,8 +170,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
         args.put( DLNormalFilterKeys.TEMPLATES.toString(), templateModels );
         args.put( DLNormalFilterKeys.FILTERS.toString(), filterModels );
-        final EventListener listener = new EventListener() {
-
+        final EventListener<Event> listener = new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 masterController.onFilterManagerOk( ( NormalFilterModel ) event.getData() );
             }
@@ -182,12 +181,14 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     /**
      * exports current view in listbox and sends the file as a response
      */
+    @Override
     public void exportCurrentView() {
         try {
             // grab model of current view
             final Map<String, Object> args = takeCurrentViewSnapshoot();
 
-            List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
+            @SuppressWarnings("unchecked")
+			List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
 
             for (Iterator<Map<String, Object>> it = columnModels.iterator(); it.hasNext();) {
                 Map<String, Object> item = it.next();
@@ -203,7 +204,33 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             LOGGER.error( "Something went wrong.", ex );
         }
     }
+    
+    /**
+     * exports current view in listbox and returns the AMedia response.
+     */
+    @Override
+    public AMedia directExportCurrentView() throws IOException {
+        try {
+            // grab model of current view
+            final Map<String, Object> args = takeCurrentViewSnapshoot();
 
+            @SuppressWarnings("unchecked")
+			List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
+
+            for (Iterator<Map<String, Object>> it = columnModels.iterator(); it.hasNext();) {
+                Map<String, Object> item = it.next();
+                // remove invisible columns
+                if (!(Boolean) item.get("visible")) {
+                    it.remove();
+                }
+            }
+            Integer rows = (Integer) args.get("rows");
+
+            return this.exportDirect("report", "data", columnModels, rows);
+        } finally { }
+    }
+
+    @Override
     public void onExportManager() {
 
         // grab model of current view
@@ -212,13 +239,14 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         // add master component
         args.put("windowCtl", masterController.getWindowCtl());
 
-        final EventListener listener = new EventListener() {
-
+        final EventListener<Event> listener = new EventListener<Event>() {
             public void onEvent(final Event event) throws IOException {
-                Map<String, Object> args = (Map<String, Object>) event.getData();
+                @SuppressWarnings("unchecked")
+				Map<String, Object> args = (Map<String, Object>) event.getData();
                 String fileName = (String) args.get("filename");
                 String sheetName = (String) args.get("sheetname");
-                List<Map<String, Object>> model = (List<Map<String, Object>>) args.get("model");
+                @SuppressWarnings("unchecked")
+				List<Map<String, Object>> model = (List<Map<String, Object>>) args.get("model");
                 Integer rows = (Integer) args.get("rows");
                 export(fileName, sheetName, model, rows);
             }
@@ -281,6 +309,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         return args;
     }
 
+    @Override
     public void onResetFilters() throws InterruptedException {
         if ( isLocked() ) {
             return;
@@ -288,7 +317,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
         Messagebox.show(Labels.getLabel("listbox.manager.resetFilter.message.text"),
                 Labels.getLabel("listbox.manager.resetFilter.message.title"),
-                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
@@ -298,6 +327,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         } );
     }
 
+    @Override
     public void onResetAll() throws InterruptedException {
         if ( isLocked() ) {
             return;
@@ -305,7 +335,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
         Messagebox.show( Labels.getLabel("listbox.manager.reset.message.text"),
                 Labels.getLabel("listbox.manager.reset.message.title"),
-                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
             public void onEvent( final Event event ) {
                 if ( event.getData().equals( Messagebox.OK ) ) {
@@ -328,6 +358,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         }
     }
 
+    @Override
     public List<String> getFilters() {
         final List<String> filters = new LinkedList<String>();
         for ( NormalFilterUnitModel unit : masterController.getNormalFilterModel() ) {
@@ -352,6 +383,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         return filters;
     }
 
+    @Override
     public void fireChanges() {
         manager.fireChanges();
     }
@@ -359,6 +391,11 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     protected void export(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
         final AMedia file = ExcelExportUtils.exportSimple(fileName, sheetName, prepareSource(model, rows));
         masterController.onExportManagerOk(file);
+    }
+    
+    protected AMedia exportDirect(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
+        final AMedia file = ExcelExportUtils.exportSimple(fileName, sheetName, prepareSource(model, rows));
+        return file;
     }
 
     protected DataSource prepareSource(final List<Map<String, Object>> model, final int rows) {
@@ -396,7 +433,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         }
 
         // load data 
-        List data;
+        List<T> data;
         try {
             // ensure, that column is visible in the model (is hidden if the user has added it only for export)
             for (Map<String, Object> unit : model) {
@@ -415,7 +452,6 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                 hide.setVisible(false);
             }
         }
-
 
         final List<Cell> cells = new LinkedList<Cell>(heads);
         for (Object entity : data) {
@@ -445,7 +481,6 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                 column++;
             }
         }
-
         return cells;
     }
 
