@@ -10,14 +10,15 @@ import cz.datalite.zk.components.list.filter.components.CloneableFilterComponent
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.zkoss.lang.Strings;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.ListitemComparator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ZK component DLListheader is extended component from standard Listheader
@@ -55,7 +56,10 @@ public class DLListheader extends Listheader {
     
     /** column is enabled for export */
     protected boolean exportable = true;
-    
+
+    /** use this operator for quick filter and as a default operator for normal filter. */
+    protected DLFilterOperator defaultFilterOperator;
+
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
     
