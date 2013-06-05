@@ -1,7 +1,6 @@
 package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.dao.DLSortType;
-import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
@@ -562,9 +561,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     public void setSelectedItem( final T selectedItem ) {
         if ( masterController.isLocked() || listboxModel == null ) return;
 
-        // ignore if not changed
-        if ( !EqualsHelper.isEqualsNull( this.selectedItem, selectedItem ) )
-            this.selectedItem = selectedItem;
+        this.selectedItem = selectedItem;
     }
 
     public Set<T> getSelectedItems() {
@@ -573,9 +570,6 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     public void setSelectedItems( Set<T> selectedItems ) {
         if ( masterController.isLocked() ) return;
-
-        // ignore if not changed
-        if ( EqualsHelper.isEqualsNull( this.selectedItems, selectedItems ) ) return;
 
         this.selectedItems = selectedItems;
     }
