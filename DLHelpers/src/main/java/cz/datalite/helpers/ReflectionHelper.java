@@ -616,7 +616,7 @@ public abstract class ReflectionHelper
             return aClass.getMethod("get" + methodName);
         } catch (NoSuchMethodException e) {
             try {
-                return aClass.getMethod("is" + methodName, field.getType());
+                return aClass.getMethod("is" + methodName);
             } catch (NoSuchMethodException e1) {
                 if (aClass.getSuperclass() != Object.class) {
                     return getFieldGetter(aClass.getSuperclass(), field);
