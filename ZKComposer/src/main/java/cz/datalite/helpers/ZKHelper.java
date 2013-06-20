@@ -12,10 +12,7 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.*;
 import org.zkoss.zul.impl.NumberInputElement;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Pomocne funkce pro ZK framework
@@ -219,9 +216,17 @@ public class ZKHelper {
     public static void setReadonly(Component comp, boolean readonly) {
         final String READONLY_CLASS = " dl-readonly ";
 
+        // tyto tridy dale nepropaguji zmeny na sve deti
+        List<String> stopPropagationClassNames = Arrays.asList(
+                Bandbox.class.getName(),
+                Combobox.class.getName(),
+                "cz.datalite.zk.components.list.view.DLQuickFilter" // string because of no dependency
+        );
+
         // nejprve rekurzivne vsechny deti
-        for (Component child : (List<Component>) comp.getChildren()) {
-            setReadonly(child, readonly);
+        for (Component child : comp.getChildren()) {
+            if (!stopPropagationClassNames.contains(child.getClass().getName()))
+                setReadonly(child, readonly);
         }
 
         // pro zname typy komponent nastavim
