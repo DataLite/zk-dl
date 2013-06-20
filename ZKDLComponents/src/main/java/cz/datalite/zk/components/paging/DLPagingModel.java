@@ -23,6 +23,8 @@ public class DLPagingModel {
     protected Integer pageSize = NOT_PAGING;
     // Total size - count total items
     protected Integer totalSize = UNKNOWN_TOTAL_SIZE;
+    // Rows on actual page
+    protected Integer rowsOnPage = 0;
 
     // Uses total size
     @Deprecated // value is infered from totalSize value (null or not null)
@@ -61,14 +63,20 @@ public class DLPagingModel {
 
     public void setTotalSize( final Integer totalItems, final int rowsOnThisPage ) {
         if ( totalItems == null || !countPages ) {
-            if ( pageSize >= rowsOnThisPage )
-                totalSize = actualPage * pageSize + rowsOnThisPage;
+            if ( pageSize >= rowsOnThisPage)
+            {
+                // special case when rows  = 0 and actual page > 0 - we are out of page range -
+                // still do not know total size.
+                if (getActualPage() == 0 || rowsOnThisPage != 0)
+                    totalSize = actualPage * pageSize + rowsOnThisPage;
+            }
         }
         else {
             if ( totalItems < 0 )
                 throw new WrongValueException( "Total size have to be possitive or zero." );
             this.totalSize = totalItems;
         }
+        this.rowsOnPage = rowsOnThisPage;
         setPagesCount();
     }
 
@@ -90,5 +98,13 @@ public class DLPagingModel {
 
     public boolean isKnownPageCount() {
         return pageCount != UNKNOWN_PAGE_COUNT;
+    }
+
+    public Integer getRowsOnPage() {
+        return rowsOnPage;
+    }
+
+    public void setRowsOnPage(Integer rowsOnPage) {
+        this.rowsOnPage = rowsOnPage;
     }
 }

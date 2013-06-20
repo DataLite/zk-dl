@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.list.controller.impl;
 
-import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
@@ -8,6 +7,7 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLQuickFilter;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -31,11 +31,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         this.masterController = masterController;
         this.quickFilter = quickFilter;
         this.model = model;
-
-        // defaultni hodnota a je inicializovane
-        if ( quickFilter.getQuickFilterDefault() != null && QuickFilterModel.CONST_ALL.equals( this.model.getKey() ) ) {
-            this.model.setKey(quickFilter.getQuickFilterDefault());
-        }
 
         bindingModel = new QuickFilterModel( model.getKey(), model.getValue(), model.getModel() );
         quickFilter.setController( this );
@@ -89,7 +84,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         bindingModel.setKey( model.getKey() );
         bindingModel.setModel( model.getModel() );
         quickFilter.fireChanges();
-        ZKBinderHelper.loadComponent( quickFilter );
     }
 
     /**

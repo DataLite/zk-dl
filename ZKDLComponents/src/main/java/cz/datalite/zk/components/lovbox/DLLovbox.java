@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.lovbox;
 
+import cz.datalite.helpers.ZKDLResourceResolver;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
@@ -29,7 +30,6 @@ import org.zkoss.zul.*;
 
 import java.text.MessageFormat;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -45,7 +45,6 @@ import java.util.regex.Pattern;
  */
 public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComponent {
 
-    public static final String LOVBOX_CLEAR_IMAGE = "~./dlzklib/img/remove16x16.png";
     /** Pattern to split {@link #labelProperties}/ */
     private static final Pattern PATTERN_LABEL_PROPERTIES = Pattern.compile( "\\s*,\\s*" );
     /** default component page size */
@@ -72,6 +71,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected DLQuickFilter filter;
     protected DLPaging paging;
     protected DLListbox listbox;
+
     // params
     /** defines page size for paging comonent */
     protected Integer pageSize = PAGE_SIZE;
@@ -102,7 +102,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     private String parentCascadeId;
     /** Cascading  parent property name. This property got from selectedItem in parentCascadeId component and used as a filter for this combo. */
     private String parentCascadeColumn;
-    /** Readonly is implemented by disabled. */
+    /** Readonly is implemented by hiding. */
     private boolean readonly;
     /** If true, lovbox will create paging component on the listbox. */
     private boolean createPaging = true;
@@ -112,6 +112,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     private boolean multiple = false;
     /** defines hflex for each column in listbox. */
     protected String[] hflexes;
+    /** allow to enter text value (aka textbox). this should be allowed only for value binding (not selected item) */
+    protected boolean editable = false;
+    /** Should the filter run for onchanging event (use only for fast queries) */
+    protected boolean autocomplete = false;
 
     /**
      * Create component without any parameter
@@ -139,7 +143,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             popup.setParent( this );
         } else // try to find user added components
         {
-            for ( Component child : ( List<Component> ) popup.getChildren() ) {
+            for ( Component child : popup.getChildren() ) {
                 if ( child instanceof DLListbox ) {
                     listbox = ( DLListbox ) child;
                     if ( listbox.getRows() > 0 ) {
@@ -221,6 +225,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             filter = new DLQuickFilter();
             filter.setQuickFilterAll(quickFilterAll);
             filter.setStyle( "margin: 5px;");
+            filter.setAutocomplete(isAutocomplete());
             if (searchProperty != null)
                 filter.setQuickFilterDefault(searchProperty);
             popup.insertBefore( filter, listbox );            
@@ -544,7 +549,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     /**
-     * Readonly is implemented by disabled. Texbox is always readonly (Lovbox is for selecting items).
+     * Readonly is implemented by button hiding. Texbox is always readonly (Lovbox is for selecting items).
      * @param readonly true to set readonly
      */
     @Override
@@ -553,6 +558,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         setAutodrop(!readonly);
         setButtonVisible(!readonly);
+
+        // textbox readonly is set only for editable field
+        if (editable)
+            super.setReadonly(readonly);
     }
 
     /**
@@ -594,7 +603,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         final Button button = new Button();
 
         button.setLabel(Labels.getLabel("lovbox.clear"));
-        button.setImage( LOVBOX_CLEAR_IMAGE );
+        button.setImage(ZKDLResourceResolver.resolveImage("remove16x16.png"));
         button.setStyle( "position: absolute; top: 5px; right: 2%; width: 90px" );
         button.addEventListener( Events.ON_CLICK, new EventListener() {
 
@@ -705,4 +714,29 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.quickFilterAll = quickFilterAll;
     }
 
+    /**
+     * Allow to enter text value (aka textbox). this should be allowed only for value binding (not selected item)
+     */
+    public boolean isEditable() {
+        return editable;
+    }
+
+    /**
+     * Allow to enter text value (aka textbox). this should be allowed only for value binding (not selected item)
+     */
+    public void setEditable(boolean editable) {
+        super.setReadonly(!editable);  // call readonly on parent diretly
+        this.editable = editable;
+    }
+
+    /** Should the filter run for onchanging event (use only for fast queries) */
+    public boolean isAutocomplete() {
+        return autocomplete;
+    }
+
+    /** Should the filter run for onchanging event (use only for fast queries)
+     * Set this value only before afterCompose(). */
+    public void setAutocomplete(boolean autocomplete) {
+        this.autocomplete = autocomplete;
+    }
 }

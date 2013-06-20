@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="cz.datalite.zk.databinder.DLDataBinderInit" arg0="winListboxManager"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?xel-method prefix="zkdl" name="i" class="cz.datalite.helpers.ZKDLResourceResolver" signature="java.lang.String resolveImage(java.lang.String)"?>
+
+<?page title="Listbox manager"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()"  width="680px" id="winListboxManager" closable="true" border="normal" title="Správce exportování"  self="@{define(content)}"
+        apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController">
+
+        <hbox style="margin: 10px;">
+            <image src="${zkdl:i('excel_big.png')}" />
+            <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.exportManager.title')}" />
+        </hbox>
+
+        <hbox style="margin: 10px;">
+            <vbox>
+                <label value="${c:l('listbox.exportManager.hidden')}" style="font-weight: bold; margin-bottom: 10px;" />
+                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}" />
+                    </listitem>
+                </listbox>
+            </vbox>
+
+            <vbox style="margin-top: 50px; margin-left: 5px; margin-right: 5px">
+                <button onClick="ctl.selector.onUnusedToUsedAllMove()" src="${zkdl:i('right2Arrow32x32.png')}"/>
+                <button onClick="ctl.selector.onUnusedToUsedMove()" src="${zkdl:i('rightArrow32x32.png')}"/>
+                <button onClick="ctl.selector.onUsedToUnusedMove()" src="${zkdl:i('leftArrow32x32.png')}"/>
+                <button onClick="ctl.selector.onUsedToUnusedAllMove()" src="${zkdl:i('left2Arrow32x32.png')}"/>
+            </vbox>
+
+            <vbox>
+                <label value="${c:l('listbox.exportManager.displayed')}" style="font-weight: bold; margin-bottom: 10px;" />
+                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}" />
+                    </listitem>
+                </listbox>
+            </vbox>
+
+            <vbox style="margin-top: 50px; margin-left: 5px;">
+                <button onClick="ctl.selector.onTopMove()" src="${zkdl:i('up2Arrow32x32.png')}"/>
+                <button onClick="ctl.selector.onUpMove()" src="${zkdl:i('upArrow32x32.png')}"/>
+                <button onClick="ctl.selector.onDownMove()" src="${zkdl:i('downArrow32x32.png')}"/>
+                <button onClick="ctl.selector.onBottomMove()" src="${zkdl:i('down2Arrow32x32.png')}"/>
+            </vbox>
+        </hbox>
+
+        <grid style="margin: 10px; width: 640px;">
+            <columns>
+                <column />
+                <column />
+            </columns>
+            <rows>
+                <row>
+                    <label value="${c:l('listbox.exportManager.recordCount')}" />
+                    <intbox value="@{ctl.rows}" width="90%" />
+                </row>
+                <row>
+                    <label value="${c:l('listbox.exportManager.sheetName')}" />
+                    <textbox value="@{ctl.sheetName}" width="90%" />
+                </row>
+                <row>
+                    <label value="${c:l('listbox.exportManager.fileName')}Název souboru" />
+                    <textbox value="@{ctl.fileName}" width="90%" />
+                </row>
+            </rows>
+        </grid>
+
+        <hbox style="margin: 10px; margin-left: auto;">
+            <button label="${c:l('listbox.ok')}" forward="onOk" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+        </hbox>
+    </window>
+</zk>

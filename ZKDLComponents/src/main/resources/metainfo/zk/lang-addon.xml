@@ -19,7 +19,6 @@
 	<!-- Which language this addon will be added to -->
     <language-name>xul/html</language-name>
 
-
     <version>
         <version-class>metainfo.zk.Version</version-class>
         <version-uid>5.0.0</version-uid>
@@ -88,6 +87,7 @@
                 <attribute-value>java.lang.String</attribute-value>
             </attribute>
         </annotation>
+
     </component>
 
     <component>
@@ -206,18 +206,12 @@
                 <attribute-value>both</attribute-value>
             </attribute>
         </annotation>
-    </component>
-
-    <component>
-        <component-name>dlpaging</component-name>
-        <component-class>cz.datalite.zk.components.paging.DLPaging</component-class>
-        <extends>hbox</extends>
-    </component>
-
-    <component>
-        <component-name>listControl</component-name>
-        <component-class>cz.datalite.zk.components.list.view.DLListControl</component-class>
-        <extends>hbox</extends>
+        <mold>
+            <mold-name>default</mold-name>
+            <mold-uri>mold/listbox.js</mold-uri>
+            <css-uri>css/listbox.css.dsp</css-uri>
+            <css-uri>css/dllistbox.css.dsp</css-uri>
+        </mold>
     </component>
 
     <component>
@@ -245,13 +239,41 @@
     <component>
         <component-name>listboxmanager</component-name>
         <component-class>cz.datalite.zk.components.list.view.DLListboxManager</component-class>
-        <extends>hbox</extends>
+        <widget-class>dlzklib.Listboxmanager</widget-class>
+        <mold>
+            <mold-name>default</mold-name>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
+            <mold-uri>mold/listboxmanager.js</mold-uri>
+        </mold>
     </component>
+
+    <component>
+        <component-name>listControl</component-name>
+        <component-class>cz.datalite.zk.components.list.view.DLListControl</component-class>
+        <extends>div</extends>
+    </component>
+
 
     <component>
         <component-name>quickfilter</component-name>
         <component-class>cz.datalite.zk.components.list.view.DLQuickFilter</component-class>
-        <extends>hbox</extends>
+        <widget-class>dlzklib.Quickfilter</widget-class>
+        <mold>
+            <mold-name>default</mold-name>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
+            <mold-uri>mold/quickfilter.js</mold-uri>
+        </mold>
     </component>
 
+    <component>
+        <component-name>dlpaging</component-name>
+        <component-class>cz.datalite.zk.components.paging.DLPaging</component-class>
+        <widget-class>dlzklib.DLPaging</widget-class>
+        <mold>
+            <mold-name>default</mold-name>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
+            <mold-uri>mold/dlpaging.js</mold-uri>
+        </mold>
+
+    </component>
 </language-addon>

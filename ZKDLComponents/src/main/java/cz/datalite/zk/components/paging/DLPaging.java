@@ -1,14 +1,15 @@
 package cz.datalite.zk.components.paging;
 
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.au.AuRequests;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.*;
+import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.event.PagingEvent;
+import org.zkoss.zul.event.ZulEvents;
 import org.zkoss.zul.ext.Pageable;
-import org.zkoss.zul.ext.Paginated;
+import org.zkoss.zul.impl.XulElement;
 
 /**
  * Component like {@link org.zkoss.zul.Paging}. It's usable for model
@@ -16,212 +17,23 @@ import org.zkoss.zul.ext.Paginated;
  *
  * @author Karel Cemus
  */
-public class DLPaging extends Hbox implements Pageable {
+public class DLPaging extends XulElement implements Pageable {
+
+    static {
+        addClientEvent(DLPaging.class, ZulEvents.ON_PAGING, CE_IMPORTANT|CE_NON_DEFERRABLE);
+    }
 
     // Controller
     protected DLPagingController controller;
     // Model
     protected DLPagingModel model;
+
     // Attributes
     protected Integer pageSize = DLPagingModel.NOT_PAGING;
-    protected boolean autohide = true;
+    protected boolean autohide = false;
     protected boolean detailed = true;
     protected boolean countPages = true;
 
-    // view
-    protected Intbox pageNumber;
-    protected Label totalPages = new Label();
-    protected Label detailInfo = new Label();
-
-    // buttons
-    protected final Button first = new Button();
-    protected final Button previous = new Button();
-    protected final Button next = new Button();
-    protected final Button last = new Button();
-    // parents for buttons, because buttons need parent with css button class.
-    private final Div firstButton = new Div();
-    private final Div previousButton = new Div();
-    private final Div nextButton = new Div();
-    private final Div lastButton = new Div();
-
-    // everyting added by ZUL page goes here (see appendChild)
-    private final Hbox additionalContent = new Hbox();
-
-    public DLPaging() {
-        super();
-
-        setClass("z-paging");
-        setWidth("100%");
-
-        first.setZclass("z-paging-first"); first.setSclass("z-paging-btn");
-        first.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) throws Exception
-            {
-                setActivePage(0);
-            }
-        });
-        previous.setZclass("z-paging-prev"); previous.setSclass("z-paging-btn");
-        previous.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) throws Exception
-            {
-                setActivePage(getActivePage()-1);
-            }
-        });
-        next.setZclass("z-paging-next"); next.setSclass("z-paging-btn");
-        next.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) throws Exception
-            {
-                setActivePage(getActivePage()+1);
-            }
-        });
-        last.setZclass("z-paging-last");  last.setSclass("z-paging-btn");
-        last.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) throws Exception
-            {
-                setActivePage(getPageCount());
-            }
-        });
-
-        first.setParent(firstButton);
-        previous.setParent(previousButton);
-
-        // place button parent
-        firstButton.setParent(this);
-        previousButton.setParent(this);
-
-        pageNumber = new Intbox();
-        pageNumber.setWidth( "3em" );
-        pageNumber.setParent( this );
-        pageNumber.addEventListener( Events.ON_CHANGE, new org.zkoss.zk.ui.event.EventListener() {
-
-            public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
-                setActivePage( pageNumber.getValue() - 1 );
-            }
-        } );
-
-        pageNumber.addEventListener( Events.ON_OK, new org.zkoss.zk.ui.event.EventListener() {
-
-            public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
-                setActivePage( pageNumber.getValue() - 1 );
-            }
-        } );
-
-        new Label("/").setParent(this);
-
-        totalPages.setParent(this);
-
-        // place button parent
-        nextButton.setParent(this);
-        lastButton.setParent(this);
-
-        next.setParent(nextButton);
-        last.setParent(lastButton);
-
-        Space space = new Space();
-        space.setHflex("1");
-        space.setParent(this);
-
-        additionalContent.setParent(this);
-
-        detailInfo.setStyle("align: right;");
-        detailInfo.setParent(this);
-
-        space = new Space();
-        space.setParent(this);
-
-        // events onMouseOver and onMouseOut for all buttons
-        next.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                nextButton.setClass("z-paging-btn z-paging-btn-over");
-            }
-        } );
-
-        next.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                if(! next.isDisabled())
-                {
-                    nextButton.setClass("z-paging-btn");
-                }
-                else
-                {
-                    nextButton.setClass("z-paging-btn z-paging-btn-disd");
-                }
-            }
-        } );
-
-        first.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                firstButton.setClass("z-paging-btn z-paging-btn-over");
-            }
-        } );
-
-        first.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                if(! first.isDisabled())
-                {
-                    firstButton.setClass("z-paging-btn");
-                }
-                else
-                {
-                    firstButton.setClass("z-paging-btn z-paging-btn-disd");
-                }
-            }
-        } );
-
-        previous.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                previousButton.setClass("z-paging-btn z-paging-btn-over");
-            }
-        } );
-
-        previous.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                if(! previous.isDisabled())
-                {
-                    previousButton.setClass("z-paging-btn");
-                }
-                else
-                {
-                    previousButton.setClass("z-paging-btn z-paging-btn-disd");
-                }
-            }
-        } );
-
-        last.addEventListener( Events.ON_MOUSE_OVER, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                lastButton.setClass("z-paging-btn z-paging-btn-over");
-            }
-        } );
-
-        last.addEventListener( Events.ON_MOUSE_OUT, new org.zkoss.zk.ui.event.EventListener()
-        {
-            public void onEvent( final org.zkoss.zk.ui.event.Event event )
-            {
-                if(! last.isDisabled())
-                {
-                    lastButton.setClass("z-paging-btn");
-                }
-                else
-                {
-                    lastButton.setClass("z-paging-btn z-paging-btn-disd");
-                }
-            }
-        } );
-    }
 
     public void setController( final DLPagingController controller ) {
         assert controller != null : "Controller cannot be null.";
@@ -245,33 +57,14 @@ public class DLPaging extends Hbox implements Pageable {
     }
 
     public void setAutohide( final boolean autohide ) {
-        this.autohide = autohide;
-    }
-
-    public Intbox getPageNumber() {
-        return pageNumber;
+        if (this.autohide != autohide) {
+            this.autohide = autohide;
+            smartUpdate("autohide", autohide);
+        }
     }
 
     public int getTotalSize() {
         return getPagingModel().getTotalSize();
-    }
-
-    /**
-     * This metod has to be called only on model through controller.
-     * This metod always fails.
-     * @param size
-     * @throws WrongValueException
-     */
-    public void setTotalSize( final int size ) throws WrongValueException {
-        throw new SecurityException( "You have to use paging model." );
-    }
-
-    public int getPageIncrement() {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    public void setPageIncrement( final int pginc ) throws WrongValueException {
-        throw new UnsupportedOperationException( "Not supported yet." );
     }
 
     public boolean isDetailed() {
@@ -279,7 +72,10 @@ public class DLPaging extends Hbox implements Pageable {
     }
 
     public void setDetailed( final boolean detailed ) {
-        this.detailed = detailed;
+        if (this.detailed != detailed) {
+            this.detailed = detailed;
+            smartUpdate("detailed", detailed);
+        }
     }
 
     public boolean isCountPages() {
@@ -287,7 +83,10 @@ public class DLPaging extends Hbox implements Pageable {
     }
 
     public void setCountPages( final boolean countPages ) {
-        this.countPages = countPages;
+        if (this.countPages != countPages) {
+            this.countPages = countPages;
+            smartUpdate("countPages", countPages);
+        }
     }
 
     public int getPageSize() {
@@ -300,7 +99,10 @@ public class DLPaging extends Hbox implements Pageable {
      * @throws WrongValueException
      */
     public void setPageSize( final int size ) throws WrongValueException {
-        pageSize = size;
+        if (this.pageSize != size) {
+            this.pageSize = size;
+            smartUpdate("pageSize", size);
+        }
     }
 
     public int getPageCount() {
@@ -317,8 +119,22 @@ public class DLPaging extends Hbox implements Pageable {
      * @throws WrongValueException
      */
     public void setActivePage( final int pg ) throws WrongValueException {
+        int oldPage = getPagingModel().getActualPage();
+
         if ( controller != null && getPagingModel().getActualPage() != pg )
+        {
             controller.onPaging( pg );
+
+            // check special case - not known page count and empty data -> user entered actual page value
+            // out of range. We do not know last page number, so return to the old page
+            if (pg != 0 && !getPagingModel().isKnownPageCount() && getPagingModel().getRowsOnPage() == 0)
+            {
+                Clients.showNotification(Labels.getLabel("listbox.paging.outOfRange"), Clients.NOTIFICATION_TYPE_WARNING,
+                        this, "before_start", 3000, true);
+                controller.onPaging( oldPage );
+                invalidate(); // rerender paging to refresh old paging value
+            }
+        }
     }
 
     protected String getInfoText() {
@@ -350,81 +166,6 @@ public class DLPaging extends Hbox implements Pageable {
         return text.toString();
     }
 
-    /**
-     * Component read model and write changed like page count or active page
-     */
-    public void fireChanges() {
-        if ( isDetailed() )
-        {
-            detailInfo.setVisible(true);
-            detailInfo.setValue( getInfoText() );
-        }
-        else
-        {
-            detailInfo.setVisible(false);
-        }
-
-        int newPageNumber = getPagingModel().getPageCount() == 0 ? 0 : getActivePage() + 1;
-        pageNumber.setValue( newPageNumber );
-        if ( newPageNumber > getPagingModel().getPageCount() )
-            pageNumber.setStyle( "border: 2px red solid; background-image: none; background-color: pink; " );
-        else pageNumber.setStyle( "" );
-
-        if (!isKnownPageCount())
-            totalPages.setValue("?");
-        else
-           totalPages.setValue("" + getPageCount());
-
-        if (getActivePage() == 0)
-        {
-            firstButton.setClass("z-paging-btn z-paging-btn-disd");
-            previousButton.setClass("z-paging-btn z-paging-btn-disd");
-            first.setDisabled(true);
-            previous.setDisabled(true);
-        }
-        else
-        {
-            firstButton.setClass("z-paging-btn");
-            previousButton.setClass("z-paging-btn");
-            first.setDisabled(false);
-            previous.setDisabled(false);
-        }
-
-        if (getActivePage() == getPageCount()-1)
-        {
-            nextButton.setClass("z-paging-btn z-paging-btn-disd");
-            lastButton.setClass("z-paging-btn z-paging-btn-disd");
-            next.setDisabled(true);
-            last.setDisabled(true);
-        }
-        else
-        {
-            nextButton.setClass("z-paging-btn");
-            lastButton.setClass("z-paging-btn");
-            next.setDisabled(false);
-            last.setDisabled(false);
-        }
-
-
-        if (!isKnownPageCount())
-        {
-            nextButton.setClass("z-paging-btn");
-            lastButton.setClass("z-paging-btn z-paging-btn-disd");
-            next.setDisabled(false);
-            last.setDisabled(true);
-        }
-
-    }
-
-    public String getInfoTags() {
-        if ( getPagingModel().getTotalSize() == 0 )
-            return "";
-        final StringBuffer sb = new StringBuffer( 512 );
-        sb.append( "<div id=\"" ).append( getUuid() ).append( "!info\" class=\"" ).append( getZclass() ).append( "-info\">" ).append( getInfoText() ).append( "</div>" );
-        return sb.toString();
-    }
-
-
     @Override
     public String getZclass() {
         final String added = "os".equals( getMold() ) ? "-os" : "";
@@ -436,14 +177,48 @@ public class DLPaging extends Hbox implements Pageable {
         return ( controller == null ) ? true : super.isVisible() && ( getPageCount() > 1 || !isAutohide() );
     }
 
-    protected boolean isBothPaging() {
-        final Component parent = getParent();
-        if ( parent instanceof Paginated )
-            return "both".equals( ( (Paginated) parent ).getPagingPosition() );
-        return false;
-    }
-
     public boolean isKnownPageCount() {
         return getPagingModel().isKnownPageCount();
+    }
+
+    /**
+     * Component read model and write changed like page count or active page
+     */
+    public void fireChanges() {
+        smartUpdate("totalSize", getTotalSize());
+        smartUpdate("infoText", getInfoText());
+        smartUpdate("activePage", getPagingModel().getPageCount() == 0 ? 0 : getActivePage());
+        smartUpdate("pageCount", getPageCount());
+        smartUpdate("knownPageCount", isKnownPageCount());
+    }
+
+    // super
+    protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
+            throws java.io.IOException {
+        super.renderProperties(renderer);
+
+        renderer.render("totalSize", getTotalSize());
+        renderer.render("pageSize", getPageSize());
+        renderer.render("pageCount", getPageCount());
+        renderer.render("knownPageCount", isKnownPageCount());
+
+        renderer.render("infoText", getInfoText());
+        renderer.render("activePage", getPagingModel().getPageCount() == 0 ? 0 : getActivePage());
+
+        render(renderer, "detailed", isDetailed());
+        render(renderer, "autohide", isAutohide());
+    }
+
+    // set active page on paging event directly
+    public void service(org.zkoss.zk.au.AuRequest request, boolean everError) {
+        final String name = request.getCommand();
+        if (name.equals(ZulEvents.ON_PAGING)) {
+            // create paging event directly instead of static factory method because of pageCount problem if total size not known
+            int pgi = AuRequests.getInt(request.getData(), "", 0);
+            PagingEvent evt = new PagingEvent(ZulEvents.ON_PAGING, request.getComponent(), pgi);
+            setActivePage(evt.getActivePage());
+            Events.postEvent(evt);
+        } else
+            super.service(request, everError);
     }
 }

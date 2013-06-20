@@ -1,50 +1,27 @@
 package cz.datalite.zk.components.list.view;
 
-import cz.datalite.zk.components.paging.DLPaging;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Separator;
+import org.zkoss.zul.Div;
 
 /**
  * Component for managing listbox. There can be defined
  * which advanced components will be shown in the navigating
- * panel > listbox manager / paging / quick filter.
+ * panel > listbox manager / quick filter.
  *
  * @author Michal Pavlusek
  */
-public class DLListControl extends Hbox {
-  private static final long serialVersionUID = -3323491094746695460L;
+public class DLListControl extends Div {
 
-	// constants
-    private static final int CONST_PAGE_SIZE = 100;
-    
     // basic display settings
-    private boolean paging = false;
     private boolean qfilter = true;
     private boolean manager = true;
-    private int pageSize = CONST_PAGE_SIZE;
-    private boolean countPages = true;
-    private boolean autohide = false;
-    private boolean quickFilterAll = true;
-    private String quickFilterDefault;
-    private String quickFilterButton;
-
-    // style settings
-    private String qFilterStyle;
-    private String qFilterClass;
-    private String managerStyle;
-    private String managerClass;
 
     // variables with components
     private final DLQuickFilter qFilterComponent;
     private final DLListboxManager managerComponent;
-    private final DLPaging pagingComponent;
 
     /** Everyting added by ZUL page goes here (see appendChild). */
-    private final Hbox additionalContent;
-
-    /** First separator of content. */
-    private final Separator separator1;
+    private final Div additionalContent;
 
     /** Just constructing the component (to recognize own child components and user added components). */
     private boolean inConstruct = true;
@@ -57,56 +34,25 @@ public class DLListControl extends Hbox {
      */
     public DLListControl() {
         super();
-        
-        setClass("z-paging");
-        setWidth("100%");
+
+        setZclass("z-listcontrol");
 
         qFilterComponent = new DLQuickFilter();
         qFilterComponent.setParent( this );
 
-        separator1 = new Separator();
-        separator1.setHflex("1");
-        separator1.setParent(this);
-
-        additionalContent = new Hbox();
+        additionalContent = new Div();
         additionalContent.setParent(this);
-
-        Separator separator = new Separator();
-        separator.setWidth("5px");
-        separator.setParent(this);
+        additionalContent.setZclass("z-listcontrol-aux-content");
 
         managerComponent = new DLListboxManager();
-        managerComponent.setParent( this );
-
-        separator = new Separator();
-        separator.setParent(this);
-
-        pagingComponent = new DLPaging();
-        pagingComponent.setParent( this );
-        pagingComponent.setVisible(paging);
-
-        separator = new Separator();
-        separator.setParent(this);
+        managerComponent.setParent(this);
 
         inConstruct = false;
     }
 
-    public void init() {    	
-        initPaging();
-        initQuickFilter();
+    public void init() {
     }
 
-    private void initQuickFilter() {    	
-        qFilterComponent.setQuickFilterAll(quickFilterAll);
-        qFilterComponent.setQuickFilterDefault(quickFilterDefault);
-        qFilterComponent.setQuickFilterButton(quickFilterButton);
-    }
-
-    private void initPaging() {
-        pagingComponent.setPageSize( pageSize );
-        pagingComponent.setAutohide( autohide );
-        pagingComponent.setCountPages( countPages );
-    }
 
     /**
      * Append child to additionalContent hbox in the center.
@@ -127,22 +73,12 @@ public class DLListControl extends Hbox {
         if (inConstruct) {
             return super.insertBefore(newChild, refChild);
         } else {
-            additionalContent.setHflex("1");
-            separator1.setHflex("0");
             return additionalContent.insertBefore(newChild, refChild);
         }
     }
 
 
     /************************** SETTERS & GETTERS *****************************/
-    public boolean isPaging() {
-        return paging;
-    }
-
-    public void setPaging( final boolean paging ) {
-        this.paging = paging;
-        pagingComponent.setVisible(paging);
-    }
 
     public boolean isQfilter() {
         return qfilter;
@@ -162,19 +98,6 @@ public class DLListControl extends Hbox {
         managerComponent.setVisible(manager);
     }
 
-    public void setPageSize( final int pageSize ) {
-        this.pageSize = pageSize;
-        pagingComponent.setPageSize( pageSize );
-    }
-
-    public void setAutohide( final boolean autohide ) {
-        this.autohide = autohide;
-    }
-
-    public void setCountPages( final boolean countPages ) {
-        this.countPages = countPages;
-    }
-
     public DLQuickFilter getQFilterComponent() {
         return qFilterComponent;
     }
@@ -183,56 +106,53 @@ public class DLListControl extends Hbox {
         return managerComponent;
     }
 
-    public DLPaging getPagingComponent() {
-        return pagingComponent;
-    }
 
     public String getQFilterStyle() {
-        return qFilterStyle;
+        return qFilterComponent.getStyle();
     }
 
     public void setQFilterStyle( final String qFilterStyle ) {
-        this.qFilterStyle = qFilterStyle;
+        this.qFilterComponent.setStyle(qFilterStyle);
     }
 
     public String getQFilterClass() {
-        return qFilterClass;
+        return qFilterComponent.getSclass();
     }
 
     public void setQFilterClass( final String qFilterClass ) {
-        this.qFilterClass = qFilterClass;
+        this.qFilterComponent.setSclass(qFilterClass);
     }
 
     public String getManagerStyle() {
-        return managerStyle;
+        return this.managerComponent.getStyle();
     }
 
     public void setManagerStyle( final String managerStyle ) {
-        this.managerStyle = managerStyle;
+        this.managerComponent.setStyle(managerStyle);
     }
 
     public String getManagerClass() {
-        return managerClass;
+        return this.managerComponent.getSclass();
     }
 
     public void setManagerClass( final String managerClass ) {
-        this.managerClass = managerClass;
+        this.managerComponent.setSclass(managerClass);
     }
 
     public void setQuickFilterAll( final boolean quickFilterAll ) {
-        this.quickFilterAll = quickFilterAll;
+        this.qFilterComponent.setQuickFilterAll(quickFilterAll);
     }
 
     public void setQuickFilterDefault( final String quickFilterDefault ) {
-        this.quickFilterDefault = quickFilterDefault;
+        this.qFilterComponent.setQuickFilterDefault(quickFilterDefault);
     }
 
     public String getQuickFilterButton() {
-        return quickFilterButton;
+        return qFilterComponent.getQuickFilterButton();
     }
 
     public void setQuickFilterButton(String quickFilterButton) {
-        this.quickFilterButton = quickFilterButton;
+        this.qFilterComponent.setQuickFilterButton(quickFilterButton);
     }
 
     public void setWysiwyg( boolean wysiwyg ) {
@@ -241,5 +161,13 @@ public class DLListControl extends Hbox {
 
     public Boolean isWysiwyg() {
         return wysiwyg;
+    }
+
+    public boolean isAutocomplete() {
+        return qFilterComponent.isAutocomplete();
+    }
+
+    public void setAutocomplete(boolean autocomplete) {
+        this.qFilterComponent.setAutocomplete(autocomplete);
     }
 }

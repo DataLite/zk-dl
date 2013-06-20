@@ -1,14 +1,12 @@
 package cz.datalite.zk.components.list.view;
 
 import cz.datalite.zk.components.list.controller.DLManagerController;
-import java.util.List;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Separator;
+import org.zkoss.zul.impl.XulElement;
+
+import java.util.List;
 
 /**
  * Bar with advanced tools for managing the listbox.
@@ -16,148 +14,149 @@ import org.zkoss.zul.Separator;
  * @author Karel Cemus
  * @author Ondrej Medek <xmedeko@gmail.com>
  */
-public class DLListboxManager extends Hbox {
+public class DLListboxManager extends XulElement {
 
-    protected static final String CONST_EVENT = Events.ON_CLICK;
-    protected static final String CONST_DEFAULT_ICON_PATH = "~./dlzklib/img/";
-    protected static final String CONST_IMAGE_SIZE = "20px";
+    static {
+        addClientEvent(DLListboxManager.class, "onColumnManager", CE_NON_DEFERRABLE);
+        addClientEvent(DLListboxManager.class, "onSortManager", CE_NON_DEFERRABLE);
+        addClientEvent(DLListboxManager.class, "onFilterManager", CE_NON_DEFERRABLE);
+        addClientEvent(DLListboxManager.class, "onExportManager", CE_NON_DEFERRABLE);
+        addClientEvent(DLListboxManager.class, "onResetFilters", CE_NON_DEFERRABLE);
+        addClientEvent(DLListboxManager.class, "onResetAll", CE_NON_DEFERRABLE);
+    }
+
+    // enable/disable controls
+    protected boolean columnManager = true;
+    protected boolean sortManager = true;
+    protected boolean filterManager = true;
+    protected boolean exportManager = true;
+    protected boolean resetFilters = false;
+    protected boolean resetAll = true;
+
     protected static final String CONST_FILTER_MANAGER = Labels.getLabel( "listbox.tooltip.filterManager" );
     protected DLManagerController controller;
-    protected Image filterManager;
 
     public DLListboxManager() {
         super();
-        this.setPack( "center" );
-        this.setSclass( "datalite-listbox-manager" );
-
-        // icon separator
-        final Separator imgSeparator = new Separator();
-        imgSeparator.setBar( true );
-        imgSeparator.setOrient( "vertical" );
-
-        Image image = this.createImage();
-
-        image.setTooltiptext( Labels.getLabel( "listbox.tooltip.columnManager" ) );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "menu_items_small.png" );
-        image.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onColumnManager", new EventListener() {
             public void onEvent( final Event event ) {
                 controller.onColumnManager();
             }
         } );
-        this.appendChild( image );
-        this.appendChild( ( Separator ) imgSeparator.clone() );
-
-        image = this.createImage();
-        image.setTooltiptext( Labels.getLabel( "listbox.tooltip.sortingManager" ) );
-        image.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onSortManager", new EventListener() {
             public void onEvent( final Event event ) {
                 controller.onSortManager();
             }
         } );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "sort_small.png" );
-        this.appendChild( image );
-        this.appendChild( ( Separator ) imgSeparator.clone() );
-
-        this.filterManager = this.createImage();
-        this.filterManager.setTooltiptext( CONST_FILTER_MANAGER );
-        this.filterManager.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onFilterManager", new EventListener() {
             public void onEvent( final Event event ) {
                 controller.onFilterManager();
             }
         } );
-        this.appendChild( this.filterManager );
-        this.appendChild( ( Separator ) imgSeparator.clone() );
-
-        image = this.createImage();
-        image.setTooltiptext( Labels.getLabel( "listbox.tooltip.export" ) );
-        image.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onExportManager", new EventListener() {
             public void onEvent( final Event event ) {
                 controller.onExportManager();
             }
         } );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "excel_small.png" );
-        this.appendChild( image );
-        this.appendChild( ( Separator ) imgSeparator.clone() );
-
-        image = this.createImage();
-        image.setTooltiptext( Labels.getLabel( "listbox.tooltip.resetFilters" ) );
-        image.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onResetFilters", new EventListener() {
             public void onEvent( final Event event ) throws InterruptedException {
                 controller.onResetFilters();
             }
         } );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "cancel_filter.png" );
-        this.appendChild( image );
-        this.appendChild( ( Separator ) imgSeparator.clone() );
-
-        image = this.createImage();
-        image.setTooltiptext( Labels.getLabel( "listbox.tooltip.resetAll" ) );
-        image.addEventListener( CONST_EVENT, new EventListener() {
-
+        addEventListener( "onResetAll", new EventListener() {
             public void onEvent( final Event event ) throws InterruptedException {
                 controller.onResetAll();
             }
         } );
-        image.setSrc( CONST_DEFAULT_ICON_PATH + "trash.png" );
-        this.appendChild( image );
-    }
-
-    /**
-     * @return A new {@link Image} with CSS class, height and width.
-     */
-    private Image createImage() {
-        final Image image = new Image();
-        image.setStyle("cursor: pointer;");
-        image.setWidth( CONST_IMAGE_SIZE );
-        image.setHeight( CONST_IMAGE_SIZE );
-        image.setClass( "datalite-listbox-manager-image" );
-        return image;
     }
 
     public void setController( final DLManagerController controller ) {
         this.controller = controller;
     }
 
-    public void onColumnManager() {
-        controller.onColumnManager();
-    }
+    public String getFilterTooltip() {
+        final List<String> filters = controller.getFilters();
+        StringBuilder sb = new StringBuilder();
 
-    public void onSortManager() {
-        controller.onSortManager();
-    }
 
-    public void onFilterManager() {
-        controller.onFilterManager();
-    }
+        if ( !filters.isEmpty() ) {
+            for ( String filter : filters ) {
+                sb.append( filter ).append( ", " );
+            }
+        }
 
-    public void onExportManager() {
-        controller.onExportManager();
+        return sb.toString();
     }
 
     public void fireChanges() {
-        final StringBuffer tooltip = new StringBuffer( CONST_FILTER_MANAGER + ": " );
-        final List<String> filters = controller.getFilters();
+        smartUpdate("filterTooltip", getFilterTooltip());
+    }
 
-        if ( filters.isEmpty() ) {
-            tooltip.append( Labels.getLabel( "listbox.tooltip.noActiveFilter" ) );
-            filterManager.setSrc( CONST_DEFAULT_ICON_PATH + "filter_small.png" );
-        } else {
-            for ( String filter : filters ) {
-                tooltip.append( filter ).append( ", " );
-            }
-            tooltip.delete( tooltip.length() - 2, tooltip.length() );
-            filterManager.setSrc( CONST_DEFAULT_ICON_PATH + "filter_small_active.png" );
-        }
+    protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
+            throws java.io.IOException {
+        super.renderProperties(renderer);
 
-        if ( tooltip.length() < 150 ) {
-            filterManager.setTooltiptext( tooltip.toString() );
-        } else {
-            filterManager.setTooltiptext( tooltip.substring( 0, 150 ) + "..." );
-        }
+        if (!columnManager) renderer.render("columnManager", columnManager);
+        if (!sortManager) renderer.render("sortManager", sortManager);
+        if (!filterManager) renderer.render("filterManager", filterManager);
+        if (!exportManager) renderer.render("exportManager", exportManager);
+        if (!resetFilters) renderer.render("resetFilters", resetFilters);
+        if (!resetAll) renderer.render("resetAll", resetAll);
+
+        render(renderer, "filterTooltip", getFilterTooltip());
+    }
+
+    public boolean isColumnManager() {
+        return columnManager;
+    }
+
+    public void setColumnManager(boolean columnManager) {
+        this.columnManager = columnManager;
+        invalidate();
+    }
+
+    public boolean isSortManager() {
+        return sortManager;
+    }
+
+    public void setSortManager(boolean sortManager) {
+        this.sortManager = sortManager;
+        invalidate();
+    }
+
+    public boolean isFilterManager() {
+        return filterManager;
+    }
+
+    public void setFilterManager(boolean filterManager) {
+        this.filterManager = filterManager;
+        invalidate();
+    }
+
+    public boolean isExportManager() {
+        return exportManager;
+    }
+
+    public void setExportManager(boolean exportManager) {
+        this.exportManager = exportManager;
+        invalidate();
+    }
+
+    public boolean isResetFilters() {
+        return resetFilters;
+    }
+
+    public void setResetFilters(boolean resetFilters) {
+        this.resetFilters = resetFilters;
+        invalidate();
+    }
+
+    public boolean isResetAll() {
+        return resetAll;
+    }
+
+    public void setResetAll(boolean resetAll) {
+        this.resetAll = resetAll;
+        invalidate();
     }
 }

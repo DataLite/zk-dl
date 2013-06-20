@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.helpers.DateHelper;
+import cz.datalite.helpers.ZKDLResourceResolver;
 import cz.datalite.helpers.excel.export.*;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLManagerController;
@@ -11,10 +12,6 @@ import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
 import cz.datalite.zk.converter.ZkConverter;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
 import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
@@ -29,6 +26,9 @@ import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -58,8 +58,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      */
     protected void showPage( final String page, final Map<String, Object> args, final EventListener listener ) {
         args.put( "master", masterController );
-        final String uri = "~./dlzklib/resource/" + page;
-        final org.zkoss.zul.Window win = ( org.zkoss.zul.Window ) org.zkoss.zk.ui.Executions.createComponents( uri, null, args );
+        final org.zkoss.zul.Window win;
+        win = ( org.zkoss.zul.Window ) ZKDLResourceResolver.resolveAndCreateComponents(page, null, args);
         win.addEventListener( "onSave", listener );
         win.doHighlighted();
     }

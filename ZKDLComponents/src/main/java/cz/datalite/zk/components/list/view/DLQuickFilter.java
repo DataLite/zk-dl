@@ -1,142 +1,96 @@
 package cz.datalite.zk.components.list.view;
 
 import cz.datalite.helpers.EqualsHelper;
-import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.au.AuRequest;
 import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.*;
+import org.zkoss.zk.ui.event.*;
+import org.zkoss.zul.Menuitem;
+import org.zkoss.zul.Menupopup;
+import org.zkoss.zul.impl.InputElement;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * Component for tool which allows user to quickly filter in the listbox
+ * Component for tool which allows user to quickly filter in the listbox.
  * @author Karel Cemus
+ * @author Jiri Bubnik
  */
-public class DLQuickFilter extends org.zkoss.zul.Hbox {
+public class DLQuickFilter extends InputElement {
 
-	private static final long serialVersionUID = 6888715542666042737L;
-	
-	// Controller
-    protected DLQuickFilterController controller;
-    
-    // Model
-    protected List<Entry<DLColumnUnitModel, String>> model;
-    protected boolean quickFilterAll = true;
-    protected String quickFilterDefault;
-    
-    // View
-    protected final Menupopup popup;
-    protected final Textbox textbox;
-    protected final Label selector;
-    
-    // Constants
-    protected static final String	CONST_DEFAULT_ICON_PATH = "~./dlzklib/img/";
-    protected static final String	CONST_IMAGE_SIZE = "20px";
-    protected static final String	CONST_IMAGE_STYLE = "";
-    private static final String		CONST_POINTER_STYLE = "cursor: pointer;";
-
-    // Variables
-    private Hbox	parent;
-    private Image	activateFilter;
-
-    public DLQuickFilter() {
-    	super();
-    	
-    	// quickfilter components are composed into this hbox
-        parent = new Hbox();
-        parent.setSclass("datalite-listbox-qfiltr");
-        this.appendChild(parent);
-
-        // selector is currently selected menuitem text  
-        selector = new Label();
-		selector.setSclass("datalite-listbox-qfiltr-selector");
-		selector.setStyle(CONST_POINTER_STYLE);
-		selector.setTooltiptext(Labels.getLabel("quickFilter.tooltip.filterRange"));
-        selector.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-            public void onEvent(final Event event) {
-                popup.open(selector);
-            }
-        });        
-		parent.appendChild(selector);
-
-		// popup with items applicable to filtering
-		popup = new Menupopup();
-		popup.setSclass("datalite-listbox-qfiltr-popup");
-		popup.setStyle("z-index: 100000 !important;");
-		parent.appendChild(popup);
-
-		// image next to selector  
-		final Image open = new Image();
-		open.setSclass("datalite-listbox-qfiltr-open");
-		open.setTooltiptext(Labels.getLabel("quickFilter.tooltip.openFilter"));
-		open.setSrc(CONST_DEFAULT_ICON_PATH + "open.png");
-		open.setStyle(CONST_POINTER_STYLE);
-		open.setWidth("10px");
-		open.setHeight(CONST_IMAGE_SIZE);
-		open.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				popup.open(selector);
-			}
-		});
-		parent.appendChild(open);
-
-		// textbox for quickfilter value
-        textbox = new Textbox();
-        textbox.setSclass( "datalite-listbox-qfiltr-textbox" );
-		addEventListener(Events.ON_OK, new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				onQuickFilter();
-			}
-		});
-		parent.appendChild(textbox);
-
-		// magnifier image which activates (submit) filter
-		activateFilter = new Image();
-		activateFilter.setSclass("datalite-listbox-qfiltr-image");
-		activateFilter.setSrc(CONST_DEFAULT_ICON_PATH + "search25x25.png");
-		activateFilter.setStyle(CONST_IMAGE_STYLE);
-		activateFilter.setWidth(CONST_IMAGE_SIZE);
-		activateFilter.setHeight(CONST_IMAGE_SIZE);
-		activateFilter.setStyle(CONST_POINTER_STYLE);
-		activateFilter.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				onQuickFilter();
-			}
-		});
-		appendChild(activateFilter);        
+    static {
+        addClientEvent(DLQuickFilter.class, "onOpenPopup", CE_IMPORTANT|CE_NON_DEFERRABLE);
     }
 
+    /** Include "All" option in column selection. */
+    protected boolean quickFilterAll = true;
+    /** Default column for filtering */
+    protected String quickFilterDefault;
+    /** If set, show button with this label instead of magnifier glass icon. */
+    protected String quickFilterButton;
+    /** Should the filter run for onchanging event (use only for fast queries) */
+    protected boolean autocomplete = false;
+
+    // Controller
+    protected DLQuickFilterController controller;
+
+    // Model
+    protected List<Entry<DLColumnUnitModel, String>> model;
+
+    // Search label
+    private String label;
+
+    // View
+    protected final Menupopup popup;
+
+    // sync value from client
+    EventListener valueListener = new EventListener<Event>() {
+        public void onEvent(Event event) throws Exception {
+            if (controller != null)
+                controller.getBindingModel().setValue(getValue());
+        }
+    };
+
+    // do search (registered for ON_OK and if autocomplete than on ON_CHANGING)
+    EventListener searchListener = new EventListener<Event>() {
+        public void onEvent(Event event) throws Exception {
+            if (event instanceof InputEvent) // synchonize ON_CHANING event
+                controller.getBindingModel().setValue(((InputEvent) event).getValue());
+            onQuickFilter();
+        }
+    };
+
+
+    // create popup and register events
+    public DLQuickFilter() {
+    	super();
+
+        popup = new Menupopup();
+        popup.setSclass("z-quickfilter-popup");
+        popup.setStyle("z-index: 100000 !important;");
+
+        addEventListener(Events.ON_CHANGE, valueListener);
+        addEventListener(Events.ON_OK, searchListener);
+    }
+
+    /**
+     * Set quick filter controller - propagate model changes to the controller model.
+     * @param controller controller
+     */
     public void setController( final DLQuickFilterController controller ) {
     	this.controller = controller;
-        setAttribute( getUuid() + "_model", controller, Component.COMPONENT_SCOPE);
-        
-        // register proper annotation based used version of binding
-		if (ZKBinderHelper.version(textbox) == 1) {
-			ZKBinderHelper.registerAnnotation(textbox, "value", "value", getUuid() + "_model.bindingModel.value");
-		} else if (ZKBinderHelper.version(textbox) == 2) {
-			ZKBinderHelper.registerAnnotation(textbox, "value", "bind", getUuid() + "_model.bindingModel.value");
-		}
     }
 
     public void fireChanges() {
-    	// odstraníme všechny položky
-        while ( popup.getChildren().size() > 0 ) {
-            popup.removeChild( popup.getLastChild() );
-        }
-
-        // znovu vytvoříme položky, podle modelu
+        // recreate popup menu according to the model
+        popup.getChildren().clear();
 		if (quickFilterAll) {
 			popup.appendChild(new Menuitem(Labels.getLabel("quickFilter.menu.all")) {
-				private static final long serialVersionUID = 4832675217567501552L;
 				{
 					setValue(cz.datalite.zk.components.list.filter.QuickFilterModel.CONST_ALL);
 					addEventListener(Events.ON_CLICK, new SelectMenuItemEventListener(this));
@@ -145,12 +99,8 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 		}
 
         for ( final Entry<DLColumnUnitModel, String> entry : model ) {
-        	// filter allowed for all columns, use quickFilter="false" to disable, JIRA ref. ZK-197
-//          // do not allow to filter by invisible column
-//			if (!entry.getKey().isVisible()) {
-//				continue;
-//			}
-            
+        	// ZK-197 - include even invisible columns, use quickFilter="false" to hide a column
+
 			popup.appendChild(new Menuitem(entry.getValue()) {
 				private static final long serialVersionUID = -2228715092126157753L;
 				{
@@ -162,24 +112,24 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 		}
 
         this.setActiveFilter();
+        this.setValue(controller.getBindingModel().getValue());
     }
 
+    // Actual button selection
     protected void setActiveFilter() {
-    	// Actual button selection
-        final DLColumnUnitModel unit = controller.getBindingModel().getModel();
-        
-		int indexOfVisible = quickFilterAll ? 0 : -1;
-		for (Entry<DLColumnUnitModel, String> entry : model) {
-			// do not allow to filter by invisible column
-			if (entry.getKey().isVisible())
-				++indexOfVisible;
-			else
-				continue;
 
-			if (EqualsHelper.isEqualsNull(entry.getKey(), unit)) {
-				setActiveFilter((Menuitem) popup.getChildren().get(indexOfVisible));
+        final DLColumnUnitModel unit = controller.getBindingModel().getModel();
+        String column = unit != null ? unit.getColumn() : getQuickFilterDefault();
+        
+		int index = quickFilterAll ? 1 : 0;
+		for (Entry<DLColumnUnitModel, String> entry : model) {
+
+			if (EqualsHelper.isEqualsNull(entry.getKey().getColumn(), column)) {
+				setActiveFilter((Menuitem) popup.getChildren().get(index));
 				return;
 			}
+
+            index++;
 		}
 		// model wasn't found in the menu list
 		if (popup.getChildren().size() > 0) {
@@ -191,14 +141,15 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
     }
 
     protected void setActiveFilter( final Menuitem item ) {
-    	selector.setValue( item.getLabel() );        
+        setLabel(item.getLabel());
         controller.getBindingModel().setKey(item.getValue());
         controller.getBindingModel().setModel((DLColumnUnitModel) item.getAttribute("model"));
     }
 
+    // Event onOK or onChaning - do search
     public void onQuickFilter() {
         if (!controller.validateQuickFilter()) {
-            throw new WrongValueException(textbox, Labels.getLabel("quickFilter.validation.failed"));
+            throw new WrongValueException(this, Labels.getLabel("quickFilter.validation.failed"));
         }
 
         controller.onQuickFilter();
@@ -225,15 +176,6 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 	public String getQuickFilterDefault() {
 		return this.quickFilterDefault;
 	}
-
-    /**
-     * Setting focus on Quick Filter means focus on textbox
-     * @param focus if true, textbox is selected
-     */
-    @Override
-    public void setFocus(boolean focus) {
-        textbox.setFocus(focus);
-    }
 
 	class SelectMenuItemEventListener implements EventListener<Event> {
 
@@ -275,27 +217,94 @@ public class DLQuickFilter extends org.zkoss.zul.Hbox {
 	}
 
     /**
-     * Setting filter button with label = parameter.
+     * If set, show button with this label instead of magnifier glass icon.
+     */
+    public String getQuickFilterButton() {
+        return quickFilterButton;
+    }
+
+    /**
+     * If set, show button with this label instead of magnifier glass icon.
      * @param quickFilterButton label for button.
      */
-	public void setQuickFilterButton(String quickFilterButton) {
-		// whether i want filter button
-		if (quickFilterButton != null) {
-			activateFilter.setParent(null);
+    public void setQuickFilterButton(String quickFilterButton) {
+        this.quickFilterButton = quickFilterButton;
+        smartUpdate("quickFilterButton", quickFilterButton);
+    }
 
-			final Button button = new Button();
-			button.setLabel(quickFilterButton);
-			button.setImage(CONST_DEFAULT_ICON_PATH + "search25x25.png");
-			button.setClass("quick-filter-button");
-			button.setStyle(CONST_POINTER_STYLE);
-			button.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-				public void onEvent(final Event event) {
-					onQuickFilter();
-				}
-			});
-			parent.appendChild(button);
+    /** Should the filter run for onchanging event (use only for fast queries) */
+    public boolean isAutocomplete() {
+        return autocomplete;
+    }
 
-			((DLListControl) this.getParent()).setHeight("34px");
-		}
-	}
+    /** Should the filter run for onchanging event (use only for fast queries) */
+    public void setAutocomplete(boolean autocomplete) {
+        // if changed, attach or detach listener
+        if (this.autocomplete != autocomplete) {
+            if (autocomplete)
+                addEventListener(Events.ON_CHANGING, searchListener);
+            else
+                removeEventListener(Events.ON_CHANGING, searchListener);
+        }
+
+        this.autocomplete = autocomplete;
+    }
+
+    /**
+     * Label is selected value for the key.
+     * @param label selected value for the key.
+     */
+    protected void setLabel(String label) {
+        this.label = label;
+        smartUpdate("label", label);
+    }
+
+
+    //-- super --//
+    protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
+            throws java.io.IOException {
+        super.renderProperties(renderer);
+
+        render(renderer, "label", label);
+        render(renderer, "quickFilterButton", quickFilterButton);
+    }
+
+    @Override
+    protected Object coerceFromString(String value) throws WrongValueException {
+        return value != null ? value: "";
+    }
+
+    @Override
+    protected String coerceToString(Object value) {
+        return value != null ? (String)value: "";
+    }
+
+    /** Returns the value.
+     * The same as {@link #getText}.
+     * <p>Default: "".
+     * @exception WrongValueException if user entered a wrong value
+     */
+    public String getValue() throws WrongValueException {
+        return getText();
+    }
+    /** Sets the value.
+     *
+     * @param value the value; If null, it is considered as empty.
+     * @exception WrongValueException if value is wrong
+     */
+    public void setValue(String value) throws WrongValueException {
+        setText(value);
+    }
+
+    @Override
+    public void service(AuRequest request, boolean everError) {
+        final String cmd = request.getCommand();
+        if (cmd.equals("onOpenPopup")) {
+            // page was not set in constructor, delay to the show event
+            popup.setPage(DLQuickFilter.this.getPage());
+            popup.open(DLQuickFilter.this);
+        }
+
+        super.service(request, everError);
+    }
 }

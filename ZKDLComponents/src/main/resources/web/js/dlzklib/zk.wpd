@@ -1,0 +1,9 @@
+<!-- zk.wpd
+  TODO - localization of messages
+-->
+<package name="dlzklib" language="xul/html" depends="zul.inp,zul.mesh">
+    <script src="lang/msgdlzklib.js"/>
+	<widget name="Quickfilter"/>
+	<widget name="DLPaging"/>
+	<widget name="Listboxmanager"/>
+</package>

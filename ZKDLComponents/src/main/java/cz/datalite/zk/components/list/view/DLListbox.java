@@ -4,10 +4,6 @@ import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Execution;
@@ -21,6 +17,10 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.ext.Selectable;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This component is the extension for the ZK listbox. This component and
@@ -38,6 +38,9 @@ public class DLListbox extends Listbox {
     protected static final Logger LOGGER = LoggerFactory.getLogger( DLListbox.class );
     
     protected DLListboxComponentController controller;
+
+    /** should be automatically selected first row */
+    private boolean selectFirstRow = true;
 
     @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
     public DLListbox() {
@@ -134,10 +137,6 @@ public class DLListbox extends Listbox {
         return false;
     }
 
-    /**
-     * should be automatically selected first row
-     */
-    private boolean selectFirstRow = true;
 
     /**
      * Should be selected first row automatically after insertion new model
