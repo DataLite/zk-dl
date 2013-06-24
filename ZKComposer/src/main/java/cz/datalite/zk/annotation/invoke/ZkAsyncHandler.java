@@ -18,12 +18,14 @@
  */
 package cz.datalite.zk.annotation.invoke;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.utils.ZkCancellable;
 import cz.datalite.zk.annotation.ZkAsync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.event.*;
+import org.zkoss.zul.Timer;
 
 /**
  * <p>Handles binding request before and after method invocation. For all
@@ -45,6 +47,9 @@ public class ZkAsyncHandler extends Handler {
     
     /** key of the busybox in context map */
     private static final String ASYNC_BUSYBOX = "Async::busybox";
+
+    /** key of the timer in context map */
+    private static final String ASYNC_TIMER = "Async::timer";
     
      /** key of the interceptor in context map */
     private static final String ASYNC_INTERCEPTOR = "Async::interceptor";
@@ -57,6 +62,12 @@ public class ZkAsyncHandler extends Handler {
 
     /** name of event fired after async long operation is done */
     private final String eventAfter;
+
+    /** name of event fired during the operation progress */
+    private final String eventProgress;
+
+    /** interval to repeat eventProgress. */
+    private final int eventProgressInterval;
 
     /** if operation is cancellable */
     private final boolean cancellable;
@@ -82,16 +93,21 @@ public class ZkAsyncHandler extends Handler {
         // parent component
         String component = "".equals(annotation.component()) ? null : annotation.component();
         // return instance of handler
-        return new ZkAsyncHandler(inner, message, i18n, annotation.cancellable(), component, annotation.doAfter());
+        return new ZkAsyncHandler(inner, message, i18n, annotation.cancellable(), component, annotation.doAfter(),
+                annotation.doProgress(), annotation.progressInterval());
     }
 
-    public ZkAsyncHandler(Invoke inner, final String message, final boolean i18n, final boolean cancellable, final String component, final String eventAfter) {
+    public ZkAsyncHandler(Invoke inner, final String message, final boolean i18n,
+                          final boolean cancellable, final String component, final String eventAfter,
+                          final String eventProgress, final int eventProgressInterval) {
         super(inner);
         this.message = message;
         this.i18n = i18n;
         this.component = component;
         this.cancellable = cancellable;
         this.eventAfter = eventAfter;
+        this.eventProgress = eventProgress;
+        this.eventProgressInterval = eventProgressInterval;
     }
 
     @Override
@@ -126,6 +142,16 @@ public class ZkAsyncHandler extends Handler {
                 } );
             busybox.show( context.getRoot() );
             context.putParameter( ASYNC_BUSYBOX, busybox );
+
+            // install timer to update status
+            if ( !StringHelper.isNull(eventProgress) ) {
+                Timer timer = new Timer(eventProgressInterval);
+                timer.setRepeats(true);
+                timer.addForward(Events.ON_TIMER, context.getRoot(), eventProgress, context);
+                timer.setParent(context.getRoot());
+
+                context.putParameter( ASYNC_TIMER, timer );
+            }
         }
 
         // invocation is not complete, prevent resuming
@@ -150,7 +176,12 @@ public class ZkAsyncHandler extends Handler {
         } finally {
             // close shown blocking window
             final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( ASYNC_BUSYBOX );
-            busybox.close(context.getRoot());           
+            busybox.close(context.getRoot());
+
+            // detach timer
+            Timer timer = (Timer) context.getParameter( ASYNC_TIMER );
+            if (timer != null)
+                timer.detach();
         }
     }
 

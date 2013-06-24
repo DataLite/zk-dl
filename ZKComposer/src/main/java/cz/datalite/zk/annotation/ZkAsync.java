@@ -100,7 +100,7 @@ public @interface ZkAsync {
     public boolean i18n() default false;
 
     /**
-     * If user is allowed to abort a running operation. Default is true
+     * If user is allowed to abort a running operation. Default is false.
      *
      * Cancellable operations are executed in <strong>asynchronnous</strong>
      * event which prevents from working with desktop bound object. Look at {@link #doAfter
@@ -108,7 +108,7 @@ public @interface ZkAsync {
      *
      * @return cancellable operation
      */
-    public boolean cancellable() default true;
+    public boolean cancellable() default false;
 
     /**
      * Asynchronnous operations are executed in an async event, which doesn't
@@ -123,6 +123,27 @@ public @interface ZkAsync {
      * @return a name of the event fired after completing async operation
      */
     public String doAfter() default ZkEvents.ON_ASYNC_FINISHED;
+
+    /**
+     * Use this event to update status of async operation.
+     *
+     * If defined, new timer component is instantiated and an onTimer event is called after
+     * progressInterval is elapsed. This event is translated to doProgress event with additional
+     * attributes. You can use ZkEvents.ON_ASYNC_PROGRESS constant.
+     *
+     * @return a name of the event fired on regular interval during the progress of the event.
+     */
+    public String doProgress();
+
+    /**
+     * Interval in miliseconds between doProgress invocation.
+     *
+     * If doProgress event is defined, timer component is instantiated on the client to call this event.
+     * Use this attribute to adjust interval between invocations.
+     *
+     * @return interval in miliseconds, default is 1 second
+     */
+    public int progressInterval() default 1000;
 
     /**
      * Identifier of component to be blocked. User won't be able to invoke any

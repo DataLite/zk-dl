@@ -36,6 +36,16 @@ public @interface ZkEvents {
     public static String ON_ASYNC_FINISHED = "onAsyncFinished";
 
     /**
+     * Default event name to be fired after asynchronnous. Please note, that progress info is not
+     * enabled by default, you need to explicitly use it in ZkAsync annotation.
+     *
+     * method invocation progress event. The method to be invoked asynchronnously is
+     * set by {@link ZkAsync}.
+     */
+    public static String ON_ASYNC_PROGRESS = "onAsyncProgress";
+
+
+    /**
      * Predefined constant for default event type for payload.
      */
     public static final int EVENT_DEFAULT = 0;
