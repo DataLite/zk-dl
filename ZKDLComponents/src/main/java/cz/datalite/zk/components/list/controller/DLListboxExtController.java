@@ -98,11 +98,6 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      */
     DLEasyFilterController getEasyFilterController();
 
-    /**
-     * Returns quickFilter controller
-     * @return quickFilter controller
-     */
-    DLQuickFilterController getQuickFilterController();
 
     /**
      * Loads data with actual filter model model but not with paging.

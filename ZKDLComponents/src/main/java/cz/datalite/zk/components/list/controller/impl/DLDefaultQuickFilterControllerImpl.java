@@ -3,6 +3,8 @@ package cz.datalite.zk.components.list.controller.impl;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.view.DLQuickFilter;
+
 import java.util.List;
 
 /**
@@ -27,11 +29,16 @@ public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterControll
         return "";
     }
 
+
     public boolean validateQuickFilter()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void initModel( List<DLColumnUnitModel> columnModels ) {
+    }
+
+    public DLQuickFilter getQuickFilter() {
+        throw new UnsupportedOperationException( "Not supported yet." );
     }
 }

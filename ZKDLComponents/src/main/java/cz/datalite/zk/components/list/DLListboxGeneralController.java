@@ -11,6 +11,7 @@ import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.enums.DLFiterType;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
+import cz.datalite.zk.components.list.filter.QuickFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.model.DLMasterModel;
@@ -612,6 +613,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public DLListbox getListbox() {
         return listboxController.getListbox();
+    }
+
+    public void setQuickFilter(String column, String value) {
+        QuickFilterModel model = getQuickFilterController().getBindingModel();
+        model.setKey(column);
+        model.setValue(value);
+        model.setModel(getColumnUnitModel(column));
+        getQuickFilterController().getQuickFilter().fireChanges();
     }
 
     protected void callListeners( final Event event ) {

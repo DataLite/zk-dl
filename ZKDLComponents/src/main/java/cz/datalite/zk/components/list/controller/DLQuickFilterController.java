@@ -1,8 +1,7 @@
 package cz.datalite.zk.components.list.controller;
 
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
-import cz.datalite.zk.components.list.model.DLColumnUnitModel;
-import java.util.List;
+import cz.datalite.zk.components.list.view.DLQuickFilter;
 
 /**
  * Interface for the quickfilter component controller.
@@ -36,4 +35,10 @@ public interface DLQuickFilterController {
      * @return uuid
      */
     String getUuid();
+
+    /**
+     * Returns the quickfilter component.
+     * @return the quickfilter component.
+     */
+    DLQuickFilter getQuickFilter();
 }

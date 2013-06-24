@@ -123,4 +123,8 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
     public String getUuid() {
         return quickFilter.getUuid();
     }
+
+    public DLQuickFilter getQuickFilter() {
+        return quickFilter;
+    }
 }

@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list;
 
+import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.model.DLMasterModel;
 import cz.datalite.zk.components.list.view.DLListbox;
@@ -279,6 +280,14 @@ public interface DLListboxController<T> {
      * @return UI component
      */
     DLListbox getListbox();
+
+    /**
+     * Set quick filter column and value.
+     * @param column column name from listbox model, NormalFilterModel.ALL constatnt may be used as well.
+     * @param value new value of filter
+     */
+    void setQuickFilter(String column, String value);
+
 
     /**
      * <p>Adds listener on the specific event.</p>
