@@ -1,6 +1,10 @@
 package cz.datalite.zk.components.list.controller;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import org.zkoss.util.media.AMedia;
 
 /**
  * Interface for the listbox component which provides
@@ -60,4 +64,9 @@ public interface DLManagerController {
      * Exports current view in listbox. The result is MS Excel file
      */
     void exportCurrentView();
+
+    /**
+     * Exports current view in listbox and returns AMedia resource.
+     */
+	AMedia directExportCurrentView() throws IOException;
 }
