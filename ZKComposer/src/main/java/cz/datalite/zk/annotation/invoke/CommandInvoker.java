@@ -20,13 +20,14 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.bind.AnnotationBinder;
 import cz.datalite.zk.bind.Binder;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.Component;
+
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *

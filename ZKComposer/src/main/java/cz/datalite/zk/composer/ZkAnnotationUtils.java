@@ -3,16 +3,17 @@ package cz.datalite.zk.composer;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.annotation.processor.AnnotationProcessor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.SystemException;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Util class for ZK-DL annotations like {@link ZkModel} and {@link ZkController}.
@@ -324,9 +325,14 @@ public final class ZkAnnotationUtils {
             boolean zkEvent = false;
             boolean zkConfirm = false;
             boolean zkBinding = false;
+            boolean command = false;
+            boolean notifyChange = false;
             for ( Annotation annot : method.getDeclaredAnnotations() ) {
-                if ( annot instanceof ZkEvent || annot instanceof ZkEvents || annot instanceof Command ) {
+                if ( annot instanceof ZkEvent || annot instanceof ZkEvents ) {
                     zkEvent = true;
+                    continue;
+                } else if ( annot instanceof Command ) {
+                    command = true;
                     continue;
                 } else if ( annot instanceof ZkConfirm ) {
                     zkConfirm = true;
@@ -334,11 +340,16 @@ public final class ZkAnnotationUtils {
                 } else if ( annot instanceof ZkBinding || annot instanceof ZkBindings ) {
                     zkBinding = true;
                     continue;
+                } else if ( annot instanceof Command) {
+                    notifyChange = true;
                 }
             }
 
-            if ( !zkEvent && ( zkConfirm || zkBinding ) )
+            if ( !(zkEvent || command) && ( zkConfirm || zkBinding ) )
                 throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" @ZkEvent or @Command is required." );
+
+            if ( !command && notifyChange )
+                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" @Command is required for @NotifyChange." );
         }
     }
 }

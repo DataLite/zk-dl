@@ -21,11 +21,12 @@ package cz.datalite.zk.annotation.processor;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.annotation.*;
 import cz.datalite.zk.annotation.invoke.*;
-import java.lang.reflect.Method;
-import java.util.*;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * <p>Annotation Processor handles all ZK annotations on the methods. For each
@@ -70,6 +71,7 @@ public class AnnotationProcessor<T> {
         wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
+        wrappers.add( new GeneralWrapperProcessor( ZkRole.class, ZkRoleHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkBlocking.class, ZkBlockingHandler.class ) );
         wrappers.add( new GeneralWrapperProcessor( ZkAsync.class, ZkAsyncHandler.class ) );
 
@@ -117,6 +119,11 @@ public class AnnotationProcessor<T> {
                 // attach listener
                 target.addEventListener( cached.methodInvoker.getEventName(), new InvokeListener( context ) );
             }
+        }
+
+        // allow handlers to do custom bindings
+        for ( final Cache cached : commands.values() ) {
+            cached.invoker.bind(root);
         }
     }
     

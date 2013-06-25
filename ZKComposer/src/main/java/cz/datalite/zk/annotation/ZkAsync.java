@@ -133,7 +133,7 @@ public @interface ZkAsync {
      *
      * @return a name of the event fired on regular interval during the progress of the event.
      */
-    public String doProgress();
+    public String doProgress() default "";
 
     /**
      * Interval in miliseconds between doProgress invocation.
