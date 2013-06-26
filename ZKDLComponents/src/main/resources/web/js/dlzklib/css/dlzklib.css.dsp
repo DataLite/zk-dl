@@ -15,7 +15,6 @@
 /* Quickfilter component */
 .z-quickfilter {
     font-size: 11px;
-    float: left;
 }
 .z-quickfilter span {
     display: block;
@@ -62,7 +61,7 @@
 
 /* DLPaging component */
 .z-dlpaging {
-    height: 35px;
+    height: auto;
 }
 
 .z-dlpaging-button-table {
@@ -90,8 +89,8 @@
 
 .z-listboxmanager span { /* Images */
     display: block;
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     /*margin: 4px 0 0 3px;*/
     cursor: pointer;
 }
@@ -126,7 +125,8 @@
 
 /* Listcontrol component*/
 .z-listcontrol {
-    height: 35px;
+    height: 20px;
+    padding: 2px 0px 7px 5px;
 }
 
 .z-listcontrol-aux-content {
@@ -137,6 +137,50 @@
     margin: 0 auto 0 30px;
 }
 
+.z-listcontrol .z-quickfilter {
+    float: left;
+}
+
+/* Lovbox component */
+.z-lovbox { position: relative; }
+
+/* Lovbox popup */
+.z-lovbox-pp { height: auto!important; width: auto!important; }
+.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 6px 0 0 0; height: auto!important; width: 300px!important; }
+.z-lovbox-pp .z-bandbox-popup-cl { border: 1px solid #7eaac6; }
+.z-lovbox-pp .z-listbox { margin: 0 auto; max-height: 350px; overflow-y: auto; }
+.z-lovbox-pp .z-dlpaging { padding: 0; }
+
+.z-lovbox .z-bandbox-image-btn {
+    background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px;
+
+    width: 18px;
+    height: 19px;
+    cursor: pointer;
+    display: block;
+}
+
+.z-lovbox .z-bandbox-image-btn.z-bandbox-btn-over {
+    border: 0 none;
+    margin-left: 0;
+}
+
+
+.z-lovbox .z-bandbox-del, .z-lovbox .z-bandbox-rounded-del {
+    background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat;
+    position: absolute;
+    right: 18px;
+    top: 5px;
+    cursor: pointer;
+    padding: 5px 7px;
+    display: none;
+}
+
+.z-lovbox .z-bandbox-del:hover, .z-lovbox .z-bandbox-rounded-del:hover {
+    background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat;
+    top: 4px;
+    padding: 7px 7px;
+}
 
 /* -- window: login,error,notFound -- */
 /*

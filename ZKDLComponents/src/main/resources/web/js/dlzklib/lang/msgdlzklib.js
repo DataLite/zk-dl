@@ -7,3 +7,4 @@ msgdlzklib.filterManager_tooltip = 'Správce filtrů' ;
 msgdlzklib.resetFilters_tooltip = 'Vymazat filtry' ;
 msgdlzklib.resetAll_tooltip = 'Vymazat filtry a vrátit původní nastavení' ;
 
+

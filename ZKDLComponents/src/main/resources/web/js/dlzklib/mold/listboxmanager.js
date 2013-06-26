@@ -10,6 +10,7 @@ function (out) {
     if (this.getColumnManager()) out.push(this.getIconHtml("columnManager", "menu_items_small", iconCount++));
     if (this.getSortManager()) out.push(this.getIconHtml("sortManager", "sort_small", iconCount++));
     if (this.getFilterManager()) out.push(this.getIconHtml("filterManager", "filter_small", iconCount++));
+    if (this.getExportManager()) out.push(this.getIconHtml("exportManager", "excel_small", iconCount++));
     if (this.getResetFilters()) out.push(this.getIconHtml("resetFilters", "cancel_filter", iconCount++));
     if (this.getResetAll()) out.push(this.getIconHtml("resetAll", "trash_small", iconCount++));
 

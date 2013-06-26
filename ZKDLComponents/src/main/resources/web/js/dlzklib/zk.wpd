@@ -6,4 +6,5 @@
 	<widget name="Quickfilter"/>
 	<widget name="DLPaging"/>
 	<widget name="Listboxmanager"/>
+	<widget name="Lovbox"/>
 </package>

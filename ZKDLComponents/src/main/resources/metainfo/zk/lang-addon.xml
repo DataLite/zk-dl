@@ -33,7 +33,22 @@
     <component>
         <component-name>lovbox</component-name>
         <component-class>cz.datalite.zk.components.lovbox.DLLovbox</component-class>
-        <extends>bandbox</extends>
+        <widget-class>dlzklib.Lovbox</widget-class>
+        <mold>
+            <mold-name>default</mold-name>
+            <mold-uri>mold/lovbox.js</mold-uri>
+            <css-uri>../zul/inp/css/combo.css.dsp</css-uri>
+        </mold>
+        <mold>
+            <mold-name>rounded</mold-name>
+            <mold-uri>mold/lovbox.js</mold-uri>
+            <css-uri>../zul/inp/css/combo.css.dsp</css-uri>
+        </mold>
+        <mold>
+            <mold-name>image</mold-name>
+            <mold-uri>mold/lovbox-image.js</mold-uri>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
+        </mold>
         <annotation>
             <annotation-name>default-bind</annotation-name>
             <property-name>selectedItem</property-name>

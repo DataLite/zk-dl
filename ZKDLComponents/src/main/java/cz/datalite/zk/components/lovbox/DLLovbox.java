@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.lovbox;
 
-import cz.datalite.helpers.ZKDLResourceResolver;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
@@ -17,11 +16,9 @@ import org.zkoss.lang.Objects;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.Locales;
-import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.au.AuRequest;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.OpenEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -55,6 +52,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLLovbox.class );
     
     static {
+        addClientEvent(DLLovbox.class, "onClear", CE_IMPORTANT|CE_NON_DEFERRABLE);
+
         // init page size
         PAGE_SIZE = Library.getIntProperty( "zk-dl.lovbox.pageSize", 10);   
         LOGGER.debug( "Lovbox default page size is defined as '" + PAGE_SIZE +  "'." );
@@ -78,7 +77,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** number of rows  shown on the list, default value is same as pageSize to prevent page scrolling */
     protected Integer rows = ROWS;
     /** defines listbox width for component in the popup */
-    protected String listWidth = "400px";
+    protected String listWidth = "100%";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
     protected String[] labelProperties = new String[] {};
     /** Format for properties */
@@ -122,13 +121,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     public DLLovbox() {
         super();
+
+        // default lovbox behaviour / readonly and autodrop
         super.setReadonly( true );
         setAutodrop( true );
-
-        // Bandbox component overrides onOk - we need it for quick filter
-        setWidgetOverride("enterPressed_", "function (evt) {}");
-        // default tooltip
-        setTooltiptext(getValue());
     }
 
     /**
@@ -136,7 +132,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * is necessary also creates listbox.
      */
     public void afterCompose() {
-        setClass( "z-lovbox" );
         popup = getDropdown();
         if ( popup == null ) { // if popup isn't defined in zul
             popup = new Bandpopup();
@@ -157,8 +152,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
         }
 
-        popup.setSclass( "z-lovbox-popup" );
-        
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
             final Listhead head = new DLListhead(); // create lishead and listitem
@@ -236,12 +229,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             paging.setAutohide(true);
             popup.appendChild( paging );
         }
-
-        // clear button is on absolute position in top right corner
-        if ( clearButton ) {
-            Button button = createClearButton();
-            popup.appendChild( button );
-        }
     }
 
     /**
@@ -250,14 +237,15 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws Exception
      */
     public void init() throws Exception {
-        listbox.setWidth( listWidth );
-        if ( paging != null ) paging.setWidth( listWidth );
+        popup.setWidth("500px");
+        popup.setVflex("min");
+        //listbox.setVflex("min");
+        //listbox.setHflex("min");
+//        //listbox.setWidth( listWidth );
+//        //if ( paging != null ) paging.setWidth( listWidth );
          
         if ( paging != null && pageSize != null ) {
             paging.setPageSize( pageSize );            
-        }
-        if (paging!=null) {
-            paging.setStyle("background: none; border: 0;");
         }
         if ( pageSize != null && listbox.getRows() == 0 ) {
             listbox.setRows( rows );
@@ -332,6 +320,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     public void setClearButton( boolean clearButton ) {
+        if (this.clearButton != clearButton)
+            smartUpdate("clearButton", clearButton);
         this.clearButton = clearButton;
     }
 
@@ -599,24 +589,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             filter.setFocus(true);
     }
 
-    protected Button createClearButton() throws UiException {
-        final Button button = new Button();
-
-        button.setLabel(Labels.getLabel("lovbox.clear"));
-        button.setImage(ZKDLResourceResolver.resolveImage("remove16x16.png"));
-        button.setStyle( "position: absolute; top: 5px; right: 2%; width: 90px" );
-        button.addEventListener( Events.ON_CLICK, new EventListener() {
-
-            public void onEvent( final Event event ) throws Exception {
-                controller.setSelectedItem( null );
-                // deselect listbox
-                controller.getListboxController().setSelected( null );
-            }
-        } );
-
-        return button;
-    }
-
     public void setParentCascadeColumn( final String parentCascadeColumn ) {
         this.parentCascadeColumn = parentCascadeColumn;
     }
@@ -738,5 +710,28 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * Set this value only before afterCompose(). */
     public void setAutocomplete(boolean autocomplete) {
         this.autocomplete = autocomplete;
+    }
+
+
+    //-- super --//
+    protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
+            throws java.io.IOException {
+        super.renderProperties(renderer);
+
+        if (!clearButton)
+            render(renderer, "clearButton", clearButton);
+    }
+
+
+    @Override
+    public void service(AuRequest request, boolean everError) {
+        final String cmd = request.getCommand();
+        if (cmd.equals("onClear")) {
+            controller.setSelectedItem( null );
+            // deselect listbox
+            controller.getListboxController().setSelected( null );
+        }
+
+        super.service(request, everError);
     }
 }

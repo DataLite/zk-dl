@@ -7,7 +7,10 @@ import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.au.AuRequest;
 import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.*;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.InputEvent;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.impl.InputElement;
@@ -301,10 +304,15 @@ public class DLQuickFilter extends InputElement {
         final String cmd = request.getCommand();
         if (cmd.equals("onOpenPopup")) {
             // page was not set in constructor, delay to the show event
-            popup.setPage(DLQuickFilter.this.getPage());
+            popup.setParent(DLQuickFilter.this);
             popup.open(DLQuickFilter.this);
         }
 
         super.service(request, everError);
+    }
+
+    // allow add popup below quickfilter
+    protected boolean isChildable() {
+        return true;
     }
 }

@@ -2,6 +2,7 @@ package cz.datalite.zk.components.list.view;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Hbox;
 
 /**
  * Component for managing listbox. There can be defined
@@ -21,7 +22,7 @@ public class DLListControl extends Div {
     private final DLListboxManager managerComponent;
 
     /** Everyting added by ZUL page goes here (see appendChild). */
-    private final Div additionalContent;
+    private final Hbox additionalContent;
 
     /** Just constructing the component (to recognize own child components and user added components). */
     private boolean inConstruct = true;
@@ -40,12 +41,17 @@ public class DLListControl extends Div {
         qFilterComponent = new DLQuickFilter();
         qFilterComponent.setParent( this );
 
-        additionalContent = new Div();
+        additionalContent = new Hbox();
         additionalContent.setParent(this);
         additionalContent.setZclass("z-listcontrol-aux-content");
+        additionalContent.setAlign("center");
 
         managerComponent = new DLListboxManager();
         managerComponent.setParent(this);
+
+        Div cleaner = new Div();
+        cleaner.setZclass("z-dlzklib-clear");
+        cleaner.setParent(this);
 
         inConstruct = false;
     }
