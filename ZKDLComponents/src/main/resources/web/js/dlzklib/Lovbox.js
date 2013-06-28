@@ -1,14 +1,25 @@
 dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
-    _clearButton: true,
+    _clearButton: false,
+    _lovboxReadonly: false,
+    _watermark: '',
+    _defaultColor: '',
+    _watermarkColor: '#aaa',
 
     $define: {
-        imageClass: function (v) { // image mold
-            var n = this.getImageNode();
-            if (n) n.class = v || '';
+        clearButton: function () {
+            if (this.desktop)
+                this.rerender();
         },
 
-        clearButton: function () {
-            this.redraw_();
+        watermark: function (v) {
+            if (this.desktop) {
+                $(this.getInputNode()).Watermark(v);
+            }
+        },
+
+        lovboxReadonly: function() {
+            if (this.desktop)
+                this.rerender();
         }
 
         //-disd
@@ -18,10 +29,24 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     bind_: function () {
         this.$supers(dlzklib.Lovbox, 'bind_', arguments);
         this.domListen_(this.$n("del"), "onClick", "_doClear");
+
+        if (!this.getLovboxReadonly()) {
+            this.domListen_(this.getInputNode(), "onFocus", "_clearWatermark");
+            this.domListen_(this.getInputNode(), "onBlur", "_doWatermark");
+            this.domListen_(this.getInputNode(), "onChange", "_doWatermark");
+        }
+
+        this._doWatermark();
     },
 
     unbind_: function () {
-        this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
+        if (!this.getLovboxReadonly()) {
+            this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
+            this.domUnlisten_(this.getInputNode(), "onFocus", "_clearWatermark");
+            this.domUnlisten_(this.getInputNode(), "onBlur", "_doWatermark");
+            this.domUnlisten_(this.getInputNode(), "onChange", "_doWatermark");
+        }
+
         this.$supers(dlzklib.Lovbox, 'unbind_', arguments);
     },
 
@@ -56,7 +81,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     visibleDelNode: function ( visible ) {
         var del = this.$n("del");
         if (del) {
-            if (visible && this._clearButton && this.getText() )
+            if (visible && this.getClearButton() && this.getText() && !this.getLovboxReadonly() )
                 del.style.display = "inline"
             else
                 del.style.display = "none"
@@ -119,7 +144,35 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     // Bandbox component overrides onOk - we need it for quick filter
-    enterPressed_ : function () {}
+    enterPressed_ : function () {},
+
+    _doWatermark: function () {
+        var input = $(this.getInputNode()),
+            watermark = this.getWatermark();
+
+        if (!this._defaultColor)
+            this._defaultColor = input.css("color");
+
+        if(watermark && !this.getLovboxReadonly() && (input.val().length==0 || input.val()==watermark)) {
+            input.val(watermark);
+            input.css("color",this._watermarkColor);
+        } else {
+            input.css("color",this._defaultColor);
+        }
+    },
+
+    _clearWatermark: function() {
+        var input = $(this.getInputNode()),
+            watermark = this.getWatermark();
+        if(input.val()==watermark)
+            input.val("");
+        input.css("color",this._defaultColor);
+    },
+
+    setValue: function() {
+        this.$supers('setValue', arguments);
+        this._doWatermark();
+    }
 }, {
     $redraw: _zkf
 })

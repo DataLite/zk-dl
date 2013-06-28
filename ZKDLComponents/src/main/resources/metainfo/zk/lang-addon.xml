@@ -37,12 +37,10 @@
         <mold>
             <mold-name>default</mold-name>
             <mold-uri>mold/lovbox.js</mold-uri>
-            <css-uri>../zul/inp/css/combo.css.dsp</css-uri>
         </mold>
         <mold>
             <mold-name>rounded</mold-name>
             <mold-uri>mold/lovbox.js</mold-uri>
-            <css-uri>../zul/inp/css/combo.css.dsp</css-uri>
         </mold>
         <mold>
             <mold-name>image</mold-name>

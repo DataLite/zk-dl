@@ -115,6 +115,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected boolean editable = false;
     /** Should the filter run for onchanging event (use only for fast queries) */
     protected boolean autocomplete = false;
+    /** Watermark in input field */
+    protected String watermark;
 
     /**
      * Create component without any parameter
@@ -239,11 +241,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public void init() throws Exception {
         popup.setWidth("500px");
         popup.setVflex("min");
-        //listbox.setVflex("min");
-        //listbox.setHflex("min");
-//        //listbox.setWidth( listWidth );
-//        //if ( paging != null ) paging.setWidth( listWidth );
-         
+
         if ( paging != null && pageSize != null ) {
             paging.setPageSize( pageSize );            
         }
@@ -544,9 +542,12 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     @Override
     public void setReadonly( final boolean readonly ) {
+        // original readonly means not allow to write text
+        // lovbox radonly is sent to client as new value lovboxReadonly
+        smartUpdate("lovboxReadonly", readonly);
         this.readonly = readonly;
 
-        setAutodrop(!readonly);
+        setAutodrop(!readonly && !editable);
         setButtonVisible(!readonly);
 
         // textbox readonly is set only for editable field
@@ -698,6 +699,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     public void setEditable(boolean editable) {
         super.setReadonly(!editable);  // call readonly on parent diretly
+        setAutodrop(!readonly && !editable); // autodrop only for full lovbox bahaviour
         this.editable = editable;
     }
 
@@ -712,14 +714,31 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.autocomplete = autocomplete;
     }
 
+    public String getWatermark() {
+        return watermark;
+    }
+
+    public void setWatermark(String watermark) {
+        smartUpdate("watermark", watermark);
+        this.watermark = watermark;
+    }
 
     //-- super --//
     protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
             throws java.io.IOException {
         super.renderProperties(renderer);
 
-        if (!clearButton)
+        if (clearButton)
             render(renderer, "clearButton", clearButton);
+
+        if (getWatermark() != null)
+            render(renderer, "watermark", watermark);
+
+        // original readonly means not allow to write text
+        // lovbox radonly is sent to client as new value lovboxReadonly
+        if (readonly)
+            render(renderer, "lovboxReadonly", readonly);
+
     }
 
 
