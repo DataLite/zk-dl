@@ -221,9 +221,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     public void onCreate() {
         // allocate the array of indicies
-        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
-            listcellIndicies.add( null );
-        }
+//        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
+//            listcellIndicies.add( null );
+//        }
         
         masterController.onCreate();
     }
@@ -326,13 +326,17 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     /** update the template if it uses new data binding (v2.0) */
     private void updateTemplateVersion2() {
         final List<DLColumnUnitModel> unorderedModel = new LinkedList( columnModel.getColumnModels() );
+        
+        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
+            listcellIndicies.add( null );
+        }
 
         // update the listcell mapping
         // points to the first unused field
         int max = 0;
         for ( int i = 0; i < unorderedModel.size(); ++i ) {
             if ( unorderedModel.get( i ).isVisible() ) {
-                // the order is indexed from 1
+                // the order is indexed from 1            	
                 listcellIndicies.set( unorderedModel.get( i ).getOrder() - 1, i );
                 // update index of max
                 max = unorderedModel.get( i ).getOrder() > max ? unorderedModel.get( i ).getOrder() : max;
