@@ -70,7 +70,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /** Controller for the quick filter component */
     protected DLQuickFilterController quickFilterController = new DLDefaultQuickFilterControllerImpl();
     /** Controller for the profile component */
-    protected DLProfileManagerController<T> profileManagerController = new DLDefaultProfileManagerControllerImpl<T>();
+    protected DLProfileManagerController<T> profileManagerController;
     /** main entity class */
     protected final Class<T> entityClass;
     /** automatically save model */
@@ -182,7 +182,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param comp profile manager component
      */
 	protected void initProfileManager(final DLProfileManager<T> comp) {
-		this.profileManagerController = new DLProfileManagerControllerImpl<T>(this, comp);
+		this.profileManagerController = new DLProfileManagerControllerImpl<T>(this, comp, this.getProfileService());
+    }
+	
+	/**
+     * Method can be overridden to inject profile service into this controller
+     */
+	protected ProfileService getProfileService() {
+		return null;
     }
 
 	public void onCreate() {
@@ -191,7 +198,11 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 			boolean modelInSession = this.loadModel();
 
 			if (!modelInSession) {
-				// TODO load default profile from persistent storage
+				if (this.profileManagerController != null) {
+					if (this.profileManagerController.selectDefaultProfile(true)) {
+						this.profileManagerController.onLoadProfile();
+					}
+				}
 			}
 		}
     	
@@ -707,6 +718,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public static class EventListeners extends LinkedList<EventListener> {
     }
     
+    /**
+     * This method applies {@link DLListboxProfile} to agenda.
+     */
     public void applyProfile(DLListboxProfile profile) {
     	LOGGER.info("applyProfile = " + profile);
     	
@@ -739,9 +753,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		
 		for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
 			String column = unit.getColumn();
-			if (column == null) {
-				// sloupce bez parametru column
-				column = "column" + i;				
+			if (column == null) {				
+				column = "column" + i;
 			}
 			
 			if (columnModelJsonObject != null && columnModelJsonObject.containsKey(column)) {				
@@ -754,10 +767,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				unit.setOrderDirectly(Integer.valueOf(order));		
 				unit.setSortOrder(Integer.valueOf(sortOrder));
 				unit.setSortType(DLSortType.getByStringValue(sortType));				
-			} else {
-				//unit.setVisible(false);
-				//initColumns.add(unit);			
-			}
+			} 
 			
 			/*
 			 * FILTER 
@@ -767,7 +777,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				Object value1 = (((JSONObject) filterModelJsonObject.get(column)).get("value1"));
 				Object value2 = (((JSONObject) filterModelJsonObject.get(column)).get("value2"));
 //				String type = (((JSONObject) filterModelJsonObject.get(column)).get("type")).toString();
-				
 //				Object typed1Value = ObjectConverter.convert(value1, unit.getColumnType().getName());
 //				Object typed2Value = ObjectConverter.convert(value2, unit.getColumnType().getName()); 
 				
@@ -785,7 +794,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		// notify view about new model load
 		this.getListboxController().fireOrderChanges();
 
-		// refresh filters (this method also call refreshDataModel() and autosaveModel()) 		
+		// refresh filters (this method also calls refreshDataModel() and autosaveModel()) 		
 		this.onFilterManagerOk(savedModel);
 				
 		if (profile.getColumnsHashCode() == null || columns.hashCode() != profile.getColumnsHashCode()) {			
@@ -793,6 +802,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		}		
     }
     
+    /**
+     * This method creates {@link DLListboxProfile} from actual agenda settings.
+     */    
     public DLListboxProfile createProfile() {
     	LOGGER.info("create profile");
     	
@@ -815,8 +827,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     		columnInfo.put("sortType", unit.getSortType().getStringValue());
 
     		String column = unit.getColumn();
-    		if (column == null) {
-    			// sloupce bez parametru column
+    		if (column == null) {    			
     			column = "column" + i;
     		}
     		
@@ -852,11 +863,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     		filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
     		filterInfo.put("value1", normalFilterUnitModel.getValue(1));
     		filterInfo.put("value2", normalFilterUnitModel.getValue(2));
-    		//			filterInfo.put("type", String.valueOf(normalFilterUnitModel.getType().getName()));	
+    		// filterInfo.put("type", String.valueOf(normalFilterUnitModel.getType().getName()));	
 
     		String column = normalFilterUnitModel.getColumn();
-    		if (column == null) {
-    			// sloupce bez parametru column
+    		if (column == null) {    			
     			column = "column" + i;
     		}
 

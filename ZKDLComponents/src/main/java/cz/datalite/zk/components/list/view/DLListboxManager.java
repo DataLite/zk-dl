@@ -38,32 +38,32 @@ public class DLListboxManager extends XulElement {
 
     public DLListboxManager() {
         super();
-        addEventListener( "onColumnManager", new EventListener() {
+        addEventListener( "onColumnManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 controller.onColumnManager();
             }
         } );
-        addEventListener( "onSortManager", new EventListener() {
+        addEventListener( "onSortManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 controller.onSortManager();
             }
         } );
-        addEventListener( "onFilterManager", new EventListener() {
+        addEventListener( "onFilterManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 controller.onFilterManager();
             }
         } );
-        addEventListener( "onExportManager", new EventListener() {
+        addEventListener( "onExportManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 controller.onExportManager();
             }
         } );
-        addEventListener( "onResetFilters", new EventListener() {
+        addEventListener( "onResetFilters", new EventListener<Event>() {
             public void onEvent( final Event event ) throws InterruptedException {
                 controller.onResetFilters();
             }
         } );
-        addEventListener( "onResetAll", new EventListener() {
+        addEventListener( "onResetAll", new EventListener<Event>() {
             public void onEvent( final Event event ) throws InterruptedException {
                 controller.onResetAll();
             }
@@ -78,11 +78,17 @@ public class DLListboxManager extends XulElement {
         final List<String> filters = controller.getFilters();
         StringBuilder sb = new StringBuilder();
 
-
         if ( !filters.isEmpty() ) {
+        	boolean first = true;
             for ( String filter : filters ) {
-                sb.append( filter ).append( ", " );
+            	if (first) {
+            		first = false;
+            	} else {
+            		sb.append(", ");
+            	}
+                sb.append( filter );
             }
+            sb.append(".");
         }
 
         return sb.toString();
