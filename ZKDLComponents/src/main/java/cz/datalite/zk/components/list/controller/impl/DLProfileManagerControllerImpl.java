@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKDLResourceResolver;
@@ -123,19 +125,19 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 
 			selectedProfile.setColumnModelJsonData(profile.getColumnModelJsonData());
 			selectedProfile.setFilterModelJsonData(profile.getFilterModelJsonData());
-			selectedProfile.setColumnsHashCode(profile.getColumnsHashCode());
-
+			selectedProfile.setColumnsHashCode(profile.getColumnsHashCode());			
 			
+			this.profileService.save(profile);
 		} 
 	}
 
 	@Override
-	public void onEditProfile() {
+	public void onEditProfile(boolean create) {
 		DLListboxProfile selectedProfile = this.profilesCtl.getSelectedItem();
-		DLListboxProfile editProfile;
+		final DLListboxProfile editProfile;
 		
-		if (selectedProfile == null) {
-			editProfile = new DLListboxProfile();
+		if (create) {
+			editProfile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
 		} else {
 			editProfile = selectedProfile;
 		}
@@ -146,12 +148,27 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 
 		final org.zkoss.zul.Window win;
 		win = (org.zkoss.zul.Window) ZKDLResourceResolver.resolveAndCreateComponents("listboxProfileEditWindow.zul", null, args);
-		// win.addEventListener( "onSave", listener );
+		
+		final EventListener<Event> listener = new EventListener<Event>() {
+			public void onEvent(final Event event) {
+				onEditProfileOk(editProfile);
+			}
+		};
+        
+        win.addEventListener( "onSave", listener );
 		win.doHighlighted();
 	}	
 	
 	@Override
-	public void onEditProfileOk(DLListboxProfile profile) {
-		this.profileService.makePersistent(profile);
+	public void onEditProfileOk(DLListboxProfile profile) {		
+		this.profileService.save(profile);
+		
+		this.profilesCtl.getListboxController().refreshDataModel();
+		this.profilesCtl.setSelectedItem(profile);
+	}
+
+	@Override
+	public void onDeleteProfile() {
+		this.profileService.delete(this.profilesCtl.getSelectedItem());		
 	}	
 }

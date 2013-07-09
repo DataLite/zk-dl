@@ -36,13 +36,13 @@ public class ProfileServiceSessionImpl implements ProfileService {
 	}
 
 	@Override
-	public DLListboxProfile makePersistent(DLListboxProfile dlListboxProfile) {
+	public DLListboxProfile save(DLListboxProfile dlListboxProfile) {
 		Sessions.getCurrent().setAttribute(PROFILE_SESS_ATTR + dlListboxProfile.getDlListboxId(), dlListboxProfile);
 		return dlListboxProfile;
 	}
 
 	@Override
-	public void makeTransient(DLListboxProfile dlListboxProfile) {
+	public void delete(DLListboxProfile dlListboxProfile) {
 		throw new IllegalAccessError("Method not valid for session implementation.");		
 	}
 }

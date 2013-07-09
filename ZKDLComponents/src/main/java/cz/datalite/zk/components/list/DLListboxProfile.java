@@ -21,7 +21,7 @@ public class DLListboxProfile {
 	private boolean hidden = false;
 	
 	/** profile can be overwritten using save button in profile manager */
-	private boolean saveable = true;
+	private boolean editable = true;
 
 	/** profile ownew */
 	private String user;
@@ -83,12 +83,12 @@ public class DLListboxProfile {
 		this.hidden = hidden;
 	}
 
-	public boolean isSaveable() {
-		return saveable;
+	public boolean isEditable() {
+		return editable;
 	}
 
-	public void setSaveable(boolean saveable) {
-		this.saveable = saveable;
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 
 	public String getUser() {

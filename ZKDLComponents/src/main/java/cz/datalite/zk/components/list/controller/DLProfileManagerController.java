@@ -8,9 +8,11 @@ public interface DLProfileManagerController<T> {
 	
 	void onSaveProfile();
 	
-	void onEditProfile();
+	void onEditProfile(boolean create);
 	
 	void onEditProfileOk(DLListboxProfile profile);
+	
+	void onDeleteProfile();
 
 	boolean selectDefaultProfile(boolean onCreate);
 

@@ -6,10 +6,11 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 
 import cz.datalite.zk.components.list.DLListboxProfile;
-import cz.datalite.zk.components.list.controller.DLProfileManagerController;
 
 /**
  * Controller for the popup window used to create/edit profile.
@@ -17,18 +18,14 @@ import cz.datalite.zk.components.list.controller.DLProfileManagerController;
 public class ListboxProfileEditController {
 	
 	DLListboxProfile 	profile;	
-	
 	Component 			view;
-	DLProfileManagerController profileManagerController;
 	
 	@Init
-	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("profile") DLListboxProfile profile,
-			@ExecutionArgParam("profileManagerController") DLProfileManagerController profileManagerController) {
+	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("profile") DLListboxProfile profile) {
 		Selectors.wireComponents(view, this, false);
 		
 		this.profile = profile;
-		this.view = view;		
-		this.profileManagerController = profileManagerController;
+		this.view = view;
     }
 	
 	@Command
@@ -38,7 +35,7 @@ public class ListboxProfileEditController {
 	
 	@Command
 	public void save() {
-		this.profileManagerController.onEditProfileOk(this.profile);
+		Events.postEvent(new Event("onSave", this.view, null));
 		this.view.detach();
 	}
 

@@ -529,7 +529,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         // Executions.getCurrent().getDesktop().getSession().setAttribute( getSessionName() + "cache", model );
     	if (!lock) {
     		LOGGER.info("save model to session, session = {}", this.getSessionName());
-    		this.profileServiceSessionImpl.makePersistent(this.createProfile());
+    		this.profileServiceSessionImpl.save(this.createProfile());
     	}
     }
 

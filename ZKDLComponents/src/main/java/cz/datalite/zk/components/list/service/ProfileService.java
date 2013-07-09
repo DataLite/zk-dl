@@ -12,8 +12,8 @@ public interface ProfileService {
 
 	public DLListboxProfile findById(Long id);
 
-	public DLListboxProfile makePersistent(DLListboxProfile dlListboxProfile);
+	public DLListboxProfile save(DLListboxProfile dlListboxProfile);
 	
-	public void makeTransient(DLListboxProfile dlListboxProfile);
+	public void delete(DLListboxProfile dlListboxProfile);
 
 }
