@@ -33,6 +33,7 @@ import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.ForwardEvent;
 
 /**
  * <p>Method invoker handles requests for invocation given method on given
@@ -95,8 +96,10 @@ public class MethodInvoker implements Invoke {
             final Event event = context.getEvent();
             
             // unwrap forward event
-            final Event unwrappedEvent = (event instanceof org.zkoss.zk.ui.event.ForwardEvent)
-                    ? ((org.zkoss.zk.ui.event.ForwardEvent) event).getOrigin() : event;
+            Event unwrappedEvent = event;
+            while (unwrappedEvent instanceof ForwardEvent && ((ForwardEvent)unwrappedEvent).getOrigin() != null) {
+                unwrappedEvent = ((ForwardEvent) unwrappedEvent).getOrigin();
+            }
 
             List<Object> args = buildArgs(event, unwrappedEvent);
 
