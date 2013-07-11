@@ -10,10 +10,10 @@ function (out) {
 //    </div>
     out.push('<div', this.domAttrs_(), '>');
     out.push('<span id="', uuid, '-text" class="', zcls, '-text', '">', this.getLabel(), '</span>');
-    out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"/>');
+    out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
     out.push('<input id="', uuid, '-real" class="', zcls, '-real" type="text" value="',this.getValue(),'"/>');
-    out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"/>');
-    out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"/>');
+    out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
+    out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
     out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
 }

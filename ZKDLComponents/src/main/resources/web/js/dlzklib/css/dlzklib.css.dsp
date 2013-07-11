@@ -145,8 +145,8 @@
 .z-lovbox { position: relative; }
 
 /* Lovbox popup */
-.z-lovbox-pp { height: auto!important; width: auto!important; }
-.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 6px 0 0 0; height: auto!important; width: 300px!important; }
+.z-lovbox-pp { height: auto; width: auto; }
+.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 6px 0 0 0; height: auto; width: 300px; }
 .z-lovbox-pp .z-bandbox-popup-cl { border: 1px solid #7eaac6; }
 .z-lovbox-pp .z-listbox { margin: 0 auto; max-height: 350px; overflow-y: auto; }
 .z-lovbox-pp .z-dlpaging { padding: 0; }
@@ -363,3 +363,87 @@ background: -ms-linear-gradient(top, #ff7256 0%,#ffffff 100%)!important;
 background: linear-gradient(top, #ff7256 0%,#ffffff 100%)!important;
 -pie-background: linear-gradient(top, #ff7256 0%,#ffffff 100%)!important;
 }*/
+
+
+/*
+ Critical error 500 (error.zul)
+*/
+
+.z-criticalError { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 0 auto; }
+.z-criticalError .z-criticalError-header { border-bottom: 1px solid #BEBEBE; font-size: 12px; padding: 7px 5px;  }
+
+.z-criticalError a { color: #545e6b; }
+.z-criticalError a:hover { text-decoration: underline; }
+.z-criticalError hr { border-color: #fff!important; margin-top: 30px;}
+.z-criticalError p { font-size: 11px; margin: 5px 0; }
+
+.z-criticalError h1.title { color: #666; font-size: 2em; font-weight: bold!important; line-height: 1; margin-bottom: 10px; }
+
+.z-criticalError .z-criticalError-cnt { margin: 0 auto; padding: 10px 0 5px 0; position: relative; text-align: center; width: 100%; }
+
+.z-criticalError-textarea { width: 840px; }
+
+.z-criticalError-download { color: red; cursor: pointer; font-weight: bold; margin-right: 7px; }
+.z-criticalError-download:hover { text-decoration:underline; }
+
+.z-criticalError .globe { cursor: pointer; position: relative; top: 5px; }
+
+.z-criticalError .btn { border: 1px solid #ccc; border-bottom: 1px solid #b4b4b4; color: #666; margin-top: 15px; margin-bottom: 5px; padding: 6px 14px 20px 14px; text-shadow: 0 1px 1px #fff; width: auto; }
+
+/* -- CSS3 -- */
+.z-criticalError,
+.z-criticalError .z-criticalError-header,
+.z-criticalError .btn { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
+
+.z-criticalError {
+-webkit-border-radius: 5px 5px 5px 5px;
+-moz-border-radius: 5px 5px 5px 5px;
+border-radius: 5px 5px 5px 5px;
+}
+.z-criticalError .z-criticalError-header {
+-webkit-border-radius: 5px 5px 0 0;
+-moz-border-radius: 5px 5px 0 0;
+border-radius: 5px 5px 0 0;
+}
+
+.z-criticalError .z-criticalError-header {
+background: #f6f8f9;
+background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%)!important;
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(50%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9))!important;
+background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%)!important;
+background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%)!important;
+background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%)!important;
+background: linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%)!important;
+-pie-background: linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%)!important;
+}
+
+.z-criticalError .btn {
+background: #f3f3f3;
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3f3f3), color-stop(50%, #dddddd), color-stop(50%, #d2d2d2), color-stop(100%, #dfdfdf));
+background: -webkit-linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+background: -moz-linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+background: -ms-linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+background: -o-linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+background: linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+-pie-background: linear-gradient(top, #f3f3f3 0%, #dddddd 50%, #d2d2d2 50%, #dfdfdf 100%);
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+}
+
+.z-criticalError .btn:hover {
+background: #e5e5e5;
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e5e5e5), color-stop(50%, #d1d1d1), color-stop(50%, #c4c4c4), color-stop(100%, #b8b8b8));
+background: -webkit-linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+background: -moz-linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+background: -ms-linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+background: -o-linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+background: linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+-pie-background: linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 100%);
+}
+
+.z-criticalError .btn:active {
+-moz-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
+-webkit-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
+box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
+}

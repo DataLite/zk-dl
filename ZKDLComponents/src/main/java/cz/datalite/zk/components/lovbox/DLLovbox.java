@@ -239,7 +239,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws Exception
      */
     public void init() throws Exception {
-        popup.setWidth("500px");
+        listbox.setWidth("500px");
         popup.setVflex("min");
 
         if ( paging != null && pageSize != null ) {

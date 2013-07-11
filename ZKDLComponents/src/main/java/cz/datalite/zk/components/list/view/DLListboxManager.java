@@ -75,13 +75,14 @@ public class DLListboxManager extends XulElement {
     }
 
     public String getFilterTooltip() {
-        final List<String> filters = controller.getFilters();
         StringBuilder sb = new StringBuilder();
 
-
-        if ( !filters.isEmpty() ) {
-            for ( String filter : filters ) {
-                sb.append( filter ).append( ", " );
+        if (controller != null) {
+            List<String> filters = controller.getFilters();
+            if ( !filters.isEmpty() ) {
+                for ( String filter : filters ) {
+                    sb.append( filter ).append( ", " );
+                }
             }
         }
 
