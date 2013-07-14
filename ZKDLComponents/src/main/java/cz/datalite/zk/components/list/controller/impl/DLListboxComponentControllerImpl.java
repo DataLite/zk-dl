@@ -41,7 +41,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLListboxComponentControllerImpl.class );
     
     // master controller
-    protected final DLListboxExtController masterController;
+    protected final DLListboxExtController<T> masterController;
     // model
     /** data model - empty list on start */
     protected List<T> listboxModel = new ArrayList<T>();
@@ -52,6 +52,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     /** renderer template for changing when order of the column is changed */
     @Deprecated
     protected Listitem renderTemplate;
+    /** renderer template for changing when order of the column is changed (new binding) */
+    protected final Template template;
     /** map model - cell in the renderer because of breaking and creating relations */
     @Deprecated
     protected final Map<DLColumnUnitModel, Listcell> rendererCellTemplates = new HashMap<DLColumnUnitModel, Listcell>();
@@ -72,16 +74,14 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     /** local flag used to enable/disable emitting the event on the select. */
     protected boolean notifyOnSelect = true;
 
-    @SuppressWarnings( "unchecked" )
-    public DLListboxComponentControllerImpl( final DLListboxExtController masterController, final DLColumnModel columnModel, final DLListbox listbox, final boolean autoinit ) {
+    public DLListboxComponentControllerImpl( final DLListboxExtController<T> masterController, final DLColumnModel columnModel, final DLListbox listbox, final boolean autoinit ) {
         this.masterController = masterController;
         this.columnModel = columnModel;
         this.listbox = listbox;
         this.listbox.setController( DLListboxComponentControllerImpl.this );
-
+     
         // on select updates model
-        listbox.addEventListener( Events.ON_SELECT, new org.zkoss.zk.ui.event.EventListener() {
-
+        listbox.addEventListener( Events.ON_SELECT, new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) throws Exception {
                 try {
                     // ignore events from method on init render
@@ -91,10 +91,11 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                     notifyOnSelect = false;
 
                     T selectedItem;
-                    if ( listbox.getSelectedIndex() == -1 )
+                    if ( listbox.getSelectedIndex() == -1 ) {
                         selectedItem = null;
-                    else
+                    } else {
                         selectedItem = listboxModel.get( listbox.getSelectedIndex() );
+                    }
 
                     // multiple selected items
                     final Set<T> selectedItems = new HashSet<T>();
@@ -114,31 +115,47 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         } );
 
         // updates filter if onEasyFilter is captured
-        listbox.addEventListener( "onEasyFilter", new org.zkoss.zk.ui.event.EventListener() {
-
+        listbox.addEventListener( "onEasyFilter", new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
                 masterController.getEasyFilterController().onEasyFilter();
             }
         } );
 
         // updates filter if onEasyFilterClear is captured
-        listbox.addEventListener( "onEasyFilterClear", new org.zkoss.zk.ui.event.EventListener() {
-
+        listbox.addEventListener( "onEasyFilterClear", new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) {
                 masterController.getEasyFilterController().onClearEasyFilter( true );
             }
         } );
         
         // direct export listener
-        listbox.addEventListener(DLListbox.ON_DIRECT_EXPORT, new org.zkoss.zk.ui.event.EventListener() {
-
+        listbox.addEventListener(DLListbox.ON_DIRECT_EXPORT, new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent(Event event) throws Exception {
                 masterController.onDirectExport();
             }
         });
 
+        // init default headers model
         defaultHeaders.addAll( listbox.getListheaders() );
+        
+        // init column model
         initListheaderModels( listbox.getListheaders(), autoinit );
+        
+        // test if the component is written using new databinding
+        // if so, initiate it properly
+        Set<String> templates = listbox.getTemplateNames();
+        
+        if (templates.isEmpty()) {
+        	this.template = null;
+        } else if (templates.size() > 1) {        	
+			throw new RuntimeException("Only one template element is allowed as direct child of listbox element. Check zul file.");
+		} else if (templates.size() == 1) {
+			// zul uses new databinding, list of cells is defined as template
+			this.template = listbox.getTemplate(templates.iterator().next());
+			this.setRendererTemplate(this.template);						
+		} else {
+			this.template = null;
+		}
     }
 
     public void onSort( final DLListheader listheader ) {
@@ -204,9 +221,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     public void onCreate() {
         // allocate the array of indicies
-        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
-            listcellIndicies.add( null );
-        }
+//        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
+//            listcellIndicies.add( null );
+//        }
         
         masterController.onCreate();
     }
@@ -220,11 +237,12 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     public void fireDataChanges() {
         if ( listboxModel != null ) {
 
-            if ( ZKBinderHelper.version( listbox ) == 1 )
+            if ( ZKBinderHelper.version( listbox ) == 1 ) {
                 listbox.setListModel( listboxModel );
-            else if ( ZKBinderHelper.version( listbox ) == 2 )
+            } else if ( ZKBinderHelper.version( listbox ) == 2 ) {
                 // notify the change on the model
                 ZKBinderHelper.notifyChange( listbox, this, "listboxModel" );
+            }
 
             // if selected item is null or not in new list and we should select first row
             if ( listbox.isSelectFirstRow() && !listboxModel.contains( getSelectedItem() ) && listboxModel.size() > 0 ) {
@@ -237,7 +255,14 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     public void fireColumnModelChanges() {
         initListheaderModels( defaultHeaders, true );
-        initRendererTemplate( defaultHeaders, defaultRendererCellTemplates );
+
+		if (ZKBinderHelper.version(listbox) == 1) {
+			// if using old style template, init model from cell template 
+			this.initRendererTemplate(this.defaultHeaders, this.defaultRendererCellTemplates);
+		} else if (ZKBinderHelper.version(listbox) == 2) {
+			// otherwise init model from template
+			this.setRendererTemplate(this.template);
+		}
     }
 
     private void initListheaderModels( final List<DLListheader> headers, final boolean autoinit ) {
@@ -263,12 +288,13 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         // update order of listheaders
         updateListhead();
         
-        if ( ZKBinderHelper.version( listbox ) == 1 )
+        if ( ZKBinderHelper.version( listbox ) == 1 ) {
             // if using old style template, update it
             updateTemplateVersion1();
-        else if ( ZKBinderHelper.version( listbox ) == 2 )
+        } else if ( ZKBinderHelper.version( listbox ) == 2 ) {
             // otherwise update model
             updateTemplateVersion2();
+        }
 
         // clear rendered items
         listbox.getItems().clear();
@@ -279,8 +305,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     
     /** update the template if it uses old data binding (v1.0) */
     private void updateTemplateVersion1() {
-        if ( renderTemplate == null )
+        if ( renderTemplate == null ) {
             throw new UiException( "Template is not set. Is there data binding set on the component correctly?" );
+        }
 
         // remove all children
         renderTemplate.getChildren().clear();
@@ -290,21 +317,26 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         Collections.sort( orderedModel );
 
         for ( DLColumnUnitModel unit : orderedModel ) {
-            if ( unit.isVisible() )
+            if ( unit.isVisible() ) {
                 renderTemplate.appendChild( rendererCellTemplates.get( unit ) );
+            }
         }
     }
     
     /** update the template if it uses new data binding (v2.0) */
     private void updateTemplateVersion2() {
         final List<DLColumnUnitModel> unorderedModel = new LinkedList( columnModel.getColumnModels() );
+        
+        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
+            listcellIndicies.add( null );
+        }
 
         // update the listcell mapping
         // points to the first unused field
         int max = 0;
         for ( int i = 0; i < unorderedModel.size(); ++i ) {
             if ( unorderedModel.get( i ).isVisible() ) {
-                // the order is indexed from 1
+                // the order is indexed from 1            	
                 listcellIndicies.set( unorderedModel.get( i ).getOrder() - 1, i );
                 // update index of max
                 max = unorderedModel.get( i ).getOrder() > max ? unorderedModel.get( i ).getOrder() : max;
@@ -360,8 +392,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     @SuppressWarnings( "unchecked" )
     public void setRendererTemplate( final Listitem item ) {
         renderTemplate = listbox.getItemAtIndex( 0 );
-        for ( final Component cmp : renderTemplate.getChildren() )
+        for ( final Component cmp : renderTemplate.getChildren() ) {
             defaultRendererCellTemplates.add( ( Listcell ) cmp );
+        }
         initRendererTemplate( listbox.getListheaders(), defaultRendererCellTemplates );
     }
     
@@ -382,7 +415,6 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 return;
             }
             
-            
             TemplateInfo info = ( TemplateInfo ) ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
             
             List<NodeInfo> nodes = info.getChildren();
@@ -391,7 +423,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             final List<NodeInfo> cellTemplates = new ArrayList<NodeInfo>();
             cellTemplates.addAll( listcells );
             
-            initTemplate( listbox.getListheaders(), cellTemplates );
+            initTemplate( defaultHeaders, cellTemplates );
             
         } catch ( Exception ex ) {
             LOGGER.error( "Template couldn't be loaded from the databinding.", ex );
@@ -545,9 +577,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                     throw new IllegalArgumentException("Item " + sel + " for selection not found in the model.");
                 listbox.addItemToSelection(listbox.getItemAtIndex(index));
             }
-            if (selectedItem == null)
+            if (selectedItem == null) {
                 listbox.clearSelection();
-            else {
+            } else {
                 int index = listboxModel.indexOf(selectedItem);
                 if (index == -1)
                     throw new IllegalArgumentException("selectedItem " + selectedItem + " not found in the model.");
@@ -604,8 +636,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         int index = listboxModel.indexOf(item);
 
-        if (index == -1)
-        {
+        if (index == -1) {
             // if the listbox model is not live (i.e. holds only copy of original list), we need to modify it as well
             if (listboxModel.getInnerList() != getListboxModel())
                 getListboxModel().add(0, item);
@@ -615,9 +646,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             setSelected(item);
 
             return false;
-        }
-        else
-        {
+		} else {
             // if the listbox model is not live (i.e. holds only copy of original list), we need to update it as well
             if (listboxModel.getInnerList() != getListboxModel())
                 getListboxModel().set(index, item);

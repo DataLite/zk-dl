@@ -124,7 +124,7 @@ public abstract class DLComboboxGeneralController<T> implements DLComboboxExtCon
     public void fireParentChanges( final Cascadable parent ) {
         model.setFilter( cascadeUtil.getParentColumn( parent ), parent.getSelectedItem() );
         refreshModel();
-        System.out.println( "new model size is " + model.getModel().size() );
+        // System.out.println( "new model size is " + model.getModel().size() );
 
         final Object entity = !model.getModel().isEmpty() && selectFirstOnCascade ? model.getModel().get( 0 ) : DLSelectedComboitemConverter.DUMMY;
 

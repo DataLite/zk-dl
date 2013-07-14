@@ -427,12 +427,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
      * @param o order
      * @return -1 if first less then other, 0 if same, 1 otherwise.
      */
-    public int compareTo(DLColumnUnitModel o)
-    {
-        if (o == null)
-            return 0;
-        return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
-    }
+	public int compareTo(DLColumnUnitModel o) {
+		if (o == null)
+			return 0;
+		return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
+	}
 
     public Composer<?> getController() {
         return controller;
@@ -456,5 +455,16 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
 	public void setExportColumn(String exportColumn) {
 		this.exportColumn = exportColumn;
-	}   
+	}  
+	  
+	@Override
+	public String toString() {
+		return "DLColumnUnitModel [column=" + column + ", columnType=" + columnType + ", converter=" + converter
+				+ ", controller=" + controller + ", label=" + label + ", order=" + order + ", visible=" + visible
+				+ ", sortOrder=" + sortOrder + ", sortType=" + sortType + ", sortColumn=" + sortColumn + ", sortZk="
+				+ sortZk + ", sortable=" + sortable + ", quickFilter=" + quickFilter + ", quickFilterOperator="
+				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", filterOperators="
+				+ filterOperators + ", filterComponentFactory=" + filterComponentFactory + ", exportColumn="
+				+ exportColumn + ", filterCompiler=" + filterCompiler + "]";
+	}	
 }
