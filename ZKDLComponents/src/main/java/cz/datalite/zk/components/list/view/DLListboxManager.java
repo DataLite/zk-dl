@@ -1,6 +1,8 @@
 package cz.datalite.zk.components.list.view;
 
 import cz.datalite.zk.components.list.controller.DLManagerController;
+
+import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -23,20 +25,30 @@ public class DLListboxManager extends XulElement {
         addClientEvent(DLListboxManager.class, "onExportManager", CE_NON_DEFERRABLE);
         addClientEvent(DLListboxManager.class, "onResetFilters", CE_NON_DEFERRABLE);
         addClientEvent(DLListboxManager.class, "onResetAll", CE_NON_DEFERRABLE);
+        
+        /** Reads default configuration for library */
+        columnManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.columnManager", "true"));
+        sortManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.sortManager", "true"));
+        filterManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.filterManager", "true"));
+        exportManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.exportManager", "true"));
+        resetFilters = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetFilters", "false"));
+        resetAll = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetAll", "true"));        
     }
 
     // enable/disable controls
-    protected boolean columnManager = true;
-    protected boolean sortManager = true;
-    protected boolean filterManager = true;
-    protected boolean exportManager = true;
-    protected boolean resetFilters = false;
-    protected boolean resetAll = true;
+    protected static boolean columnManager;
+    protected static boolean sortManager;
+    protected static boolean filterManager;
+    protected static boolean exportManager;
+    protected static boolean resetFilters;
+    protected static boolean resetAll;
 
     protected static final String CONST_FILTER_MANAGER = Labels.getLabel( "listbox.tooltip.filterManager" );
     protected DLManagerController controller;
 
     public DLListboxManager() {
+    	
+    	
         super();
         addEventListener( "onColumnManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
@@ -75,6 +87,9 @@ public class DLListboxManager extends XulElement {
     }
 
     public String getFilterTooltip() {
+    	if (controller == null) {
+    		return "";
+    	}
         final List<String> filters = controller.getFilters();
         StringBuilder sb = new StringBuilder();
 

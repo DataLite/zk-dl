@@ -30,9 +30,22 @@
 	                </row>
 	            </rows>
 	        </grid>
+	        <grid style="margin: 0px 10px; width: 420px;">
+	            <columns>
+	                <column />
+	                <column />
+	            </columns>
+	            <rows>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.saveAgendaSettings')}" />
+	                    <checkbox id="saveAgendaSettingsCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                </row>	                
+	            </rows>
+	        </grid>
 	        
-	        <hbox style="margin: 10px; margin-left: auto;">            	
-            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save')"/>
+	        <hbox style="margin: 10px; margin-left: auto;">
+	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')"/>            	
+            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveAgendaSettings=saveAgendaSettingsCheckbox.checked)"/>
             	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
         	</hbox>
         		        

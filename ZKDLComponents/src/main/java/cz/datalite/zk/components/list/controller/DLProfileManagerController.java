@@ -5,15 +5,15 @@ import cz.datalite.zk.components.list.DLListboxProfile;
 public interface DLProfileManagerController<T> {
 
 	void onLoadProfile();
-	
-	void onSaveProfile();
-	
-	void onEditProfile(boolean create);
-	
-	void onEditProfileOk(DLListboxProfile profile);
-	
-	void onDeleteProfile();
+
+	void onEditProfile(Long idProfile);
+
+	void onEditProfileOk(DLListboxProfile profile, boolean saveAgendaSettings);
+
+	void onDeleteProfile(Long idProfile);
 
 	boolean selectDefaultProfile(boolean onCreate);
+	
+	void fireChanges();
 
 }

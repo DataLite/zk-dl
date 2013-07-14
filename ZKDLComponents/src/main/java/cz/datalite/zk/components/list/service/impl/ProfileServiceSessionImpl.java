@@ -10,7 +10,7 @@ import cz.datalite.zk.components.list.service.ProfileService;
 
 public class ProfileServiceSessionImpl implements ProfileService {
 	
-	public static final String PROFILE_SESS_ATTR = "__dlistbox__profile__";
+	public static final String PROFILE_SESS_ATTR = "__dlListbox__profile__";
 	
 	@Override
 	public List<DLListboxProfile> findAll() {
@@ -45,4 +45,9 @@ public class ProfileServiceSessionImpl implements ProfileService {
 	public void delete(DLListboxProfile dlListboxProfile) {
 		throw new IllegalAccessError("Method not valid for session implementation.");		
 	}
+
+	@Override
+	public DLListboxProfile getByDefault(String dlListboxId) {
+		throw new IllegalAccessError("Method not valid for session implementation.");
+	}	
 }

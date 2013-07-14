@@ -159,6 +159,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      */
     protected void initListbox( final DLListbox comp ) {
         listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp, autoinit );
+        this.autosave = comp.isAutosave();
     }
 
     /**
@@ -203,7 +204,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 						this.profileManagerController.onLoadProfile();
 					}
 				}
-			}
+			} 
 		}
     	
         getListboxController().fireOrderChanges();
@@ -255,6 +256,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         }
         refreshDataModel();
         getListboxController().fireChanges();
+        fireProfileManagerChanges();
         autosaveModel();
     }
 
@@ -330,6 +332,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         
         autosaveModel();
 
+        fireProfileManagerChanges();
         refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)
     }
     
@@ -497,24 +500,17 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public boolean loadModel() {
-    	LOGGER.info("load model stored in session, session = {}", this.getSessionName());
-    	List<DLListboxProfile> profiles = this.profileServiceSessionImpl.findAll(this.getSessionName());
+    	@SuppressWarnings("unchecked")
+		List<DLListboxProfile> profiles = (List<DLListboxProfile>) this.profileServiceSessionImpl.findAll(this.getSessionName());
     	
-    	if (profiles.isEmpty()) {    		
-    		return false;
-    	} else {
-    		this.applyProfile(profiles.get(0));
-    		return true;
-    	}    	
-//        final DLMasterModel loaded = ( DLMasterModel ) org.zkoss.zk.ui.Sessions.getCurrent().getAttribute( getSessionName() + "cache" );
-//        if ( loaded == null ) {
-//            return false;
-//        } else {
-//            model = loaded;
-//            model.getFilterModel().getDefault().clear();
-//            return true;
-//        }
-    }
+		if (profiles.isEmpty()) {
+			return false;
+		} else {
+			LOGGER.info("load model stored in session, session = {}", this.getSessionName());
+			this.applyProfile(profiles.get(0));
+			return true;
+		}
+	}
 
     /**
      * If autoset model then save model.
@@ -560,7 +556,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         
         managerController.fireChanges();        
         quickFilterController.fireChanges();
-        easyFilterController.fireChanges();
+        easyFilterController.fireChanges();        
+        fireProfileManagerChanges();
         
         refreshDataModel();
     }
@@ -571,6 +568,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         quickFilterController.fireChanges();
         easyFilterController.fireChanges();
         managerController.fireChanges();
+        fireProfileManagerChanges();
         
         refreshDataModel();
     }
@@ -675,6 +673,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public DLListbox getListbox() {
         return listboxController.getListbox();
     }
+    
+    public void fireProfileManagerChanges() {
+    	if (this.profileManagerController != null) {
+        	this.profileManagerController.fireChanges();
+        }
+    }
 
     public void setQuickFilter(String column, String value) {
         QuickFilterModel model = getQuickFilterController().getBindingModel();
@@ -732,14 +736,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		String columnModelJsonData = profile.getColumnModelJsonData();
 		JSONObject columnModelJsonObject = null;
 		if (columnModelJsonData != null && columnModelJsonData.length() > 0) {
-			LOGGER.info("Column model JSON: " + columnModelJsonData);		
+			//LOGGER.info("Column model JSON: " + columnModelJsonData);		
 			columnModelJsonObject = (JSONObject) JSONValue.parse(columnModelJsonData);
 		}
 		
 		String filterModelJsonData = profile.getFilterModelJsonData();
 		JSONObject filterModelJsonObject = null;
 		if (filterModelJsonData != null && filterModelJsonData.length() > 0) {
-			LOGGER.info("Filter model JSON: " + filterModelJsonData);		
+			//LOGGER.info("Filter model JSON: " + filterModelJsonData);		
 			filterModelJsonObject = (JSONObject) JSONValue.parse(filterModelJsonData);
 		}		
 		
@@ -776,9 +780,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				String operator = (((JSONObject) filterModelJsonObject.get(column)).get("operator")).toString();
 				Object value1 = (((JSONObject) filterModelJsonObject.get(column)).get("value1"));
 				Object value2 = (((JSONObject) filterModelJsonObject.get(column)).get("value2"));
-//				String type = (((JSONObject) filterModelJsonObject.get(column)).get("type")).toString();
-//				Object typed1Value = ObjectConverter.convert(value1, unit.getColumnType().getName());
-//				Object typed2Value = ObjectConverter.convert(value2, unit.getColumnType().getName()); 
 				
 				NormalFilterUnitModel normalFilterUnitModel = new NormalFilterUnitModel(unit);
 				normalFilterUnitModel.setOperator(DLFilterOperator.strToEnum(operator));
@@ -796,10 +797,11 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
 		// refresh filters (this method also calls refreshDataModel() and autosaveModel()) 		
 		this.onFilterManagerOk(savedModel);
-				
-		if (profile.getColumnsHashCode() == null || columns.hashCode() != profile.getColumnsHashCode()) {			
-			LOGGER.warn("DLListbox columns has changed, profile may not be valid.");
-		}		
+		
+		// TODO inform user that profile may not be valid
+//		if (profile.getColumnsHashCode() == null || columns.hashCode() != profile.getColumnsHashCode()) {			
+//			LOGGER.warn("DLListbox columns has changed, profile may not be valid.");
+//		}		
     }
     
     /**
@@ -808,7 +810,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public DLListboxProfile createProfile() {
     	LOGGER.info("create profile");
     	
-    	DLListboxProfile profile = new DLListboxProfile();
+    	DLListboxProfile profile = new DLListboxProfileImpl();
     	profile.setDlListboxId(this.getSessionName());
     	
     	DLMasterModel masterModel = this.getModel();
@@ -840,8 +842,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	JSONObject json = new JSONObject();
     	json.putAll(allColumnsInfo);
 
-    	LOGGER.info( "Column model JSON: {}", json.toJSONString());
-    	LOGGER.info( "hash: {}", columns.hashCode());
+    	// LOGGER.info( "Column model JSON: {}", json.toJSONString());
+    	// LOGGER.info( "hash: {}", columns.hashCode());
 
     	// data
     	profile.setColumnModelJsonData(json.toJSONString());
@@ -862,8 +864,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     		HashMap<String, Object> filterInfo = new HashMap<String, Object>();
     		filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
     		filterInfo.put("value1", normalFilterUnitModel.getValue(1));
-    		filterInfo.put("value2", normalFilterUnitModel.getValue(2));
-    		// filterInfo.put("type", String.valueOf(normalFilterUnitModel.getType().getName()));	
+    		filterInfo.put("value2", normalFilterUnitModel.getValue(2));    			
 
     		String column = normalFilterUnitModel.getColumn();
     		if (column == null) {    			
@@ -877,7 +878,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	json = new JSONObject();
     	json.putAll(allColumnsInfo);
 
-    	LOGGER.info( "Filter model JSON: {}", json.toJSONString());		
+    	// LOGGER.info( "Filter model JSON: {}", json.toJSONString());		
 
     	// data
     	profile.setFilterModelJsonData(json.toJSONString());	

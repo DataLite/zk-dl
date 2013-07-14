@@ -1,21 +1,22 @@
 package cz.datalite.zk.components.list.controller.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zul.Window;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKDLResourceResolver;
 import cz.datalite.zk.components.list.DLListboxFilterController;
 import cz.datalite.zk.components.list.DLListboxGeneralController;
 import cz.datalite.zk.components.list.DLListboxProfile;
+import cz.datalite.zk.components.list.DLListboxProfileImpl;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLProfileManagerController;
 import cz.datalite.zk.components.list.service.ProfileService;
@@ -28,8 +29,6 @@ import cz.datalite.zk.components.profile.DLProfileManager;
  * provides extended tools.
  */
 public class DLProfileManagerControllerImpl<T> implements DLProfileManagerController<T> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(DLProfileManagerControllerImpl.class);
 
 	// master controller
 	private final DLListboxExtController<T> masterController;
@@ -80,7 +79,9 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 				new DLListboxFilterController<DLListboxProfile>(this.getClass().getName() + "ProfilesLovbox") {
 					@Override
 					protected List<DLListboxProfile> loadData() {
-						return profileService.findAll(masterController.getSessionName());
+						List<DLListboxProfile> profiles = (List<DLListboxProfile>) profileService.findAll(masterController.getSessionName()); 
+						Collections.sort(profiles, new DLListboxProfileImpl().new NameComparator());;
+						return profiles;
 					}
 				});
 
@@ -93,14 +94,11 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 			return false;
 		}
 
-		// TODO findDefault method
-		List<DLListboxProfile> profiles = this.profileService.findAll();
+		DLListboxProfile defaultProfile = this.profileService.getByDefault(masterController.getSessionName());
 
-		for (DLListboxProfile profile : profiles) {
-			if (profile.isDefaultProfile()) {
-				this.profilesCtl.getLovBox().setSelectedItem(profile);
-				return true;
-			}
+		if (defaultProfile != null) {
+			this.profilesCtl.getLovBox().setSelectedItem(defaultProfile);
+			return true;
 		}
 
 		return false;
@@ -116,59 +114,66 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	}
 
 	@Override
-	public void onSaveProfile() {
-		DLListboxProfile selectedProfile = this.profilesCtl.getSelectedItem();
-
-		if (selectedProfile != null) {
-			// save to existing profile			
-			DLListboxProfile profile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
-
-			selectedProfile.setColumnModelJsonData(profile.getColumnModelJsonData());
-			selectedProfile.setFilterModelJsonData(profile.getFilterModelJsonData());
-			selectedProfile.setColumnsHashCode(profile.getColumnsHashCode());			
-			
-			this.profileService.save(profile);
-		} 
-	}
-
-	@Override
-	public void onEditProfile(boolean create) {
-		DLListboxProfile selectedProfile = this.profilesCtl.getSelectedItem();
+	public void onEditProfile(Long idProfile) {
 		final DLListboxProfile editProfile;
 		
-		if (create) {
-			editProfile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
+		if (idProfile == null) {
+			editProfile = new DLListboxProfileImpl();
 		} else {
-			editProfile = selectedProfile;
+			editProfile = this.profileService.findById(idProfile);
 		}
 		
 		final Map<String, Object> args = new HashMap<String, Object>();
-		args.put("profileManagerController", this);
 		args.put("profile", editProfile);
 
-		final org.zkoss.zul.Window win;
-		win = (org.zkoss.zul.Window) ZKDLResourceResolver.resolveAndCreateComponents("listboxProfileEditWindow.zul", null, args);
+		final Window win = (org.zkoss.zul.Window) ZKDLResourceResolver.resolveAndCreateComponents("listboxProfileEditWindow.zul", null, args);
 		
-		final EventListener<Event> listener = new EventListener<Event>() {
+		final EventListener<Event> saveListener = new EventListener<Event>() {
 			public void onEvent(final Event event) {
-				onEditProfileOk(editProfile);
+				onEditProfileOk(editProfile, Boolean.valueOf(event.getData().toString()));
 			}
-		};
+		};        
+		win.addEventListener("onSave", saveListener);
+		
+		final EventListener<Event> deleteListener = new EventListener<Event>() {
+			public void onEvent(final Event event) {
+				onDeleteProfile(editProfile.getId());
+			}
+		};        
+		win.addEventListener("onDelete", deleteListener);
         
-        win.addEventListener( "onSave", listener );
 		win.doHighlighted();
 	}	
 	
 	@Override
-	public void onEditProfileOk(DLListboxProfile profile) {		
+	public void onEditProfileOk(DLListboxProfile profile, boolean saveAgendaSettings) {
+		if (saveAgendaSettings || profile.getId() == null) {
+			DLListboxProfile actualAgendaSettingProfile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
+			profile.setColumnModelJsonData(actualAgendaSettingProfile.getColumnModelJsonData());
+			profile.setFilterModelJsonData(actualAgendaSettingProfile.getFilterModelJsonData());
+			profile.setColumnsHashCode(actualAgendaSettingProfile.getColumnsHashCode());
+			profile.setDlListboxId(actualAgendaSettingProfile.getDlListboxId());
+		}
+		
 		this.profileService.save(profile);
 		
 		this.profilesCtl.getListboxController().refreshDataModel();
-		this.profilesCtl.setSelectedItem(profile);
+		
+		if (saveAgendaSettings) {
+			this.profilesCtl.setSelectedItem(profile);
+		}
 	}
 
 	@Override
-	public void onDeleteProfile() {
-		this.profileService.delete(this.profilesCtl.getSelectedItem());		
-	}	
+	public void onDeleteProfile(Long idProfile) {				
+		this.profileService.delete(new DLListboxProfileImpl(idProfile));
+		this.profilesCtl.getListboxExtController().setSelected(null);
+		this.profilesCtl.getListboxController().refreshDataModel();
+	}
+
+	@Override
+	public void fireChanges() {		
+		this.profilesCtl.getListboxExtController().setSelected(null);
+	}
+	
 }
