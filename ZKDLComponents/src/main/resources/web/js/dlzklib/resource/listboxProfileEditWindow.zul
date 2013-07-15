@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?xel-method prefix="zkdl" name="i" class="cz.datalite.helpers.ZKDLResourceResolver" signature="java.lang.String resolveImage(java.lang.String)"?>
+
+<?page title="Listbox profile edit"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
+    	closable="true" id="listboxProfileEditWindow" title="Editace profilu" border="normal" width="460px">  
+    	
+    	<vlayout form="@id('fx') @load(vm.profile) @save(vm.profile, before='save')">
+    	
+        	<grid style="margin: 10px; width: 420px;">
+	            <columns>
+	                <column />
+	                <column />
+	            </columns>
+	            <rows>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.name')}" />
+	                    <textbox value="@bind(fx.name)" width="90%" constraint="no empty" maxlength="16"/>
+	                </row>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.public')}" />
+	                    <checkbox checked="@bind(fx.publicProfile)" width="90%" />
+	                </row>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.default')}" />
+	                    <checkbox checked="@bind(fx.defaultProfile)" width="90%" />
+	                </row>
+	            </rows>
+	        </grid>
+	        <grid style="margin: 0px 10px; width: 420px;">
+	            <columns>
+	                <column />
+	                <column />
+	            </columns>
+	            <rows>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.saveAgendaSettings')}" />
+	                    <checkbox id="saveAgendaSettingsCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                </row>	                
+	            </rows>
+	        </grid>
+	        
+	        <hbox style="margin: 10px; margin-left: auto;">
+	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')"/>            	
+            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveAgendaSettings=saveAgendaSettingsCheckbox.checked)"/>
+            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
+        	</hbox>
+        		        
+        </vlayout>      
+    </window>
+</zk>

@@ -80,6 +80,9 @@ public class DLListheader extends Listheader {
     
     /** controller */
     protected DLListboxComponentController controller;
+    
+    /** default visibility (defined in zul file) */
+    private Boolean defaultVisible = null;
 
     public void initModel() {
         model.setLabel( getLabel() );
@@ -87,7 +90,7 @@ public class DLListheader extends Listheader {
         model.setSortZk( sortZk );
         model.setSortType( defaultSort );
         model.setSortColumn( sortColumn );
-        model.setVisible( isVisible() );
+        model.setVisible( (defaultVisible != null) ? defaultVisible : isVisible() );
         model.setColumn( column );
         model.setExportColumn( exportColumn );
         model.setColumnType( columnType );
@@ -339,6 +342,14 @@ public class DLListheader extends Listheader {
         if ( this.filterCompiler == null ) {
             this.filterCompiler = filterCompiler;
         }
+    }
+    
+    @Override
+    public boolean setVisible(boolean visible) {
+    	if (this.defaultVisible == null) {
+    		this.defaultVisible = visible;
+    	}
+    	return super.setVisible(visible);
     }
 
     public void setFilterCompiler( final String filterCompilerClass ) {

@@ -27,6 +27,7 @@ import org.zkoss.zul.*;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -117,6 +118,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected boolean autocomplete = false;
     /** Watermark in input field */
     protected String watermark;
+    /** Components to add before or after listbox in popup window */
+    protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
 
     /**
      * Create component without any parameter
@@ -231,6 +234,16 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             paging.setAutohide(true);
             popup.appendChild( paging );
         }
+        
+        if (!additionalComponents.isEmpty()) {
+        	for (DLLovboxPopupComponentPosition position : additionalComponents.keySet()) {
+        		if (position.equals(DLLovboxPopupComponentPosition.POSITION_TOP)) {
+        			popup.insertBefore(additionalComponents.get(position), filter != null ? filter : listbox);
+        		} else if (position.equals(DLLovboxPopupComponentPosition.POSITION_BOTTOM)) {        			
+        			popup.appendChild(additionalComponents.get(position));
+        		}
+        	}
+        }        
     }
 
     /**
@@ -752,5 +765,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         super.service(request, everError);
+    }
+    
+    public void addComponentToPopup(DLLovboxPopupComponentPosition position, Component comp) {
+    	this.additionalComponents.put(position, comp);
     }
 }

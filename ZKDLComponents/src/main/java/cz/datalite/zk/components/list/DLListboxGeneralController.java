@@ -14,7 +14,10 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.QuickFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.model.DLFilterModel;
 import cz.datalite.zk.components.list.model.DLMasterModel;
+import cz.datalite.zk.components.list.service.ProfileService;
+import cz.datalite.zk.components.list.service.impl.ProfileServiceSessionImpl;
 import cz.datalite.zk.components.list.view.DLListControl;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListboxManager;
@@ -22,17 +25,20 @@ import cz.datalite.zk.components.list.view.DLQuickFilter;
 import cz.datalite.zk.components.paging.DLPaging;
 import cz.datalite.zk.components.paging.DLPagingController;
 import cz.datalite.zk.components.paging.DLPagingModel;
+import cz.datalite.zk.components.profile.DLProfileManager;
+
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
+
+import org.zkoss.json.JSONObject;
+import org.zkoss.json.JSONValue;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
-import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.Paging;
 
 import java.util.*;
@@ -61,8 +67,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected DLPagingController pagingController = new DLDefaultPagingControllerImpl();
     /** Controller for the easy filter components */
     protected DLEasyFilterController easyFilterController = new DLDefaultEasyFilterControllerImpl();
-    /** Controller for the quick filter comopnent */
+    /** Controller for the quick filter component */
     protected DLQuickFilterController quickFilterController = new DLDefaultQuickFilterControllerImpl();
+    /** Controller for the profile component */
+    protected DLProfileManagerController<T> profileManagerController;
     /** main entity class */
     protected final Class<T> entityClass;
     /** automatically save model */
@@ -75,7 +83,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
     /** model lock - if model is locked it cannot be changed */
     protected boolean lock = false;
-
+    
+    /** profile service used to load/store profiles from/to session */
+    private ProfileService profileServiceSessionImpl;
+    
     /**
      * Create instance of the general controller
      * @param identifier identifier which is used to saving model to the session - it must be unique in the session
@@ -88,9 +99,15 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             this.entityClass = clazz;
         }
         this.identifier = identifier;
-        if ( autosave ) {
-            autoinit ^= loadModel();
-        }
+      
+        this.profileServiceSessionImpl = new ProfileServiceSessionImpl();
+        
+        // always init model, parameters contained in profile are applied to it 
+        autoinit = true;
+        // if ( autosave ) {
+        //    autoinit ^= loadModel();
+        // }
+        
         easyFilterController = new DLEasyFilterControllerImpl( this, model.getFilterModel().getEasy() );
     }
 
@@ -98,6 +115,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         this( identifier, null );
     }
 
+    @SuppressWarnings("unchecked")
+	@Override
     public void doAfterCompose( final Component comp ) {
         if ( comp instanceof DLListbox ) {
             initListbox( ( DLListbox ) comp );
@@ -107,6 +126,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             initManager( ( DLListboxManager ) comp );
         } else if ( comp instanceof DLQuickFilter ) {
             initQuickFilter( ( DLQuickFilter ) comp );
+        } else if ( comp instanceof DLProfileManager ) {
+			initProfileManager((DLProfileManager<T>) comp);
         } else if ( comp instanceof DLListControl ) { // řídící komponenta
             final DLListControl listControl = ( DLListControl ) comp;
             listControl.init();
@@ -138,12 +159,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      */
     protected void initListbox( final DLListbox comp ) {
         listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp, autoinit );
-
-        // test if the component is written using new databinding
-        // if so, initiate it properly
-        Template template = comp.getTemplate( "model" );
-        if ( template != null )
-            getListboxController().setRendererTemplate( template );
+        this.autosave = comp.isAutosave();
     }
 
     /**
@@ -161,8 +177,36 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected void initQuickFilter( final DLQuickFilter comp ) {
         quickFilterController = new DLQuickFilterControllerImpl( this, model.getFilterModel().getQuick(), comp );
     }
+    
+    /**
+     * Initialize profile manager component
+     * @param comp profile manager component
+     */
+	protected void initProfileManager(final DLProfileManager<T> comp) {
+		this.profileManagerController = new DLProfileManagerControllerImpl<T>(this, comp, this.getProfileService());
+    }
+	
+	/**
+     * Method can be overridden to inject profile service into this controller
+     */
+	protected ProfileService getProfileService() {
+		return null;
+    }
 
-    public void onCreate() {
+	public void onCreate() {
+		if (!lock) {
+			// try to load model in session if any
+			boolean modelInSession = this.loadModel();
+
+			if (!modelInSession) {
+				if (this.profileManagerController != null) {
+					if (this.profileManagerController.selectDefaultProfile(true)) {
+						this.profileManagerController.onLoadProfile();
+					}
+				}
+			} 
+		}
+    	
         getListboxController().fireOrderChanges();
         quickFilterController.fireChanges();
         managerController.fireChanges();
@@ -212,6 +256,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         }
         refreshDataModel();
         getListboxController().fireChanges();
+        fireProfileManagerChanges();
         autosaveModel();
     }
 
@@ -287,9 +332,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         
         autosaveModel();
 
+        fireProfileManagerChanges();
         refreshDataModel(); // JB if data for hidden columns are not available, need to reload data (not only set model)
     }
-
+    
     public void onFilterManagerOk( final NormalFilterModel data ) {
         if ( lock ) {
             return;
@@ -409,7 +455,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         return loadDistinctColumnValues( column, filterModel, firstRow, rowCount, Collections.singletonList( sort ) );
     }
 
-    public Class getEntityClass() {
+    public Class<?> getEntityClass() {
         return entityClass;
     }
 
@@ -427,7 +473,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void registerEasyFilterOnFilter( final Component comp, final String event ) {
         getListboxController().addForward( event, comp, "onEasyFilter" );
-
     }
 
     public void registerEasyFilterVariable( final String compId, final String variableName ) {
@@ -455,15 +500,17 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public boolean loadModel() {
-        final DLMasterModel loaded = ( DLMasterModel ) org.zkoss.zk.ui.Sessions.getCurrent().getAttribute( getSessionName() + "cache" );
-        if ( loaded == null ) {
-            return false;
-        } else {
-            model = loaded;
-            model.getFilterModel().getDefault().clear();
-            return true;
-        }
-    }
+    	@SuppressWarnings("unchecked")
+		List<DLListboxProfile> profiles = (List<DLListboxProfile>) this.profileServiceSessionImpl.findAll(this.getSessionName());
+    	
+		if (profiles.isEmpty()) {
+			return false;
+		} else {
+			LOGGER.info("load model stored in session, session = {}", this.getSessionName());
+			this.applyProfile(profiles.get(0));
+			return true;
+		}
+	}
 
     /**
      * If autoset model then save model.
@@ -475,7 +522,11 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public void saveModel() {
-        Executions.getCurrent().getDesktop().getSession().setAttribute( getSessionName() + "cache", model );
+        // Executions.getCurrent().getDesktop().getSession().setAttribute( getSessionName() + "cache", model );
+    	if (!lock) {
+    		LOGGER.info("save model to session, session = {}", this.getSessionName());
+    		this.profileServiceSessionImpl.save(this.createProfile());
+    	}
     }
 
     public void setAutoSaveModel( final boolean autosave ) {
@@ -486,7 +537,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * Returns session name for save/load model
      * @return session name
      */
-    protected String getSessionName() {
+    @Override
+    public String getSessionName() {
         return getClass().getName() + "#" + org.zkoss.zk.ui.Executions.getCurrent().getDesktop().getRequestPath() + "$" + identifier;
     }
 
@@ -496,23 +548,29 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void clearAllModel() {
         model.clear();
-        autosaveModel();
-
+        
         getListboxController().fireColumnModelChanges();
-        getListboxController().fireOrderChanges();
-        getListboxController().fireChanges();
-        managerController.fireChanges();
-        refreshDataModel();
+        getListboxController().fireOrderChanges();        
+        
+        autosaveModel();
+        
+        managerController.fireChanges();        
         quickFilterController.fireChanges();
-        easyFilterController.fireChanges();
+        easyFilterController.fireChanges();        
+        fireProfileManagerChanges();
+        
+        refreshDataModel();
     }
 
     public void clearFilterModel() {
         model.getFilterModel().clear();
-        refreshDataModel();
+        
         quickFilterController.fireChanges();
         easyFilterController.fireChanges();
         managerController.fireChanges();
+        fireProfileManagerChanges();
+        
+        refreshDataModel();
     }
 
     public void addDefaultFilter( final String property, final DLFilterOperator operator, final Object value1, final Object value2 ) {
@@ -551,8 +609,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         boolean found = getListboxController().updateItem(item);
 
         // update paging (+1 row)
-        if (!found)
-        {
+        if (!found) {
             model.getPagingModel().setTotalSize(model.getPagingModel().getTotalSize()+1,
                     getListboxController().getListbox().getModel().getSize());
             pagingController.fireChanges();
@@ -616,6 +673,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public DLListbox getListbox() {
         return listboxController.getListbox();
     }
+    
+    public void fireProfileManagerChanges() {
+    	if (this.profileManagerController != null) {
+        	this.profileManagerController.fireChanges();
+        }
+    }
 
     public void setQuickFilter(String column, String value) {
         QuickFilterModel model = getQuickFilterController().getBindingModel();
@@ -657,5 +720,169 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public static class EventListeners extends LinkedList<EventListener> {
+    }
+    
+    /**
+     * This method applies {@link DLListboxProfile} to agenda.
+     */
+    public void applyProfile(DLListboxProfile profile) {
+    	LOGGER.info("applyProfile = " + profile);
+    	
+    	// reset to default
+    	this.model.clear();
+        this.getListboxController().fireColumnModelChanges();
+    	
+    	// load new model profile
+		String columnModelJsonData = profile.getColumnModelJsonData();
+		JSONObject columnModelJsonObject = null;
+		if (columnModelJsonData != null && columnModelJsonData.length() > 0) {
+			//LOGGER.info("Column model JSON: " + columnModelJsonData);		
+			columnModelJsonObject = (JSONObject) JSONValue.parse(columnModelJsonData);
+		}
+		
+		String filterModelJsonData = profile.getFilterModelJsonData();
+		JSONObject filterModelJsonObject = null;
+		if (filterModelJsonData != null && filterModelJsonData.length() > 0) {
+			//LOGGER.info("Filter model JSON: " + filterModelJsonData);		
+			filterModelJsonObject = (JSONObject) JSONValue.parse(filterModelJsonData);
+		}		
+		
+		DLMasterModel masterModel = this.getModel();
+		DLColumnModel columnModel = masterModel.getColumnModel();
+		
+		NormalFilterModel savedModel = new NormalFilterModel();
+		
+		int i = 0;
+		List<String> columns = new ArrayList<String>();
+		
+		for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
+			String column = unit.getColumn();
+			if (column == null) {				
+				column = "column" + i;
+			}
+			
+			if (columnModelJsonObject != null && columnModelJsonObject.containsKey(column)) {				
+				String visible = (((JSONObject) columnModelJsonObject.get(column)).get("visible")).toString();
+				String order = (((JSONObject) columnModelJsonObject.get(column)).get("order")).toString();
+				String sortOrder = (((JSONObject) columnModelJsonObject.get(column)).get("sortOrder")).toString();
+				String sortType = (((JSONObject) columnModelJsonObject.get(column)).get("sortType")).toString();
+				
+				unit.setVisible(Boolean.valueOf(visible));
+				unit.setOrderDirectly(Integer.valueOf(order));		
+				unit.setSortOrder(Integer.valueOf(sortOrder));
+				unit.setSortType(DLSortType.getByStringValue(sortType));				
+			} 
+			
+			/*
+			 * FILTER 
+			 */
+			if (filterModelJsonObject != null && filterModelJsonObject.containsKey(column)) {
+				String operator = (((JSONObject) filterModelJsonObject.get(column)).get("operator")).toString();
+				Object value1 = (((JSONObject) filterModelJsonObject.get(column)).get("value1"));
+				Object value2 = (((JSONObject) filterModelJsonObject.get(column)).get("value2"));
+				
+				NormalFilterUnitModel normalFilterUnitModel = new NormalFilterUnitModel(unit);
+				normalFilterUnitModel.setOperator(DLFilterOperator.strToEnum(operator));
+				normalFilterUnitModel.setValue(1, value1);
+				normalFilterUnitModel.setValue(2, value2);			
+				savedModel.add(normalFilterUnitModel);
+			}
+			
+			columns.add(column);
+			i++;
+		}
+		
+		// notify view about new model load
+		this.getListboxController().fireOrderChanges();
+
+		// refresh filters (this method also calls refreshDataModel() and autosaveModel()) 		
+		this.onFilterManagerOk(savedModel);
+		
+		// TODO inform user that profile may not be valid
+//		if (profile.getColumnsHashCode() == null || columns.hashCode() != profile.getColumnsHashCode()) {			
+//			LOGGER.warn("DLListbox columns has changed, profile may not be valid.");
+//		}		
+    }
+    
+    /**
+     * This method creates {@link DLListboxProfile} from actual agenda settings.
+     */    
+    public DLListboxProfile createProfile() {
+    	LOGGER.info("create profile");
+    	
+    	DLListboxProfile profile = new DLListboxProfileImpl();
+    	profile.setDlListboxId(this.getSessionName());
+    	
+    	DLMasterModel masterModel = this.getModel();
+    	DLColumnModel columnModel = masterModel.getColumnModel(); // linkedlist		
+    	DLFilterModel filterModel = masterModel.getFilterModel();
+
+    	HashMap<String, Map<String, Object>> allColumnsInfo = new HashMap<String, Map<String,Object>>();
+    	List<String> columns = new ArrayList<String>();
+
+    	int i = 0;
+    	for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
+    		HashMap<String, Object> columnInfo = new HashMap<String, Object>();
+    		columnInfo.put("visible", String.valueOf(unit.isVisible()));
+    		columnInfo.put("order", String.valueOf(unit.getOrder().toString()));
+    		columnInfo.put("sortOrder", String.valueOf(unit.getSortOrder()));
+    		columnInfo.put("sortType", unit.getSortType().getStringValue());
+
+    		String column = unit.getColumn();
+    		if (column == null) {    			
+    			column = "column" + i;
+    		}
+    		
+    		columns.add(column);
+        	allColumnsInfo.put(column, columnInfo);    		
+    			
+    		i++;
+    	}		
+
+    	JSONObject json = new JSONObject();
+    	json.putAll(allColumnsInfo);
+
+    	// LOGGER.info( "Column model JSON: {}", json.toJSONString());
+    	// LOGGER.info( "hash: {}", columns.hashCode());
+
+    	// data
+    	profile.setColumnModelJsonData(json.toJSONString());
+
+    	// hash
+    	profile.setColumnsHashCode(columns.hashCode());
+
+    	/**
+    	 * FILTER
+    	 */		
+    	allColumnsInfo = new HashMap<String, Map<String,Object>>();		
+
+    	i = 0;
+    	Iterator<NormalFilterUnitModel> nfumIterator = filterModel.getNormal().iterator();
+
+    	while (nfumIterator.hasNext()) {
+    		NormalFilterUnitModel normalFilterUnitModel = nfumIterator.next();
+    		HashMap<String, Object> filterInfo = new HashMap<String, Object>();
+    		filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
+    		filterInfo.put("value1", normalFilterUnitModel.getValue(1));
+    		filterInfo.put("value2", normalFilterUnitModel.getValue(2));    			
+
+    		String column = normalFilterUnitModel.getColumn();
+    		if (column == null) {    			
+    			column = "column" + i;
+    		}
+
+    		allColumnsInfo.put(column, filterInfo);	
+    		i++;
+    	}		
+
+    	json = new JSONObject();
+    	json.putAll(allColumnsInfo);
+
+    	// LOGGER.info( "Filter model JSON: {}", json.toJSONString());		
+
+    	// data
+    	profile.setFilterModelJsonData(json.toJSONString());	
+
+    	return profile;
     }
 }

@@ -5,6 +5,7 @@ import cz.datalite.zk.components.list.DLListboxController;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.model.DLColumnModel;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @param <T> main entity type
  * @author Karel Cemus
  */
-public interface DLListboxExtController<T> extends DLListboxController<T>, Composer {
+public interface DLListboxExtController<T> extends DLListboxController<T>, Composer<Component> {
 
     /**
      * Reacts on paging model change.
@@ -77,7 +78,7 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * Returns instance of type of the main entity
      * @return class of entity type
      */
-    Class getEntityClass();
+    Class<?> getEntityClass();
 
     /**
      * Returns column distinct list.
@@ -110,7 +111,7 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * Returns window controller - main controller on the page.
      * @return window controller
      */
-    Composer getWindowCtl();
+    Composer<Component> getWindowCtl();
 
     /**
      * Reacts on onSelect event.
@@ -161,4 +162,10 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * The result is file send to the user
      */
     void onDirectExport();
+
+    /**
+     * Returns session name
+     * @return session name
+     */
+	String getSessionName();
 }

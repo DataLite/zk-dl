@@ -74,4 +74,8 @@ public enum DLFilterOperator {
     public int getArity() {
         return arity;
     }
+
+	public String getShortName() {
+		return shortName;
+	}
 }

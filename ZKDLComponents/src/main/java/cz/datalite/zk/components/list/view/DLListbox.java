@@ -41,6 +41,9 @@ public class DLListbox extends Listbox {
 
     /** should be automatically selected first row */
     private boolean selectFirstRow = true;
+    
+    /** autosave model (columns and filters settings) to session */
+    private boolean autosave = true;
 
     @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
     public DLListbox() {
@@ -290,14 +293,20 @@ public class DLListbox extends Listbox {
         }
     }
 
-    @Override
-    public void setDisabled( boolean disabled ) {
-        super.setDisabled( disabled );
-        
-        for( Listitem item : getItems() ) 
-            item.setDisabled( disabled );
-    }
-    
-    
+	@Override
+	public void setDisabled(boolean disabled) {
+		super.setDisabled(disabled);
 
+		for (Listitem item : getItems()) {
+			item.setDisabled(disabled);
+		}
+	}
+
+	public boolean isAutosave() {
+		return autosave;
+	}
+
+	public void setAutosave(boolean autosave) {
+		this.autosave = autosave;
+	}
 }
