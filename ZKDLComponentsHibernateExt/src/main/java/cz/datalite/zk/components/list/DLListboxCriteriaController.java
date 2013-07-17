@@ -35,13 +35,22 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     protected static final Logger LOGGER = LoggerFactory.getLogger( DLListboxCriteriaController.class );
 
     /**
-     * Creates instance of the extended controller which uses Hibernate Criteria
-     * @param identifier
+     * {@inheritDoc}
+     */
+    public DLListboxCriteriaController( ) {
+        this(null);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public DLListboxCriteriaController( final String identifier ) {
         this( identifier, null );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public DLListboxCriteriaController( final String identifier, final Class<T> clazz ) {
         super( identifier, clazz );
         compiler = getCompiler();
