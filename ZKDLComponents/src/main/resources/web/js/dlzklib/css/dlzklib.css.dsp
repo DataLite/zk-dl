@@ -146,7 +146,7 @@
 
 /* Lovbox popup */
 .z-lovbox-pp { height: auto; width: auto; }
-.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 6px 0 0 0; height: auto; width: 300px; }
+.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 6px 0 0 0; height: auto; width: auto; }
 .z-lovbox-pp .z-bandbox-popup-cl { border: 1px solid #7eaac6; }
 .z-lovbox-pp .z-listbox { margin: 0 auto; max-height: 350px; overflow-y: auto; }
 .z-lovbox-pp .z-dlpaging { padding: 0; }

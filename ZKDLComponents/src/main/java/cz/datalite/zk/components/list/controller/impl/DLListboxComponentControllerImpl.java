@@ -74,7 +74,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     /** local flag used to enable/disable emitting the event on the select. */
     protected boolean notifyOnSelect = true;
 
-    public DLListboxComponentControllerImpl( final DLListboxExtController<T> masterController, final DLColumnModel columnModel, final DLListbox listbox, final boolean autoinit ) {
+    public DLListboxComponentControllerImpl( final DLListboxExtController<T> masterController, final DLColumnModel columnModel, final DLListbox listbox ) {
         this.masterController = masterController;
         this.columnModel = columnModel;
         this.listbox = listbox;
@@ -139,7 +139,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         defaultHeaders.addAll( listbox.getListheaders() );
         
         // init column model
-        initListheaderModels( listbox.getListheaders(), autoinit );
+        initListheaderModels( listbox.getListheaders() );
         
         // test if the component is written using new databinding
         // if so, initiate it properly
@@ -254,7 +254,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     public void fireColumnModelChanges() {
-        initListheaderModels( defaultHeaders, true );
+        initListheaderModels( defaultHeaders );
 
 		if (ZKBinderHelper.version(listbox) == 1) {
 			// if using old style template, init model from cell template 
@@ -265,7 +265,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 		}
     }
 
-    private void initListheaderModels( final List<DLListheader> headers, final boolean autoinit ) {
+    private void initListheaderModels( final List<DLListheader> headers ) {
         columnMap.clear();
         // loading listheades
         int i = 0;
@@ -273,9 +273,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             columnMap.put( header, columnModel.getColumnModel( ++i ) );
             header.setModel( columnMap.get( header ) );
             header.setController( this );
-            if ( autoinit ) {
-                header.initModel();
-            }
+            header.initModel();
         }
     }
 

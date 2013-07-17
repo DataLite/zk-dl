@@ -77,8 +77,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected boolean autosave = true;
     /** component identifier */
     protected final String identifier;
-    /** is necessary to call initialization methods - isn't when model is loaded from session */
-    protected boolean autoinit = true;
     /** list of the listeners */
     protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
     /** model lock - if model is locked it cannot be changed */
@@ -89,7 +87,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     
     /**
      * Create instance of the general controller
-     * @param identifier identifier which is used to saving model to the session - it must be unique in the session
+     * @param identifier identifier which is used to saving model to the session. It must be uniqueue in scope of same composer and entity.
+     * @param clazz enity class
      */
     @SuppressWarnings( "unchecked" )
     public DLListboxGeneralController( final String identifier, final Class<T> clazz ) {
@@ -102,17 +101,25 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
       
         this.profileServiceSessionImpl = new ProfileServiceSessionImpl();
         
-        // always init model, parameters contained in profile are applied to it 
-        autoinit = true;
-        // if ( autosave ) {
-        //    autoinit ^= loadModel();
-        // }
-        
         easyFilterController = new DLEasyFilterControllerImpl( this, model.getFilterModel().getEasy() );
     }
 
+    /**
+     * Create instance of the general controller.
+     * Model class is infered from generics via reflection.
+     * @param identifier identifier which is used to saving model to the session. It must be uniqueue in scope of same composer and entity.
+     */
     public DLListboxGeneralController( final String identifier ) {
         this( identifier, null );
+    }
+
+    /**
+     * Create instance of the general controller.
+     * Identifier is infered from composer / request path and listbox component id.
+     * Model class is infered from generics via reflection.
+     */
+    public DLListboxGeneralController() {
+        this( null );
     }
 
     @SuppressWarnings("unchecked")
@@ -158,7 +165,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param comp listbox component
      */
     protected void initListbox( final DLListbox comp ) {
-        listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp, autoinit );
+        listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp );
         this.autosave = comp.isAutosave();
     }
 
@@ -507,7 +514,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 			return false;
 		} else {
 			LOGGER.info("load model stored in session, session = {}", this.getSessionName());
-			this.applyProfile(profiles.get(0));
+			this.applyProfile(profiles.get(0), false);
 			return true;
 		}
 	}
@@ -534,12 +541,24 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     /**
-     * Returns session name for save/load model
+     * Returns session name for save/load model.
+     * <p>Session name is composed as "composer#entity$id"<ul>
+     * <li>Composer name via attribute $composer. If no composer is found, request path is used.</li>
+     * <li>Resolved entity class (set via constructor or from generic)</li>
+     * <li>ID - identifier set via constructor or listbox id. If neither is set, this part is ommited</li>
+     * </ul> </p>
+     *
      * @return session name
      */
     @Override
     public String getSessionName() {
-        return getClass().getName() + "#" + org.zkoss.zk.ui.Executions.getCurrent().getDesktop().getRequestPath() + "$" + identifier;
+        Object composer = getListbox().getAttribute("$composer", Component.SPACE_SCOPE);
+        String composerClass = composer != null ? composer.getClass().getName() : null;
+        String requestPath = org.zkoss.zk.ui.Executions.getCurrent().getDesktop().getRequestPath();
+        String entityClass = getEntityClass().getName();
+        String id = identifier != null ? identifier : getListbox().getId();
+
+        return (composerClass != null ? composerClass : requestPath) + "#" + entityClass + (id == null ? "" : "$" + id);
     }
 
     public void refreshBinding() {
@@ -723,9 +742,16 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
     
     /**
-     * This method applies {@link DLListboxProfile} to agenda.
+     * This method applies {@link DLListboxProfile} to agenda and refresh data.
      */
     public void applyProfile(DLListboxProfile profile) {
+        applyProfile(profile, true);
+    }
+
+    /**
+     * This method applies {@link DLListboxProfile} to agenda.
+     */
+    protected void applyProfile(DLListboxProfile profile, boolean refreshData) {
     	LOGGER.info("applyProfile = " + profile);
     	
     	// reset to default
@@ -754,7 +780,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		
 		int i = 0;
 		List<String> columns = new ArrayList<String>();
-		
+
 		for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
 			String column = unit.getColumn();
 			if (column == null) {				
@@ -767,7 +793,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				String sortOrder = (((JSONObject) columnModelJsonObject.get(column)).get("sortOrder")).toString();
 				String sortType = (((JSONObject) columnModelJsonObject.get(column)).get("sortType")).toString();
 				
-				unit.setVisible(Boolean.valueOf(visible));
+				unit.setVisibleDirectly(Boolean.valueOf(visible));
 				unit.setOrderDirectly(Integer.valueOf(order));		
 				unit.setSortOrder(Integer.valueOf(sortOrder));
 				unit.setSortType(DLSortType.getByStringValue(sortType));				
@@ -795,8 +821,11 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		// notify view about new model load
 		this.getListboxController().fireOrderChanges();
 
-		// refresh filters (this method also calls refreshDataModel() and autosaveModel()) 		
-		this.onFilterManagerOk(savedModel);
+		// refresh filters
+        model.getFilterModel().getNormal().clear();
+        model.getFilterModel().getNormal().addAll( savedModel );
+        if (refreshData)
+            onFilterChange( DLListboxEvents.ON_NORMAL_FILTER_CHANGE );
 		
 		// TODO inform user that profile may not be valid
 //		if (profile.getColumnsHashCode() == null || columns.hashCode() != profile.getColumnsHashCode()) {			

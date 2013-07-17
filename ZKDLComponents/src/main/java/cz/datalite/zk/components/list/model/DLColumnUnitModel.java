@@ -200,6 +200,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
         this.visible = visible;
     }
+
+    public void setVisibleDirectly(Boolean visible) {
+        this.visible = visible;
+    }
+
     // ************* SORT ************* //
 
     public boolean isSortZk() {
@@ -466,5 +471,5 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", filterOperators="
 				+ filterOperators + ", filterComponentFactory=" + filterComponentFactory + ", exportColumn="
 				+ exportColumn + ", filterCompiler=" + filterCompiler + "]";
-	}	
+	}
 }

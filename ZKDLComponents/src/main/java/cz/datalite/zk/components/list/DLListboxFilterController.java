@@ -23,10 +23,23 @@ import java.util.List;
  */
 public abstract class DLListboxFilterController<T> extends DLListboxSimpleController<T> {
 
+    /**
+     * {@inheritDoc}
+     */
+    public DLListboxFilterController() {
+        super();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public DLListboxFilterController(final String identifier) {
         super(identifier);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public DLListboxFilterController(final String identifier, final Class<T> clazz) {
         super(identifier, clazz);
     }

@@ -3,6 +3,7 @@ package cz.datalite.zk.components.lovbox;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
+import cz.datalite.zk.components.list.DLListboxController;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.view.DLListbox;
@@ -18,6 +19,7 @@ import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.Locales;
 import org.zkoss.zk.au.AuRequest;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.OpenEvent;
@@ -78,7 +80,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** number of rows  shown on the list, default value is same as pageSize to prevent page scrolling */
     protected Integer rows = ROWS;
     /** defines listbox width for component in the popup */
-    protected String listWidth = "100%";
+    protected String listWidth = "350px";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
     protected String[] labelProperties = new String[] {};
     /** Format for properties */
@@ -121,6 +123,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** Components to add before or after listbox in popup window */
     protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
 
+
+    // mark status before afterCompose is called
+    private boolean initialized = false;
+
+
     /**
      * Create component without any parameter
      */
@@ -156,6 +163,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 }
             }
         }
+        popup.setVflex("min");
 
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
@@ -217,7 +225,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             listbox.setParent( popup );
         }
         
-        listbox.setSelectFirstRow( false );
+        listbox.setSelectFirstRow(false);
+        listbox.setWidth(listWidth);
 
         if ( filter == null && isCreateQuickFilter()) {
             filter = new DLQuickFilter();
@@ -243,7 +252,18 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         			popup.appendChild(additionalComponents.get(position));
         		}
         	}
-        }        
+        }
+
+        // if the composer not set via ZUL (apply="xxx"), call doAfterCompose() manually to bind lovbox and controller
+        if (getAttribute("$composer", COMPONENT_SCOPE) == null && controller != null) {
+            try {
+                controller.doAfterCompose(this);
+            } catch (Exception e) {
+                UiException.Aide.wrap(e, "Unable to set controller");
+            }
+        }
+
+        initialized = true;
     }
 
     /**
@@ -252,9 +272,6 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @throws Exception
      */
     public void init() throws Exception {
-        listbox.setWidth("500px");
-        popup.setVflex("min");
-
         if ( paging != null && pageSize != null ) {
             paging.setPageSize( pageSize );            
         }
@@ -295,23 +312,42 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     /**
-     * This method can be call from zul throw databinding. This method sets
-     * controller only if actual controller is null
+     * Set conroller manually (instead of apply="xx" in ZUL).
+     * The controller must be set before afterCompose(),
+     *
      * @param controller controller for this component
-     * @throws Exception
      */
     public void setController( final DLLovboxExtController<T> controller ) {
-        try {
-            if ( this.controller == null ) {
-                controller.doAfterCompose( this );
-            }
-        } catch ( Exception ex ) {
-            throw new RuntimeException( ex );
-        }
+        if (initialized)
+            throw new UiException("Composer can be set manually only before afterCompose is called.");
+        this.controller = controller;
     }
 
+    /**
+     * Returns the controller.
+     */
     public DLLovboxExtController<T> getController() {
         return controller;
+    }
+
+    /**
+     * Set conroller manually (instead of apply="xx" in ZUL). Setup listbox controller and use
+     * default DLLovboxGeneralController wrapper.
+     *
+     * @param listboxController listbox controller for this component
+     */
+    public void setListboxController( final DLListboxExtController<T> listboxController ) {
+        if (initialized)
+            throw new UiException("Composer can be set manually only before afterCompose is called.");
+
+        controller = new DLLovboxGeneralController<T>(listboxController);
+    }
+
+    /**
+     * Returns listbox controller (unwrapped from current lovbox controller).
+     */
+    public DLListboxController<T> getListboxController() {
+        return controller == null ? null : controller.getListboxController();
     }
 
     /**

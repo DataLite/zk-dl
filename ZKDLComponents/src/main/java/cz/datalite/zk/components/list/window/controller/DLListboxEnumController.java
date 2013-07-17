@@ -23,6 +23,14 @@ public class DLListboxEnumController<T extends Enum> extends DLListboxGeneralCon
     /**
      * Creates simple controller which can operate without database. This can
      * work with list.
+     */
+    public DLListboxEnumController(Class<T> clazz) {
+        this(null, clazz);
+    }
+
+    /**
+     * Creates simple controller which can operate without database. This can
+     * work with list.
      *
      * @param identifier unique identifier to set data model to the session
      */
