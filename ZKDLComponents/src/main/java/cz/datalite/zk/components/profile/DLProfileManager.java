@@ -126,7 +126,6 @@ public class DLProfileManager<T> extends Hbox {
 		head.appendChild(header);
 		
 		this.profilesListbox.appendChild(head);		
-		this.profilesLovbox.afterCompose();
 		
 		if (ZKBinderHelper.version(this) == 1) {
 			this.profilesListbox.setItemRenderer(new ListboxListitemRenderer());
@@ -134,7 +133,8 @@ public class DLProfileManager<T> extends Hbox {
 			this.profilesListbox.setTemplate("model", new ListboxTemplate());
 		} 
 		
-		this.profilesLovbox.setController(controller);		
+		this.profilesLovbox.setController(controller);	
+		this.profilesLovbox.afterCompose();
 	}
 
 	public void setController(final DLProfileManagerController<T> controller) {
