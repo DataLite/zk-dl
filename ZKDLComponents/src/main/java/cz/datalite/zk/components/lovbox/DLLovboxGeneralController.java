@@ -70,7 +70,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
             // initialize component - set atributes and controllers
             lovbox.init();
-            cascadeUtil.addDefaultParent( lovbox );
+            cascadeUtil.addDefaultParent(lovbox);
         } else
             throw new IllegalAccessException( "DLLovboxGeneralController is applicable only on DLLovbox component." );
     }
@@ -92,7 +92,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
         model.setSelectedItem( listboxController.getSelectedItem() );
         model.setSelectedItems( listboxController.getSelectedItems() );
         lovbox.fireChanges();
-        cascadeUtil.dofireParentChanges();
+
         if ( close ) {
             lovbox.close();
         }
@@ -125,6 +125,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
         cascadeUtil.addFollower( follower );
     }
 
+    // called by parent to notify me (this is a follower)
     public void fireParentChanges( final Cascadable parent ) {
 
         if ( listboxController.isLocked() ) {
@@ -133,11 +134,17 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
         listboxController.getModel().getFilterModel().getEasy().get( DLFilterOperator.EQUAL ).put( cascadeUtil.getParentColumn( parent ), parent.getSelectedItem() );
 
-        listboxController.refreshDataModel();
+        listboxController.refreshDataModel(true);
 
-        listboxController.setSelectedIndex( 0 );
-
+        // clear selection
+        listboxController.setSelectedItem(null);
         onSelect( false );
+    }
+
+    // notify all followers
+    @Override
+    public void fireCascadeChanges() {
+        cascadeUtil.dofireParentChanges();
     }
 
     public DLLovboxModel<T> getModel() {

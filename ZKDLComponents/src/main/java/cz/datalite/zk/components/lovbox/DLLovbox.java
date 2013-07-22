@@ -456,6 +456,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
             this.setValue( value.toString() );
         }
+
+        controller.fireCascadeChanges();
     }
 
     /**

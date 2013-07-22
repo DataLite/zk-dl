@@ -80,7 +80,7 @@ public class DLFilterModel {
                 key = key.replace( "#", "." );  // replacement because of definition in the zul - there cannot be used "."
                 final DLColumnUnitModel column = columnModel.getByName( key );
                 final NormalFilterUnitModel unit = column == null ? new NormalFilterUnitModel( key ) : new NormalFilterUnitModel( column );
-                unit.setOperator( operator );
+                unit.setOperator( operator, true );
                 unit.setValue( 1, value );
                 compiledEasyFilter.add( unit );
             }

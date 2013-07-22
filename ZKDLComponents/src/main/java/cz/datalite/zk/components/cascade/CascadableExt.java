@@ -18,6 +18,11 @@ public interface CascadableExt<T> extends Cascadable<T> {
     void fireParentChanges( final Cascadable parent );
 
     /**
+     * Notify all followers;
+     */
+    void fireCascadeChanges();
+
+    /**
      * Adds follower to the controller. It's required to notifiing children when
      * parent is changed.
      * @param follower follower in the combobox cascade
