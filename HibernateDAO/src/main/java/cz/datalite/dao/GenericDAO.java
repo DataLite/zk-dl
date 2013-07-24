@@ -38,12 +38,22 @@ public interface GenericDAO<T, ID extends Serializable>
      * Return the persistent instance of the given entity class with the given identifier,
      * or null if there is no such persistent instance. (If the instance is already associated
      * with the session, return that instance. This method never returns an uninitialized instance.)
-     * Obtain the specified lock mode if the instance exists.
      *
      * @param id an identifier
      * @return a persistent instance or null
      */
     T get(ID id);
+
+    /**
+     * Return the persistent instance of the given entity class with the given identifier,
+     * or null if there is no such persistent instance. (If the instance is already associated
+     * with the session, return that instance. This method never returns an uninitialized instance.)
+     *
+     * @param id an identifier
+     * @param associationPath eager load associated entities on associationPath
+     * @return a persistent instance or null
+     */
+    public T get( final ID id, String ... associationPath);
 
     /**
      * Return current state of the entity. If the entity is detached, another attached instance is returned,
@@ -53,6 +63,16 @@ public interface GenericDAO<T, ID extends Serializable>
      * @return a persistent instance or null
      */
     T get(T entity);
+
+    /**
+     * Return current state of the entity. If the entity is detached, another attached instance is returned,
+     * otherwise the same instance. This is convenience method - same result would be get(entity.getId()).
+     *
+     * @param entity attached or detached entity.
+     * @param path eager load associated entities on associationPath
+     * @return a persistent instance or null
+     */
+    T get(T entity, String ... path);
 
     /**
      * Find all entities in this table

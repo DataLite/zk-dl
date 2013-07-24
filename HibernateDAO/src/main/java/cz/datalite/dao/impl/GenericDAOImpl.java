@@ -82,9 +82,31 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         return ( T ) getSession().get( getPersistentClass(), id );
     }
 
+    public T get( final ID id, String ... associationPath) {
+        assert id != null : INVALID_ARGUMENT_ID_MISSING;
+        Criteria criteria = getSession().createCriteria( getPersistentClass() );
+        criteria.add(Restrictions.idEq(id));
+
+        for (String p : associationPath)
+            criteria.setFetchMode(p, FetchMode.JOIN);
+
+        return ( T ) criteria.uniqueResult();
+    }
+
     public T get( final T entity ) {
         assert entity != null : INVALID_ARGUMENT_ID_MISSING;
         return ( T ) getSession().get( getPersistentClass(), entityInformation.getId(entity) );
+    }
+
+    public T get( final T entity, String ... path ) {
+        assert entity != null : INVALID_ARGUMENT_ID_MISSING;
+        Criteria criteria = getSession().createCriteria( getPersistentClass() );
+        criteria.add(Restrictions.idEq( entityInformation.getId(entity) ));
+
+        for (String p : path)
+            criteria.setFetchMode(p, FetchMode.JOIN);
+
+        return ( T ) criteria.uniqueResult();
     }
 
     public T findById( final ID id ) {
