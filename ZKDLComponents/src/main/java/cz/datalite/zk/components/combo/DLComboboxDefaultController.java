@@ -85,6 +85,11 @@ public class DLComboboxDefaultController<T> implements DLComboboxExtController<T
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
+    @Override
+    public void fireCascadeChanges() {
+        throw new UnsupportedOperationException( "Not supported yet." );
+    }
+
     public void addFollower( final CascadableExt follower ) {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
