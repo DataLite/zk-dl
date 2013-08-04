@@ -3,6 +3,7 @@ package cz.datalite.zk.components.list;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
+import cz.datalite.helpers.JsonHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.utils.HashMapAutoCreate;
 import cz.datalite.zk.components.list.controller.*;
@@ -647,7 +648,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         return model;
     }
 
-    public Composer getWindowCtl() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public Composer getWindowCtl() {
         return getListboxController().getWindowCtl();
     }
 
@@ -762,15 +764,23 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 		String columnModelJsonData = profile.getColumnModelJsonData();
 		JSONObject columnModelJsonObject = null;
 		if (columnModelJsonData != null && columnModelJsonData.length() > 0) {
-			//LOGGER.info("Column model JSON: " + columnModelJsonData);		
-			columnModelJsonObject = (JSONObject) JSONValue.parse(columnModelJsonData);
+			//LOGGER.info("Column model JSON: " + columnModelJsonData);
+			try {
+				columnModelJsonObject = (JSONObject) JSONValue.parse(columnModelJsonData);
+			} catch (Exception ex) {
+				LOGGER.error("Unable to parse column model JSONObject: " + columnModelJsonData, ex);
+			}
 		}
 		
 		String filterModelJsonData = profile.getFilterModelJsonData();
 		JSONObject filterModelJsonObject = null;
 		if (filterModelJsonData != null && filterModelJsonData.length() > 0) {
-			//LOGGER.info("Filter model JSON: " + filterModelJsonData);		
-			filterModelJsonObject = (JSONObject) JSONValue.parse(filterModelJsonData);
+			//LOGGER.info("Filter model JSON: " + filterModelJsonData);	
+			try {
+				filterModelJsonObject = (JSONObject) JSONValue.parse(filterModelJsonData);
+			} catch (Exception ex) {
+				LOGGER.error("Unable to parse filter model JSONObject: " + filterModelJsonData, ex);
+			}			
 		}		
 		
 		DLMasterModel masterModel = this.getModel();
@@ -806,11 +816,13 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				String operator = (((JSONObject) filterModelJsonObject.get(column)).get("operator")).toString();
 				Object value1 = (((JSONObject) filterModelJsonObject.get(column)).get("value1"));
 				Object value2 = (((JSONObject) filterModelJsonObject.get(column)).get("value2"));
+				String value1Type = (String) (((JSONObject) filterModelJsonObject.get(column)).get("value1Type"));
+				String value2Type = (String) (((JSONObject) filterModelJsonObject.get(column)).get("value2Type"));
 				
 				NormalFilterUnitModel normalFilterUnitModel = new NormalFilterUnitModel(unit);
 				normalFilterUnitModel.setOperator(DLFilterOperator.strToEnum(operator));
-				normalFilterUnitModel.setValue(1, value1);
-				normalFilterUnitModel.setValue(2, value2);			
+				normalFilterUnitModel.setValue(1, JsonHelper.fromJsonObject(value1, value1Type));
+				normalFilterUnitModel.setValue(2, JsonHelper.fromJsonObject(value2, value2Type));
 				savedModel.add(normalFilterUnitModel);
 			}
 			
@@ -883,25 +895,46 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	/**
     	 * FILTER
     	 */		
-    	allColumnsInfo = new HashMap<String, Map<String,Object>>();		
-
-    	i = 0;
+    	allColumnsInfo = new HashMap<String, Map<String,Object>>();
     	Iterator<NormalFilterUnitModel> nfumIterator = filterModel.getNormal().iterator();
 
-    	while (nfumIterator.hasNext()) {
-    		NormalFilterUnitModel normalFilterUnitModel = nfumIterator.next();
-    		HashMap<String, Object> filterInfo = new HashMap<String, Object>();
-    		filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
-    		filterInfo.put("value1", normalFilterUnitModel.getValue(1));
-    		filterInfo.put("value2", normalFilterUnitModel.getValue(2));    			
+		while (nfumIterator.hasNext()) {
+			NormalFilterUnitModel normalFilterUnitModel = nfumIterator.next();
+			HashMap<String, Object> filterInfo = new HashMap<String, Object>();
+			try {
+				Object value1 = normalFilterUnitModel.getValue(1);
+				Object value2 = normalFilterUnitModel.getValue(2);
+				
+				String value1Type = value1 != null ? value1.getClass().getName() : "";
+				if (value1 != null && Collection.class.isAssignableFrom(value1.getClass())) {
+					Object o = ((Collection<?>) value1).iterator().next();
+					if (o != null) {
+						value1Type = value1Type + "#" + o.getClass().getName();
+					}
+				}
+				String value2Type = value2 != null ? value2.getClass().getName() : "";
+				if (value2 != null && Collection.class.isAssignableFrom(value2.getClass())) {
+					Object o = ((Collection<?>) value2).iterator().next();
+					if (o != null) {
+						value2Type = value2Type + "#" + o.getClass().getName();
+					}
+				}
+				
+				filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
+				filterInfo.put("value1", JsonHelper.toJsonObject(value1));
+				filterInfo.put("value1Type", value1Type);
+				filterInfo.put("value2", JsonHelper.toJsonObject(value2));
+				filterInfo.put("value2Type", value2Type);				
+				
+				String column = normalFilterUnitModel.getColumn();
 
-    		String column = normalFilterUnitModel.getColumn();
-    		if (column == null) {    			
-    			column = "column" + i;
-    		}
-
-    		allColumnsInfo.put(column, filterInfo);	
-    		i++;
+				// filter unit must have column
+				if (column != null) {
+					allColumnsInfo.put(column, filterInfo);
+				}
+			} catch (IllegalArgumentException iex) {
+				iex.printStackTrace();
+			}
     	}		
 
     	json = new JSONObject();

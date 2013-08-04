@@ -225,6 +225,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             listbox.setParent( popup );
         }
         
+        // disable autosave column and filter model for lovbox
+        listbox.setAutosave(false);
+        
         listbox.setSelectFirstRow(false);
         listbox.setWidth(listWidth);
 

@@ -148,7 +148,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         if (templates.isEmpty()) {
         	this.template = null;
         } else if (templates.size() > 1) {        	
-			throw new RuntimeException("Only one template element is allowed as direct child of listbox element. Check zul file.");
+			throw new RuntimeException("Only one template element is allowed as direct child of DLListbox element. Check zul file.");
 		} else if (templates.size() == 1) {
 			// zul uses new databinding, list of cells is defined as template
 			this.template = listbox.getTemplate(templates.iterator().next());
