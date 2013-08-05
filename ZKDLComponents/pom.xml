@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.4.2.4</version>
+    <version>1.4.2.5</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controlls - listbox, lovbox, combobox.</description>
 

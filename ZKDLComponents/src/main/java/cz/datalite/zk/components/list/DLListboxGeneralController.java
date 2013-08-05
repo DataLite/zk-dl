@@ -905,26 +905,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 				Object value1 = normalFilterUnitModel.getValue(1);
 				Object value2 = normalFilterUnitModel.getValue(2);
 				
-				String value1Type = value1 != null ? value1.getClass().getName() : "";
-				if (value1 != null && Collection.class.isAssignableFrom(value1.getClass())) {
-					Object o = ((Collection<?>) value1).iterator().next();
-					if (o != null) {
-						value1Type = value1Type + "#" + o.getClass().getName();
-					}
-				}
-				String value2Type = value2 != null ? value2.getClass().getName() : "";
-				if (value2 != null && Collection.class.isAssignableFrom(value2.getClass())) {
-					Object o = ((Collection<?>) value2).iterator().next();
-					if (o != null) {
-						value2Type = value2Type + "#" + o.getClass().getName();
-					}
-				}
+				String value1Type = JsonHelper.getType(value1);
+				String value2Type = JsonHelper.getType(value2);
 				
 				filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
 				filterInfo.put("value1", JsonHelper.toJsonObject(value1));
 				filterInfo.put("value1Type", value1Type);
 				filterInfo.put("value2", JsonHelper.toJsonObject(value2));
-				filterInfo.put("value2Type", value2Type);				
+				filterInfo.put("value2Type", value2Type);			
 				
 				String column = normalFilterUnitModel.getColumn();
 
@@ -941,7 +929,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	json.putAll(allColumnsInfo);
 
     	// LOGGER.info( "Filter model JSON: {}", json.toJSONString());		
-
+    	System.out.println("Filter model JSON: " + json.toJSONString());
+    	
     	// data
     	profile.setFilterModelJsonData(json.toJSONString());	
 
