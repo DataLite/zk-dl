@@ -43,11 +43,11 @@
 	            </rows>
 	        </grid>
 	        
-	        <hbox style="margin: 10px; margin-left: auto;">
-	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')"/>            	
-            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveAgendaSettings=saveAgendaSettingsCheckbox.checked)"/>
-            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
-        	</hbox>
+	        <div style="margin: 5px 10px 5px auto; text-align:right;">
+	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" mold="trendy"/>            	
+            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveAgendaSettings=saveAgendaSettingsCheckbox.checked)" mold="trendy"/>
+            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" mold="trendy"/>
+        	</div>
         		        
         </vlayout>      
     </window>

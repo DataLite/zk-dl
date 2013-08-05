@@ -17,5 +17,5 @@ public interface CloneableFilterComponent<T> extends FilterComponent<T> {
      *
      * @return deep copy of the object
      */
-    FilterComponent cloneComponent();
+    FilterComponent<T> cloneComponent();
 }

@@ -27,29 +27,35 @@ public class DLListboxManager extends XulElement {
         addClientEvent(DLListboxManager.class, "onResetAll", CE_NON_DEFERRABLE);
         
         /** Reads default configuration for library */
-        columnManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.columnManager", "true"));
-        sortManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.sortManager", "true"));
-        filterManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.filterManager", "true"));
-        exportManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.exportManager", "true"));
-        resetFilters = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetFilters", "false"));
-        resetAll = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetAll", "true"));        
+        defaultColumnManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.columnManager", "true"));
+        defaultSortManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.sortManager", "true"));
+        defaultFilterManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.filterManager", "true"));
+        defaultExportManager = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.exportManager", "true"));
+        defaultResetFilters = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetFilters", "false"));
+        defaultResetAll = Boolean.parseBoolean(Library.getProperty("zk-dl.listbox.manager.resetAll", "true"));        
     }
 
-    // enable/disable controls
-    protected static boolean columnManager;
-    protected static boolean sortManager;
-    protected static boolean filterManager;
-    protected static boolean exportManager;
-    protected static boolean resetFilters;
-    protected static boolean resetAll;
+    // enable/disable controls (static values for all instances)
+    protected static boolean defaultColumnManager;
+    protected static boolean defaultSortManager;
+    protected static boolean defaultFilterManager;
+    protected static boolean defaultExportManager;
+    protected static boolean defaultResetFilters;
+    protected static boolean defaultResetAll;
+    
+    // enable/disable controls (member values for current instance)
+    protected boolean columnManager = defaultColumnManager;
+    protected boolean sortManager = defaultSortManager;
+    protected boolean filterManager = defaultFilterManager;
+    protected boolean exportManager = defaultExportManager;
+    protected boolean resetFilters = defaultResetFilters;
+    protected boolean resetAll = defaultResetAll;
 
     protected static final String CONST_FILTER_MANAGER = Labels.getLabel( "listbox.tooltip.filterManager" );
     protected DLManagerController controller;
 
     public DLListboxManager() {
-    	
-    	
-        super();
+    	super();
         addEventListener( "onColumnManager", new EventListener<Event>() {
             public void onEvent( final Event event ) {
                 controller.onColumnManager();

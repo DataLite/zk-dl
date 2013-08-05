@@ -111,7 +111,7 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * Returns window controller - main controller on the page.
      * @return window controller
      */
-    Composer<Component> getWindowCtl();
+    Composer getWindowCtl();
 
     /**
      * Reacts on onSelect event.

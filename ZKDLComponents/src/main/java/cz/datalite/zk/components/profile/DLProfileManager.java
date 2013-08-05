@@ -14,6 +14,7 @@ import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.Bandpopup;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Hlayout;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
 import org.zkoss.zul.Listitem;
@@ -79,18 +80,20 @@ public class DLProfileManager<T> extends Hbox {
 		this.profilesLovbox.appendChild(popup);
 		
 		// bar with buttons to manage profiles
-		Hbox buttonBar = new Hbox();
-		
-		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.load", true, new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				controller.onLoadProfile();
-				profilesLovbox.close();
-			}
-		});
+		Hlayout buttonBar = new Hlayout();
+		buttonBar.setStyle("text-align:right;padding:5px;");
+		buttonBar.setSpacing("5px");
 		
 		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.create", true, new EventListener<Event>() {
 			public void onEvent(final Event event) {
 				controller.onEditProfile(null);
+				profilesLovbox.close();
+			}
+		});
+		
+		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.load", true, new EventListener<Event>() {
+			public void onEvent(final Event event) {
+				controller.onLoadProfile();
 				profilesLovbox.close();
 			}
 		});
@@ -161,6 +164,7 @@ public class DLProfileManager<T> extends Hbox {
 		final Button button = new Button(Labels.getLabel(labelKey));
 		button.setTooltiptext(Labels.getLabel(labelKey + ".tooltip"));
 		button.setVisible(visible);
+		button.setMold("trendy");
 
 		button.addEventListener(CONST_EVENT, listener);
 		parent.appendChild(button);
