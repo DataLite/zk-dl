@@ -446,26 +446,26 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
             ComponentInfo info = ( ComponentInfo ) cell;
 
+            // resolve binding text to
             String bindingText = null;
+            String bindingProperty = "label";
             if ( info.getAnnotationMap() != null ) {
-                bindingText = info.getAnnotationMap().getAnnotation( "label", "load" ) != null
-                        ? info.getAnnotationMap().getAnnotation( "label", "load" ).getAttribute( "value" )
-                        : null;
-                
-                bindingText = info.getAnnotationMap().getAnnotation( "label", "bind" ) != null
-                        ? info.getAnnotationMap().getAnnotation( "label", "bind" ).getAttribute( "value" )
-                        : bindingText;
+                bindingText = getBindingText(info, bindingProperty);
+                if (bindingText == null) {
+                    bindingProperty = "checked";
+                    bindingText = getBindingText(info, bindingProperty);
+                }
             }
 
             String converter = null;
             Map<String,String> converterArgs = Collections.<String,String>emptyMap();
 
-            if ( info.getAnnotationMap() != null && info.getAnnotationMap().getAnnotation( "label", "converter" ) != null ) {
-                converter = info.getAnnotationMap().getAnnotation( "label", "converter" ) != null
-                        ? info.getAnnotationMap().getAnnotation( "label", "converter" ).getAttribute( "value" )
+            if ( info.getAnnotationMap() != null && info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ) != null ) {
+                converter = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ) != null
+                        ? info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttribute( "value" )
                         : null;
                 converterArgs = new HashMap<String, String>();
-                Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation( "label", "converter" ).getAttributes();
+                Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttributes();
                 for ( String key : attrs.keySet() ) {
                     if ( attrs.get( key ).length > 0 )
                         // strip quotes
@@ -487,7 +487,20 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 columnMap.get( header ).setColumnType( getFieldType( masterController.getEntityClass(), columnMap.get( header ).getColumn() ) );
         }
     }
-    
+
+    // Returns binding text of a component and property - check @load and @bind annotations
+    private String getBindingText(ComponentInfo info, String property) {
+        String bindingText;
+        bindingText = info.getAnnotationMap().getAnnotation( property, "load" ) != null
+                ? info.getAnnotationMap().getAnnotation( property, "load" ).getAttribute( "value" )
+                : null;
+
+        bindingText = info.getAnnotationMap().getAnnotation( property, "bind" ) != null
+                ? info.getAnnotationMap().getAnnotation( property, "bind" ).getAttribute( "value" )
+                : bindingText;
+        return bindingText;
+    }
+
     protected void initRendererTemplate( final List<DLListheader> headers, final List<Listcell> listcells ) {
         // loading renderer templates and column name from the binding.
         // ---------------

@@ -1,6 +1,7 @@
 package cz.datalite.helpers.excel.export;
 
 import java.io.*;
+import java.lang.Boolean;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -321,6 +322,12 @@ public final class ExcelExportUtils {
                 cell.setFormat( format );
             }
             return new Label( cell.getX(), cell.getY(), value.toString(), format );
+        } else if ( value instanceof Boolean) {
+            if ( format == null ) {
+                format = new WritableCellFormat( cell.getFont() );
+                cell.setFormat( format );
+            }
+            return new Label( cell.getX(), cell.getY(), (Boolean)value ? "Y" : "N", format );
         } else { // string or other object type
             if ( format == null ) {
                 format = new WritableCellFormat( cell.getFont() );
