@@ -375,17 +375,16 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert entity != null : INVALID_ARGUMENT_ENTITY_MISSING;
 
         try {
-            getSession().getIdentifier( entity );
-            return true;
+            return getSession().getIdentifier( entity ) == null;
         } catch ( TransientObjectException ex ) {
-            return false;
+            return true;
         }
     }
 
-    public T reload( T entity ) {
-        assert entity != null : "Invalid argument in GenericDAO reload(). Entity is missing";
-        assert !isNew( entity ) : "Invalid argument in GenericDAO reload(). Entity is transient";
+    public void refresh( T entity ) {
+        assert entity != null : "Invalid argument in GenericDAO refresh(). Entity is missing";
+        assert !isNew( entity ) : "Invalid argument in GenericDAO refresh(). Entity is transient";
 
-        return ( T ) getSession().load( entity.getClass(), getSession().getIdentifier( entity ) );
+        getSession().refresh(entity);
     }
 }

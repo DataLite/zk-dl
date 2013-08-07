@@ -189,18 +189,17 @@ public interface GenericDAO<T, ID extends Serializable>
     void clear();
 
     /**
-     * Podle toho, zda má nastaveno ID zjistí, jestli je nová nebo existující entita.
+     * Return true, if the entity is transient (check ID != null).
      *
-     * @param entity pro kterou entitu
-     * @return true, pokud má nastavené ID
+     * @param entity entity to check
+     * @return true, if entity is transient
      */
-    public boolean isNew(T entity);
+    boolean isNew(T entity);
 
     /**
-     * Znovu načte objekt z databáze (tím efektivně zruší všechny změny). Vrací novou instanci, takže předávanou nezmění.
+     * Refresh the entity from the database. It works even if the entity is detached.
      *
-     * @param entity kterou entitu, musí v databázi existovat (být uložená)
-     * @return znovu načtenou entitu - nová instance.
+     * @param entity entity to referesh
      */
-    public T reload(T entity);
+    void refresh(T entity);
 }
