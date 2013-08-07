@@ -85,8 +85,7 @@ public class ZkBlockingHandler extends Handler {
                 // handler used, remove itself
                 root.removeEventListener(EVENT, this);
 
-                // user was informed, resumeBeforeInvoke in execution
-                resumeInvoke(context);
+                doInvoke(context);
             }
         });
         // fire echo event
@@ -101,10 +100,15 @@ public class ZkBlockingHandler extends Handler {
         return false;
     }
 
-    @Override
-    protected void doAfter(final Context context) {
-        final Component root = context.getRoot();
-        final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( BLOCKING_BUSYBOX );
-        busybox.close(root);
+    // user was informed, resumeInvoke in execution
+    // after execution remove busybox (even in case of exception)
+    private void doInvoke(Context context) throws Exception {
+        try {
+            resumeInvoke(context);
+        } finally {
+            final Component root = context.getRoot();
+            final BusyBoxHandler busybox = ( BusyBoxHandler ) context.getParameter( BLOCKING_BUSYBOX );
+            busybox.close(root);
+        }
     }
 }
