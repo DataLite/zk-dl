@@ -214,6 +214,11 @@ public interface DLListboxController<T> {
     void refreshDataModel( boolean clearPaging );
 
     /**
+     * <p>Clear all data from the listbox.</p>
+     */
+    void clearDataModel();
+
+    /**
      * <p>Returns selected item in the listbox.</p>
      * @return selectedItem
      */

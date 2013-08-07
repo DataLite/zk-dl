@@ -412,6 +412,13 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         callListeners( new Event( DLListboxEvents.ON_MODEL_CHANGE, getListbox() ) );
     }
 
+    public void clearDataModel() {
+        model.getPagingModel().clear();
+        getListboxController().setListboxModel(Collections.<T>emptyList());
+        getListboxController().fireDataChanges();
+        setSelectedItem(null);
+    }
+
     public DLResponse<T> loadData( final int rowLimit ) {
         return loadData( model.getFilterModelInNormal(), 0, rowLimit, model.getColumnModel().getSorts() );
     }
