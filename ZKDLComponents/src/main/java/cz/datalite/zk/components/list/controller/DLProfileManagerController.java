@@ -8,12 +8,12 @@ public interface DLProfileManagerController<T> {
 
 	void onEditProfile(Long idProfile);
 
-	void onEditProfileOk(DLListboxProfile profile, boolean saveAgendaSettings);
+	void onEditProfileOk(DLListboxProfile profile, boolean saveColumnModel, boolean saveFilterModel);
 
 	void onDeleteProfile(Long idProfile);
 
 	boolean selectDefaultProfile(boolean onCreate);
-	
+
 	void fireChanges();
 
 }

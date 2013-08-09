@@ -12,7 +12,7 @@
     	
         	<grid style="margin: 10px; width: 420px;">
 	            <columns>
-	                <column />
+	                <column width="120px" />
 	                <column />
 	            </columns>
 	            <rows>
@@ -21,8 +21,13 @@
 	                    <textbox value="@bind(fx.name)" width="90%" constraint="no empty" maxlength="16"/>
 	                </row>
 	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.public')}" />
-	                    <checkbox checked="@bind(fx.publicProfile)" width="90%" />
+	                	<label value="${c:l('listbox.profileManager.profile.type')}" />
+	                    <radiogroup selectedItem="@bind(fx.publicProfile) @converter(vm.booleanConverter)">	 
+	                    	<vlayout>                   	
+	                    		<radio label="${c:l('listbox.profileManager.profile.public')}" value="true" />
+	                    		<radio label="${c:l('listbox.profileManager.profile.private')}" value="false" />
+	                    	</vlayout>
+	                    </radiogroup>	                    
 	                </row>
 	                <row>
 	                    <label value="${c:l('listbox.profileManager.profile.default')}" />
@@ -37,16 +42,20 @@
 	            </columns>
 	            <rows>
 	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.saveAgendaSettings')}" />
-	                    <checkbox id="saveAgendaSettingsCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
-	                </row>	                
+	                    <label value="${c:l('listbox.profileManager.profile.saveColumnModel')}" />
+	                    <checkbox id="saveColumnModelCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                </row>
+	                <row>
+	                    <label value="${c:l('listbox.profileManager.profile.saveFilterModel')}" />
+	                    <checkbox id="saveColumnFilterCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                </row>
 	            </rows>
 	        </grid>
 	        
 	        <div style="margin: 5px 10px 5px auto; text-align:right;">
-	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" mold="trendy"/>            	
-            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveAgendaSettings=saveAgendaSettingsCheckbox.checked)" mold="trendy"/>
-            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" mold="trendy"/>
+	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" />            	
+            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
+            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
         	</div>
         		        
         </vlayout>      

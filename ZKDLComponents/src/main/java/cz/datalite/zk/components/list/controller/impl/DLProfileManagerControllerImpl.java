@@ -23,6 +23,7 @@ import cz.datalite.zk.components.list.service.ProfileService;
 import cz.datalite.zk.components.list.service.ProfileServiceFactory;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.profile.DLProfileManager;
+import cz.datalite.zk.events.SaveProfileEvent;
 
 /**
  * Implementation of the controller for the Listbox profile manager which
@@ -116,50 +117,59 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	@Override
 	public void onEditProfile(Long idProfile) {
 		final DLListboxProfile editProfile;
-		
+
 		if (idProfile == null) {
 			editProfile = new DLListboxProfileImpl();
 		} else {
 			editProfile = this.profileService.findById(idProfile);
 		}
-		
+
 		final Map<String, Object> args = new HashMap<String, Object>();
 		args.put("profile", editProfile);
+		args.put("buttonMold", this.dlProfileManagerComponent.getButtonMold());
 
 		final Window win = (org.zkoss.zul.Window) ZKDLResourceResolver.resolveAndCreateComponents("listboxProfileEditWindow.zul", null, args);
-		
-		final EventListener<Event> saveListener = new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				onEditProfileOk(editProfile, Boolean.valueOf(event.getData().toString()));
+
+		final EventListener<SaveProfileEvent> saveListener = new EventListener<SaveProfileEvent>() {
+			public void onEvent(final SaveProfileEvent event) {
+				onEditProfileOk(editProfile, event.isSaveColumnModel(), event.isSaveFilterModel());
 			}
-		};        
-		win.addEventListener("onSave", saveListener);
-		
+		};
+		win.addEventListener(SaveProfileEvent.ON_SAVE_PROFILE, saveListener);
+
 		final EventListener<Event> deleteListener = new EventListener<Event>() {
 			public void onEvent(final Event event) {
 				onDeleteProfile(editProfile.getId());
 			}
-		};        
+		};
 		win.addEventListener("onDelete", deleteListener);
-        
+
 		win.doHighlighted();
 	}	
 	
 	@Override
-	public void onEditProfileOk(DLListboxProfile profile, boolean saveAgendaSettings) {
-		if (saveAgendaSettings || profile.getId() == null) {
-			DLListboxProfile actualAgendaSettingProfile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
+	public void onEditProfileOk(DLListboxProfile profile, boolean saveColumnModel, boolean saveFilterModel) {
+		DLListboxProfile actualAgendaSettingProfile = ((DLListboxGeneralController<T>) this.masterController).createProfile();
+
+		if (profile.getId() == null) {			
 			profile.setColumnModelJsonData(actualAgendaSettingProfile.getColumnModelJsonData());
 			profile.setFilterModelJsonData(actualAgendaSettingProfile.getFilterModelJsonData());
 			profile.setColumnsHashCode(actualAgendaSettingProfile.getColumnsHashCode());
 			profile.setDlListboxId(actualAgendaSettingProfile.getDlListboxId());
+		} else {
+			if (saveColumnModel) {
+				profile.setColumnModelJsonData(actualAgendaSettingProfile.getColumnModelJsonData());
+			}
+			if (saveFilterModel) {
+				profile.setFilterModelJsonData(actualAgendaSettingProfile.getFilterModelJsonData());	
+			}
 		}
 		
 		this.profileService.save(profile);
 		
 		this.profilesCtl.getListboxController().refreshDataModel();
 		
-		if (saveAgendaSettings) {
+		if (saveColumnModel && saveFilterModel) {
 			this.profilesCtl.setSelectedItem(profile);
 		}
 	}
