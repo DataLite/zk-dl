@@ -936,7 +936,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	json.putAll(allColumnsInfo);
 
     	// LOGGER.info( "Filter model JSON: {}", json.toJSONString());		
-    	System.out.println("Filter model JSON: " + json.toJSONString());
     	
     	// data
     	profile.setFilterModelJsonData(json.toJSONString());	
