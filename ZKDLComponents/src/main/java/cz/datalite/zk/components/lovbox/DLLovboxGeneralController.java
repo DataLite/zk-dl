@@ -97,6 +97,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             lovbox.close();
         }
         final Set<T> set = Collections.singleton( model.getSelectedEntity() );
+        callListeners( new Event( Events.ON_CHANGE, lovbox, lovbox.getValue() ) );
         callListeners( new SelectEvent( Events.ON_SELECT, lovbox, set ) );
         callListeners( new SelectEvent( DLListboxEvents.ON_DLSELECT, lovbox, set ) );
     }
@@ -134,11 +135,13 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
         listboxController.getModel().getFilterModel().getEasy().get( DLFilterOperator.EQUAL ).put( cascadeUtil.getParentColumn( parent ), parent.getSelectedItem() );
 
-        listboxController.refreshDataModel(true);
-
         // clear selection
         listboxController.setSelectedItem(null);
         onSelect( false );
+
+        // clear data and ensure onOpen will fire (back to initial state before first onOpen)
+        listboxController.clearDataModel();
+        listboxController.lockModel();
     }
 
     // notify all followers
