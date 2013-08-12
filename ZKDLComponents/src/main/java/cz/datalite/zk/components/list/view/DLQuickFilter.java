@@ -25,7 +25,6 @@ import java.util.Map.Entry;
  * @author Jiri Bubnik
  */
 public class DLQuickFilter extends InputElement {
-
     static {
         addClientEvent(DLQuickFilter.class, "onOpenPopup", CE_IMPORTANT|CE_NON_DEFERRABLE);
     }

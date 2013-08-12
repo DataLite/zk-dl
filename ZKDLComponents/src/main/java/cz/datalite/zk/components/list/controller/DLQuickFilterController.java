@@ -25,6 +25,12 @@ public interface DLQuickFilterController {
     void fireChanges();
 
     /**
+     * Returns quick filter model
+     * @return quick filter model
+     */
+    QuickFilterModel getModel();
+
+    /**
      * Returns binding model
      * @return binding model
      */

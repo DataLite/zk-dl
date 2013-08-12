@@ -709,11 +709,11 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public void setQuickFilter(String column, String value) {
-        QuickFilterModel model = getQuickFilterController().getBindingModel();
+        // setup binding model
+        QuickFilterModel model = getQuickFilterController().getModel();
         model.setKey(column);
         model.setValue(value);
         model.setModel(getColumnUnitModel(column));
-        getQuickFilterController().getQuickFilter().fireChanges();
     }
 
     protected void callListeners( final Event event ) {

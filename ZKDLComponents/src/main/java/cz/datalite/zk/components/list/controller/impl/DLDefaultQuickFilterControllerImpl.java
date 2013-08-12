@@ -21,6 +21,11 @@ public class DLDefaultQuickFilterControllerImpl implements DLQuickFilterControll
     public void fireChanges() {
     }
 
+    @Override
+    public QuickFilterModel getModel() {
+        throw new UnsupportedOperationException( "Not supported yet." );
+    }
+
     public QuickFilterModel getBindingModel() {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
