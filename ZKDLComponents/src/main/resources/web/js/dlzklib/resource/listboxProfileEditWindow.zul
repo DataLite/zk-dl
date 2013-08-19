@@ -4,13 +4,15 @@
 
 <?page title="Listbox profile edit"?>
 
-<zk xmlns="http://www.zkoss.org/2005/zul">
-    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
-    	closable="true" id="listboxProfileEditWindow" title="Editace profilu" border="normal" width="460px">  
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
+    <window apply="org.zkoss.bind.BindComposer" 
+            viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
+            closable="true" id="listboxProfileEditWindow" title="Editace profilu" border="normal" width="460px" 
+            sclass="window">  
     	
-    	<vlayout form="@id('fx') @load(vm.profile) @save(vm.profile, before='save')">
+    	<vlayout form="@id('fx') @load(vm.profile) @save(vm.profile, before='save')" sclass="editable padding10">
     	
-        	<grid style="margin: 10px; width: 420px;">
+        	<grid sclass="margin-bottom10" width="99.4%">
 	            <columns>
 	                <column width="120px" />
 	                <column />
@@ -18,7 +20,7 @@
 	            <rows>
 	                <row>
 	                    <label value="${c:l('listbox.profileManager.profile.name')}" />
-	                    <textbox value="@bind(fx.name)" width="90%" constraint="no empty" maxlength="16"/>
+	                    <textbox value="@bind(fx.name)" width="98%" constraint="no empty" maxlength="16"/>
 	                </row>
 	                <row>
 	                	<label value="${c:l('listbox.profileManager.profile.type')}" />
@@ -35,7 +37,8 @@
 	                </row>
 	            </rows>
 	        </grid>
-	        <grid style="margin: 0px 10px; width: 420px;">
+                
+	        <grid sclass="margin-bottom10" width="99.4%">
 	            <columns>
 	                <column />
 	                <column />
@@ -52,11 +55,13 @@
 	            </rows>
 	        </grid>
 	        
-	        <div style="margin: 5px 10px 5px auto; text-align:right;">
+	        <div sclass="fr">
 	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" />            	
             	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
             	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
         	</div>
+                
+                <n:br class="clear" />
         		        
         </vlayout>      
     </window>
