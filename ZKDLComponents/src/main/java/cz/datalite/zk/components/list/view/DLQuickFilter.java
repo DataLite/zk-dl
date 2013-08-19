@@ -54,7 +54,7 @@ public class DLQuickFilter extends InputElement {
     EventListener valueListener = new EventListener<Event>() {
         public void onEvent(Event event) throws Exception {
             if (controller != null)
-                controller.getBindingModel().setValue(getValue());
+                controller.getModel().setValue(getValue());
         }
     };
 
@@ -62,7 +62,7 @@ public class DLQuickFilter extends InputElement {
     EventListener searchListener = new EventListener<Event>() {
         public void onEvent(Event event) throws Exception {
             if (event instanceof InputEvent) // synchonize ON_CHANING event
-                controller.getBindingModel().setValue(((InputEvent) event).getValue());
+                controller.getModel().setValue(((InputEvent) event).getValue());
             onQuickFilter();
         }
     };
@@ -114,13 +114,13 @@ public class DLQuickFilter extends InputElement {
 		}
 
         this.setActiveFilter();
-        this.setValue(controller.getBindingModel().getValue());
+        this.setValue(controller.getModel().getValue());
     }
 
     // Actual button selection
     protected void setActiveFilter() {
 
-        final DLColumnUnitModel unit = controller.getBindingModel().getModel();
+        final DLColumnUnitModel unit = controller.getModel().getModel();
         String column = unit != null ? unit.getColumn() : getQuickFilterDefault();
         
 		int index = quickFilterAll ? 1 : 0;
@@ -144,8 +144,8 @@ public class DLQuickFilter extends InputElement {
 
     protected void setActiveFilter( final Menuitem item ) {
         setLabel(item.getLabel());
-        controller.getBindingModel().setKey(item.getValue());
-        controller.getBindingModel().setModel((DLColumnUnitModel) item.getAttribute("model"));
+        controller.getModel().setKey(item.getValue());
+        controller.getModel().setModel((DLColumnUnitModel) item.getAttribute("model"));
     }
 
     // Event onOK or onChaning - do search
@@ -192,8 +192,8 @@ public class DLQuickFilter extends InputElement {
 		}
 
 		public void onEvent(final org.zkoss.zk.ui.event.Event event) {
-			controller.getBindingModel().setKey(column);
-			controller.getBindingModel().setModel(model);
+			controller.getModel().setKey(column);
+			controller.getModel().setModel(model);
 			setActiveFilter(item);
 		}
 	}

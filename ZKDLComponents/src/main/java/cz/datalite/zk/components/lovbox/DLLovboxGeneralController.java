@@ -109,11 +109,9 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
     public void setSelectedItem( final T selectedItem ) {
 
         // ensure, that listbox is loaded
-        if ( listboxController.isLocked() ) {
-            lovbox.onOpen( new OpenEvent( Events.ON_OPEN, lovbox, true ) );
+        if ( !listboxController.isLocked() ) {
+            listboxController.setSelectedItem( selectedItem );
         }
-
-        listboxController.setSelectedItem( selectedItem );
 
         onSelect( true );
     }
@@ -156,6 +154,12 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
     public DLLovbox<T> getLovBox() {
         return lovbox;
+    }
+
+    public void invalidateListboxModel() {
+        if (!getListboxController().isLocked())
+           getListboxController().clearDataModel();
+        getListboxController().lockModel();
     }
 
     public void addListener( final String event, final EventListener listener ) {
