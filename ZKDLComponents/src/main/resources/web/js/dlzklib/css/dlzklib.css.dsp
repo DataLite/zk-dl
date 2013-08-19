@@ -14,8 +14,9 @@
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
-.z-dlpaging-button-table { float: left; margin-left: 8px; width: auto; }
-.z-dlpaging-aux-content { margin: 0 auto; text-align: center; vertical-align: middle; width: 80%; }
+.z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
+.z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: 70%; }
+.z-paging-info, .z-paging div.z-paging-info { top: 8px; }
 
 /* -- Listboxmanager component -- */
 .z-listboxmanager { float: right; margin: 2px 2px 0 0; }
