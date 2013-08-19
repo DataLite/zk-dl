@@ -36,6 +36,18 @@ public interface DLLovboxController<T> extends Cascadable<T> {
     DLLovbox<T> getLovBox();
 
     /**
+     * Invalidate underlying listbox.
+     * <p/>
+     * Data are cleared and listbox is locked - it simulates the state of listbox before lovbox is opened for the
+     * first time.
+     * <p/>
+     * Typical usage is if different filter should be applied on the listbox data. listbox.refreshDataModel() is not
+     * optimal, because data are loaded from DB immediately. If you use invalidateListboxModel() instead, data are loaded
+     * only after the user opens the lovbox.
+     */
+    void invalidateListboxModel();
+
+    /**
      * <p>Adds listener on the specific event.</p>
      *
      * <p><b>Supported events are:</b></p>

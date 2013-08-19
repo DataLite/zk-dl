@@ -23,7 +23,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
     protected final DLListboxExtController masterController;
     // model
     protected final QuickFilterModel model;
-    protected final QuickFilterModel bindingModel;
     // view
     protected final DLQuickFilter quickFilter;
 
@@ -32,7 +31,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         this.quickFilter = quickFilter;
         this.model = model;
 
-        bindingModel = new QuickFilterModel( model.getKey(), model.getValue(), model.getModel() );
         quickFilter.setController( this );
     }
 
@@ -40,9 +38,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         if ( masterController.isLocked() ) {
             return;
         }                       
-        model.setValue( bindingModel.getValue() == null ? null : bindingModel.getValue().trim());
-        model.setKey( bindingModel.getKey() );
-        model.setModel( bindingModel.getModel() );
         masterController.onFilterChange( DLListboxEvents.ON_QUICK_FILTER_CHANGE );
     }
 
@@ -80,9 +75,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         // if the column is not visible anymore then reset the filter
         if ( model.getModel() != null && !model.getModel().isVisible() ) model.clear();
         
-        bindingModel.setValue( model.getValue() );
-        bindingModel.setKey( model.getKey() );
-        bindingModel.setModel( model.getModel() );
         quickFilter.fireChanges();
     }
 
@@ -118,10 +110,6 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
 
     public QuickFilterModel getModel() {
         return this.model;
-    }
-
-    public QuickFilterModel getBindingModel() {
-        return this.bindingModel;
     }
 
     public String getUuid() {
