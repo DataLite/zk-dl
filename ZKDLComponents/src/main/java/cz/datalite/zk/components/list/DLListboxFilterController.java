@@ -22,33 +22,53 @@ import java.util.List;
  * @param <T> model type
  */
 public abstract class DLListboxFilterController<T> extends DLListboxSimpleController<T> {
-
-    /**
-     * {@inheritDoc}
-     */
-    public DLListboxFilterController() {
+	
+	/**
+	 * Controller does not refresh data in case of paging or sorting if set to true.
+	 */
+	private boolean disableReload = false;
+	
+	/**
+	 * Controller holds data in this list if disableReload set to true. 
+	 */
+	private List<T> data = null;
+	
+	public DLListboxFilterController() {
         super();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxFilterController(final String identifier) {
         super(identifier);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxFilterController(final String identifier, final Class<T> clazz) {
         super(identifier, clazz);
+    }
+    
+    public DLListboxFilterController(final boolean disableReload) {
+        super();
+        this.disableReload = disableReload;
+    }
+
+    public DLListboxFilterController(final String identifier, final boolean disableReload) {
+    	super(identifier);
+        this.disableReload = disableReload;        
+    }
+
+    public DLListboxFilterController(final String identifier, final Class<T> clazz, final boolean disableReload) {
+        super(identifier, clazz);
+        this.disableReload = disableReload;
     }
 
     @Override
     protected DLResponse<T> loadData(List<NormalFilterUnitModel> filter, int firstRow, int rowCount, List<DLSort> sorts) {
         boolean disjunction = prepareFilter(filter);
+        
+        if (this.data == null || !this.disableReload) {        	
+        	this.data = loadData();
+        }
 
-        return DLFilter.filterAndCount(filter, loadData(), firstRow, rowCount, sorts, disjunction);
+        return DLFilter.filterAndCount(filter, this.data, firstRow, rowCount, sorts, disjunction);
     }
 
     /**
@@ -91,7 +111,12 @@ public abstract class DLListboxFilterController<T> extends DLListboxSimpleContro
 
         return toAddList;
     }
-
+    
+    @Override
+	public void clearDataModel() {
+		this.data = null;
+		super.clearDataModel();
+	}
 
     /**
      * Load data from the database.
