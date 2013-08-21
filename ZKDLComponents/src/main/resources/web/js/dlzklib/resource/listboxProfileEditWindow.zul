@@ -26,8 +26,8 @@
 	                	<label value="${c:l('listbox.profileManager.profile.type')}" />
 	                    <radiogroup selectedItem="@bind(fx.publicProfile) @converter(vm.booleanConverter)">	 
 	                    	<vlayout>                   	
-	                    		<radio label="${c:l('listbox.profileManager.profile.public')}" value="true" />
-	                    		<radio label="${c:l('listbox.profileManager.profile.private')}" value="false" />
+	                    		<radio label="${c:l('listbox.profileManager.profile.public')}" value="true" id="publicRadio" />
+	                    		<radio label="${c:l('listbox.profileManager.profile.private')}" value="false" id="privateRadio" />
 	                    	</vlayout>
 	                    </radiogroup>	                    
 	                </row>
@@ -46,17 +46,17 @@
 	            <rows>
 	                <row>
 	                    <label value="${c:l('listbox.profileManager.profile.saveColumnModel')}" />
-	                    <checkbox id="saveColumnModelCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                    <checkbox id="saveColumnModelCheckbox" checked="true" width="90%" />
 	                </row>
 	                <row>
 	                    <label value="${c:l('listbox.profileManager.profile.saveFilterModel')}" />
-	                    <checkbox id="saveColumnFilterCheckbox" checked="true" width="90%" disabled="@load(empty fx.id)"/>
+	                    <checkbox id="saveColumnFilterCheckbox" width="90%" />
 	                </row>
 	            </rows>
 	        </grid>
 	        
 	        <div sclass="fr">
-	        	<button label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" />            	
+	        	<button id="deleteButton" label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" />            	
             	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
             	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
         	</div>

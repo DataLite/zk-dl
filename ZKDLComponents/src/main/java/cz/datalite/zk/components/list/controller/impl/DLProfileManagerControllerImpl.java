@@ -120,6 +120,7 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 
 		if (idProfile == null) {
 			editProfile = new DLListboxProfileImpl();
+			editProfile.setPublicProfile(false);
 		} else {
 			editProfile = this.profileService.findById(idProfile);
 		}
@@ -127,7 +128,8 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 		final Map<String, Object> args = new HashMap<String, Object>();
 		args.put("profile", editProfile);
 		args.put("buttonMold", this.dlProfileManagerComponent.getButtonMold());
-
+		args.put("allowCreatePublic", this.dlProfileManagerComponent.isAllowCreatePublic());
+		
 		final Window win = (org.zkoss.zul.Window) ZKDLResourceResolver.resolveAndCreateComponents("listboxProfileEditWindow.zul", null, args);
 
 		final EventListener<SaveProfileEvent> saveListener = new EventListener<SaveProfileEvent>() {
@@ -177,13 +179,13 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	@Override
 	public void onDeleteProfile(Long idProfile) {				
 		this.profileService.delete(new DLListboxProfileImpl(idProfile));
-		this.profilesCtl.getListboxExtController().setSelected(null);
+		this.profilesCtl.getLovBox().setSelectedItem(null);
 		this.profilesCtl.getListboxController().refreshDataModel();
 	}
 
 	@Override
 	public void fireChanges() {		
-		this.profilesCtl.getListboxExtController().setSelected(null);
+		this.profilesCtl.getLovBox().setSelectedItem(null);
 	}
 	
 }

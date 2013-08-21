@@ -14,6 +14,7 @@ import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.Bandpopup;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Hlayout;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Listcell;
@@ -73,6 +74,27 @@ public class DLProfileManager<T> extends Hlayout {
 	 * Mold used for all buttons (default,os,trendy).
 	 */
     private String buttonMold = "trendy";
+    
+    /**
+   	 * Button to create new profile is visible when set to true.
+   	 */
+    private boolean showNewButton = true;
+    
+    /**
+ 	 * Common (public) profile can be created if set to true.
+ 	 *
+ 	 */
+     private boolean allowCreatePublic = true;
+    
+    /**
+	 * Profile type column (personal / common) is visible when set to true.
+	 */
+    private boolean showType = true;
+    
+    /**
+	 * Default profile column is visible when set to true.
+	 */
+    private boolean showDefault = true;
 
 	private DLProfileManagerController<T> controller;
 	private final DLLovbox<DLListboxProfile> profilesLovbox;
@@ -105,7 +127,7 @@ public class DLProfileManager<T> extends Hlayout {
 		buttonBar.setStyle("text-align:right;padding:5px;");
 		buttonBar.setSpacing("5px");
 		
-		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.create", true, new EventListener<Event>() {
+		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.create", this.showNewButton, new EventListener<Event>() {
 			public void onEvent(final Event event) {
 				controller.onEditProfile(null);
 				profilesLovbox.close();
@@ -134,9 +156,25 @@ public class DLProfileManager<T> extends Hlayout {
 		head.appendChild(header);
 		
 		header = new DLListheader();
+		header.setLabel("");
+		header.setSort("auto(publicProfile)");
+		header.setWidth("24px");
+		header.setVisible(this.showType);
+		header.setAlign("center");
+		head.appendChild(header);
+		
+		header = new DLListheader();
 		header.setLabel(Labels.getLabel("listbox.profileManager.profile.name"));
 		header.setSort("auto(name)");		
 		header.setSortDirection("ascending");
+		head.appendChild(header);
+		
+		header = new DLListheader();
+		header.setLabel("");
+		header.setSort("auto(defaultProfile)");
+		header.setWidth("32px");
+		header.setVisible(this.showDefault);
+		header.setAlign("center");
 		head.appendChild(header);
 		
 		header = new DLListheader();
@@ -209,6 +247,38 @@ public class DLProfileManager<T> extends Hlayout {
 	public void setEditButtonWidth(String editButtonWidth) {
 		this.editButtonWidth = editButtonWidth;
 	}
+	
+	public boolean isAllowCreatePublic() {
+		return allowCreatePublic;
+	}
+
+	public void setAllowCreatePublic(boolean allowCreatePublic) {
+		this.allowCreatePublic = allowCreatePublic;
+	}
+
+	public boolean isShowNewButton() {
+		return showNewButton;
+	}
+
+	public void setShowNewButton(boolean showNewButton) {
+		this.showNewButton = showNewButton;
+	}
+
+	public boolean isShowType() {
+		return showType;
+	}
+
+	public void setShowType(boolean showType) {
+		this.showType = showType;
+	}
+
+	public boolean isShowDefault() {
+		return showDefault;
+	}
+
+	public void setShowDefault(boolean showDefault) {
+		this.showDefault = showDefault;
+	}
 
 	public Button createButtonWithTooltip(Component parent, String labelKey, boolean visible, EventListener<Event> listener) {
 		final Button button = new Button(Labels.getLabel(labelKey));
@@ -261,6 +331,13 @@ public class DLProfileManager<T> extends Hlayout {
 			listitem.appendChild(idCell);
 			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.id");
 			
+			// profile type cell 
+			final Listcell typeCell = new Listcell();	
+			typeCell.setVisible(showType);			
+			listitem.appendChild(typeCell);			
+			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '" 
+				+ Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "'");
+			
 			// profile name cell and click handler
 			final Listcell nameCell = new Listcell();
 			
@@ -275,8 +352,18 @@ public class DLProfileManager<T> extends Hlayout {
 			listitem.appendChild(nameCell);
 			ZKBinderHelper.registerAnnotation(nameCell, "label", "load", "item.name");
 			
+			// default profile cell 
+			final Listcell defaultCell = new Listcell();	
+			defaultCell.setVisible(showDefault);			
+			listitem.appendChild(defaultCell);	
+			
+			Checkbox defaultCellCheckbox = new Checkbox();
+			defaultCellCheckbox.setDisabled(true);
+			defaultCell.appendChild(defaultCellCheckbox);			
+			ZKBinderHelper.registerAnnotation(defaultCellCheckbox, "checked", "load", "item.defaultProfile");
+			
 			// button edit cell and nested button
-			final Listcell buttonCell = new Listcell();			
+			final Listcell buttonCell = new Listcell();
 			listitem.appendChild(buttonCell);
 			
 			final HtmlBasedComponent editBtn = DLProfileManager.this.createEditButtonWithTooltip(buttonCell, true, new EventListener<Event>() {
@@ -310,6 +397,12 @@ public class DLProfileManager<T> extends Hlayout {
 			final Listcell idCell = new Listcell(profile.getId().toString());
 			item.appendChild(idCell);
 			
+			// profile type cell 
+			final Listcell typeCell = new Listcell(profile.isPublicProfile() ? Labels.getLabel("listbox.profileManager.profile.short.public")
+							: Labels.getLabel("listbox.profileManager.profile.short.private"));	
+			typeCell.setVisible(showType);			
+			item.appendChild(typeCell);			
+			
 			// profile name cell and click handler
 			final Listcell nameCell = new Listcell(profile.getName());
 			
@@ -322,6 +415,16 @@ public class DLProfileManager<T> extends Hlayout {
 			});
 			
 			item.appendChild(nameCell);
+			
+			// default profile cell 
+			final Listcell defaultCell = new Listcell();	
+			defaultCell.setVisible(showDefault);			
+			item.appendChild(defaultCell);	
+			
+			Checkbox defaultCellCheckbox = new Checkbox();
+			defaultCellCheckbox.setDisabled(true);
+			defaultCellCheckbox.setChecked(profile.isDefaultProfile());
+			defaultCell.appendChild(defaultCellCheckbox);						
 
 			// button edit cell and nested button
 			final Listcell buttonCell = new Listcell();

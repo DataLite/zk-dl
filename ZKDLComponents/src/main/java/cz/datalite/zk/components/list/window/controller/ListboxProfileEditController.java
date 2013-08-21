@@ -34,16 +34,28 @@ public class ListboxProfileEditController {
 	private DLListboxProfile profile;
 	private Component view;
 	private String buttonMold;
+	private boolean allowCreatePublic;
 	private Converter<Radio, Boolean, Radiogroup> booleanConverter = new BooleanConverter();
 	
 	@Wire("button")
 	private List<Button> buttons;
+	
+	@Wire("#deleteButton")
+	private Button deleteButton;
+	
+	@Wire("#privateRadio")
+	private Radio privateRadio;
+	
+	@Wire("#publicRadio")
+	private Radio publicRadio;
 
 	@Init
-	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("profile") DLListboxProfile profile, @ExecutionArgParam("buttonMold") String buttonMold) {
+	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("profile") DLListboxProfile profile, @ExecutionArgParam("buttonMold") String buttonMold,
+			@ExecutionArgParam("allowCreatePublic") boolean allowCreatePublic) {
 		this.profile = profile;
 		this.view = view;
 		this.buttonMold = buttonMold;
+		this.allowCreatePublic = allowCreatePublic;		
 	}
 
 	@AfterCompose
@@ -52,6 +64,14 @@ public class ListboxProfileEditController {
 		
 		for (Button button : this.buttons) {
 			button.setMold(this.buttonMold);
+		}
+		
+		if (!this.allowCreatePublic) {
+			this.privateRadio.setDisabled(true);
+			this.publicRadio.setDisabled(true);			
+		}
+		if (this.profile.getId() == null) {
+			this.deleteButton.setVisible(false);
 		}
 	}
 
