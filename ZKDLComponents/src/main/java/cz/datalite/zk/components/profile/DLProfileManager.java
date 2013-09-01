@@ -116,6 +116,7 @@ public class DLProfileManager<T> extends Hlayout {
 		// init bandpop and listbox inside lovbox
 		this.profilesListbox = new DLListbox();
 		this.profilesListbox.setStyle("overflow-y:auto!important");
+		this.profilesListbox.setSelectFirstRow(false);
 				
 		Bandpopup popup = new Bandpopup();
 		popup.appendChild(this.profilesListbox);
@@ -140,6 +141,8 @@ public class DLProfileManager<T> extends Hlayout {
 				profilesLovbox.close();
 			}
 		});
+		
+		this.profilesListbox.setNonselectableTags("*");  // only click on name cell is registered  
 		
 		this.profilesLovbox.addComponentToPopup(DLLovboxPopupComponentPosition.POSITION_BOTTOM, buttonBar);
 		this.appendChild(this.profilesLovbox);
@@ -301,6 +304,7 @@ public class DLProfileManager<T> extends Hlayout {
 		} else {
 			button = new Image(this.editButtonImage);			
 		}
+		button.setSclass("selectable");
 		button.setTooltiptext(Labels.getLabel("listbox.profileManager.edit.tooltip"));
 		button.setVisible(visible);		
 
@@ -333,17 +337,22 @@ public class DLProfileManager<T> extends Hlayout {
 			
 			// profile type cell 
 			final Listcell typeCell = new Listcell();	
-			typeCell.setVisible(showType);			
+			typeCell.setVisible(showType);
+			typeCell.setSclass("nonselectable");
 			listitem.appendChild(typeCell);			
 			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '" 
 				+ Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "'");
-			
+			ZKBinderHelper.registerAnnotation(typeCell, "tooltiptext", "load", "item.publicProfile ? '"
+				+ Labels.getLabel("listbox.profileManager.profile.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.private") + "'");
 			// profile name cell and click handler
 			final Listcell nameCell = new Listcell();
 			
 			nameCell.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 				@Override
 				public void onEvent(Event event) throws Exception {
+					Listitem selectedListitem = (Listitem) nameCell.getParent();
+					profilesLovbox.setSelectedItem((DLListboxProfile) selectedListitem.getValue()); 
+					
 					controller.onLoadProfile();
 					profilesLovbox.close();
 				}
@@ -353,9 +362,10 @@ public class DLProfileManager<T> extends Hlayout {
 			ZKBinderHelper.registerAnnotation(nameCell, "label", "load", "item.name");
 			
 			// default profile cell 
-			final Listcell defaultCell = new Listcell();	
-			defaultCell.setVisible(showDefault);			
-			listitem.appendChild(defaultCell);	
+			final Listcell defaultCell = new Listcell();
+			defaultCell.setVisible(showDefault);
+			defaultCell.setSclass("nonselectable");
+			listitem.appendChild(defaultCell);
 			
 			Checkbox defaultCellCheckbox = new Checkbox();
 			defaultCellCheckbox.setDisabled(true);
@@ -364,6 +374,7 @@ public class DLProfileManager<T> extends Hlayout {
 			
 			// button edit cell and nested button
 			final Listcell buttonCell = new Listcell();
+			buttonCell.setSclass("nonselectable");
 			listitem.appendChild(buttonCell);
 			
 			final HtmlBasedComponent editBtn = DLProfileManager.this.createEditButtonWithTooltip(buttonCell, true, new EventListener<Event>() {
@@ -394,13 +405,16 @@ public class DLProfileManager<T> extends Hlayout {
 
 		@Override
 		public void render(Listitem item, DLListboxProfile profile, int index) throws Exception {
+			item.setValue(profile);
+			
 			final Listcell idCell = new Listcell(profile.getId().toString());
 			item.appendChild(idCell);
 			
 			// profile type cell 
 			final Listcell typeCell = new Listcell(profile.isPublicProfile() ? Labels.getLabel("listbox.profileManager.profile.short.public")
 							: Labels.getLabel("listbox.profileManager.profile.short.private"));	
-			typeCell.setVisible(showType);			
+			typeCell.setVisible(showType);
+			typeCell.setSclass("nonselectable");
 			item.appendChild(typeCell);			
 			
 			// profile name cell and click handler
@@ -409,6 +423,9 @@ public class DLProfileManager<T> extends Hlayout {
 			nameCell.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 				@Override
 				public void onEvent(Event event) throws Exception {
+					Listitem selectedListitem = (Listitem) nameCell.getParent();
+					profilesLovbox.setSelectedItem((DLListboxProfile) selectedListitem.getValue());
+					
 					controller.onLoadProfile();
 					profilesLovbox.close();
 				}
@@ -418,7 +435,8 @@ public class DLProfileManager<T> extends Hlayout {
 			
 			// default profile cell 
 			final Listcell defaultCell = new Listcell();	
-			defaultCell.setVisible(showDefault);			
+			defaultCell.setVisible(showDefault);
+			defaultCell.setSclass("nonselectable");
 			item.appendChild(defaultCell);	
 			
 			Checkbox defaultCellCheckbox = new Checkbox();
@@ -428,6 +446,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 			// button edit cell and nested button
 			final Listcell buttonCell = new Listcell();
+			buttonCell.setSclass("nonselectable");
 			item.appendChild(buttonCell);
 				
 			DLProfileManager.this.createEditButtonWithTooltip(buttonCell, profile.isEditable(), new EventListener<Event>() {

@@ -351,6 +351,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         model.getFilterModel().getNormal().clear();
         model.getFilterModel().getNormal().addAll( data );
 
+        fireProfileManagerChanges();
         onFilterChange( DLListboxEvents.ON_NORMAL_FILTER_CHANGE );
     }
 

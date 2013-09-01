@@ -60,9 +60,7 @@
             	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
             	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
         	</div>
-                
-                <n:br class="clear" />
-        		        
+            	        
         </vlayout>      
     </window>
 </zk>

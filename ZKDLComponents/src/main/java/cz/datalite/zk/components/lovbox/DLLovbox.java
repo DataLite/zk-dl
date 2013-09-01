@@ -58,12 +58,12 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         addClientEvent(DLLovbox.class, "onClear", CE_IMPORTANT|CE_NON_DEFERRABLE);
 
         // init page size
-        PAGE_SIZE = Library.getIntProperty( "zk-dl.lovbox.pageSize", 10);   
-        LOGGER.debug( "Lovbox default page size is defined as '" + PAGE_SIZE +  "'." );
+		PAGE_SIZE = Library.getIntProperty("zk-dl.lovbox.pageSize", 10);
+		LOGGER.debug( "Lovbox default page size is defined as '" + PAGE_SIZE +  "'." );
         
         // init rows
-         ROWS = Library.getIntProperty( "zk-dl.lovbox.rows", 10);
-         LOGGER.debug( "Lovbox default number of rows in a listbox is defined as '" + ROWS + "'.");
+		ROWS = Library.getIntProperty("zk-dl.lovbox.rows", 10);
+		LOGGER.debug( "Lovbox default number of rows in a listbox is defined as '" + ROWS + "'.");
     }
     
     // controller
@@ -83,6 +83,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected String listWidth = "350px";
     /** defines names of properties which are shown in the lovbox value - Array of properties */
     protected String[] labelProperties = new String[] {};
+    /** defines labels of colums in head (listbox head is visible if at least one header label is defined), only for binding 2.0 */
+    protected String[] labelHeaders = new String[] {};
+    /** defines widths of columns in px, em, % or hflex (number, min etc.), only for binding 2.0 */
+    protected String[] labelWidths = new String[] {};
     /** Format for properties */
     private String labelFormat;
     /** defines name of property, which is searched in database. */
@@ -113,6 +117,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** Allow to select multiple values from the lovbox.  */
     private boolean multiple = false;
     /** defines hflex for each column in listbox. */
+    @Deprecated // use widths
     protected String[] hflexes;
     /** allow to enter text value (aka textbox). this should be allowed only for value binding (not selected item) */
     protected boolean editable = false;
@@ -123,10 +128,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** Components to add before or after listbox in popup window */
     protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
 
-
     // mark status before afterCompose is called
     private boolean initialized = false;
-
 
     /**
      * Create component without any parameter
@@ -148,8 +151,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         if ( popup == null ) { // if popup isn't defined in zul
             popup = new Bandpopup();
             popup.setParent( this );
-        } else // try to find user added components
-        {
+            popup.setSclass( "z-lovbox-popup" );
+        } else {  // try to find user added components
             for ( Component child : popup.getChildren() ) {
                 if ( child instanceof DLListbox ) {
                     listbox = ( DLListbox ) child;
@@ -167,8 +170,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         if ( listbox == null ) { // if listbox isn't defined in zul
             listbox = new DLListbox(); // create component
+            
             final Listhead head = new DLListhead(); // create lishead and listitem
-            listbox.appendChild( head );
+            head.setSclass("z-lovbox-listhead");
+            
+			listbox.appendChild(head);
 
             if ( ZKBinderHelper.version( this ) == 1 ) {
                 // version 1 does not support lovbox on a object
@@ -194,13 +200,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 // labelProperties and descriptionProperty may be null - then only one cell is created
                 // and it will contain model value (i.e. toString() ).
                 listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty ) );
-
-                for ( String property : this.labelProperties ) {
-                    // header
-                    final DLListheader header = new DLListheader();
-                    header.setColumn( property );
-                    head.appendChild( header );
-                }
+                this.initHeader(head);
                 
                 if ( searchProperty != null ) // if search property is defined create search column
                     ( ( DLListheader ) head.getFirstChild() ).setColumn( searchProperty );
@@ -305,6 +305,38 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.setAttribute("binder", binder);
         binder.loadAll();
     }
+    
+	private void initHeader(Listhead head) {
+		int index = 0;
+		
+		for (String property : this.labelProperties) {
+			final DLListheader header = new DLListheader();
+
+			if (labelHeaders != null && labelHeaders.length > 0) {
+				if (labelHeaders.length > index) {
+					header.setLabel(labelHeaders[index]);
+				} else {
+					header.setLabel("");
+				}
+			}
+			if (labelWidths != null && labelWidths.length > 0) {
+				if (labelWidths.length > index) {
+					String width = labelWidths[index];
+					if (width.contains("em") || width.contains("%") || width.contains("px")) {
+						header.setWidth(width);
+					} else {
+						header.setHflex(width);
+					}
+				} else {
+					header.setHflex("1");
+				}
+			}
+
+			header.setColumn(property);
+			head.appendChild(header);
+			index++;
+		}
+	}
 
     /**
      * Set controller - this method is called from doAfterCompose
@@ -445,7 +477,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
 
             // get values for properties
-            this.setValue( getDispalyValueForModel(this.controller.getSelectedItem()) );
+            this.setValue( getDisplayValueForModel(this.controller.getSelectedItem()) );
         }
         else
         {
@@ -455,7 +487,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 if (value.length() > 0)
                     value.append(",");
 
-                value.append(getDispalyValueForModel(selectedItem));
+                value.append(getDisplayValueForModel(selectedItem));
             }
             this.setValue( value.toString() );
         }
@@ -469,7 +501,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @param model model to get value
      * @return formated string
      */
-    protected String getDispalyValueForModel(T model) {
+    protected String getDisplayValueForModel(T model) {
 
         final int size = this.labelProperties.length;
 
@@ -537,6 +569,33 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             if ( this.labelProperties.length <= 0 ) {
                 this.labelProperties = null;
             }
+        }
+    }
+    
+    /**
+	 * Optional argument. Comma separated list of values - column names. 
+	 * 
+	 * Listbox header will be visile if at least one label is defined.
+	 * 
+	 * Note: works only for with binding (2.0)
+	 */
+    public void setLabelHeader( final String labelHeader ) {
+		if (labelHeader != null) {
+			this.labelHeaders = PATTERN_LABEL_PROPERTIES.split(labelHeader);
+		}
+    }
+    
+    /**
+	 * Optional argument. Comma separated list of values - column widths.
+	 * 
+	 * Width can be defined in px, em, % or as hflex (without suffix) including
+	 * combination of these types.
+	 * 
+	 * Note: works only with new binding (2.0)
+	 */
+    public void setLabelWidth( final String labelWidth ) {
+		if (labelWidth != null) {
+			this.labelWidths = PATTERN_LABEL_PROPERTIES.split(labelWidth);         
         }
     }
 
@@ -776,7 +835,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         smartUpdate("watermark", watermark);
         this.watermark = watermark;
     }
-
+    
     //-- super --//
     protected void renderProperties(org.zkoss.zk.ui.sys.ContentRenderer renderer)
             throws java.io.IOException {
@@ -808,6 +867,12 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         super.service(request, everError);
     }
     
+    /**
+   	 * Optional argument. Allows add component to bandpop below listbox
+   	 * or above listbox. 
+   	 * 
+   	 * @see DLLovboxPopupComponentPosition
+   	 */
     public void addComponentToPopup(DLLovboxPopupComponentPosition position, Component comp) {
     	this.additionalComponents.put(position, comp);
     }

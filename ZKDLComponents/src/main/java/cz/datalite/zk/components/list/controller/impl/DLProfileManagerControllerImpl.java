@@ -184,8 +184,9 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	}
 
 	@Override
-	public void fireChanges() {		
-		this.profilesCtl.getLovBox().setSelectedItem(null);
+	public void fireChanges() {
+		this.profilesCtl.getLovBox().getListboxController().setSelected(null);
+		this.profilesCtl.setSelectedItem(null);
 	}
 	
 }

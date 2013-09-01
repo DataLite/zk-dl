@@ -2,6 +2,8 @@
 
 /* global */
 .z-dlzklib-clear { clear: both; }
+.selectable { cursor : pointer!important; }
+.nonselectable { cursor : default!important; }
 
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; }
