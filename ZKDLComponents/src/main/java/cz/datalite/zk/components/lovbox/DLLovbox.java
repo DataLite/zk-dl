@@ -426,7 +426,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
         final boolean isChange = !Objects.equals( selectedItem, controller.getSelectedItem() );
 
-        controller.getListboxExtController().setSelectedItem( selectedItem );
+        // we need to clear listbox selected value, otherwise the client will not be able to generate onSelect event
+        if (isChange && !controller.getListboxExtController().isLocked()) {
+            // more clear solution will be to try select correct item, but it is not easy to find a way
+            // of direct selection without any event is sent.
+            controller.getListboxExtController().setSelected( null );
+            controller.getListboxExtController().getListbox().setSelectedIndex(-1);
+        }
+
         controller.getModel().setSelectedItem( selectedItem );
 
         if ( isChange ) {
