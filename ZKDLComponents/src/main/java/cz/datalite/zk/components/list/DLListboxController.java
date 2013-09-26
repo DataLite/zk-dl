@@ -18,6 +18,7 @@ import java.util.Set;
  *
  * @param <T> main entity
  * @author Karel Cemus
+ * @author Jiri Bubnik
  */
 public interface DLListboxController<T> {
 
@@ -28,23 +29,23 @@ public interface DLListboxController<T> {
      * <i>java:</i> controller.registerEasyFilterVariable(comp, "filter");<br/>
      * <i>zul:</i><br/>
      * <ul>
-     * <li>&lt;textbox value="@{filter.like.name}"/&gt;</li>
-     * <li>&lt;intbox value="@{filter.gt.priority}"/&gt;</li>
+     * <li>&lt;textbox value="@{filter.LIKE.name}"/&gt;</li>
+     * <li>&lt;intbox value="@{filter.GT.priority}"/&gt;</li>
      * </ul></p>
      *
-     * <p><b>Available operators:</b><br />
+     * <p><b>Available operators (always use uppercase to distinct it from EL reserved words):</b><br />
      * <dl>
-     * <dt>like</dt>
+     * <dt>LIKE</dt>
      *    <dd>%needle%, *needle*</dd>
-     * <dt>ge</dt>
+     * <dt>GE</dt>
      *    <dd>greater equal: >=</dd>
-     * <dt>gt</dt>
+     * <dt>GT</dt>
      *    <dd>greater than: ></dd>
-     * <dt>le</dt>
+     * <dt>LE</dt>
      *    <dd>lesser equal: <=</dd>
-     * <dt>lt</dt>
+     * <dt>LT</dt>
      *    <dd>lesser than: <</dd>
-     * <dt>eq</dt>
+     * <dt>EQ</dt>
      *    <dd>equal: =</dd>
      * </dl>
      * </p>
@@ -63,88 +64,21 @@ public interface DLListboxController<T> {
      */
     void registerEasyFilterVariable( String compId, String variableName );
 
-    /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnFilter(org.zkoss.zk.ui.Component, java.lang.String)}
-     * with event <b>onClick</b></p>
-     * @param comp component with event listener
-     */
-    void registerEasyFilterOnFilter( org.zkoss.zk.ui.Component comp );
 
     /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnFilter(org.zkoss.zk.ui.Component, java.lang.String)}
-     * with event <b>onClick</b></p>
-     * @param compId component with listeners identifier
-     */
-    void registerEasyFilterOnFilter( String compId );
-
-    /**
-     * <p>Register event listener on the specified event on this component.
-     * When event is captured easy filter is saved from binding model to the
-     * normal model and listbox data model is refreshed. If autosaving is setted
-     * then is model automatically saved to the session.</p>
-     * @param comp component with listener
-     * @param event event name which will be captured
-     */
-    void registerEasyFilterOnFilter( org.zkoss.zk.ui.Component comp, String event );
-
-    /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnFilter(org.zkoss.zk.ui.Component, java.lang.String)}.</p>
-     * @param compId component identifier
-     * @param event event name
-     */
-    void registerEasyFilterOnFilter( String compId, String event );
-
-    /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnClear(org.zkoss.zk.ui.Component, java.lang.String) }
-     * with event name <b>onClick</b></p>
-     * @param comp compnent with event listener
-     */
-    void registerEasyFilterOnClear( org.zkoss.zk.ui.Component comp );
-
-    /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnClear(org.zkoss.zk.ui.Component, java.lang.String) }
-     * with event name <b>onClick</b></p>
-     * @param compId component identifier
-     */
-    void registerEasyFilterOnClear( String compId );
-
-    /**
-     * <p>Registers event listener on this component. When event is captured
-     * easy filter model is cleared and listbox data model is refreshed. If
-     * autosave is setted then model will be save to the session.</p>
-     * @param comp component with listener
-     * @param event event name
-     */
-    void registerEasyFilterOnClear( org.zkoss.zk.ui.Component comp, String event );
-
-    /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnClear(org.zkoss.zk.ui.Component, java.lang.String) }</p>
-     * @param compId component identifier
-     * @param event event name
-     */
-    void registerEasyFilterOnClear( String compId, String event );
-
-    /**
-     * Reaction on filter event.
-     * You can raise easy filter event manually by calling this function instead of registering 
-     * event automatically by calling one of registerEasyFiterOnFilter method 
-     * (e.g. {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnFilter( java.lang.String )})
+     * Confirm values in easy filter and refresh data in listbox.
      */
     void confirmEasyFilter();
 
     /**
-     * Reaction on clear filter event.
-     * You can raise easy filter event manually by calling this function instead of registering 
-     * event automatically by calling one of registerEasyFiterOnClear method 
-     * (e.g. {@link cz.datalite.zk.components.list.DLListboxController#registerEasyFilterOnFilter( java.lang.String )})
+     * Clear values in easy filter and refresh data in listbox.
      */
     void clearEasyFilter();
 
     /**
-     * <p>Like {@link cz.datalite.zk.components.list.DLListboxController#clearEasyFilter() }</p>
-     * Call this method if you want to disable automatic refresh.
+     * Clear values in easy filter.
      *
-     * @param refresh set to true to disable automatic refresh and only clear filter fields.
+     * @param refresh true if immediately refresh data in listbox
      */
     void clearEasyFilter( boolean refresh );
 

@@ -55,7 +55,7 @@ public enum DLFilterOperator {
      */
     public static DLFilterOperator strToEnum( final String key ) {
         for ( DLFilterOperator op : values() ) {
-            if ( op.shortName.equals( key ) ) {
+            if ( op.shortName.equals( key.toLowerCase() ) ) {
                 return op;
             }
         }

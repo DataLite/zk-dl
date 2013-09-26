@@ -475,22 +475,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         return entityClass;
     }
 
-    public void registerEasyFilterOnFilter( final String compId ) {
-        registerEasyFilterOnFilter( getListboxController().getFellow( compId ) );
-    }
-
-    public void registerEasyFilterOnFilter( final Component comp ) {
-        registerEasyFilterOnFilter( comp, "onClick" );
-    }
-
-    public void registerEasyFilterOnFilter( final String compId, final String event ) {
-        registerEasyFilterOnFilter( getListboxController().getFellow( compId ), event );
-    }
-
-    public void registerEasyFilterOnFilter( final Component comp, final String event ) {
-        getListboxController().addForward( event, comp, "onEasyFilter" );
-    }
-
     public void registerEasyFilterVariable( final String compId, final String variableName ) {
         registerEasyFilterVariable( getListboxController().getFellow( compId ), variableName );
     }
@@ -498,23 +482,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     public void registerEasyFilterVariable( final Component comp, final String variableName ) {
         comp.setAttribute( variableName, easyFilterController.getBindingModel(), Component.SPACE_SCOPE );
     }
-
-    public void registerEasyFilterOnClear( final String compId ) {
-        registerEasyFilterOnClear( getListboxController().getFellow( compId ) );
-    }
-
-    public void registerEasyFilterOnClear( final Component comp ) {
-        registerEasyFilterOnClear( comp, "onClick" );
-    }
-
-    public void registerEasyFilterOnClear( final String compId, final String event ) {
-        registerEasyFilterOnClear( getListboxController().getFellow( compId ), event );
-    }
-
-    public void registerEasyFilterOnClear( final Component comp, final String event ) {
-        getListboxController().addForward( event, comp, "onEasyFilterClear" );
-    }
-
     public boolean loadModel() {
     	@SuppressWarnings("unchecked")
 		List<DLListboxProfile> profiles = (List<DLListboxProfile>) this.profileServiceSessionImpl.findAll(this.getSessionName());
