@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import cz.datalite.zk.bind.Binder;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
@@ -160,46 +161,62 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     public void onRemove( final Row row ) {
         // removes actual row
         final RowModel model = getModelFromComponent( row );
-        rows.remove( model );
-        ZKBinderHelper.loadComponent( self );
+        rows.remove(model);
+        ZKBinderHelper.loadComponent(self);
     }
 
     public void onRemoveAll() {
         rows.clear();
-        ZKBinderHelper.loadComponent( self );
+        ZKBinderHelper.loadComponent(self);
     }
 
     @SuppressWarnings( "unchecked" )
     public void onAdd() {
         final NormalFilterUnitModel unit = new NormalFilterUnitModel();
         unit.update( modelTemplates.get( 0 ) );
-        rows.add( new RowModel( unit ) );
+        rows.add(new RowModel(unit));
         ZKBinderHelper.loadComponent( self );
     }
 
     public void onSelectColumn( final Combobox columnbox ) {
         final Combobox operatorBox = ( Combobox ) columnbox.getNextSibling();
-        ZKBinderHelper.loadComponent( operatorBox );
-        refreshComponents( ( Row ) columnbox.getParent() );
+        ZKBinderHelper.loadComponent(operatorBox);
+        refreshComponents((Row) columnbox.getParent());
     }
 
     public void onSelectOperator( final Combobox combobox ) {
-        refreshComponents( ( Row ) combobox.getParent() );
+        refreshComponents((Row) combobox.getParent());
     }
 
     public void onRenderComponents( final Combobox combobox ) {
-        onSelectColumn( combobox );
-        onRenderComponents( ( Row ) combobox.getParent() );
+        onSelectColumn(combobox);
+        onRenderComponents((Row) combobox.getParent());
     }
 
+    /**
+     * Rerender components if necessary.
+     *
+     * Problem: if the component is removed, than self databinding is unregistered in DesktopEventQueue.unsubscribe, but is
+     * never subscribed again (component is detached). This is especially problem for our lovbox, which can create adhoc binding.
+     *
+     * @param row row of listbox where to rerender
+     */
     public void onRenderComponents( final Row row ) {
-        final Component lastChild = row.getLastChild(); // image button remove
+        int COMPONENT_OFFSET = 2; // first are 2 comboboxes with column and operator selection , than value columns to render
         final RowModel model = getModelFromComponent( row );
-        for ( int i = 0; i < DLFilterOperator.MAX_ARITY; ++i ) { // remove all
-            lastChild.getPreviousSibling().setParent( null );
-        }
-        for ( int i = 0; i < DLFilterOperator.MAX_ARITY; ++i ) { // insert all
-            row.insertBefore( model.getPosition( i + 1 ), lastChild );
+        for ( int i = 0; i < DLFilterOperator.MAX_ARITY; ++i ) { // replace all
+            int idx = COMPONENT_OFFSET + i;
+            if (row.getChildren().get(idx) != model.getPosition( i + 1 )) {
+                row.getChildren().remove(idx);
+                Component newComp = model.getPosition(i + 1);
+                row.getChildren().add(idx, newComp);
+
+                // reinicialize binding
+                Object binder = newComp.getAttribute("binder", Component.COMPONENT_SCOPE);
+                if (binder != null && binder instanceof Binder) {
+                    ((Binder)binder).loadComponent(newComp);
+                }
+            }
         }
         LOGGER.debug( "Components have been rendered." );
     }

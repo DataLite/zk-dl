@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.lovbox;
 
+import cz.datalite.zk.bind.Binder;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
 import cz.datalite.zk.components.cascade.CascadableExt;
@@ -147,6 +148,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * is necessary also creates listbox.
      */
     public void afterCompose() {
+        // ensure binding is available
+        Binder ownBinder = checkCreateOwnBinder();
+
         popup = getDropdown();
         if ( popup == null ) { // if popup isn't defined in zul
             popup = new Bandpopup();
@@ -266,7 +270,30 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             }
         }
 
+        // init own binder
+        if (ownBinder != null) {
+            ownBinder.initAnnotatedBindings();
+            ownBinder.loadComponent(this, true);
+        }
+
         initialized = true;
+    }
+
+    /**
+     * Lovbox needs databinding for it's internal function. If the binder is not set by client, create own binding.
+     * This is not a complete inicialization - after compose you need to call initAnnotatedBindings() and loadComponent().
+     *
+     * @return new databinder or null if binder is already set
+     */
+    private Binder checkCreateOwnBinder() {
+        if (!ZKBinderHelper.hasBinder( this )) {
+            Binder ownBinder = new Binder();
+            this.setAttribute("binder", ownBinder, Component.COMPONENT_SCOPE);
+            ownBinder.init(this, new Object(), null);
+
+            return ownBinder;
+        } else
+            return null;
     }
 
     /**
