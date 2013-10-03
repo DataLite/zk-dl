@@ -3,9 +3,7 @@ package cz.datalite.dao.plsql;
 import org.springframework.jdbc.core.SqlParameter;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Definice volání PL/SQL
@@ -362,7 +360,7 @@ public interface StoredProcedureInvoker
 	 *
 	 * @return map hodnot výstupních parametrů
 	 */
-	Map<String, Object> execute() ;
+    StoredProcedureResult execute() ;
 
     /**
      * Vyzvednutí hodnot parametru
@@ -373,7 +371,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> T extract(Map<String, Object> resultMap, String name, Class<T> returnType) ;
+    <T> T extract(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
      * Vyzvednutí hodnot parametru
@@ -384,7 +382,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T extends StructConvertable> T extractStruct(Map<String, Object> resultMap, String name, Class<T> returnType) ;
+    <T extends StructConvertable> T extractStruct(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
      * Vyzvednutí hodnot parametru
@@ -395,7 +393,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> List<T> extractArray(Map<String, Object> resultMap, String name, Class<T> returnType) ;
+    <T> List<T> extractArray(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
      * Vyzvednutí hodnot PL/SQL recordu
@@ -406,7 +404,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> T extractRecord(Map<String, Object> resultMap, String name, Class<T> returnType) ;
+    <T> T extractRecord(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
      * Vyzvednutí hodnot PL/SQL recordu
@@ -417,7 +415,7 @@ public interface StoredProcedureInvoker
      *
      * @return true pokud byla ve vysledku alespon jedna hodnota polozky ciloveho objektu
      */
-    <T> boolean extractRecord(Map<String, Object> resultMap, String name, T returnValue) ;
+    <T> boolean extractRecord(StoredProcedureResult resultMap, String name, T returnValue) ;
 
     /**
      *
@@ -429,7 +427,7 @@ public interface StoredProcedureInvoker
      *
      * @return seznam vyzvednutých záznamů
      */
-    <T> List<T> extractTable(Map<String, Object> resultMap, String name, Class<T> returnType) ;
+    <T> List<T> extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
      *
@@ -441,7 +439,7 @@ public interface StoredProcedureInvoker
      * @param target              cílový seznam
      * @param mergeType           způsob spojení seznamu z dba a cilového seznamu
      */
-    <T> void extractTable(Map<String, Object> resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType) ;
+    <T> void extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType) ;
 
     /**
      * Vyzvednutí hodnot parametru
@@ -451,7 +449,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    Boolean extractBoolean(Map<String, Object> resultMap, String name) ;
+    Boolean extractBoolean(StoredProcedureResult resultMap, String name) ;
 
     /**
      * Vyzvednutí výsledku funkce
@@ -461,7 +459,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> T extractResult(Map<String, Object> resultMap, Class<T> returnType) ;
+    <T> T extractResult(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
      * Vyzvednutí výsledku funkce
@@ -471,7 +469,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T extends StructConvertable> T extractResultStruct(Map<String, Object> resultMap, Class<T> returnType) ;
+    <T extends StructConvertable> T extractResultStruct(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
      * Vyzvednutí výsledku funkce (db pole)
@@ -481,7 +479,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> List<T> extractResultArray(Map<String, Object> resultMap, Class<T> returnType) ;
+    <T> List<T> extractResultArray(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
      * Vyzvednutí výsledku funkce (PL/SQL table)
@@ -491,7 +489,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> List<T> extractResultTable(Map<String, Object> resultMap, Class<T> returnType) ;
+    <T> List<T> extractResultTable(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
      * Vyzvednutí výsledku funkce (PL/SQL record)
@@ -501,5 +499,5 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
-    <T> T extractResultRecord(Map<String, Object> resultMap, Class<T> returnType) ;
+    <T> T extractResultRecord(StoredProcedureResult resultMap, Class<T> returnType) ;
 }

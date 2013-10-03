@@ -1,9 +1,6 @@
 package cz.datalite.dao.plsql.impl;
 
-import cz.datalite.dao.plsql.MergeType;
-import cz.datalite.dao.plsql.SqlLobValueFactory;
-import cz.datalite.dao.plsql.StoredProcedureInvoker;
-import cz.datalite.dao.plsql.StructConvertable;
+import cz.datalite.dao.plsql.*;
 import cz.datalite.dao.plsql.annotations.SqlField;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.ReflectionHelper;
@@ -701,7 +698,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> T extractResult( Map<String, Object> resultMap, Class<T> returnType )
+    public <T> T extractResult( StoredProcedureResult resultMap, Class<T> returnType )
     {
         Object obj = resultMap.get(RETURN_VALUE_NAME) ;
 
@@ -709,7 +706,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> List<T> extractResultArray( Map<String, Object> resultMap, Class<T> returnType )
+    public <T> List<T> extractResultArray( StoredProcedureResult resultMap, Class<T> returnType )
     {
         Object obj = resultMap.get(RETURN_VALUE_NAME) ;
 
@@ -738,13 +735,13 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> List<T> extractResultTable(Map<String, Object> resultMap, Class<T> returnType)
+    public <T> List<T> extractResultTable(StoredProcedureResult resultMap, Class<T> returnType)
     {
         return extractTable( resultMap, RETURN_VALUE_NAME, returnType ) ;
     }
 
     @Override
-    public Map<String, Object> execute()
+    public StoredProcedureResult execute()
     {
         if ( wrapNeed )
         {
@@ -753,7 +750,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         try
         {
-            return execute( inputs ) ;
+            return new StoredProcedureResult( execute( inputs ) ) ;
         }
         catch ( DataAccessException e )
         {
@@ -763,7 +760,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
                 if ( sqlException.getErrorCode() == 4068 ) //Balík byl změněn
                 {
-                    return execute( inputs ) ;
+                    return new StoredProcedureResult( execute( inputs ) ) ;
                 }
             }
 
@@ -1311,7 +1308,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
 
-    public <T> List<T> extractTable(Map<String, Object> resultMap, String name, Class<T> returnType)
+    public <T> List<T> extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
         List<T> result = new ArrayList<T>() ;
 
@@ -1350,7 +1347,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> void extractTable(Map<String, Object> resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType)
+    public <T> void extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType)
     {
         List<T> novySeznam = extractTable(resultMap, name, returnType) ;
 
@@ -1407,7 +1404,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      * @param returnType    návratový typ (typ polozky)
      * @param target        vygenerovaný seznam zdrojových dat
      */
-    private <T> void extractFromTable( Map<String, Object> resultMap, String name, Class<T> returnType, Map<FieldInfo, List<?>> target )
+    private <T> void extractFromTable( StoredProcedureResult resultMap, String name, Class<T> returnType, Map<FieldInfo, List<?>> target )
     {
         for( Map.Entry<String, FieldInfo> field : getFieldMaps( returnType ).entrySet() )
         {
@@ -1419,7 +1416,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
 
     @Override
-    public <T> T extractRecord(Map<String, Object> resultMap, String name, Class<T> returnType)
+    public <T> T extractRecord(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
         if ( isBoolean(returnType) )
         {
@@ -1451,7 +1448,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
         }
     }
 
-    public <T> boolean extractRecord(Map<String, Object> resultMap, String name, T returnValue)
+    public <T> boolean extractRecord(StoredProcedureResult resultMap, String name, T returnValue)
     {
         boolean found = false ;
 
@@ -1570,7 +1567,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> T extract(Map<String, Object> resultMap, String name, Class<T> returnType)
+    public <T> T extract(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
         Object obj = resultMap.get( name ) ;
 
@@ -1578,7 +1575,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T extends StructConvertable> T extractStruct(Map<String, Object> resultMap, String name, Class<T> returnType)
+    public <T extends StructConvertable> T extractStruct(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
         Object obj = resultMap.get( name ) ;
 
@@ -1586,7 +1583,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public <T> List<T> extractArray(Map<String, Object> resultMap, String name, Class<T> returnType)
+    public <T> List<T> extractArray(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
         Object obj = resultMap.get( name ) ;
 
@@ -1594,19 +1591,19 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
-    public Boolean extractBoolean(Map<String, Object> resultMap, String name)
+    public Boolean extractBoolean(StoredProcedureResult resultMap, String name)
     {
         return extractRecord( resultMap, name, Boolean.class ) ;
     }
 
     @Override
-    public <T extends StructConvertable> T extractResultStruct(Map<String, Object> resultMap, Class<T> returnType)
+    public <T extends StructConvertable> T extractResultStruct(StoredProcedureResult resultMap, Class<T> returnType)
     {
         return extractStruct( resultMap, RETURN_VALUE_NAME, returnType ) ;
     }
 
     @Override
-    public <T> T extractResultRecord(Map<String, Object> resultMap, Class<T> returnType)
+    public <T> T extractResultRecord(StoredProcedureResult resultMap, Class<T> returnType)
     {
         return extractRecord( resultMap, RETURN_VALUE_NAME, returnType ) ;
     }
