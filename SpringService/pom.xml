@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.1</version>
+        <version>1.4.3</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>SpringService</artifactId>
-    <version>1.4.1.3</version>
+    <version>1.4.3</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
 
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>HibernateDAO</artifactId>
-            <version>1.4.1.5</version>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
         
         <dependency>
@@ -90,6 +90,13 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>oracle-jdbc</artifactId>
+            <version>10.2.0.4</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
