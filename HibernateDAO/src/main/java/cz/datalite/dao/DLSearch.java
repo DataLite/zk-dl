@@ -1,12 +1,17 @@
 package cz.datalite.dao;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
+import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
 import org.hibernate.sql.JoinType;
+
+import javax.persistence.Embedded;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -15,6 +20,8 @@ import org.hibernate.sql.JoinType;
  * @author Karel Cemus
  */
 public class DLSearch<T> {
+    // when creating automatic alias for full path, use this suffix for alias naming (e.g. 'propertyAlias')
+    private String ALIAS_SUFFIX = "Alias";
 
     /** Criterions in filter */
     private final List<Criterion> criterions = new LinkedList<Criterion>();
@@ -32,15 +39,11 @@ public class DLSearch<T> {
     private final List<Projection> projections = new LinkedList<Projection>();
     /** Defines constant for disabled paging */
     public static final int NOT_PAGING = -1;
-    private Class<T> persistentClass = null;
 
-    /**
-     * Returns the generic class this object is constucted for (may be null)
-     * @return the generic class
-     */
-    public Class<T> getPersistentClass() {
-        return persistentClass;
-    }
+    /** Class of the main entity. If persistence class is set, all properties are validated against this class.
+     *  It is mandatory to set persistentClass if @Embedded annotation is used - we need to check if embeddable
+     *  */
+    private Class<T> persistentClass = null;
 
     /**
      * Create DLSearch
@@ -73,15 +76,21 @@ public class DLSearch<T> {
      * @param firstRow index of 1st row (starts at 0)
      */
     public DLSearch( final List<DLSort> sorts, final int rowCount, final int firstRow ) {
+        this( sorts, rowCount, firstRow, null );
+    }
+
+    /**
+     * Create DLSearch
+     * @param sorts order by definition
+     * @param rowCount requested row count
+     * @param firstRow index of 1st row (starts at 0)
+     * @param persistentClass if persistence class is set, all properties are validated against this class
+     */
+    public DLSearch( final List<DLSort> sorts, final int rowCount, final int firstRow, Class<T> persistentClass ) {
         this.sorts = sorts;
         this.rowCount = rowCount;
         this.firstRow = firstRow;
-
-        // setup persistence class, only if set
-        if ( getClass().getGenericSuperclass() instanceof ParameterizedType
-                && ((( ParameterizedType ) getClass().getGenericSuperclass()).getActualTypeArguments()).length > 0 ) {
-            this.persistentClass = ( Class<T> ) (( ParameterizedType ) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        }
+        this.persistentClass = persistentClass;
     }
 
     /**
@@ -198,127 +207,297 @@ public class DLSearch<T> {
     }
 
     /**
-     * <p>Adds alias name for your property. If alias is already defined
-     * nothing is done. Else your entered alias is added.</p>
-     * <p>Notes: <br/>Alias must containt EXACTLY one dot.<br/>Alias name
-     * mustn't be same like some field name.</p>
-     * <h2>Example:</h2>
-     * <i>path:</i> human.hobby<br/>
-     * <i>alias:</i> hobby<br/>
-     * <h2>Example:</h2>
-     * <i>path:</i> hobby.type<br/>
-     * <i>alias:</i> typeAlias<br/>
-     * @param path table address - contains exactly one dot
-     * @param alias pseudonym for the path
-     * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
-     * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
-     * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
-     * @deprecated as of Hibernate 4  use JoinType object
+     * Adds all aliases for full field path with INNER_JOIN type.
+     * Use this method to obtain alias for Restrictions property names.
+     *
+     * <p>If alias already exists, it is modified to INNER_JOIN and it's name is returned. Otherwise new alias
+     * is created with default name.</p>
+     *
+     * @param fullPath full field path (e.g. 'property', 'property.innerProperty', 'property.innerProperty.moreProperty')
+     * @return existing or new alias name
      */
-    @Deprecated
-    public void addAlias( final String path, final String alias, final int joinType ) {
-       addAlias(path, alias, JoinType.parse(joinType));
+    public String addAliases( final String fullPath ) {
+        return addAliases(fullPath, JoinType.INNER_JOIN);
     }
 
+
     /**
-     * <p>Adds alias name for your property. If alias is already defined
-     * nothing is done. Else your entered alias is added.</p>
-     * <p>Notes: <br/>Alias must containt EXACTLY one dot.<br/>Alias name
-     * mustn't be same like some field name.</p>
-     * <h2>Example:</h2>
-     * <i>path:</i> human.hobby<br/>
-     * <i>alias:</i> hobby<br/>
-     * <h2>Example:</h2>
-     * <i>path:</i> hobby.type<br/>
-     * <i>alias:</i> typeAlias<br/>
-     * @param path table address - contains exactly one dot
-     * @param alias pseudonym for the path
+     * Adds all aliases for full field path with custom type. Typical usage is to get alias to create Restriction.
+     *
+     * @param fullPath full field path (e.g. 'property', 'property.innerProperty', 'property.innerProperty.moreProperty')
      * @param joinType {@link JoinType#FULL_JOIN}, {@link JoinType#LEFT_OUTER_JOIN} {@link JoinType#INNER_JOIN}
+     * @return existing or new alias name
      */
-    public void addAlias( final String path, final String alias, final JoinType joinType ) {
-        String fullPath = path.lastIndexOf( '.' ) == -1 ? "" : path.substring( 0, path.lastIndexOf( '.' ) );
-        Alias parent = null;
-        if ( fullPath.length() > 0 ) {
-            for ( Alias a : aliases ) {
-                if ( a.getAlias().equals( fullPath ) ) {
-                    parent = a;
-                    break;
+    public String addAliases( final String fullPath, final JoinType joinType ) {
+        // actual alias while traversing fullPath
+        Alias parentAlias = null;
+
+        String embeddablePrefix = "";
+        Class lastEmbeddableClass = null;
+        for (String property : parsePath( fullPath )) {
+            // resolve current path (parentAlias + embeddablePrefix + property)
+            String currentPath;
+            if (parentAlias == null) {
+                if (!StringHelper.isNull(embeddablePrefix))
+                    currentPath = embeddablePrefix.substring(1) + "." + property;
+                else
+                    currentPath = property;
+            } else {
+                currentPath = parentAlias.getAlias() + embeddablePrefix + "." + property                ;
+            }
+
+            Alias newAlias = getAliasForPath(currentPath);
+
+            if (newAlias == null) {
+
+                Class clazz = lastEmbeddableClass != null ? lastEmbeddableClass :
+                              parentAlias != null ? parentAlias.getPersistentClass() :
+                                persistentClass;
+                if (isEmbeddableField(clazz, property)) {
+                    // skip embeddable field - it is similar to normal join (dot separated),
+                    // but alias should be created only for a whole embeddable proeprty
+                    // e.g. 'embeddable.property' should remain as single alias an will be named 'embeddable#propertyAlias'
+                    embeddablePrefix = embeddablePrefix + "." + property;
+                    lastEmbeddableClass = resolvePropertyClass(clazz, property);
+                    continue;
                 }
+
+                // alias name is property name + alias suffix constant. If it contains dot, it is embedded property
+                // and we need to somehow escape, because it is not valid alias name - use # instead.
+                String aliasName = property.replace(".", "#") + ALIAS_SUFFIX;
+
+                // check duplicit alias name, prefix with full path. For root property s
+                // (e.g. 'prop.inner.prop' -> #prop#inner#propAlias)
+                if (getAlias(aliasName) != null) {
+                    aliasName = "#" + fullPath.replace(".", "#") + ALIAS_SUFFIX;
+                }
+
+                newAlias = addAlias( currentPath, aliasName, joinType, resolvePropertyClass(clazz, property) );
             }
+
+            parentAlias = newAlias;
+            embeddablePrefix = "";
+            lastEmbeddableClass = null;
         }
 
-        if ( parent == null ) {
-            fullPath = path;
-        } else {
-            fullPath = parent.getFullPath() + '.' + path.substring( path.indexOf( '.' ) + 1 );
-        }
-
-        for ( Alias a : aliases ) {
-            if ( a.getFullPath().equals( fullPath ) ) {
-                return;
-            }
-        }
-
-        aliases.add( new Alias( fullPath, path, alias, joinType ) );
+        return parentAlias != null ? parentAlias.getAlias() : null;
     }
 
     /**
-     * <p>Adds alias name for your property. If alias is already defined
-     * nothing is done. Else your entered alias is added. Calls addAlias(path, path, joinType).</p>
-     * @param path table address - contains exactly one dot
-     * @param joinType {@link JoinType#FULL_JOIN}, {@link JoinType#LEFT_OUTER_JOIN} {@link JoinType#INNER_JOIN}
+     * Enforce eager fetching for full field path .
+     *
+     * <p>Note: this method is currently implemented as addAlias(fullPath, JoinType.LEFT_OUTER_JOIN).
+     * However, this may change in the future and you should always create alias manually if you need
+     * alias for sorting or querying.</p>
+     *
+     * @param  paths property address - contains max. one dot (e.g. 'property', 'myExistingAlias.property')
+     * @return existing or new alias name
      */
-    public void addAlias( final String path, final JoinType joinType ) {
-        addAlias( path, path, joinType );
+    public void addFetch( final String ... paths) {
+        for (String path : paths)
+            addAlias(path, JoinType.LEFT_OUTER_JOIN);
     }
 
     /**
-     * <p>Adds alias name for your property. If alias is already defined
-     * nothing is done. Else your entered alias is added. Calls addAlias(path, path, joinType).</p>
-     * @param path table address - contains exactly one dot
-     * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
-     * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
-     * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
-     * @deprecated as of Hibernate 4 use JPA JoinType
+     * Enforce eager fetching for full field path .
+     *
+     * <p>Note: this method is currently implemented as addAlias(fullPath, JoinType.LEFT_OUTER_JOIN).
+     * However, this may change in the future and you should always create alias manually if you need
+     * alias for sorting or querying.</p>
+     *
+     * @param fullPaths full field path (e.g. 'property', 'property.innerProperty', 'property.innerProperty.moreProperty')
+     * @return existing or new alias name
      */
-    @Deprecated
-    public void addAlias( final String path, final int joinType ) {
-        addAlias( path, path, joinType );
+    public void addFetches( final String ... fullPaths) {
+        for (String fullPath : fullPaths)
+            addAliases(fullPath, JoinType.LEFT_OUTER_JOIN);
     }
 
     /**
-     * <p>Returns alias name for your property. If alias is already defined
-     * for this path it is returned. Else your entered alias is added and
-     * returned. As joinType is used {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN}.</p>
-     * <p>Notes: <br/>Alias must containt EXACTLY one dot.<br/>Alias name
-     * mustn't be same like some field name.</p>
-     * <h2>Example:</h2>
-     * <i>path:</i> human.hobby<br/>
-     * <i>alias:</i> hobby<br/>
-     * <h2>Example:</h2>
-     * <i>path:</i> hobby.type<br/>
-     * <i>alias:</i> typeAlias<br/>
-     * @param path table address - contains exactly one dot
-     * @param alias pseudonym for the path
+     * Add an alias with INNERT join type. {@see addAlias(String, String, JoinType)}
+     *
+     * @param path property address - contains max. one dot (e.g. 'property', 'myExistingAlias.property')
+     * @throws java.lang.IllegalArgumentException if alias with different name for this path is already defined.
+     * @return existing or new alias name
+     */
+    public String addAlias( final String path ) {
+        return addAlias(path, JoinType.INNER_JOIN);
+    }
+
+    /**
+     * Add an alias with custom join type. {@see addAlias(String, String, JoinType)}
+     *
+     * @param path table address - contains max. one dot (e.g. 'property', 'myExistingAlias.property')
+     * @throws java.lang.IllegalArgumentException if alias with different name for this path is already defined.
+     * @return existing or new alias name
+     */
+    public String addAlias( final String path, JoinType joinType ) {
+        StringBuilder fullPath = new StringBuilder();
+
+        // expand full Path
+        for (String part : parsePath(path)) {
+            if (fullPath.length() > 0)
+                fullPath.append(".");
+          if (getAlias(part) != null)
+              fullPath.append(getAlias(part).getFullPath());
+          else
+              fullPath.append(part);
+        }
+
+        // and call full path variant
+        return addAliases( fullPath.toString(), joinType );
+    }
+
+     /**
+     * Add an alias with INNER_JOIN and custom alias name. {@see addAlias(String, String, JoinType)}
+      *
+     * @param path table address - contains max. one dot (e.g. 'property', 'myExistingAlias.property')
+     * @param alias alias for the path
+     * @throws java.lang.IllegalArgumentException if alias with different name for this path is already defined.
      */
     public void addAlias( final String path, final String alias ) {
         addAlias( path, alias, JoinType.INNER_JOIN );
     }
 
+
     /**
-     * Returns alias for the full path with property
-     * @param fullPath full path with property
-     * @return alias witch property or null
+     * Add an alias with custom join type and custom alias name.
+     * <br/>
+     * It the alias is already defined:<ul>
+     *  <li>with different alias name, an exception is thrown</li>
+     *  <li>with same alias name, but less restrictive JoinType (i.e. existing alias LEFT_OUTER_JOIN, new type is
+     *      INNER_JOIN), current JoinType is changed</li>
+     *  <li>same alias name, same or more restrictive JoinType - nothing is done</li>
+     * </ul>
+     *
+     * <p>Notes: <br/>Alias must contain EXACTLY one dot.<br/>Alias name
+     * mustn't be same like some field name.</p>
+     *
+     * <h2>Example:</h2>
+     * <i>path:</i> human.hobby<br/>
+     * <i>alias:</i> hobby<br/>
+     * <h2>Example:</h2>
+     * <i>path:</i> hobby.type<br/>
+     * <i>alias:</i> typeAlias<br/>
+     * @param path table address - contains exactly one dot
+     * @param alias alias for the path
+     * @param joinType {@link JoinType#FULL_JOIN}, {@link JoinType#LEFT_OUTER_JOIN} {@link JoinType#INNER_JOIN}
+     *
+     * @throws java.lang.IllegalArgumentException if alias with different name for this path is already defined.
      */
-    public String getAliasForPath( final String fullPath ) {
-        final String path = getPath( fullPath );
+    public Alias addAlias( final String path, final String alias, final JoinType joinType ) {
+        return addAlias(path, alias, joinType, null);
+    }
+
+    // same as previous method with prefilled propertyClass. If null, it is resolved from property
+    protected Alias addAlias( final String path, final String alias, final JoinType joinType, Class propertyClass ) {
+
+        // parse 'hobby.type' to type. It may contain multiple dots if embedded property.
+        String pathWithoutProperty = null;
+        String property = path;
+        if (path.indexOf( '.' )  != -1) {
+            pathWithoutProperty = path.substring( 0,  path.indexOf( '.' ) );
+            property = path.substring(  path.indexOf( '.' ) + 1 );
+        }
+
+
+        Alias resolvedAlias = getAliasForPath(pathWithoutProperty);
+        if (resolvedAlias != null) {
+            // alias already defined, check it's setup
+            if (!resolvedAlias.getAlias().equals(alias)) {
+                throw new IllegalArgumentException("Unable to create alias '" + alias +
+                        "'Existing alias with different name '" + resolvedAlias.getAlias() +
+                        "' defined for path '" + path + "'.");
+            } else if (joinType.equals(JoinType.INNER_JOIN)) {
+                // ensure most strict join type
+                resolvedAlias.setJoinType(joinType);
+            }
+        } else {
+            // create alias
+            if (getAlias(alias) != null) {
+                throw new IllegalArgumentException("Unable to create alias '" + alias +
+                        "'. Existing alias with different path '" + getAlias(alias).getPath() +
+                        "' and full path '" + getAlias(alias).getFullPath() + "'.");
+            }
+
+            Alias parent = getAlias(pathWithoutProperty);
+            if (parent != null) {
+                // new alias below parent
+                String fullPath = parent.getFullPath() + "." + property;
+                String aliasPath = parent.getAlias() + "." + property;
+                resolvedAlias = new Alias( fullPath, aliasPath, alias, joinType );
+                resolvedAlias.setPersistentClass(propertyClass != null ? propertyClass :
+                        resolvePropertyClass(parent.getPersistentClass(), property));
+            } else {
+                // new root alias
+                resolvedAlias = new Alias( path, path, alias, joinType );
+                resolvedAlias.setPersistentClass(propertyClass != null ? propertyClass :
+                        resolvePropertyClass(persistentClass, property));
+            }
+
+            aliases.add( resolvedAlias );
+        }
+
+        return resolvedAlias;
+    }
+
+
+    /**
+     * Returns alias for a path.
+     *
+     * @param alias alias name
+     * @return existing alias or null if not exists.
+     */
+    public Alias getAlias(final String alias) {
+        for ( Alias a : aliases ) {
+            if ( a.getAlias().equals( alias ) ) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns alias for the a path.
+     *
+     * @param path alias path (e.g. 'parentAlias.property')
+     * @return alias for this path or null
+     */
+    public Alias getAliasForPath(final String path) {
+        for ( Alias a : aliases ) {
+            if ( a.getPath().equals( path ) ) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns alias for the full path.
+     *
+     * @param fullPath full path (e.g. 'property' or 'property.innerProperty')
+     * @return alias for this path or null
+     */
+    public String getAliasForFullPath(final String fullPath) {
+        final String path = fullPath.lastIndexOf( '.' ) == -1 ? "" : fullPath.substring( 0, fullPath.lastIndexOf( '.' ) );
         for ( Alias a : aliases ) {
             if ( a.getFullPath().equals( path ) ) {
-                return a.getAlias() + '.' + getEndOfPath( fullPath );
+                return a.getAlias() + '.' + fullPath.substring( fullPath.lastIndexOf( '.' ) + 1 );
             }
         }
         return fullPath;
     }
+    /**
+
+     * Returns aliases for path whole path to the field
+     * @param fullPath  whole path with dots
+     * @return required subpaths
+     */
+    public String[] parsePath( final String fullPath ) {
+        // path: sth1.sth2.sth3.sth4.field
+        return fullPath.split( "\\." );
+    }
+
 
     /**
      * Returns all registered aliases.
@@ -328,51 +507,6 @@ public class DLSearch<T> {
         return aliases;
     }
 
-    /**
-     * Adds all aliases for this full field path.
-     * Join type is INNER.
-     * If aliases already exists nothing is done
-     * @param fullPath full field path
-     */
-    public void addAlias( final String fullPath ) {
-        addAliases( fullPath, JoinType.INNER_JOIN );
-    }
-
-    /**
-     * Adds all aliases for this full field path.
-     * If aliases already exists nothing is done
-     * @param fullPath full field path
-     * @param joinType type of the join in SQL {@link org.hibernate.criterion.CriteriaSpecification}
-     * @deprecated as of hibernate 4
-     */
-    @Deprecated
-    public void addAliases( final String fullPath, final int joinType ) {
-        addAliases(fullPath, JoinType.parse(joinType));
-    }
-
-    /**
-     * Adds all aliases for this full field path.
-     * If aliases already exists nothing is done
-     * @param fullPath full field path
-     * @param joinType type of the join in SQL {@link org.hibernate.criterion.CriteriaSpecification}
-     */
-    public void addAliases( final String fullPath, final JoinType joinType ) {
-        final List<String> parts = DLSearch.getAliasesForWholePath( fullPath );
-        for ( int i = -1; i < parts.size() - 1; i++ ) {
-            // aliases.get(i) = sth
-            // aliases.get(i+1) = sth2
-            // i == 0
-            // sth.sth2 as sth2Alias
-            //----------------------------
-            // aliases.get(i) = sth
-            // aliases.get(i+1) = sth2
-            // i != 0
-            // sthAlias.sth2 as sth2Alias
-            final String path = (i == -1 ? "" : parts.get( i ) + "Alias.") + parts.get( i + 1 );
-            final String alias = parts.get( i + 1 ) + "Alias";
-            addAlias( path, alias, joinType );
-        }
-    }
 
     /**
      * Add projection like distinct or row count
@@ -390,44 +524,76 @@ public class DLSearch<T> {
         return projections;
     }
 
-    /**
-     * Returns aliases for path whole path to the field
-     * @param fieldPath whole path with dots
-     * @return required subpaths
-     */
-    public static List<String> getAliasesForWholePath( final String fieldPath ) {
-        // path: sth1.sth2.sth3.sth4.field
-        // result:
-        //      sth1
-        //      sth2
-        //      sth3
-        //      sth4
-        final String[] strings = fieldPath.split( "\\." );
-        final List<String> paths = new LinkedList<String>();
-        for ( int i = 0; i < strings.length - 1; i++ ) {
-            paths.add( strings[i] );
+
+    protected Class resolvePropertyClass(Class parent, String property) {
+        if (parent == null)
+            return null;
+
+        try {
+            Field field = ReflectionHelper.getDeclaredField(parent, property);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            Method method = ReflectionHelper.getFieldGetter(parent, property);
+            if (method == null)
+                throw new IllegalArgumentException("Class " + parent + " does not contain property " + property);
+
+            return method.getReturnType();
         }
-        return paths;
+    }
+
+   public boolean isEmbeddableField(Class clazz, String property) {
+       // if class is not known, there is no way how to check embeddable
+       if (clazz == null)
+           return false;
+
+        // check annotation on the field
+        Field field = null;
+        try {
+            field = ReflectionHelper.getDeclaredField(clazz, property);
+        } catch (NoSuchFieldException e) { }
+
+        if (field != null && ReflectionHelper.findAnnotation(field, Embedded.class) != null)
+            return true;
+
+        // if not found, check the method
+        Method method = ReflectionHelper.getFieldGetter(clazz, property);
+        if (method != null && ReflectionHelper.findAnnotation(method, Embedded.class) != null)
+            return true;
+
+        // neither field nor property - this property is not found at all!
+        if (field == null && method == null)
+            throw new IllegalArgumentException("Class " + clazz + " does not contain property " + property);
+
+        return false;
     }
 
     /**
-     * Returns end of the path. If it is full field path
-     * returned value is field name
-     * @param path path
-     * @return end from dot to the end
+     * Add aliases for path with property (e.g. 'entity.inner.property')
+     *
+     * @param pathWithProperty full path with property
+     * @return alias.property (e.g. 'innerAlias.property')
      */
-    public static String getEndOfPath( final String path ) {
-        return path.substring( path.lastIndexOf( '.' ) + 1 );
+    public String addAliasesForProperty(String pathWithProperty) {
+        return addAliasesForProperty(pathWithProperty, JoinType.INNER_JOIN);
     }
 
     /**
-     * Returns path from the full field path - field name is trimmed
-     * @param fieldPath full field path
-     * @return path
+     * Add aliases for path with property (e.g. 'entity.inner.property')
+     *
+     * @param pathWithProperty full path with property
+     * @param joinType join type
+     * @return alias.property (e.g. 'innerAlias.property')
      */
-    public static String getPath( final String fieldPath ) {
-        return fieldPath.lastIndexOf( '.' ) == -1 ? "" : fieldPath.substring( 0, fieldPath.lastIndexOf( '.' ) );
+    public String addAliasesForProperty(String pathWithProperty, JoinType joinType) {
+        String[] path = parsePath(pathWithProperty);
+        if (path.length > 1) {
+           return addAliases(pathWithProperty.substring(0, pathWithProperty.indexOf(".")), joinType)
+                   + "." + path[path.length-1];
+        } else {
+            return pathWithProperty;
+        }
     }
+
 
     public static class Alias {
 
@@ -436,6 +602,10 @@ public class DLSearch<T> {
         protected String _alias;
 
         protected JoinType _joinType;
+
+
+        // associated entity to alias (heuristics only, may not be known)
+        protected Class _persistentClass;
 
         /**
          * @deprecated as of Hibernate 4 user JoinType
@@ -448,7 +618,7 @@ public class DLSearch<T> {
             this._joinType = JoinType.parse(joinType);
         }
 
-        public Alias( final String fullPath, final String path, final String alias, final JoinType joinType ) {
+        public Alias( final String fullPath, final String path, final String alias, final JoinType joinType) {
             this._fullPath = fullPath;
             this._path = path;
             this._alias = alias;
@@ -461,6 +631,14 @@ public class DLSearch<T> {
 
         public void setAlias( final String alias ) {
             this._alias = alias;
+        }
+
+        public Class getPersistentClass() {
+            return _persistentClass;
+        }
+
+        public void setPersistentClass(Class persistentClass) {
+            this._persistentClass = persistentClass;
         }
 
         /**
@@ -540,4 +718,44 @@ public class DLSearch<T> {
     public void setDistinct( final boolean distinct ) {
         this.distinct = distinct;
     }
+
+
+    /**
+     * <p>Adds alias name for your property. If alias is already defined
+     * nothing is done. Else your entered alias is added.</p>
+     * <p>Notes: <br/>Alias must containt EXACTLY one dot.<br/>Alias name
+     * mustn't be same like some field name.</p>
+     * <h2>Example:</h2>
+     * <i>path:</i> human.hobby<br/>
+     * <i>alias:</i> hobby<br/>
+     * <h2>Example:</h2>
+     * <i>path:</i> hobby.type<br/>
+     * <i>alias:</i> typeAlias<br/>
+     * @param path table address - contains exactly one dot
+     * @param alias pseudonym for the path
+     * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
+     * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
+     * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
+     * @deprecated as of Hibernate 4  use JoinType object
+     */
+    @Deprecated
+    public void addAlias( final String path, final String alias, final int joinType ) {
+        addAlias(path, alias, JoinType.parse(joinType));
+    }
+
+    /**
+     * <p>Adds alias name for your property. If alias is already defined
+     * nothing is done. Else your entered alias is added. Calls addAlias(path, path, joinType).</p>
+     * @param path table address - contains exactly one dot
+     * @param joinType {@link org.hibernate.criterion.CriteriaSpecification#FULL_JOIN},
+     * {@link org.hibernate.criterion.CriteriaSpecification#INNER_JOIN},
+     * {@link org.hibernate.criterion.CriteriaSpecification#LEFT_JOIN}
+     * @deprecated as of Hibernate 4 use JPA JoinType
+     */
+    @Deprecated
+    public void addAlias( final String path, final int joinType ) {
+        addAlias( path, JoinType.parse(joinType) );
+    }
+
 }
+

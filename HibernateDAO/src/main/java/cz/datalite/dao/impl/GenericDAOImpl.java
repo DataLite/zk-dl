@@ -300,11 +300,12 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // add sort aliases
         for ( final Iterator<DLSort> it = search.getSorts(); it.hasNext(); ) {
             final DLSort sort = it.next();
-            search.addAliases( sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
+            search.addAliasesForProperty(sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
         }
 
-        // write aliasses
+        // write aliases
         for ( DLSearch.Alias alias : search.getAliases() ) {
+            alias.getFullPath();
             criteria.createAlias( alias.getPath(), alias.getAlias(), alias.getJoinType() );
         }
 
@@ -330,10 +331,10 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
                 final DLSort sort = it.next();
                 switch ( sort.getSortType() ) {
                     case ASCENDING:
-                        criteria.addOrder( Order.asc( search.getAliasForPath( sort.getColumn() ) ) );
+                        criteria.addOrder( Order.asc( search.getAliasForFullPath(sort.getColumn()) ) );
                         break;
                     case DESCENDING:
-                        criteria.addOrder( Order.desc( search.getAliasForPath( sort.getColumn() ) ) );
+                        criteria.addOrder( Order.desc( search.getAliasForFullPath(sort.getColumn()) ) );
                         break;
                     default:
                 }
@@ -386,5 +387,14 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert !isNew( entity ) : "Invalid argument in GenericDAO refresh(). Entity is transient";
 
         getSession().refresh(entity);
+    }
+
+    public int updateHQL(String update, Object... values) {
+        Query q = getSession().createQuery(update);
+        int i = 0;
+        for (Object val : values) {
+            q.setParameter(i++, val);
+        }
+        return q.executeUpdate();
     }
 }

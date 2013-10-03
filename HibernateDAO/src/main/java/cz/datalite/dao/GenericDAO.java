@@ -202,4 +202,16 @@ public interface GenericDAO<T, ID extends Serializable>
      * @param entity entity to referesh
      */
     void refresh(T entity);
+
+    /**
+     * Execute the update or delete statement.
+     * The semantics are compliant with the ejb3 Query.executeUpdate() method.
+     *
+     * @param update The HQL update query
+     * @param values Bind a value to a JDBC-style query parameter. The Hibernate type of the parameter
+     *               is first detected via the position in the query and if not sufficient secondly
+     *               guessed from the class of the given object.
+     * @return The number of entities updated or deleted.
+     */
+    int updateHQL(String update, Object ... values);
 }
