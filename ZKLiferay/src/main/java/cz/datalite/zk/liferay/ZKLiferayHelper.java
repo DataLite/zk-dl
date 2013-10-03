@@ -95,11 +95,9 @@ public abstract class ZKLiferayHelper {
      */
     public static void clientResizeBorderlayoutControllPanelOrPortlet(Component component, DLLiferayService service)
     {
-        List<Component> components = ZKHelper.findChildByClass(component, Borderlayout.class);
-        if (components.isEmpty())
+        Borderlayout borderlayout = ZKHelper.findChildByClass(component, Borderlayout.class);
+        if (borderlayout == null)
             throw new IllegalStateException("Borderlayout component not found.");
-
-        Borderlayout borderlayout = (Borderlayout) components.get(0);
 
         if (service.getThemeDisplay().getLayout().isTypeControlPanel())
             ZKLiferayHelper.clientCalculateComponentHeigthToWindowBottom(borderlayout);

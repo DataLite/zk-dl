@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.1</version>
+        <version>1.4.3</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>DLBind</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.3</version>
     <name>DLBind</name>
     <description>Binder module provides additional functionality to ZKBind.</description>
     
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
-            <version>6.5.2.1-DATALITE</version>
+            <version>6.5.2.2-DATALITE</version>
         </dependency>
         
         <dependency>

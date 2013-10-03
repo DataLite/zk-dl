@@ -205,7 +205,7 @@ public abstract class ReflectionHelper
      * value directly.
      * 
      * @param <T> type of field
-     * @param destinationField field name
+     * @param name field name
      * @param source instance of object with given field
      * @return value of that field
      * @throws NoSuchFieldException  the given instance doesn't contain such field
@@ -601,29 +601,43 @@ public abstract class ReflectionHelper
      */
     public static Method getFieldGetter(Class aClass, Field field)
     {
-        if (aClass == null) {
-            throw new IllegalArgumentException("Class aClass is null");
-        }
-
         if (field == null) {
             throw new IllegalArgumentException("field argument is null");
         }
 
         String fieldName = field.getName();
+        return getFieldGetter(aClass, fieldName);
+    }
+
+    /**
+     * Ziskani getteru dane polozky
+     *
+     * @param aClass Trida aktualni instance
+     * @param fieldName  Polozka
+     * @return getter
+     */
+    public static Method getFieldGetter(Class aClass, String fieldName)
+    {
+        if (aClass == null) {
+            throw new IllegalArgumentException("Class aClass is null");
+        }
+
+        if (fieldName == null) {
+            throw new IllegalArgumentException("fieldName argument is null");
+        }
+
         String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 
         try {
-            return aClass.getMethod("get" + methodName);
+            return aClass.getDeclaredMethod("get" + methodName);
         } catch (NoSuchMethodException e) {
             try {
                 return aClass.getMethod("is" + methodName);
             } catch (NoSuchMethodException e1) {
                 if (aClass.getSuperclass() != Object.class) {
-                    return getFieldGetter(aClass.getSuperclass(), field);
+                    return getFieldGetter(aClass.getSuperclass(), fieldName);
                 }
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -753,6 +767,23 @@ public abstract class ReflectionHelper
         }
 
         return methods;
+    }
+
+    /**
+     * Finds desired annotation on the given field. If the annotation
+     * is not set then method returns null.
+     * @param <T> type of annotation
+     * @param field investigated field
+     * @param type type of annotation
+     * @return found annotation or NULL if not set
+     */
+    public static <T> T findAnnotation( Field field, Class<T> type ) {
+        for ( Annotation annotation : field.getAnnotations() ) {
+            if ( type.isAssignableFrom( annotation.getClass() ) ) {
+                return ( T ) annotation;
+            }
+        }
+        return null;
     }
 
     /**

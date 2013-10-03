@@ -14,8 +14,6 @@
       <property name="hibernate.use_sql_comments" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
 
-      <!-- JPA mandates delete detached entity error - however basic Hibernate enables it and there is no reasen why not to use it. -->
-      <property name="hibernate.ejb.event.delete" value="cz.datalite.dao.hibernate.utils.EJB3DeleteEventListener"/>
     </properties>
   </persistence-unit>
 </persistence>
