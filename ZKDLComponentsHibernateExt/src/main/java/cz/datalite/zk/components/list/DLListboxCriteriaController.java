@@ -10,7 +10,6 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCriterionCompiler;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
@@ -19,6 +18,8 @@ import org.hibernate.criterion.Restrictions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,15 +96,15 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     protected DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts ) {
         final DLSearch<T> search = getDefaultSearchObject( filter, firstRow, rowCount, sorts );
 
-        search.addAlias( column );
-        search.addProjection( Projections.distinct( Projections.property( search.getAliasForPath( column ) ) ) );
+        search.addAliasesForProperty( column, JoinType.INNER_JOIN );
+        search.addProjection( Projections.distinct( Projections.property( search.getAliasForFullPath(column) ) ) );
 
         return ( DLResponse<String> ) loadDistinctColumnValues( search );
     }
 
     protected DLSearch<T> getDefaultSearchObject( final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts ) {
         // Vytvoření DLSearch objektu s nastaveným stránkováním a řazením
-        final DLSearch<T> search = new DLSearch<T>( sorts, rowCount, firstRow );
+        final DLSearch<T> search = new DLSearch<T>( sorts, rowCount, firstRow, getEntityClass() );
         search.addFilterCriterions( compile( filter, search ) );
         return search;
     }
@@ -122,7 +123,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     }
 
     protected Criterion compileCriteria( final NormalFilterUnitModel unit, final DLSearch search ) {
-        return compileCriteria( unit, search, Criteria.INNER_JOIN );
+        return compileCriteria( unit, search, JoinType.INNER_JOIN );
     }
 
     /**
@@ -135,7 +136,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
         final Disjunction disjunction = Restrictions.disjunction();
         for ( DLColumnUnitModel unit : model.getColumnModel().getColumnModels() ) {
             if ( unit.isColumn() && unit.isQuickFilter() ) {
-                final Criterion criterion = compileCriteria( new NormalFilterUnitModel( unit ), value, search, Criteria.LEFT_JOIN );
+                final Criterion criterion = compileCriteria( new NormalFilterUnitModel( unit ), value, search, JoinType.LEFT_OUTER_JOIN );
                 if ( criterion == null ) {
                     disjunction.add( Restrictions.sqlRestriction( "0=1" ) );
                 } else {
@@ -148,15 +149,14 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
 
     /**
      * Compiles criteria with type conversion
-     * @param type column type
-     * @param key column address
+     * @param unit filter model
      * @param value value to conversion
      * @param search search object because of aliases
      * @param joinType relation type
      * @return compiled criterion
      */
     @SuppressWarnings( "unchecked" )
-    protected Criterion compileCriteria( final NormalFilterUnitModel unit, final String value, final DLSearch search, final int joinType ) {
+    protected Criterion compileCriteria( final NormalFilterUnitModel unit, final String value, final DLSearch search, final JoinType joinType ) {
         final Class type = unit.getType();
         if ( unit.getFilterCompiler() != null ) { // compiler is defined
             unit.setOperator( unit.getQuickFilterOperator() );
@@ -185,22 +185,19 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
 
     /**
      * Compiles criteria according to the operator
-     * @param key column address
-     * @param value1 1st value
-     * @param value2 2nd value
-     * @param operator operator
+     * @param unit filter model
      * @param search search object because of alias
      * @param joinType relation type
      * @return compiled criteria
      */
-    protected Criterion compileCriteria( final NormalFilterUnitModel unit, final DLSearch search, final int joinType ) {
+    protected Criterion compileCriteria( final NormalFilterUnitModel unit, final DLSearch search, final JoinType joinType ) {
         if ( unit.getColumn() == null || unit.getColumn().length() == 0 ) {
             assert false;
             return null;
         }
 
-        search.addAliases( unit.getColumn(), joinType );
+        search.addAliasesForProperty(unit.getColumn(), joinType);
         final FilterCompiler localCompiler = unit.getFilterCompiler() == null ? compiler : unit.getFilterCompiler();
-        return ( Criterion ) localCompiler.compile( unit.getOperator(), search.getAliasForPath( unit.getColumn() ), unit.getValue( 1 ), unit.getValue( 2 ) );
+        return ( Criterion ) localCompiler.compile( unit.getOperator(), search.getAliasForFullPath(unit.getColumn()), unit.getValue( 1 ), unit.getValue( 2 ) );
     }
 }
