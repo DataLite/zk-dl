@@ -53,12 +53,12 @@ public class CascadeUtil<T> {
     }
 
     /**
-     * Adds cascading combo constraints through parentComboId and parentComboColumn combobox property.
+     * Adds cascading lovbox constraints through parentCascadeId and parentCascadeColumn lovbox property.
      *
-     * Method checks if combobox getParentComboId() is not null and then tries to find associated component
+     * Method checks if lovbox getParentCascadeId() is not null and then tries to find associated component
      * (either directly or through binding sibling).<br/>
-     * Parent must be of type DLCombobox.<br/>
-     * Finally method calls addParent(combo.getController(), combo.getParentComboColumn()).
+     * Parent must be of type DLLovbox.<br/>
+     * Finally method calls addParent(lovbox.getController(), lovbox.getParentCascadeColumn()).
      */
     public void addDefaultParent( final CascadableComponent component ) {
         if ( component.getParentCascadeId() == null )
@@ -71,7 +71,7 @@ public class CascadeUtil<T> {
         if ( parent == null )
             throw new UiException( "parentComboId component not found for component: " + component );
         else if ( !( parent instanceof CascadableComponent ) )
-            throw new UiException( "parentComboId must refer to component of type DLCombobox for component: " + component );
+            throw new UiException( "parentComboId must refer to component of type CascadableComponent for component: " + component );
 
 
         // ensure controller is loaded

@@ -57,9 +57,6 @@ public class DLListheader extends Listheader {
     /** column is enabled for export */
     protected boolean exportable = true;
 
-    /** use this operator for quick filter and as a default operator for normal filter. */
-    protected DLFilterOperator defaultFilterOperator;
-
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
     

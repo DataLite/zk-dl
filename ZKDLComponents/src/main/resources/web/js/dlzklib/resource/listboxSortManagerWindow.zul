@@ -26,14 +26,14 @@
             <rows>
                 <row self="@{each=sort}">
                     <label value="@{sort.number}"/>
-                    <dlcombobox  selectedItem="@{sort.column}" model="@{sort.modelColumns}" width="100%">
+                    <combobox  selectedItem="@{sort.column}" model="@{sort.modelColumns}" width="100%">
                         <comboitem self="@{each=column}" label="@{column.value}" value="@{column}"/>
-                    </dlcombobox>
-                    <dlcombobox selectedItem="@{sort.sortType}" model="@{sort.modelSortTypes}" width="100%">
+                    </combobox>
+                    <combobox selectedItem="@{sort.sortType}" model="@{sort.modelSortTypes}" width="100%">
                         <comboitem self="@{each=sortType}" 
                             label="@{sortType.stringValue, converter='cz.datalite.zk.components.list.window.controller.ListboxSortManagerController$SortTypeNameConverter'}"
                             value="@{sortType}"/>
-                    </dlcombobox>
+                    </combobox>
                 </row>
             </rows>
         </grid>

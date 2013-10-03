@@ -471,7 +471,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         return loadDistinctColumnValues( column, filterModel, firstRow, rowCount, Collections.singletonList( sort ) );
     }
 
-    public Class<?> getEntityClass() {
+    public Class<T> getEntityClass() {
         return entityClass;
     }
 
