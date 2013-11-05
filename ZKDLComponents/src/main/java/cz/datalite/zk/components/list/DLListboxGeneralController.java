@@ -550,8 +550,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         
         managerController.fireChanges();        
         quickFilterController.fireChanges();
-        easyFilterController.fireChanges();        
-        profileManagerController.onLoadProfile(true);
+        easyFilterController.fireChanges();
+        if (profileManagerController != null)
+            profileManagerController.onLoadProfile(true);
         
         refreshDataModel();
     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <window apply="cz.datalite.zkdl.testy.TestLovboxController" height="200px">
+        <hlayout>
+
+            <lovbox apply="${ctl.lovbox}" watermark="Vyberte oddělení" clearButton="false"/>
+        </hlayout>
+
+    </window>
+</zk>
