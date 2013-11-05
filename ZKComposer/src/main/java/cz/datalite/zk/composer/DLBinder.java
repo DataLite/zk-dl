@@ -9,6 +9,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.BindComposer;
+import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.validator.BeanValidator;
 import org.zkoss.zk.ui.*;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
@@ -212,15 +214,7 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         SelectorUtils.wireListeners( this, self );
     }
 
-    @Override
-    public ComponentInfo doBeforeCompose( Page page, Component parent, ComponentInfo compInfo ) throws Exception {
-//        Selectors.wireVariables( page, this, _resolvers );
-//        getUtilityHandler().subscribeEventQueues( this );
-//        return compInfo;
-        return super.doBeforeCompose( page, parent, compInfo );
-    }
-
-    /**
+        /**
      * <p>Before main component children are created, setup master/detail and
      * publish controller variables into component namespace. You can than use
      * value="${ctl.property}" in child components. This method is called by ZK
@@ -271,7 +265,28 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         ZkParameterUtils.setupZkParameters( this );
 
         // set up bean validator
-        self.setAttribute( "dlBeanValidator", new DLBeanValidator() );
+        setBeanValidator(new DLBeanValidator());
+    }
+
+    /**
+     * Notify the binding about a property value change.  <br/>
+     *
+     * @param property property name - i.e. name of a controller property.
+     */
+    public void notifyChange(String ... property) {
+        for (String p : property) {
+            super.notifyChange(this, p);
+        }
+    }
+
+    /**
+     * Set custom bean validator. Default setup is with DLBeanValidator - basic bean validation.
+     * @param validator validator to use or null to disable bean validation completely.
+     */
+    public void setBeanValidator(BeanValidator validator) {
+        // property used in custom binding - PropertyBindingHandler.doValidateSaveEvent() of
+        // enhanced version in org.zkoss:zkbind:${zk.version}-DATALITE
+        self.setAttribute( "dlBeanValidator",  validator);
     }
 
     /** ************************ Master / Detail *************************** */
