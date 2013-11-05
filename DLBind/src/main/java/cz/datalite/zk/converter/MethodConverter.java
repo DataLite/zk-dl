@@ -1,6 +1,10 @@
 package cz.datalite.zk.converter;
 
+import org.zkoss.bind.Binder;
+import org.zkoss.bind.impl.*;
+import org.zkoss.bind.sys.Binding;
 import org.zkoss.lang.Classes;
+import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
 
@@ -60,10 +64,23 @@ public class MethodConverter implements TypeConverter, Converter {
             if ( comp == null )
                 throw new IllegalStateException( "MethodConverter has not recognized controller instance. It is not set and the given component is NULL." );
 
-            // controller bean must be in variables
+            // controller bean must be in component variables or accessible by a variable resolver
             controllerObj = comp.getAttribute( controller, true );
+            if (controllerObj == null) {
+                controllerObj = comp.getPage().getXelVariable(controller);
+            }
+
             if ( controllerObj == null )
                 throw new UiException( errorDesc + " Unable to find bean '" + controller + "'." );
+
+
+            // try to get converter object field - if found, than return value should be the converter object
+            try {
+                controllerObj = Fields.getByCompound(controllerObj, method);
+                method = "coerceToUi";
+            } catch ( NoSuchMethodException ex ) {
+                // ok - the method itself should be coerceToUi method
+            }
 
             // load method with only value param or component + value param
             try {
@@ -75,6 +92,12 @@ public class MethodConverter implements TypeConverter, Converter {
             if ( coerceMethod == null )
                 try {
                     coerceMethod = Classes.getCloseMethod( controllerObj.getClass(), method, new Class[]{ valueClass, comp == null ? Component.class : comp.getClass() } );
+                } catch ( NoSuchMethodException ex ) {
+                }
+
+            if ( coerceMethod == null )
+                try {
+                    coerceMethod = Classes.getCloseMethod( controllerObj.getClass(), method, new Class[]{ valueClass, comp == null ? Component.class : comp.getClass(), BindContext.class } );
                 } catch ( NoSuchMethodException ex ) {
                 }
 
@@ -92,10 +115,12 @@ public class MethodConverter implements TypeConverter, Converter {
     public Object coerceToUi( Object val, Component comp ) {
         try {
             Method m = getCoerceMethod( comp, val == null ? null : val.getClass() );
-            if ( m.getGenericParameterTypes().length == 1 )
-                return m.invoke( controllerObj, val );
-            else
+            if ( m.getGenericParameterTypes().length == 3 )
+                return m.invoke( controllerObj, val, comp, createDummyBindContext(comp));
+            else if ( m.getGenericParameterTypes().length == 2 )
                 return m.invoke( controllerObj, val, comp );
+            else
+            return m.invoke( controllerObj, val );
         } catch ( IllegalAccessException ex ) {
             throw new UiException( errorDesc + " Illegal access: " + ex.getLocalizedMessage(), ex );
         } catch ( IllegalArgumentException ex ) {
@@ -107,6 +132,14 @@ public class MethodConverter implements TypeConverter, Converter {
             throw new UiException( errorDesc + " Unexpected exception: " + ex.getLocalizedMessage()
                     + "\n" + getStackTrace( ex ), ex );
         }
+    }
+
+    // dummy context to allow client code to depend on binding context (instead of just passing null)
+    private BindContext createDummyBindContext(Component comp) {
+        Binder binder = BinderUtil.getBinder(comp);
+        BindContext bindContext = BindContextUtil.newBindContext(binder, null, false, "", comp, null);
+
+        return bindContext;
     }
 
     /**
