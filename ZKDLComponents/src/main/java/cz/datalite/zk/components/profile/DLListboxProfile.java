@@ -1,5 +1,10 @@
-package cz.datalite.zk.components.list;
+package cz.datalite.zk.components.profile;
 
+import java.util.List;
+
+/**
+ * Listbox profile.
+ */
 public interface DLListboxProfile {
 
 	Long getId();
@@ -42,9 +47,28 @@ public interface DLListboxProfile {
 
 	void setFilterModelJsonData(String filterModelJsonData);
 
+    String getCustomJsonData();
+
+    void setCustomJsonData(String customJsonData);
+
+
 	Integer getColumnsHashCode();
 
 	void setColumnsHashCode(Integer columnsHashCode);
 
+    /**
+     * Add this profile to the category.
+     */
+    void addCategory(DLListboxProfileCategory category);
 
+    /**
+     * Remove this profile from the category.
+     */
+    void removeCategory(DLListboxProfileCategory category);
+
+    /**
+     * Get all categories this profile is in - zero to many.
+     * @return list of categories.
+     */
+    List<DLListboxProfileCategory> getCategories();
 }

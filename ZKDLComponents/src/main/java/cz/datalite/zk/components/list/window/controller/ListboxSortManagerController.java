@@ -18,6 +18,9 @@ import java.util.Map.Entry;
  */
 public class ListboxSortManagerController extends GenericAutowireComposer {
 
+    // maximum number of sort columns
+    private static final int MAX_SORT_COUNT = 10;
+
     public static class SortTypeNameConverter implements TypeConverter
     {
         public Object coerceToUi(Object o, Component cmpnt)
@@ -62,11 +65,6 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
             }
         } );
 
-        // inicialize model in full length
-        for ( int i = 0; i < unitModels.size(); i++ ) {
-            model.add( null );
-        }
-
         // sort types
         final List<DLSortType> modelSortTypes = getModelSortTypes();
 
@@ -90,7 +88,18 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
                     throw new UnsupportedOperationException( "Not supported yet." );
                 }
             } );
-            model.set( order, prepareMap( order + 1, unitMap, modelColumns, modelSortTypes ) );
+
+            // only for columns with sort order
+            final Integer sortOrder = ( Integer ) unitMap.get( "sortOrder" );
+            if (sortOrder != 0) {
+                model.add( order, prepareMap( order + 1, unitMap, modelColumns, modelSortTypes ) );
+                ++order;
+            }
+        }
+
+        // up to MAX_SORT_COUNT insert empty rows
+        for (int i=order; i< Math.min(unitModels.size(), MAX_SORT_COUNT); i++) {
+            model.add( order, prepareMap( order + 1, null, modelColumns, modelSortTypes ) );
             ++order;
         }
     }
@@ -104,8 +113,8 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put( "number", number + "." );
         map.put( "numberInt", number );
-        map.put( "column", modelColumns.get( modelColumns.size() - 1 ) );
-        map.put( "sortType", unitMap.get( "sortType" ) );
+        map.put( "column", unitMap == null ? null : modelColumns.get( modelColumns.size() - 1 ) );
+        map.put( "sortType", unitMap == null ? DLSortType.NATURAL : unitMap.get( "sortType" ) );
         map.put( "modelColumns", modelColumns );
         map.put( "modelSortTypes", modelSortTypes );
         return map;

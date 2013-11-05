@@ -1,9 +1,6 @@
-package cz.datalite.zk.components.list.service;
+package cz.datalite.zk.components.profile;
 
 import java.util.List;
-
-import cz.datalite.zk.components.list.DLListboxProfile;
-import cz.datalite.zk.components.profile.DLProfileManager;
 
 public interface ProfileService {
 
@@ -66,5 +63,10 @@ public interface ProfileService {
 	 * @param	dlListboxProfile profile to be deleted
 	 */
 	public void delete(DLListboxProfile dlListboxProfile);
+
+    /**
+     * Returns all categories.
+     */
+    public List<DLListboxProfileCategory> getAllCategories();
 
 }

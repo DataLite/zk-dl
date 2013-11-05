@@ -1,4 +1,4 @@
-package cz.datalite.zk.components.list.service;
+package cz.datalite.zk.components.profile;
 
 public interface ProfileServiceFactory {
 

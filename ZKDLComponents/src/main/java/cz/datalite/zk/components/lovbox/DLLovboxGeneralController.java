@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.lovbox;
 
+import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.utils.HashMapAutoCreate;
 import cz.datalite.zk.components.cascade.Cascadable;
 import cz.datalite.zk.components.cascade.CascadableExt;
@@ -27,7 +28,8 @@ import java.util.Set;
  * @param <T> main entity class in this component
  * @author Karel Cemus
  */
-public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
+public class
+        DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger( DLLovboxGeneralController.class );
     // controller
@@ -96,7 +98,11 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
         if ( close ) {
             lovbox.close();
         }
-        final Set<T> set = Collections.singleton( model.getSelectedEntity() );
+        callListeners();
+    }
+
+    public void callListeners() {
+        final Set<T> set = Collections.singleton(model.getSelectedEntity());
         callListeners( new Event( Events.ON_CHANGE, lovbox, lovbox.getValue() ) );
         callListeners( new SelectEvent( Events.ON_SELECT, lovbox, set ) );
         callListeners( new SelectEvent( DLListboxEvents.ON_DLSELECT, lovbox, set ) );
@@ -108,12 +114,27 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
     public void setSelectedItem( final T selectedItem ) {
 
-        // ensure, that listbox is loaded
-        if ( !listboxController.isLocked() ) {
-            listboxController.setSelectedItem( selectedItem );
-        }
+        model.setSelectedItem( selectedItem );
+        model.setSelectedItems( Collections.singleton(selectedItem) );
+        lovbox.fireChanges();
+        callListeners();
 
-        onSelect( true );
+        synchronizeListboxSelectedItemDirectly(selectedItem);
+    }
+
+    public void synchronizeListboxSelectedItemDirectly( final T selectedItem ) {
+        // if listbox selection should be clear immediately after selection OR selectedItem does not match
+        if ( !lovbox.isSynchronizeListboxSelectedItem() ||
+                (!listboxController.isLocked()  &&
+                 !EqualsHelper.isEqualsNull(listboxController.getSelectedItem(), selectedItem)
+                )
+           ) {
+                // changed model
+                // clear selection directly (without any events)
+                // more clear solution will be to try select correct item, but it might be not loaded yet
+                getListboxExtController().getListbox().getController().setSelectedItem(null);
+                getListboxExtController().getListbox().setSelectedIndex(-1);
+        }
     }
 
     public void addParent( final Cascadable parent, final String column ) {

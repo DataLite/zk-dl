@@ -6,6 +6,7 @@ import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -43,7 +44,7 @@ public class DLListbox extends Listbox {
     private boolean selectFirstRow = true;
     
     /** autosave model (columns and filters settings) to session */
-    private boolean autosave = true;
+    private boolean autosave = Boolean.valueOf(Library.getProperty("zk-dl.listbox.autosave", "true"));
 
     @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
     public DLListbox() {

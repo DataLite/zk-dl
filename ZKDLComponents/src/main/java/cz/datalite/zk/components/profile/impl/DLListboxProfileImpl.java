@@ -1,6 +1,12 @@
-package cz.datalite.zk.components.list;
+package cz.datalite.zk.components.profile.impl;
 
+import cz.datalite.zk.components.profile.DLListboxProfile;
+import cz.datalite.zk.components.profile.DLListboxProfileCategory;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class DLListboxProfileImpl implements DLListboxProfile {
 
@@ -34,8 +40,14 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 	/** filter model settings serialized to json */
 	private String filterModelJsonData;
 
+    /** custom data serialized to json */
+    private String customJsonData;
+
 	/** hash code of listbox columns in time of saving profile */
 	private Integer columnsHashCode;
+
+    /** List of categories this profile is in (0:N) */
+    private List<DLListboxProfileCategory> categories = new ArrayList<DLListboxProfileCategory>();
 	
 	public DLListboxProfileImpl() {
 		
@@ -151,7 +163,17 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 		this.filterModelJsonData = filterModelJsonData;
 	}
 
-	@Override
+    @Override
+    public String getCustomJsonData() {
+        return customJsonData;
+    }
+
+    @Override
+    public void setCustomJsonData(String customJsonData) {
+        this.customJsonData = customJsonData;
+    }
+
+    @Override
 	public Integer getColumnsHashCode() {
 		return columnsHashCode;
 	}
@@ -160,8 +182,23 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 	public void setColumnsHashCode(Integer columnsHashCode) {
 		this.columnsHashCode = columnsHashCode;
 	}
-	
-	@Override
+
+    @Override
+    public void addCategory(DLListboxProfileCategory category) {
+        categories.add(category);
+    }
+
+    @Override
+    public void removeCategory(DLListboxProfileCategory category) {
+        categories.remove(category);
+    }
+
+    @Override
+    public List<DLListboxProfileCategory> getCategories() {
+        return Collections.unmodifiableList(categories);
+    }
+
+    @Override
 	public String toString() {
 		return "DLListboxProfile [id=" + id + ", dlListboxId=" + dlListboxId + ", name=" + name + ", publicProfile="
 				+ publicProfile + ", defaultProfile=" + defaultProfile + ", hidden=" + hidden + ", user=" + user
@@ -169,7 +206,7 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 				+ ", columnsHashCode=" + columnsHashCode + "]";
 	}	
 	
-	public class NameComparator implements Comparator<DLListboxProfile> {
+	public static class NameComparator implements Comparator<DLListboxProfile> {
 		@Override
 		public int compare(DLListboxProfile p1, DLListboxProfile p2) {
 			if (p1.getName() != null && p2.getName() != null) {

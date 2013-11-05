@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.profile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,19 +13,10 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.Bandpopup;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Hlayout;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Listcell;
-import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listitem;
-import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.*;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
-import cz.datalite.zk.components.list.DLListboxProfile;
 import cz.datalite.zk.components.list.controller.DLProfileManagerController;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListhead;
@@ -32,6 +24,9 @@ import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.lovbox.DLLovbox;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.lovbox.DLLovboxPopupComponentPosition;
+
+import javax.activation.CommandObject;
+import javax.activation.DataHandler;
 
 /**
  * Bar with advanced tools for managing the listbox profiles.
@@ -43,7 +38,7 @@ public class DLProfileManager<T> extends Hlayout {
 	protected static final String CONST_EVENT = Events.ON_CLICK;
     protected static final String CONST_DEFAULT_ICON_PATH = "~./dlzklib/img/";
     protected static final String CONST_IMAGE_SIZE = "20px";
-    
+
     /**
 	 * Default profile will be loaded from persistent storage and applied to
 	 * listbox (onCreate) if set to true.
@@ -96,22 +91,34 @@ public class DLProfileManager<T> extends Hlayout {
 	 */
     private boolean showDefault = true;
 
+    /**
+     * Show column settings checkbox.
+     */
+    private boolean showColumnSettings = true;
+
+    /**
+     * Show filter settings checkbox.
+     */
+    private boolean showFilterSettings = true;
+
 	private DLProfileManagerController<T> controller;
 	private final DLLovbox<DLListboxProfile> profilesLovbox;
 	private final DLListbox profilesListbox;
 
 	public DLProfileManager() {
 		super();
-		
+
 		// init lovbox
 		this.profilesLovbox = new DLLovbox<DLListboxProfile>();
 		this.profilesLovbox.setCreateQuickFilter(false);
 		this.profilesLovbox.setQuickFilterAll(false);
 		this.profilesLovbox.setCreatePaging(false);
-		this.profilesLovbox.setClearButton(false);
+		this.profilesLovbox.setClearButton(true);
 		this.profilesLovbox.setLabelProperty("name");
 		this.profilesLovbox.setSearchProperty("name");
 		this.profilesLovbox.setMultiple(false);
+        this.profilesLovbox.setWatermark("Vyberte profil");
+
 		
 		// init bandpop and listbox inside lovbox
 		this.profilesListbox = new DLListbox();
@@ -135,14 +142,15 @@ public class DLProfileManager<T> extends Hlayout {
 			}
 		});
 		
-		this.createButtonWithTooltip(buttonBar, "listbox.profileManager.load", true, new EventListener<Event>() {
-			public void onEvent(final Event event) {
-				controller.onLoadProfile();
-				profilesLovbox.close();
-			}
-		});
-		
-		this.profilesListbox.setNonselectableTags("*");  // only click on name cell is registered  
+
+        this.profilesLovbox.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
+            @Override
+            public void onEvent(Event event) throws Exception {
+                controller.onLoadProfile(true);
+            }
+        });
+
+        this.profilesListbox.setNonselectableTags("*");  // only click on name cell is registered
 		
 		this.profilesLovbox.addComponentToPopup(DLLovboxPopupComponentPosition.POSITION_BOTTOM, buttonBar);
 		this.appendChild(this.profilesLovbox);
@@ -174,6 +182,7 @@ public class DLProfileManager<T> extends Hlayout {
 		
 		header = new DLListheader();
 		header.setLabel("");
+        header.setTooltiptext(Labels.getLabel("listbox.profileManager.profile.default"));
 		header.setSort("auto(defaultProfile)");
 		header.setWidth("32px");
 		header.setVisible(this.showDefault);
@@ -283,7 +292,23 @@ public class DLProfileManager<T> extends Hlayout {
 		this.showDefault = showDefault;
 	}
 
-	public Button createButtonWithTooltip(Component parent, String labelKey, boolean visible, EventListener<Event> listener) {
+    public boolean isShowColumnSettings() {
+        return showColumnSettings;
+    }
+
+    public void setShowColumnSettings(boolean showColumnSettings) {
+        this.showColumnSettings = showColumnSettings;
+    }
+
+    public boolean isShowFilterSettings() {
+        return showFilterSettings;
+    }
+
+    public void setShowFilterSettings(boolean showFilterSettings) {
+        this.showFilterSettings = showFilterSettings;
+    }
+
+    public Button createButtonWithTooltip(Component parent, String labelKey, boolean visible, EventListener<Event> listener) {
 		final Button button = new Button(Labels.getLabel(labelKey));
 		button.setTooltiptext(Labels.getLabel(labelKey + ".tooltip"));
 		button.setVisible(visible);
@@ -351,9 +376,7 @@ public class DLProfileManager<T> extends Hlayout {
 				@Override
 				public void onEvent(Event event) throws Exception {
 					Listitem selectedListitem = (Listitem) nameCell.getParent();
-					profilesLovbox.setSelectedItem((DLListboxProfile) selectedListitem.getValue()); 
-					
-					controller.onLoadProfile();
+					profilesLovbox.getController().setSelectedItem((DLListboxProfile) selectedListitem.getValue());
 					profilesLovbox.close();
 				}
 			});
@@ -369,7 +392,8 @@ public class DLProfileManager<T> extends Hlayout {
 			
 			Checkbox defaultCellCheckbox = new Checkbox();
 			defaultCellCheckbox.setDisabled(true);
-			defaultCell.appendChild(defaultCellCheckbox);			
+			defaultCell.appendChild(defaultCellCheckbox);
+            defaultCell.setTooltiptext(Labels.getLabel("listbox.profileManager.profile.default"));
 			ZKBinderHelper.registerAnnotation(defaultCellCheckbox, "checked", "load", "item.defaultProfile");
 			
 			// button edit cell and nested button
@@ -424,9 +448,7 @@ public class DLProfileManager<T> extends Hlayout {
 				@Override
 				public void onEvent(Event event) throws Exception {
 					Listitem selectedListitem = (Listitem) nameCell.getParent();
-					profilesLovbox.setSelectedItem((DLListboxProfile) selectedListitem.getValue());
-					
-					controller.onLoadProfile();
+					profilesLovbox.getController().setSelectedItem((DLListboxProfile) selectedListitem.getValue());
 					profilesLovbox.close();
 				}
 			});

@@ -128,6 +128,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected String watermark;
     /** Components to add before or after listbox in popup window */
     protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
+    /**If set to false, listbox will always have selectedItem=null and some value will be only temprarily
+     * to transfer user selection. */
+    protected boolean synchronizeListboxSelectedItem = true;
 
     // mark status before afterCompose is called
     private boolean initialized = false;
@@ -443,8 +446,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     /**
-     * Method for databinding. Sets selected item if is different to
-     * actual selected item.
+     * Method for databinding. Sets selected item if is different to actual selected item.
+     * This method does NOT send any events.
+     *
      * @param selectedItem new selected item
      */
     public void setSelectedItem( final T selectedItem ) {
@@ -455,17 +459,19 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         // we need to clear listbox selected value, otherwise the client will not be able to generate onSelect event
         if (isChange && !controller.getListboxExtController().isLocked()) {
-            // more clear solution will be to try select correct item, but it is not easy to find a way
-            // of direct selection without any event is sent.
-            controller.getListboxExtController().setSelected( null );
+            controller.getListboxExtController().getListbox().getController().setSelectedItem(null);
             controller.getListboxExtController().getListbox().setSelectedIndex(-1);
         }
 
+        // setup directly
         controller.getModel().setSelectedItem( selectedItem );
+        controller.synchronizeListboxSelectedItemDirectly( selectedItem );
 
         if ( isChange ) {
             fireChanges();
         }
+
+
     }
 
     /**
@@ -722,8 +728,11 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             if (listboxExtController.getListbox().isLoadDataOnCreate())
             {
                 listboxExtController.refreshDataModel();
-                listboxExtController.setSelectedItem( this.getSelectedItem() );
-                listboxExtController.setSelectedItems( Collections.singleton( this.getSelectedItem() ) );
+
+                if (!isSynchronizeListboxSelectedItem()) {
+                    listboxExtController.setSelectedItem( this.getSelectedItem() );
+                    listboxExtController.setSelectedItems( Collections.singleton( this.getSelectedItem() ) );
+                }
             }
         }
 
@@ -814,6 +823,16 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.createQuickFilter = createQuickFilter;
     }
 
+    /** If false, listbox will always have selectedItem=null and some value will be only temporarily to transfer user selection. */
+    public boolean isSynchronizeListboxSelectedItem() {
+        return synchronizeListboxSelectedItem;
+    }
+
+    /** If false, listbox will always have selectedItem=null and some value will be only temporarily to transfer user selection. */
+    public void setSynchronizeListboxSelectedItem(boolean synchronizeListboxSelectedItem) {
+        this.synchronizeListboxSelectedItem = synchronizeListboxSelectedItem;
+    }
+
     /**
      * Allow to select multiple values from the lovbox.
      * @return true if multiple values
@@ -893,9 +912,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public void service(AuRequest request, boolean everError) {
         final String cmd = request.getCommand();
         if (cmd.equals("onClear")) {
-            controller.setSelectedItem( null );
-            // deselect listbox
-            controller.getListboxController().setSelected( null );
+           getController().setSelectedItem(null);
         }
 
         super.service(request, everError);

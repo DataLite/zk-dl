@@ -5,62 +5,77 @@
 <?page title="Listbox profile edit"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
-    <window apply="org.zkoss.bind.BindComposer" 
+    <window apply="org.zkoss.bind.BindComposer"
             viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
-            closable="true" id="listboxProfileEditWindow" title="Editace profilu" border="normal" width="460px" 
-            sclass="window">  
-    	
-    	<vlayout form="@id('fx') @load(vm.profile) @save(vm.profile, before='save')" sclass="editable padding10">
-    	
-        	<grid sclass="margin-bottom10" width="99.4%">
-	            <columns>
-	                <column width="120px" />
-	                <column />
-	            </columns>
-	            <rows>
-	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.name')}" />
-	                    <textbox value="@bind(fx.name)" width="98%" constraint="no empty" maxlength="16"/>
-	                </row>
-	                <row>
-	                	<label value="${c:l('listbox.profileManager.profile.type')}" />
-	                    <radiogroup selectedItem="@bind(fx.publicProfile) @converter(vm.booleanConverter)">	 
-	                    	<vlayout>                   	
-	                    		<radio label="${c:l('listbox.profileManager.profile.public')}" value="true" id="publicRadio" />
-	                    		<radio label="${c:l('listbox.profileManager.profile.private')}" value="false" id="privateRadio" />
-	                    	</vlayout>
-	                    </radiogroup>	                    
-	                </row>
-	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.default')}" />
-	                    <checkbox checked="@bind(fx.defaultProfile)" width="90%" />
-	                </row>
-	            </rows>
-	        </grid>
-                
-	        <grid sclass="margin-bottom10" width="99.4%">
-	            <columns>
-	                <column />
-	                <column />
-	            </columns>
-	            <rows>
-	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.saveColumnModel')}" />
-	                    <checkbox id="saveColumnModelCheckbox" checked="true" width="90%" />
-	                </row>
-	                <row>
-	                    <label value="${c:l('listbox.profileManager.profile.saveFilterModel')}" />
-	                    <checkbox id="saveColumnFilterCheckbox" width="90%" />
-	                </row>
-	            </rows>
-	        </grid>
-	        
-	        <div sclass="fr">
-	        	<button id="deleteButton" label="${c:l('listbox.profileManager.delete')}" onClick="@command('delete')" />            	
-            	<button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
-            	<button label="${c:l('listbox.storno')}" onClick="@command('close')" />
-        	</div>
-            	        
-        </vlayout>      
+            closable="true" id="listboxProfileEditWindow" title="Editace profilu" mold="top" width="460px">
+
+        <div sclass="editable">
+
+            <n:fieldset class="margin-bottom5 wb">
+                <n:legend class="tac">
+                    <label value="${c:l('listbox.profileManager.profile.name')}" sclass="bold" />
+                </n:legend>
+                <textbox value="@bind(vm.profile.name)" width="98%" constraint="no empty" maxlength="16"/>
+            </n:fieldset>
+
+            <n:fieldset class="margin-bottom5 wb">
+                <checkbox label="${c:l('listbox.profileManager.profile.public')}" checked="@bind(vm.profile.publicProfile)" disabled="@load(not vm.dlProfileManager.allowCreatePublic)"/>
+
+                <div sclass="padding5" visible="@load(vm.profile.publicProfile)">
+                    <listbox id="categoriesLst" sclass="fl" model="@bind(vm.profile.categories)" rows="5" width="95%">
+                        <listhead>
+                            <listheader label="${c:l('listbox.profileManager.profile.category')}" width="100px"/>
+                            <listheader label="Popis"/>
+                        </listhead>
+                        <template name="model" var="catEach">
+                            <listitem value="${catEach}">
+                                <listcell label="${catEach.profileCategoryName}"/>
+                                <listcell label="${catEach.profileCategoryDescription}"/>
+                            </listitem>
+                        </template>
+                    </listbox>
+                    <div sclass="fr" width="18px">
+                        <lovbox apply="${vm.categoryLovbox}" mold="image"
+                                onSelect="@command('addCategory', category=self.selectedItem)"
+                                labelProperty="profileCategoryName" descriptionProperty="profileCategoryDescription"
+                                labelWidth="30%,70%"
+                                visible="@load(vm.dlProfileManager.allowCreatePublic)"
+                                sclass="plus"/>
+                        <btn-remove
+                                onClick="@command('removeCategory', category=categoriesLst.selectedItem.value)"
+                                visible="@load(vm.dlProfileManager.allowCreatePublic)"/>
+                    </div>
+                    <n:br class="clear" />
+                </div>
+            </n:fieldset>
+
+            <n:fieldset class="margin-bottom10 wb">
+                <div visible="@load(vm.dlProfileManager.showColumnSettings)">
+                    <checkbox id="saveColumnModelCheckbox" width="90%"
+                              label="${c:l('listbox.profileManager.profile.saveColumnModel')}"
+                              checked="@load(vm.dlProfileManager.showColumnSettings and empty vm.profile.id)"
+                              tooltiptext="${c:l('listbox.profileManager.profile.saveColumnModel.tooltip')}"/>
+                </div>
+                <div visible="@load(vm.dlProfileManager.showFilterSettings)">
+                    <checkbox id="saveColumnFilterCheckbox" width="90%"
+                              label="${c:l('listbox.profileManager.profile.saveFilterModel')}"
+                              checked="@load(vm.dlProfileManager.showFilterSettings and empty vm.profile.id)"
+                              tooltiptext="${c:l('listbox.profileManager.profile.saveFilterModel.tooltip')}"/>
+                </div>
+            </n:fieldset>
+
+            <div sclass="fl">
+                <checkbox label="${c:l('listbox.profileManager.profile.default')}" checked="@bind(vm.profile.defaultProfile)" width="90%" />
+            </div>
+            <div sclass="fr">
+                <button id="deleteButton" label="${c:l('listbox.profileManager.delete')}"
+                        onClick="@command('delete')"
+                        visible="@load(not empty vm.profile.id)" mold="dtl" />
+                <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
+                <button label="${c:l('listbox.storno')}" onClick="@command('close')" />
+            </div>
+            <n:br class="clear" />
+
+        </div>
     </window>
 </zk>

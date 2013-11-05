@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.view.DLListbox;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
@@ -17,6 +18,8 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     // model
     protected List<Map<String, Object>> usedModel = new ArrayList<Map<String, Object>>();
     protected List<Map<String, Object>> unusedModel = new ArrayList<Map<String, Object>>();
+    protected List<Map<String, Object>> hiddenModel = new ArrayList<Map<String, Object>>();
+
     // view
     public DLListbox usedListbox;
     public DLListbox unusedListbox;
@@ -35,7 +38,10 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
         final List<Map<String, Object>> columnModels = ( List<Map<String, Object>> ) arg.get( "columnModels" );
 
         for ( Map<String, Object> map : columnModels ) {
-            if ( ( Boolean ) map.get( "visible" ) ) {
+            if (StringHelper.isNull((String) map.get( "label" ) )) {
+                // System cell without label - is not part of sorting
+                hiddenModel.add( prepareMap( map ) );
+            } else if ( ( Boolean ) map.get( "visible" ) ) {
                 usedModel.add( prepareMap( map ) );
             } else {
                 unusedModel.add( prepareMap( map ) );
@@ -59,9 +65,16 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     public void onOk() {
         // setup ordering
         int i = 1;
+
+        // prepend hiddenModel
+        // THIS is special assumption, that hidden label without label is always first
+        usedModel.addAll(0, hiddenModel);
+
+        // setup order
         for (Map<String, Object> row : usedModel)
             row.put("order", i++);
-        
+
+        // post to parent
         org.zkoss.zk.ui.event.Events.postEvent( new org.zkoss.zk.ui.event.Event( "onSave", self, usedModel ) );
         self.detach();
     }

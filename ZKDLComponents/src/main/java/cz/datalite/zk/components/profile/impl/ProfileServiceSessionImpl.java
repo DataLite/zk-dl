@@ -1,12 +1,13 @@
-package cz.datalite.zk.components.list.service.impl;
+package cz.datalite.zk.components.profile.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import cz.datalite.zk.components.profile.DLListboxProfile;
+import cz.datalite.zk.components.profile.DLListboxProfileCategory;
+import cz.datalite.zk.components.profile.ProfileService;
 import org.zkoss.zk.ui.Sessions;
-
-import cz.datalite.zk.components.list.DLListboxProfile;
-import cz.datalite.zk.components.list.service.ProfileService;
 
 public class ProfileServiceSessionImpl implements ProfileService {
 	
@@ -46,7 +47,12 @@ public class ProfileServiceSessionImpl implements ProfileService {
 		throw new IllegalAccessError("Method not valid for session implementation.");		
 	}
 
-	@Override
+    @Override
+    public List<DLListboxProfileCategory> getAllCategories() {
+        return Collections.emptyList();
+    }
+
+    @Override
 	public DLListboxProfile getByDefault(String dlListboxId) {
 		throw new IllegalAccessError("Method not valid for session implementation.");
 	}	

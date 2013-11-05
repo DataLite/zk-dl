@@ -20,6 +20,7 @@ import jxl.write.WritableFont;
 import jxl.write.WriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Library;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.media.AMedia;
@@ -38,6 +39,10 @@ import org.zkoss.zul.Messagebox;
 public class DLManagerControllerImpl<T> implements DLManagerController {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger( DLManagerControllerImpl.class );
+
+    // should the user be asked for reset confirmation?
+    private static boolean confirmReset = Boolean.valueOf(Library.getProperty("zk-dl.listbox.confirmReset", "true"));
+
     // master controller
     protected final DLListboxExtController<T> masterController;
     // view
@@ -316,16 +321,20 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        Messagebox.show(Labels.getLabel("listbox.manager.resetFilter.message.text"),
-                Labels.getLabel("listbox.manager.resetFilter.message.title"),
-                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
+        if (confirmReset)
+            Messagebox.show(Labels.getLabel("listbox.manager.resetFilter.message.text"),
+                    Labels.getLabel("listbox.manager.resetFilter.message.title"),
+                    Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
-            public void onEvent( final Event event ) {
-                if ( event.getData().equals( Messagebox.OK ) ) {
-                    masterController.clearFilterModel();
+                public void onEvent( final Event event ) {
+                    if ( event.getData().equals( Messagebox.OK ) ) {
+                        masterController.clearFilterModel();
+                    }
                 }
-            }
-        } );
+            } );
+        else
+            masterController.clearFilterModel();
+
     }
 
     @Override
@@ -334,16 +343,19 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        Messagebox.show( Labels.getLabel("listbox.manager.reset.message.text"),
-                Labels.getLabel("listbox.manager.reset.message.title"),
-                Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
+        if (confirmReset)
+            Messagebox.show( Labels.getLabel("listbox.manager.reset.message.text"),
+                    Labels.getLabel("listbox.manager.reset.message.title"),
+                    Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
-            public void onEvent( final Event event ) {
-                if ( event.getData().equals( Messagebox.OK ) ) {
-                    masterController.clearAllModel();
+                public void onEvent( final Event event ) {
+                    if ( event.getData().equals( Messagebox.OK ) ) {
+                        masterController.clearAllModel();
+                    }
                 }
-            }
-        } );
+            } );
+        else
+            masterController.clearAllModel();
     }
 
     /**

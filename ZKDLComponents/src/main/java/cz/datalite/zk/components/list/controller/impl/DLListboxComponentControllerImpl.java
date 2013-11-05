@@ -10,16 +10,16 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListheader;
 import org.slf4j.LoggerFactory;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.ComponentNotFoundException;
-import org.zkoss.zk.ui.IdSpace;
-import org.zkoss.zk.ui.UiException;
+import org.zkoss.lang.Library;
+import org.zkoss.zk.ui.*;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.metainfo.NodeInfo;
+import org.zkoss.zk.ui.metainfo.PageDefinition;
 import org.zkoss.zk.ui.metainfo.TemplateInfo;
+import org.zkoss.zk.ui.metainfo.impl.MacroDefinition;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
 import org.zkoss.zul.ListModelList;
@@ -156,6 +156,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 		} else {
 			this.template = null;
 		}
+
+        applyDefaultConverters();
     }
 
     public void onSort( final DLListheader listheader ) {
@@ -263,6 +265,22 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 			// otherwise init model from template
 			this.setRendererTemplate(this.template);
 		}
+
+        applyDefaultConverters();
+    }
+
+    /**
+     * If column does not have converter, apply default from library property (if set).
+     */
+    protected void applyDefaultConverters() {
+        String booleanConverter = Library.getProperty("zk-dl.listbox.export.defaultConverter.boolean");
+
+        for (DLColumnUnitModel columnUnitModel : columnModel.getColumnModels() ) {
+            if (!columnUnitModel.isConverter() && columnUnitModel.isExportable()) {
+                if (Boolean.class.equals(columnUnitModel.getColumnType()) && booleanConverter != null)
+                    columnUnitModel.setConverter(booleanConverter, listbox, Collections.<String,String>emptyMap());
+            }
+        }
     }
 
     private void initListheaderModels( final List<DLListheader> headers ) {
@@ -412,15 +430,19 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 
                 return;
             }
-            
-            TemplateInfo info = ( TemplateInfo ) ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
-            
-            List<NodeInfo> nodes = info.getChildren();
-            NodeInfo listitemTemplate = nodes.get( 0 );
-            List<NodeInfo> listcells = listitemTemplate.getChildren();
+
             final List<NodeInfo> cellTemplates = new ArrayList<NodeInfo>();
-            cellTemplates.addAll( listcells );
-            
+
+            TemplateInfo info = ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
+            // start from <listitem> children
+            resolveTemplateListcells(cellTemplates, info.getChildren().get(0).getChildren());
+
+            if (defaultHeaders.size() != cellTemplates.size()) {
+                throw new IllegalStateException("Listbox template parsing error: different size of " +
+                        "listheaders (" + defaultHeaders.size() + ") and listitem cells (" +
+                        cellTemplates.size() + ").");
+            }
+
             initTemplate( defaultHeaders, cellTemplates );
             
         } catch ( Exception ex ) {
@@ -429,7 +451,28 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
 
     }
-    
+
+    // parse template definition and recursively search for listcells / expand macros
+    private void resolveTemplateListcells(List<NodeInfo> cellTemplates, List<NodeInfo> nodeInfoList) {
+        for (NodeInfo nodeInfo : nodeInfoList) {
+            if (nodeInfo instanceof ComponentInfo) {
+                ComponentInfo componentInfo = (ComponentInfo) nodeInfo;
+                if (componentInfo.getComponentDefinition() instanceof MacroDefinition) {
+                    MacroDefinition macro = (MacroDefinition) componentInfo.getComponentDefinition();
+                    PageDefinition pageDefinition = Executions.getPageDefinition(null, macro.getMacroURI());
+                    resolveTemplateListcells(cellTemplates, pageDefinition.getChildren());
+                } else if (componentInfo.getTag() != null) {
+                    // skip components without tag - it might be only \n in source zul
+                    // otherwise assume listcell - tag check is not safe, because the component might be subclass of listcell
+                    cellTemplates.add(nodeInfo);
+                }
+            } else {
+                // otherwise descend to children
+                resolveTemplateListcells(cellTemplates, nodeInfo.getChildren());
+            }
+        }
+    }
+
     protected void initTemplate( final List<DLListheader> headers, final List<NodeInfo>  listcells ) {
         // loading renderer templates and column name from the binding.
         // ---------------

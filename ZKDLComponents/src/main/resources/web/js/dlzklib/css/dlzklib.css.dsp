@@ -11,7 +11,7 @@
 .z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
-.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 6px 0 0 -20px; position: static; }
+.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
 .z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 4px 0 0 3px; }
 
 /* -- DLPaging component -- */

@@ -327,6 +327,10 @@ public final class DLFilter {
 					if (DLSortType.NATURAL == sort.getSortType()) {
 						continue;
 					}
+
+                    if (sort.getColumn() == null)
+                        throw new IllegalArgumentException("DLFilter cannot be used with sqlFormula sort: " + sort.toString());
+
 					int compare = beanCompare(sort.getColumn(), o1, o2);
 					if (compare == 0) {
 						continue;

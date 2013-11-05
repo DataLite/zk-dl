@@ -1,16 +1,18 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import java.util.List;
-
+import cz.datalite.zk.components.list.DLListboxController;
+import cz.datalite.zk.components.list.DLListboxFilterController;
+import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.lovbox.DLLovboxController;
+import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
+import cz.datalite.zk.components.profile.DLListboxProfile;
+import cz.datalite.zk.components.profile.DLListboxProfileCategory;
+import cz.datalite.zk.components.profile.DLProfileManager;
+import cz.datalite.zk.components.profile.impl.DLListboxProfileCategoryImpl;
+import cz.datalite.zk.events.SaveProfileEvent;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.Converter;
-import org.zkoss.bind.annotation.AfterCompose;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.ExecutionArgParam;
-import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
@@ -23,110 +25,125 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radio;
 import org.zkoss.zul.Radiogroup;
 
-import cz.datalite.zk.components.list.DLListboxProfile;
-import cz.datalite.zk.events.SaveProfileEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Controller for the popup window used to create/edit profile.
  */
 public class ListboxProfileEditController {
 
-	private DLListboxProfile profile;
-	private Component view;
-	private String buttonMold;
-	private boolean allowCreatePublic;
-	private Converter<Radio, Boolean, Radiogroup> booleanConverter = new BooleanConverter();
-	
-	@Wire("button")
-	private List<Button> buttons;
-	
-	@Wire("#deleteButton")
-	private Button deleteButton;
-	
-	@Wire("#privateRadio")
-	private Radio privateRadio;
-	
-	@Wire("#publicRadio")
-	private Radio publicRadio;
+    // active profile
+    private DLListboxProfile profile;
 
-	@Init
-	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("profile") DLListboxProfile profile, @ExecutionArgParam("buttonMold") String buttonMold,
-			@ExecutionArgParam("allowCreatePublic") boolean allowCreatePublic) {
-		this.profile = profile;
-		this.view = view;
-		this.buttonMold = buttonMold;
-		this.allowCreatePublic = allowCreatePublic;		
-	}
+    // list of categories minus categories from profile
+    List<DLListboxProfileCategory> profileCategories;
 
-	@AfterCompose
-	public void compose() {
-		Selectors.wireComponents(this.view, this, false);
-		
-		for (Button button : this.buttons) {
-			button.setMold(this.buttonMold);
-		}
-		
-		if (!this.allowCreatePublic) {
-			this.privateRadio.setDisabled(true);
-			this.publicRadio.setDisabled(true);			
-		}
-		if (this.profile.getId() == null) {
-			this.deleteButton.setVisible(false);
-		}
-	}
+    // main window component
+    private Component view;
 
-	@Command
-	public void close() {
-		this.view.detach();
-	}
-	
-	@Command
-	public void save(@BindingParam("saveFilterModel") Boolean saveFilterModel, @BindingParam("saveColumnModel") Boolean saveColumnModel) {
-		Events.postEvent(new SaveProfileEvent(this.view, saveColumnModel, saveFilterModel));
-		this.view.detach();
-	}
-	
-	@Command
-	public void delete() {
-		Messagebox.show(
-				Labels.getLabel("listbox.profileManager.delete.confirm", new String[] { this.profile.getName() }),
-				Labels.getLabel("listbox.profileManager.delete.tooltip"), Messagebox.OK | Messagebox.NO,
-				Messagebox.QUESTION, new EventListener<Event>() {
-					public void onEvent(final Event event) {
-						if (event.getData().equals(Messagebox.OK)) {
-							Events.postEvent(new Event("onDelete", view, null));
-							view.detach();
-						}
-					}
-				});
-	}
+    // manager component - provides settings
+    private DLProfileManager dlProfileManager;
 
-	public DLListboxProfile getProfile() {
-		return profile;
-	}
+    @Wire("button")
+    private List<Button> buttons;
 
-	public void setProfile(DLListboxProfile profile) {
-		this.profile = profile;
-	}
+    @Init
+    public void init(@ContextParam(ContextType.VIEW) Component view,
+                     @ExecutionArgParam("profile") DLListboxProfile profile,
+                     @ExecutionArgParam("categories") List<DLListboxProfileCategory> profileCategories,
+                     @ExecutionArgParam("dlProfileManager") DLProfileManager dlProfileManager) {
+        this.profile = profile;
 
-	public Converter<Radio, Boolean, Radiogroup> getBooleanConverter() {
-		return booleanConverter;
-	}
+        // init categories
+        this.profileCategories = new ArrayList<DLListboxProfileCategory>(profileCategories);
+        this.profileCategories.removeAll(profile.getCategories());
+        sortCategories();
 
-	private class BooleanConverter implements Converter<Radio, Boolean, Radiogroup> {
-		@Override
-		public Radio coerceToUi(Boolean beanProp, Radiogroup component, BindContext ctx) {
-			if (beanProp != null && beanProp) {
-				return (Radio) component.getFirstChild().getFirstChild();
-			} else {
-				return (Radio) component.getFirstChild().getLastChild();
-			}
-		}
+        this.view = view;
+        this.dlProfileManager = dlProfileManager;
+    }
 
-		@Override
-		public Boolean coerceToBean(Radio compAttr, Radiogroup component, BindContext ctx) {
-			return Boolean.valueOf(compAttr.getValue().toString());
-		}
-	}	
-	
+    @AfterCompose
+    public void compose() {
+        Selectors.wireComponents(this.view, this, false);
+
+        for (Button button : this.buttons) {
+            button.setMold(this.dlProfileManager.getButtonMold());
+        }
+    }
+
+    @Command
+    public void close() {
+        this.view.detach();
+    }
+
+    @Command
+    public void save(@BindingParam("saveFilterModel") Boolean saveFilterModel, @BindingParam("saveColumnModel") Boolean saveColumnModel) {
+        Events.postEvent(new SaveProfileEvent(this.view, saveColumnModel, saveFilterModel));
+        this.view.detach();
+    }
+
+    @Command
+    public void delete() {
+        Messagebox.show(
+                Labels.getLabel("listbox.profileManager.delete.confirm", new String[]{this.profile.getName()}),
+                Labels.getLabel("listbox.profileManager.delete.tooltip"), Messagebox.OK | Messagebox.NO,
+                Messagebox.QUESTION, new EventListener<Event>() {
+            public void onEvent(final Event event) {
+                if (event.getData().equals(Messagebox.OK)) {
+                    Events.postEvent(new Event("onDelete", view, null));
+                    view.detach();
+                }
+            }
+        });
+    }
+
+    @Command
+    @NotifyChange("profile")
+    public void addCategory(@BindingParam("category") DLListboxProfileCategory category) {
+        profile.addCategory(category);
+        profileCategories.remove(category);
+        categoryLovbox.invalidateListboxModel();
+    }
+
+    @Command
+    @NotifyChange("profile")
+    public void removeCategory(@BindingParam("category") DLListboxProfileCategory category) {
+        profile.removeCategory(category);
+        profileCategories.add(category);
+        sortCategories();
+        categoryLovbox.invalidateListboxModel();
+    }
+
+    private void sortCategories() {
+        Collections.sort(profileCategories, new DLListboxProfileCategoryImpl.NameComparator());
+    }
+
+
+    public DLListboxProfile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(DLListboxProfile profile) {
+        this.profile = profile;
+    }
+
+    // lovbox to add selected item
+    DLLovboxController<DLListboxProfileCategory> categoryLovbox = new DLLovboxGeneralController<DLListboxProfileCategory>(
+            new DLListboxFilterController<DLListboxProfileCategory>() {
+        @Override
+        protected List<DLListboxProfileCategory> loadData() {
+            return profileCategories;
+        }
+    });
+
+    public DLLovboxController<DLListboxProfileCategory> getCategoryLovbox() {
+       return categoryLovbox;
+    }
+
+    public DLProfileManager getDlProfileManager() {
+        return dlProfileManager;
+    }
 }

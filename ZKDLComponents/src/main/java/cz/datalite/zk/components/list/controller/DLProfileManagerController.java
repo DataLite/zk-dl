@@ -1,10 +1,10 @@
 package cz.datalite.zk.components.list.controller;
 
-import cz.datalite.zk.components.list.DLListboxProfile;
+import cz.datalite.zk.components.profile.DLListboxProfile;
 
 public interface DLProfileManagerController<T> {
 
-	void onLoadProfile();
+	void onLoadProfile(boolean refresh);
 
 	void onEditProfile(Long idProfile);
 
@@ -13,7 +13,5 @@ public interface DLProfileManagerController<T> {
 	void onDeleteProfile(Long idProfile);
 
 	boolean selectDefaultProfile(boolean onCreate);
-
-	void fireChanges();
 
 }

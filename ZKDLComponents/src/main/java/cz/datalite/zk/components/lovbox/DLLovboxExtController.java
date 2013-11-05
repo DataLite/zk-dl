@@ -25,4 +25,13 @@ public interface DLLovboxExtController<T> extends Composer, DLLovboxController<T
      */
     DLLovboxModel<T> getModel();
 
+    /**
+     * After selected item is changed from outside of listbox component (such as Lovbox.setSelectedItem()), we need
+     * to synchronize selected item on listbox. It the listbox is loaded and does not has this selected item,
+     * selectedItem is cleared.
+     *
+     * @param selectedItem actual lovbox selectedItem value
+     */
+    public void synchronizeListboxSelectedItemDirectly( final T selectedItem );
+
 }

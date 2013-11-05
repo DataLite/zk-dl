@@ -14,10 +14,15 @@ import org.zkoss.zk.ui.event.EventListener;
 public interface DLLovboxController<T> extends Cascadable<T> {
 
     /**
-     * Set entity like a selected one. This one
-     * needn't be in the listbox model, but if
-     * model doesn't contain it, this value won't
-     * be able to be selected.
+     * Set selected value of the lovbox.
+     *
+     * <p>This method will call all listeners (contrary to
+     * {@link cz.datalite.zk.components.lovbox.DLLovbox#setSelectedItem(Object)}
+     *
+     * <p>It will check the underlying listbox for selectedItem - listbox is not locked
+     * (i.e. was opened by the user) and selectedItem differs, selection is cleared (set to null).
+     * No events are called from the listbox.
+     *
      * @param selectedItem new selected entity
      */
     void setSelectedItem( T selectedItem );
