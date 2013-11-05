@@ -401,7 +401,7 @@ public class DLSearch<T> {
         }
 
 
-        Alias resolvedAlias = getAliasForPath(pathWithoutProperty);
+        Alias resolvedAlias = getAliasForPath(path);
         if (resolvedAlias != null) {
             // alias already defined, check it's setup
             if (!resolvedAlias.getAlias().equals(alias)) {

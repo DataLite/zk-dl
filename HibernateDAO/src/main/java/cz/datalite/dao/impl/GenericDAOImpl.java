@@ -6,6 +6,7 @@ import cz.datalite.dao.DLSort;
 import cz.datalite.dao.GenericDAO;
 import cz.datalite.dao.support.JpaEntityInformation;
 import cz.datalite.dao.support.JpaEntityInformationSupport;
+import cz.datalite.hibernate.OrderBySqlFormula;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
@@ -300,7 +301,8 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // add sort aliases
         for ( final Iterator<DLSort> it = search.getSorts(); it.hasNext(); ) {
             final DLSort sort = it.next();
-            search.addAliasesForProperty(sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
+            if (sort.getColumn() != null)
+                search.addAliasesForProperty(sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
         }
 
         // write aliases
@@ -329,16 +331,20 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         if ( writeOrderBy ) {
             for ( final Iterator<DLSort> it = search.getSorts(); it.hasNext(); ) {
                 final DLSort sort = it.next();
-                switch ( sort.getSortType() ) {
-                    case ASCENDING:
-                        criteria.addOrder( Order.asc( search.getAliasForFullPath(sort.getColumn()) ) );
-                        break;
-                    case DESCENDING:
-                        criteria.addOrder( Order.desc( search.getAliasForFullPath(sort.getColumn()) ) );
-                        break;
-                    default:
+                if (sort.getSqlFormula() != null) {
+                    // custom sort
+                    criteria.addOrder(OrderBySqlFormula.sqlFormula(sort.getSqlFormula()));
+                } else {
+                    switch ( sort.getSortType() ) {
+                        case ASCENDING:
+                            criteria.addOrder( Order.asc( search.getAliasForFullPath(sort.getColumn()) ) );
+                            break;
+                        case DESCENDING:
+                            criteria.addOrder( Order.desc( search.getAliasForFullPath(sort.getColumn()) ) );
+                            break;
+                        default:
+                    }
                 }
-
             }
         }
     }
