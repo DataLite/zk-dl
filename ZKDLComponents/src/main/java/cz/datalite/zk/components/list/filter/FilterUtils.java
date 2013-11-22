@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.reflect.Fields;
 
+import java.util.Map;
+
 /**
  *
  * Class defining utils used mostly by DLFilter
@@ -27,7 +29,16 @@ public class FilterUtils {
             return entity;
         } else {
             // otherwise return given field
-            return Fields.getByCompound( entity, address );
+            try {
+                return Fields.getByCompound( entity, address );
+            } catch (NoSuchMethodException e) {
+                // try to resolve Map
+                if (entity instanceof Map && ((Map)entity).containsKey(address)) {
+                    return ((Map)entity).get(address);
+                } else {
+                    throw  e;
+                }
+            }
         }
     }
 

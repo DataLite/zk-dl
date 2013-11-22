@@ -42,7 +42,7 @@ public class DLListbox extends Listbox {
 
     /** should be automatically selected first row */
     private boolean selectFirstRow = true;
-    
+
     /** autosave model (columns and filters settings) to session */
     private boolean autosave = Boolean.valueOf(Library.getProperty("zk-dl.listbox.autosave", "true"));
 

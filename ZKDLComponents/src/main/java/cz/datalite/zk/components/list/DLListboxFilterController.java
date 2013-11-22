@@ -68,7 +68,7 @@ public abstract class DLListboxFilterController<T> extends DLListboxSimpleContro
         	this.data = loadData();
         }
 
-        return DLFilter.filterAndCount(filter, this.data, firstRow, rowCount, sorts, disjunction);
+            return DLFilter.filterAndCount(filter, this.data, firstRow, rowCount, sorts, disjunction);
     }
 
     /**

@@ -13,9 +13,10 @@
 
             <n:fieldset class="margin-bottom5 wb">
                 <n:legend class="tac">
-                    <label value="${c:l('listbox.profileManager.profile.name')}" sclass="bold" />
+                    <label value="${c:l('listbox.profileManager.profile.name')}" sclass="bold"
+                            tooltiptext="@bind(vm.profile.id)"/>
                 </n:legend>
-                <textbox value="@bind(vm.profile.name)" width="98%" constraint="no empty" maxlength="16"/>
+                <textbox value="@bind(vm.profile.name)" width="98%" constraint="no empty" maxlength="255"/>
             </n:fieldset>
 
             <n:fieldset class="margin-bottom5 wb">

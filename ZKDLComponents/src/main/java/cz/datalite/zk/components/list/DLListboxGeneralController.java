@@ -214,9 +214,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 						this.profileManagerController.onLoadProfile(false);
 					}
 				}
-			} 
+			}
 		}
-    	
+
         getListboxController().fireOrderChanges();
         quickFilterController.fireChanges();
         managerController.fireChanges();
@@ -552,9 +552,10 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         quickFilterController.fireChanges();
         easyFilterController.fireChanges();
         if (profileManagerController != null)
-            profileManagerController.onLoadProfile(true);
-        
-        refreshDataModel();
+            profileManagerController.onLoadProfile(false);
+
+        if (listboxController.isLoadDataOnCreate())
+            refreshDataModel();
     }
 
     public void clearFilterModel() {

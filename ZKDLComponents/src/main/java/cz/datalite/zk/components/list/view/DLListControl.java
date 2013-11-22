@@ -41,8 +41,12 @@ public class DLListControl extends Div {
         qFilterComponent = new DLQuickFilter();
         qFilterComponent.setParent( this );
 
+        Div additionalContentCover = new Div();
+        additionalContentCover.setSclass("z-listcontrol-aux-content-cover");
+        additionalContentCover.setParent(this);
+
         additionalContent = new Hbox();
-        additionalContent.setParent(this);
+        additionalContent.setParent(additionalContentCover);
         additionalContent.setZclass("z-listcontrol-aux-content");
         additionalContent.setAlign("center");
 

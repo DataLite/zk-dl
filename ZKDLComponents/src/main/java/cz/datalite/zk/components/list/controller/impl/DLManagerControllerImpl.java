@@ -20,6 +20,7 @@ import jxl.write.WritableFont;
 import jxl.write.WriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Classes;
 import org.zkoss.lang.Library;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
@@ -299,6 +300,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             final Map<String, Object> unitMap = new HashMap<String, Object>();
             unitMap.put( "label", unit.getLabel() );
             unitMap.put( "column", (unit.getExportColumn() != null) ? unit.getExportColumn() : unit.getColumn() );
+            unitMap.put("columnType", unit.getColumnType());
             unitMap.put( "index", index );
             unitMap.put( "order", unit.getOrder() );
             unitMap.put( "visible", unit.isVisible() );
@@ -466,11 +468,14 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             }
         }
 
-        final List<Cell> cells = new LinkedList<Cell>(heads);
-        for (Object entity : data) {
+        final List<Cell> cells = new LinkedList<Cell>();
+        if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
+            cells.addAll(heads);
             row++;
-            column = 0;
+        }
 
+        for (Object entity : data) {
+            column = 0;
             for (Map<String, Object> unit : model) {
                 try {
                     final String columnName = (String) unit.get("column");
@@ -487,12 +492,24 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                         ZkConverter converter = (ZkConverter) unit.get("converter");
                         value = converter.convertToView( value );
                     }
+
+                    Class columnType = (Class) unit.get("columnType");
+                    if ( value != null && columnType != null) {
+                        try {
+                            value = Classes.coerce(columnType, value);
+                        } catch (ClassCastException e) {
+                            LOGGER.trace("Unable to convert export value {} to columnType {} - {}.", value, columnType, e);
+                        }
+                    }
+
                     cells.add(new DataCell(row, value, heads.get(column)));
                 } catch (Exception ex) { // ignore
                     LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
                 }
                 column++;
             }
+
+            row++;
         }
         return cells;
     }

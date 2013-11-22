@@ -49,22 +49,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** Pattern to split {@link #labelProperties}/ */
     private static final Pattern PATTERN_LABEL_PROPERTIES = Pattern.compile( "\\s*,\\s*" );
     /** default component page size */
-    private static final Integer PAGE_SIZE;
+    private static final Integer PAGE_SIZE = Library.getIntProperty("zk-dl.lovbox.pageSize", 10);
     /** default listbox rows */
-    private static final Integer ROWS;
+    private static final Integer ROWS = Library.getIntProperty("zk-dl.lovbox.rows", 10);
     /** logger */
     protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLLovbox.class );
     
     static {
         addClientEvent(DLLovbox.class, "onClear", CE_IMPORTANT|CE_NON_DEFERRABLE);
-
-        // init page size
-		PAGE_SIZE = Library.getIntProperty("zk-dl.lovbox.pageSize", 10);
-		LOGGER.debug( "Lovbox default page size is defined as '" + PAGE_SIZE +  "'." );
-        
-        // init rows
-		ROWS = Library.getIntProperty("zk-dl.lovbox.rows", 10);
-		LOGGER.debug( "Lovbox default number of rows in a listbox is defined as '" + ROWS + "'.");
     }
     
     // controller

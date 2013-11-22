@@ -178,7 +178,7 @@ public final class DLFilter {
 	 *            max row count
 	 * @param list
 	 *            list of entities
-	 * @param distinct
+	 * @param columnName
 	 *            name of the column with unique data
 	 * @param all
 	 *            return all records or only coresponding
@@ -188,7 +188,7 @@ public final class DLFilter {
 	 * @return filtered list - new instance
 	 */
 	private static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final List<T> list,
-			final int firstRow, final int rowCount, final String distinct, final boolean all, final boolean disjunction) {
+			final int firstRow, final int rowCount, final String columnName, final boolean all, final boolean disjunction) {
 
                 // Changed by ZK-161 on 27.6.2012
                 //  @author Karel Cemus
@@ -211,15 +211,15 @@ public final class DLFilter {
 			final List<T> output = new LinkedList<T>();
 
 			for (T entity : list) {
-				if (distinct != null && values.contains(getValue(entity, distinct))) {
-					continue; // if distinct and value is in the values continue;
+				if (columnName != null && values.contains(getValue(entity, columnName))) {
+					continue; // if columnName and value is in the values continue;
 				}
 				if (!filter(filterModel, entity, disjunction)) {
 					continue;
 				}
 
-				if (distinct != null) {
-					values.add(getValue(entity, distinct));
+				if (columnName != null) {
+					values.add(getValue(entity, columnName));
 				}
 
 				records++;
