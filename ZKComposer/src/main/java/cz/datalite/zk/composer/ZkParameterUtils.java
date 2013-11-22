@@ -118,7 +118,7 @@ public final class ZkParameterUtils {
                 throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
                         + "required=" + ( annot.required() ? "true" : "false" ) + ", "
                         + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Unable to set new value of field to '" + result + "': " + ex.getLocalizedMessage() );
+                        + ") - Unable to set new value of field to '" + result + "': " + ex.getLocalizedMessage(), ex );
             } catch ( IllegalAccessException ex ) {
                 throw SystemException.Aide.wrap( ex );
             }
@@ -133,13 +133,13 @@ public final class ZkParameterUtils {
                 throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
                         + "required=" + ( annot.required() ? "true" : "false" ) + ", "
                         + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Unable to set new value of method to '" + result + "': " + ex.getClass() + " - " + ex.getLocalizedMessage() );
+                        + ") - Unable to set new value of method to '" + result + "': " + ex.getClass() + " - " + ex.getLocalizedMessage(), ex );
             } catch ( InvocationTargetException ex ) {
                 throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
                         + "required=" + ( annot.required() ? "true" : "false" ) + ", "
                         + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
                         + ") - Unable to set new value of method to '" + result + "', error in method invocation: "
-                        + ex.getClass() + " - " + ( ex.getTargetException() == null ? ex.getLocalizedMessage() : ex.getTargetException().getLocalizedMessage() ) );
+                        + ex.getClass() + " - " + ( ex.getTargetException() == null ? ex.getLocalizedMessage() : ex.getTargetException().getLocalizedMessage() ), ex );
             }
     }
 

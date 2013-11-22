@@ -384,7 +384,7 @@ public class ZKHelper {
 
 
         Component comp = Executions.createComponents(uri, null, args);
-        assert comp instanceof Window : "Bad ZUL file for ZkHelper.openDetail function. ZUL must contain one root componente with type Window.";
+        assert comp instanceof Window : "Invalid ZUL file for ZkHelper.openDetail function. ZUL must contain one root componente with type Window.";
 
         Window detail = (Window) comp;
 

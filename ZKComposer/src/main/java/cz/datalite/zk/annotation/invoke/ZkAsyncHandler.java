@@ -21,6 +21,7 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.utils.ZkCancellable;
 import cz.datalite.zk.annotation.ZkAsync;
+import cz.datalite.zk.annotation.ZkAsyncThreadLocalResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
@@ -33,32 +34,39 @@ import org.zkoss.zul.Timer;
  * properties.</p>
  *
  * @author Karel Cemus
+ * @author Jiri Bubnik
  */
 public class ZkAsyncHandler extends Handler {
-    
+
     /** Logger instance */
     private static final Logger LOGGER = LoggerFactory.getLogger( ZkAsyncHandler.class );
 
     /** used queue name, one queue for all users async requests */
     private final static String QUEUE = "qLongOperations";
-    
+
     /** key of the exception in context map */
     private static final String ASYNC_EXCEPTION = "Async::exception";
-    
+
     /** key of the busybox in context map */
     private static final String ASYNC_BUSYBOX = "Async::busybox";
 
     /** key of the timer in context map */
     private static final String ASYNC_TIMER = "Async::timer";
-    
+
      /** key of the interceptor in context map */
     private static final String ASYNC_INTERCEPTOR = "Async::interceptor";
-    
+
      /** key of the interceptor in context map */
     private static final String ASYNC_QUEUE = "Async::queue";
 
+    /** key of the thread local state in context map */
+    private static final String ASYNC_THREADLOCAL_STATE = "Async::threadlocalState";
+
     /** state of general property */
     private final static boolean localizeAll;
+
+    /** copy thread local variables from request thread to async thread */
+    private static ZkAsyncThreadLocalResolver zkAsyncThreadLocalResolver = null;
 
     /** name of event fired after async long operation is done */
     private final String eventAfter;
@@ -71,19 +79,28 @@ public class ZkAsyncHandler extends Handler {
 
     /** if operation is cancellable */
     private final boolean cancellable;
-    
+
     /** message to be shown */
     private final String message;
-    
+
     /** use localization */
     private final boolean i18n;
-    
+
     /** parent component */
     private final String component;
 
     static {
         /** Reads default configuration for library */
         localizeAll = Boolean.parseBoolean(Library.getProperty("zk-dl.annotation.i18n", "false"));
+
+        String zkAsyncThreadLocalResolverClass = Library.getProperty("zk-dl.annotation.ZkAsync.ZkAsyncThreadLocalResolver");
+        if (zkAsyncThreadLocalResolverClass != null) {
+            try {
+                zkAsyncThreadLocalResolver = (ZkAsyncThreadLocalResolver) Class.forName(zkAsyncThreadLocalResolverClass).newInstance();
+            } catch (Exception e) {
+                LOGGER.error("Invalid library property value zk-dl.annotation.ZkAsync.ZkAsyncThreadLocalResolver='" + zkAsyncThreadLocalResolverClass + "'", e);
+            }
+        }
     }
 
     public static Invoke process(Invoke inner, ZkAsync annotation) {
@@ -152,6 +169,10 @@ public class ZkAsyncHandler extends Handler {
 
                 context.putParameter( ASYNC_TIMER, timer );
             }
+
+            if (zkAsyncThreadLocalResolver != null) {
+                context.putParameter( ASYNC_THREADLOCAL_STATE, zkAsyncThreadLocalResolver.getCurrentThreadLocalState());
+            }
         }
 
         // invocation is not complete, prevent resuming
@@ -189,12 +210,12 @@ public class ZkAsyncHandler extends Handler {
     private boolean isAsyncRunning() {
         return EventQueues.exists(QUEUE);
     }
-    
+
     /** subscribes listeners on queue */
     private void subscribe(final Context context) {
         final EventQueue queue = findQueue();
         context.putParameter( ASYNC_QUEUE, queue );
-        
+
         // subscribe async listener to handle long operation
         queue.subscribe( createInvokeListener( context ), true ); //asynchronous
 
@@ -229,7 +250,7 @@ public class ZkAsyncHandler extends Handler {
             public void onEvent(Event event) throws Exception {
                 // listen for "afterAsyncEvent" only
                 if ( !"afterAsyncEvent".equals( event.getName() ) ) return;
-                
+
                 LOGGER.trace( "Async operation finished." );
                 // clean up queue
                 cleanUp();
@@ -250,9 +271,13 @@ public class ZkAsyncHandler extends Handler {
             public void onEvent(Event event) throws Exception { //asynchronous
                 // listen for "doAsyncEvent" only
                 if ( ! "doAsyncEvent".equals( event.getName()) ) return;
-                
+
                 try {
                     LOGGER.trace( "Starting async operation." );
+
+                    if (zkAsyncThreadLocalResolver != null) {
+                        zkAsyncThreadLocalResolver.setCurrentThreadLocalState(context.getParameter(ASYNC_THREADLOCAL_STATE));
+                    }
 
                     if (cancellable) {
                         // add request to allow cancelling
@@ -280,7 +305,7 @@ public class ZkAsyncHandler extends Handler {
                     synchronized (ZkAsyncHandler.this) {
                         context.removeParameter( ASYNC_INTERCEPTOR );
                     }
-                    
+
                     // Async event finished, post notification
                     final EventQueue queue = ( EventQueue ) context.getParameter( ASYNC_QUEUE );
                     queue.publish( new Event( "afterAsyncEvent" ) );

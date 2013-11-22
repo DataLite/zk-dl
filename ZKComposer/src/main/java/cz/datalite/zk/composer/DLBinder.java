@@ -230,11 +230,19 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
      */
     @Override
     public void doBeforeComposeChildren( Component comp ) throws Exception {
-        // initialize the binder and its properties
-        init( comp );
+        try {
+            // initialize the binder and its properties
+            init( comp );
 
-        // initialize the parent (as well as the @init in children)
-        super.doBeforeComposeChildren( comp );
+            // initialize the parent (as well as the @init in children)
+            super.doBeforeComposeChildren( comp );
+        } catch (Exception e) {
+            if (comp.getParent() != null) comp.setParent(null);
+            throw e;
+        } catch (Error e) {
+            if (comp.getParent() != null) comp.setParent(null);
+            throw e;
+        }
     }
 
     /**
@@ -247,7 +255,7 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         // wire all implicit variables
         WireUtils.wireImplicit( this, comp );
 
-        // load ZK annotations        
+        // load ZK annotations
         //      @ZkModel
         //      @ZkController
         ZkAnnotationUtils.init( zkModels, zkControllers, this, self );
