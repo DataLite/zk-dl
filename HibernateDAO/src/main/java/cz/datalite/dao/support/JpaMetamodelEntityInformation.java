@@ -16,6 +16,8 @@
 package cz.datalite.dao.support;
 
 import cz.datalite.helpers.ReflectionHelper;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 
 import javax.persistence.IdClass;
 import javax.persistence.metamodel.IdentifiableType;
@@ -190,7 +192,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
      */
     private Object getFieldValue(String field, Object o) {
         try {
-            return ReflectionHelper.getFieldValue(field, o);
+            return ReflectionHelper.getFieldValue(field, deproxy(o));
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException("Field " + field + " not found on entity " + o.getClass() + " instance " + o, e);
         } catch (NoSuchMethodException e) {
@@ -207,7 +209,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
      */
     private void setFieldValue(String field, Object o, Object value) {
         try {
-            ReflectionHelper.setFieldValue(field, o, value);
+            ReflectionHelper.setFieldValue(field, deproxy(o), value);
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException("Field " + field + " not found on entity " + o.getClass() + " instance " + o + " value " + value, e);
         } catch (NoSuchMethodException e) {
@@ -264,4 +266,23 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 			return attributes.iterator();
 		}
 	}
+
+    /**
+     * Befor reflection access we need to get originl object (not the proxy).
+     * @param obj object or a proxy
+     * @param <T> object type
+     * @return the object
+     */
+    public static <T>  T deproxy(T obj) {
+        if (obj == null)
+            return obj;
+        if (obj instanceof HibernateProxy) {
+            // Unwrap Proxy;
+            //      -- loading, if necessary.
+            HibernateProxy proxy = (HibernateProxy) obj;
+            LazyInitializer li = proxy.getHibernateLazyInitializer();
+            return (T)  li.getImplementation();
+        }
+        return obj;
+    }
 }
