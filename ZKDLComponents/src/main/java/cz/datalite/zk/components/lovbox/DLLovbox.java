@@ -214,14 +214,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 (( DLListheader ) listbox.getFirstChild().getFirstChild()).setFilterCompiler( filterCompiler );
             }
 
-            if ( multiple ) {
-                listbox.setCheckmark(true);
-                listbox.setMultiple(true);
-            }
-
             Events.postEvent( new Event( Events.ON_CREATE, listbox ) );
 
             listbox.setParent( popup );
+        }
+
+        if ( multiple ) {
+            listbox.setCheckmark(true);
+            listbox.setMultiple(true);
         }
         
         // disable autosave column and filter model for lovbox
