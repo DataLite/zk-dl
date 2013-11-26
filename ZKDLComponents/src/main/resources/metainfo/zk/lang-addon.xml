@@ -47,6 +47,11 @@
             <mold-uri>mold/lovbox-image.js</mold-uri>
             <css-uri>css/dlzklib.css.dsp</css-uri>
         </mold>
+        <mold>
+            <mold-name>list</mold-name>
+            <mold-uri>mold/lovbox-list.js</mold-uri>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
+        </mold>
         <annotation>
             <annotation-name>default-bind</annotation-name>
             <property-name>selectedItem</property-name>

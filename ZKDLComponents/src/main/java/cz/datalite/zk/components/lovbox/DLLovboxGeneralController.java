@@ -133,6 +133,7 @@ public class
                 // clear selection directly (without any events)
                 // more clear solution will be to try select correct item, but it might be not loaded yet
                 getListboxExtController().getListbox().getController().setSelectedItem(null);
+                getListboxExtController().getListbox().getController().setSelectedItems(Collections.emptySet());
                 getListboxExtController().getListbox().setSelectedIndex(-1);
         }
     }

@@ -272,6 +272,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         initialized = true;
+
+        if ("list".equals(getMold()))
+            onOpen(new OpenEvent(Events.ON_OPEN, this, true));
     }
 
     /**
@@ -452,6 +455,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         // we need to clear listbox selected value, otherwise the client will not be able to generate onSelect event
         if (isChange && !controller.getListboxExtController().isLocked()) {
             controller.getListboxExtController().getListbox().getController().setSelectedItem(null);
+            controller.getListboxExtController().getListbox().getController().setSelectedItems(Collections.emptySet());
             controller.getListboxExtController().getListbox().setSelectedIndex(-1);
         }
 
