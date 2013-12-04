@@ -46,6 +46,9 @@ public class ListboxProfileEditController {
     // manager component - provides settings
     private DLProfileManager dlProfileManager;
 
+    // if there are no categories defined, do not show the lovbox
+    private boolean categoriesDefined;
+
     @Wire("button")
     private List<Button> buttons;
 
@@ -57,7 +60,13 @@ public class ListboxProfileEditController {
         this.profile = profile;
 
         // init categories
-        this.profileCategories = new ArrayList<DLListboxProfileCategory>(profileCategories);
+        if (profileCategories != null)
+            this.profileCategories = new ArrayList<DLListboxProfileCategory>(profileCategories);
+        else
+            this.profileCategories = new ArrayList<DLListboxProfileCategory>();
+
+        categoriesDefined = !this.profileCategories.isEmpty();
+
         this.profileCategories.removeAll(profile.getCategories());
         sortCategories();
 
@@ -145,5 +154,9 @@ public class ListboxProfileEditController {
 
     public DLProfileManager getDlProfileManager() {
         return dlProfileManager;
+    }
+
+    public boolean isCategoriesDefined() {
+        return categoriesDefined;
     }
 }

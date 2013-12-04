@@ -7,7 +7,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
     <window apply="org.zkoss.bind.BindComposer"
             viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
-            closable="true" id="listboxProfileEditWindow" title="Editace profilu" mold="top" width="460px">
+            closable="true" id="listboxProfileEditWindow" title="Editace profilu" width="460px">
 
         <div sclass="editable">
 
@@ -22,7 +22,7 @@
             <n:fieldset class="margin-bottom5 wb">
                 <checkbox label="${c:l('listbox.profileManager.profile.public')}" checked="@bind(vm.profile.publicProfile)" disabled="@load(not vm.dlProfileManager.allowCreatePublic)"/>
 
-                <div sclass="padding5" visible="@load(vm.profile.publicProfile)">
+                <div sclass="padding5" visible="@load(vm.profile.publicProfile and categoriesDefined)">
                     <listbox id="categoriesLst" sclass="fl" model="@bind(vm.profile.categories)" rows="5" width="95%">
                         <listhead>
                             <listheader label="${c:l('listbox.profileManager.profile.category')}" width="100px"/>
@@ -42,7 +42,7 @@
                                 labelWidth="30%,70%"
                                 visible="@load(vm.dlProfileManager.allowCreatePublic)"
                                 sclass="plus"/>
-                        <btn-remove
+                        <button label="Delete"
                                 onClick="@command('removeCategory', category=categoriesLst.selectedItem.value)"
                                 visible="@load(vm.dlProfileManager.allowCreatePublic)"/>
                     </div>
@@ -71,7 +71,7 @@
             <div sclass="fr">
                 <button id="deleteButton" label="${c:l('listbox.profileManager.delete')}"
                         onClick="@command('delete')"
-                        visible="@load(not empty vm.profile.id)" mold="dtl" />
+                        visible="@load(not empty vm.profile.id)"/>
                 <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
                 <button label="${c:l('listbox.storno')}" onClick="@command('close')" />
             </div>
