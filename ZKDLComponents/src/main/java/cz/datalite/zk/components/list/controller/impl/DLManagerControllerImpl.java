@@ -488,11 +488,6 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                         value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
                     }
 
-                    if ((Boolean) unit.get("isConverter")) {
-                        ZkConverter converter = (ZkConverter) unit.get("converter");
-                        value = converter.convertToView( value );
-                    }
-
                     Class columnType = (Class) unit.get("columnType");
                     if ( value != null && columnType != null) {
                         try {
@@ -500,6 +495,11 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                         } catch (ClassCastException e) {
                             LOGGER.trace("Unable to convert export value {} to columnType {} - {}.", value, columnType, e);
                         }
+                    }
+
+                    if ((Boolean) unit.get("isConverter")) {
+                        ZkConverter converter = (ZkConverter) unit.get("converter");
+                        value = converter.convertToView( value );
                     }
 
                     cells.add(new DataCell(row, value, heads.get(column)));
