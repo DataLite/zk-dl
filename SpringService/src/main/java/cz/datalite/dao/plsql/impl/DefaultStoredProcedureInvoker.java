@@ -45,6 +45,12 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     SqlLobValueFactory sqlLobValueFactory ;
 
     /**
+     * Database schema.
+     * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
+     */
+    String databaseSchema;
+
+    /**
      * Příznak zda je nutné provést změnu dotazu
      */
     boolean wrapNeed = false ;
@@ -68,7 +74,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         public boolean isPrimitive()
         {
-          return (      ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_BOOLEAN ) )
+          return (     ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_BOOLEAN ) )
                     || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_DATE ) )
                     || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_STRING ) )
                     || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_NUMERIC ) ) ) ;
@@ -169,25 +175,26 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, SqlLobValueFactory sqlLobValueFactory )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
 	{
 		super( dataSource, "" ) ;
 
         getJdbcTemplate().setNativeJdbcExtractor(nativeJdbcExtractor);
 
         this.sqlLobValueFactory = sqlLobValueFactory ;
+        this.databaseSchema = databaseSchema;
 	}
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
     {
-        this( dataSource, sqlLobValueFactory ) ;
+        this( dataSource, sqlLobValueFactory, databaseSchema ) ;
 
         setName( name ) ;
     }
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
     {
-        this( dataSource, name, sqlLobValueFactory ) ;
+        this( dataSource, name, sqlLobValueFactory, databaseSchema ) ;
         declareReturnParameter( resultType ) ;
     }
 
@@ -990,15 +997,15 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
             if ( isNumeric( field.getValue() ) )
             {
-               query.append( " NXT.NUMBER_TABLE := NXT.NUMBER_TABLE() " ) ;
+               query.append( " " + getDatabaseSchema() + ".NUMBER_TABLE := " + getDatabaseSchema() + ".NUMBER_TABLE() " ) ;
             }
             else if ( isDate(field.getValue()) )
             {
-                query.append( " NXT.DATE_TABLE := NXT.DATE_TABLE() " ) ;
+                query.append( " " + getDatabaseSchema() + ".DATE_TABLE := " + getDatabaseSchema() + ".DATE_TABLE() " ) ;
             }
             else
             {
-                query.append( " NXT.VARCHAR_TABLE := NXT.VARCHAR_TABLE() " ) ;
+                query.append( " " + getDatabaseSchema() + ".VARCHAR_TABLE := " + getDatabaseSchema() + ".VARCHAR_TABLE() " ) ;
             }
 
             query.append( " ;\n" ) ;
@@ -1189,15 +1196,15 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
                 if ( isNumeric( field.getValue() ) )
                 {
-                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, "NXT.NUMBER_TABLE" ) ) ;
+                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, getDatabaseSchema() + ".NUMBER_TABLE" ) ) ;
                 }
                 else if ( isDate(field.getValue()) )
                 {
-                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, "NXT.DATE_TABLE" ) ) ;
+                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, getDatabaseSchema() + ".DATE_TABLE" ) ) ;
                 }
                 else
                 {
-                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, "NXT.VARCHAR_TABLE" ) ) ;
+                    newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, getDatabaseSchema() + ".VARCHAR_TABLE" ) ) ;
                 }
             }
         }
@@ -1606,5 +1613,9 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     public <T> T extractResultRecord(StoredProcedureResult resultMap, Class<T> returnType)
     {
         return extractRecord( resultMap, RETURN_VALUE_NAME, returnType ) ;
+    }
+
+    public String getDatabaseSchema() {
+        return databaseSchema;
     }
 }

@@ -18,10 +18,16 @@ import javax.sql.DataSource;
 class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
 {
     @Autowired
-    SqlLobValueFactory sqlLobValueFactory ;
+    SqlLobValueFactory sqlLobValueFactory;
 
     @Autowired
     TransactionAwareDataSourceProxy dataSource ;
+
+    /**
+     * Setup database schema.
+     * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
+     */
+    private String databaseSchema;
 
 
     public StoredProcedureInvoker create()
@@ -36,16 +42,32 @@ class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
 
     public StoredProcedureInvoker create( DataSource dataSource )
     {
-        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema() ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema() ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name, int resultType)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema() ) ;
+    }
+
+    /**
+     * Get default database schema.
+     * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
+     */
+    public String getDatabaseSchema() {
+        return databaseSchema;
+    }
+
+    /**
+     * Setup database schema.
+     * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
+     */
+    public void setDatabaseSchema(String databaseSchema) {
+        this.databaseSchema = databaseSchema;
     }
 }
