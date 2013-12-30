@@ -17,7 +17,7 @@
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
 .z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
-.z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: 70%; }
+.z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
 .z-paging-info, .z-paging div.z-paging-info { top: 8px; }
 
 /* -- Listboxmanager component -- */
@@ -41,14 +41,13 @@
 .z-lovbox { position: relative; }
 
 /* -- Lovbox popup -- */
-.z-lovbox-pp { height: auto; width: auto; }
-.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 3px 3px 3px 3px; height: auto; width: auto; }
+.z-lovbox-pp { height: auto!important; width: auto!important; }
+.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 3px 3px 3px 3px; height: auto!important; width: auto!important; }
 .z-lovbox-pp .z-bandbox-popup-cl { border: 1px solid #7eaac6; }
-.z-lovbox-pp .z-listbox { margin: 0 auto; max-height: 350px; overflow-y: auto; }
-.z-lovbox-pp .z-dlpaging { padding: 0; }
+.z-lovbox-pp .z-listbox { margin: 0 auto; overflow-y: auto; }
+.z-lovbox-pp .z-dlpaging { padding: 0!important; }
 
-.z-lovbox .z-bandbox-image-btn { background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px; cursor: pointer;
-display: block; height: 19px; width: 18px; }
+.z-lovbox .z-bandbox-image-btn { background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px; cursor: pointer; display: block; height: 16px; width: 14px; }
 .z-lovbox .z-bandbox-image-btn.z-bandbox-btn-over { border: 0 none; margin-left: 0; }
 .z-lovbox .z-bandbox-del, 
 .z-lovbox .z-bandbox-rounded-del { background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat; cursor: pointer; display: none; padding: 5px 7px; position: absolute; right: 18px; top: 5px; }
