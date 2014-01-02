@@ -5,9 +5,19 @@ function (out) {
     out.push('<i', this.domAttrs_(), '><input id="',
         uuid, '-real" style="display:none"/>');
 
-    out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn');
+    if (this.getImageLabel()) {
+        out.push('<span id="', uuid, '-label-btn" class="', zcls, '-label-btn">');
+        out.push(this.getImageLabel());
 
-    out.push('"></i>');
+        out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
+        out.push('</span>');
+
+    } else {
+        out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
+    }
+
+
+    out.push();
 
     this.redrawpp_(out);
 

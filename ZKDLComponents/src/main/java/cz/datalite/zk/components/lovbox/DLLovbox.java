@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.lovbox;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.bind.Binder;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.cascade.CascadableComponent;
@@ -86,11 +87,13 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected String searchProperty;
     /** defines filter compiler for shorten implementation */
     protected FilterCompiler filterCompiler;
-    /** defines name of description property which is used whed
+    /** defines name of description property which is used when
     one-row lovbox is defined. This property is used as the second
     column to specifie first {main) column with label. */
     @Deprecated // use labelProperty comma seperated values
     protected String descriptionProperty;
+    /** Available only in "image" mold - prepend the image with a label */
+    protected String imageLabel;
     /** defines popup height because of display bug */
     protected String popupHeight;
     /** should be clear button present (to clear lovbox value) */
@@ -635,6 +638,17 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
     }
 
+    /** Available only in "image" mold - prepend the image with a label */
+    public String getImageLabel() {
+        return imageLabel;
+    }
+
+    /** Available only in "image" mold - prepend the image with a label */
+    public void setImageLabel(String imageLabel) {
+        smartUpdate("imageLabel", imageLabel);
+        this.imageLabel = imageLabel;
+    }
+
     /**
      * Creates cell in listhead and 1st listitem and registers binding of this field
      * to selected entity property.
@@ -901,6 +915,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         if (readonly)
             render(renderer, "lovboxReadonly", readonly);
 
+        if (!StringHelper.isNull(imageLabel))
+            render(renderer, "imageLabel", imageLabel);
     }
 
 

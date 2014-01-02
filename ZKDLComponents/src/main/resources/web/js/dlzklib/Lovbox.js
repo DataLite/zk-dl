@@ -4,6 +4,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     _watermark: '',
     _defaultColor: '',
     _watermarkColor: '#aaa',
+    _imageLabel: '',
 
     $define: {
         clearButton: function () {
@@ -20,6 +21,11 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         lovboxReadonly: function() {
             if (this.desktop)
                 this.rerender();
+        },
+
+        imageLabel: function() {
+            if (this.desktop)
+                this.rerender();
         }
 
         //-disd
@@ -28,9 +34,10 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
     bind_: function () {
         this.$supers(dlzklib.Lovbox, 'bind_', arguments);
-        this.domListen_(this.$n("del"), "onClick", "_doClear");
+        this.domListen_(this.$n("label-btn"), "onClick", "open");
 
         if (!this.getLovboxReadonly()) {
+            this.domListen_(this.$n("del"), "onClick", "_doClear");
             this.domListen_(this.getInputNode(), "onFocus", "_clearWatermark");
             this.domListen_(this.getInputNode(), "onBlur", "_doWatermark");
             this.domListen_(this.getInputNode(), "onChange", "_doWatermark");
@@ -40,6 +47,8 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     unbind_: function () {
+        this.domUnlisten_(this.$n("label-btn"), "onClick", "open");
+
         if (!this.getLovboxReadonly()) {
             this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
             this.domUnlisten_(this.getInputNode(), "onFocus", "_clearWatermark");
