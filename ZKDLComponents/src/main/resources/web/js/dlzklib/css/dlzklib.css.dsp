@@ -40,6 +40,10 @@
 /* -- Lovbox component -- */
 .z-lovbox { position: relative; }
 
+/* -- Lovbox image -- */
+.z-bandbox-label-btn { font-style: normal!important; height: 16px!important; padding: 2px 3px 1px 6px!important; }
+.z-bandbox-label-btn .z-bandbox-image-btn { float: right; }
+
 /* -- Lovbox popup -- */
 .z-lovbox-pp { height: auto!important; width: auto!important; }
 .z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 3px 3px 3px 3px; height: auto!important; width: auto!important; }

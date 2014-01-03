@@ -6,11 +6,11 @@ function (out) {
         uuid, '-real" style="display:none"/>');
 
     if (this.getImageLabel()) {
-        out.push('<span id="', uuid, '-label-btn" class="', zcls, '-label-btn">');
+        out.push('<div id="', uuid, '-label-btn" class="', zcls, '-label-btn z-button-dtl">');
         out.push(this.getImageLabel());
 
         out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
-        out.push('</span>');
+        out.push('</div>');
 
     } else {
         out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
