@@ -34,7 +34,11 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
     bind_: function () {
         this.$supers(dlzklib.Lovbox, 'bind_', arguments);
-        this.domListen_(this.$n("label-btn"), "onClick", "open");
+        var labelBtn = this.$n("label-btn");
+        if (labelBtn) {
+            this.domListen_(labelBtn, "onClick", "_clickOpen");
+        }
+
 
         if (!this.getLovboxReadonly()) {
             this.domListen_(this.$n("del"), "onClick", "_doClear");
@@ -47,7 +51,10 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     unbind_: function () {
-        this.domUnlisten_(this.$n("label-btn"), "onClick", "open");
+        var labelBtn = this.$n("label-btn");
+        if (labelBtn) {
+            this.domUnlisten_(labelBtn, "onClick", "_clickOpen");
+        }
 
         if (!this.getLovboxReadonly()) {
             this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
@@ -59,9 +66,14 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         this.$supers(dlzklib.Lovbox, 'unbind_', arguments);
     },
 
+    // additional open to onClick
+    _clickOpen: function (evt) {
+        this.open({sendOnOpen:true});
+        evt.stop();
+    },
+
     _doClear: function (evt) {
         this.fire("onClear", null, {});
-        evt.stop();
     },
 
     doMouseOut_: function () {
