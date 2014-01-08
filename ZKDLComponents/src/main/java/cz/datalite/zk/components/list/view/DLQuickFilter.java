@@ -146,6 +146,7 @@ public class DLQuickFilter extends InputElement {
         setLabel(item.getLabel());
         controller.getModel().setKey(item.getValue());
         controller.getModel().setModel((DLColumnUnitModel) item.getAttribute("model"));
+        setFocus(true);
     }
 
     // Event onOK or onChaning - do search
