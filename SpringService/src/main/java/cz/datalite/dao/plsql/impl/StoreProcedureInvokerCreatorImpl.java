@@ -27,7 +27,7 @@ class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
      * Setup database schema.
      * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
      */
-    private String databaseSchema;
+    private String databaseSchema = "NXT";
 
 
     public StoredProcedureInvoker create()

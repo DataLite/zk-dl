@@ -249,6 +249,11 @@ public final class ObjectHelper
             //noinspection unchecked
             return (T) extractLong(value);
         }
+        else if ((returnType == Double.class) || (returnType == double.class))
+        {
+            //noinspection unchecked
+            return (T) extractDouble(value);
+        }
         else if (returnType == BigDecimal.class)
         {
             //noinspection unchecked
@@ -308,6 +313,28 @@ public final class ObjectHelper
         }
 
         return (value != null) ? Long.parseLong(String.valueOf(value)) : null;
+    }
+
+    /**
+     * @param value převáděná hodnota
+     * @return převedená hodnota
+     */
+    public static Double extractDouble(Object value)
+    {
+        if (value instanceof Double)
+        {
+            return (Double) value;
+        }
+        else if (value instanceof Integer)
+        {
+            return (double) (Integer) value;
+        }
+        else if (value instanceof BigDecimal)
+        {
+            return ((BigDecimal) value).doubleValue();
+        }
+
+        return (value != null) ? Double.parseDouble(String.valueOf(value)) : null;
     }
 
     /**
