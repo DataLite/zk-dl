@@ -378,26 +378,22 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
     }
     
-    /** reuses still the same memory to prevent the new memmory allocation */
-    protected List<Component> listcellBuffer = new ArrayList<Component>();
-
     /** updates the listitem (order of cells) when it uses the new databinding */
     public void updateListItem( Listitem item ) {
         // test wheather the listcell indicies is initialized
         if (listcellIndicies.size() == 1 ) return;
-        
+
+        List<Component> listcellBuffer = new ArrayList<Component>();
         listcellBuffer.addAll( item.getChildren() );
 
-        final List<Component> listcells = item.getChildren();
-
         // remove all current listcells from the listitem
-        listcells.clear();
+        for (Component c : listcellBuffer)
+            c.setParent(null);
 
+        // insert them back in correct order
         for ( int i = 0; listcellIndicies.get( i ) != null; ++i ) {
-            listcells.add( listcellBuffer.get( listcellIndicies.get( i ) ) );
+            listcellBuffer.get( listcellIndicies.get( i ) ).setParent(item);
         }
-
-        listcellBuffer.clear();
     }
 
     public void setListboxModel( final List<T> model ) {
