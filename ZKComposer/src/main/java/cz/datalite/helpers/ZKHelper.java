@@ -378,7 +378,7 @@ public class ZKHelper {
                 // if so, report and close it
                 LOGGER.warn("Detail window is already opened. Opening of the another one was forbidden.");
                 Messagebox.show(Labels.getLabel("zkcomposer.detail.opened.message"), Labels.getLabel("zkcomposer.detail.opened.title"), Messagebox.OK, Messagebox.INFORMATION);
-                return (Window) master.getAttribute(DETAIL_WINDOW);
+                return (Window) oldDetail;
             }
         }
 
