@@ -48,9 +48,9 @@ import javax.sql.DataSource;
  *              invoker.setParameter( "druhej", Types.VARCHAR, "10" ) ;
  *              invoker.declareOutParameter( "vystupni", Types.DATE ) ;
  *
- *              Map<String, Object> values = invoker.execute() ;
+ *              StoredProcedureResult values = invoker.execute() ;
  *
- *              return (Date) values.get( "vystupni" );
+ *              return values.getDate( "vystupni" );
  *      }
  *
  *      public Date callWithInputOutput()
@@ -61,9 +61,9 @@ import javax.sql.DataSource;
  *              invoker.setParameter( "druhej", Types.VARCHAR, "10" ) ;
  *              invoker.declareInOutParameter( "vystupni", Types.DATE, new Date() ) ;
  *
- *              Map<String, Object> values = invoker.execute() ;
+ *              StoredProcedureResult values = invoker.execute() ;
  *
- *              return (Date) values.get( "vystupni" );
+ *              return values.getDate( "vystupni" );
  *      }
  *
  *      public String callWithInputAndOutputAndResult()
@@ -76,11 +76,11 @@ import javax.sql.DataSource;
  *              invoker.setParameter( "druhej", Types.VARCHAR, "10" ) ;
  *              invoker.declareInOutParameter( "vystupni", Types.DATE, new Date() ) ;
  *
- *              Map<String, Object> values = invoker.execute() ;
+ *              StoredProcedureResult values = invoker.execute() ;
  *
- *              Date date = (Date) values.get( "vystupni" );
+ *              Date date = values.getDate( "vystupni" );
  *
- *              return (String)values.get( StoredProcedureInvoker.RETURN_VALUE_NAME ) ;
+ *              return values.getResultValue( String.class ) ;
  *      }
  * *
  *      public void callWithDatabaseArray()

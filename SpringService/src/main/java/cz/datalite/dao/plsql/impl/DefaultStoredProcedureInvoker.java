@@ -1,9 +1,7 @@
 package cz.datalite.dao.plsql.impl;
 
 import cz.datalite.dao.plsql.*;
-import cz.datalite.dao.plsql.annotations.SqlField;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
-import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
@@ -18,10 +16,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
 import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
-import javax.persistence.Column;
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -55,126 +50,6 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     boolean wrapNeed = false ;
 
-    public static final String FIELD_BOOLEAN = "b" ;
-    public static final String FIELD_NUMERIC = "n" ;
-    public static final String FIELD_STRING = "s" ;
-    public static final String FIELD_DATE = "d" ;
-
-
-    static class FieldInfo
-    {
-        String fieldName ;
-        Class<?> type ;
-
-        FieldInfo(String fieldName, Class<?> type)
-        {
-            this.fieldName = fieldName;
-            this.type = type;
-        }
-
-        public boolean isPrimitive()
-        {
-          return (     ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_BOOLEAN ) )
-                    || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_DATE ) )
-                    || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_STRING ) )
-                    || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_NUMERIC ) ) ) ;
-        }
-
-    }
-
-    /**
-     * Synchronizační zámek
-     */
-    final static Object fieldsMapLocker = new Object() ;
-
-    /**
-     * Cache pro uložení mapování položek
-     */
-    static Map<Class<?>, Map<String, FieldInfo>> fieldsMap = new HashMap<Class<?>, Map<String, FieldInfo>>() ;
-
-    /**
-     * Získání SQL pro převod vstupní struktury na PL/SQL strukturu
-     *
-     * @param entityClass          zdrojová entita
-     *
-     * @return SQL script
-     */
-    private static Map<String, FieldInfo> getFieldMaps( Class<?> entityClass  )
-    {
-        Map<String, FieldInfo> fm = fieldsMap.get( entityClass ) ;
-
-        if ( ( fm == null ) || ( fm.isEmpty() ) )
-        {
-            synchronized ( fieldsMapLocker )
-            {
-                fm = generateFieldMaps(entityClass) ;
-
-                fieldsMap.put( entityClass, fm ) ;
-            }
-        }
-
-        return fm ;
-    }
-
-    /**
-     * Generování mapování
-     *
-     * @param entityClass       třída entity
-     * @return převodní mapa
-     */
-    private static Map<String, FieldInfo> generateFieldMaps( Class<?> entityClass )
-    {
-        Map<String, FieldInfo> result = new HashMap<String, FieldInfo>() ;
-
-        if ( isBoolean( entityClass ) )
-        {
-             result.put( FIELD_BOOLEAN, new FieldInfo( FIELD_BOOLEAN, Boolean.class ) ) ;
-        }
-        else if ( isNumeric( entityClass  ) )
-        {
-            result.put( FIELD_NUMERIC, new FieldInfo( FIELD_NUMERIC, Long.class ) ) ;
-        }
-        else if ( isString( entityClass  ) )
-        {
-            result.put( FIELD_STRING, new FieldInfo( FIELD_STRING, String.class ) ) ;
-        }
-        else if ( isDate( entityClass  ) )
-        {
-            result.put( FIELD_DATE, new FieldInfo( FIELD_DATE, Date.class ) ) ;
-        }
-        else
-        {
-            for( Field field : ReflectionHelper.getAllFields(entityClass) )
-            {
-                generateFieldMaps( result, field ) ;
-            }
-        }
-
-        return result ;
-    }
-
-
-    /**
-     * @param result            Výsledný seznam
-     * @param field             Aktuální položka
-     */
-    private static void generateFieldMaps( Map<String, FieldInfo> result, Field field )
-    {
-        if ( field.isAnnotationPresent( SqlField.class ) )
-        {
-            SqlField sqlField = field.getAnnotation( SqlField.class ) ;
-
-            result.put(sqlField.value(), new FieldInfo( field.getName(), field.getType() ) ) ;
-        }
-        else if ( field.isAnnotationPresent( Column.class ) )
-        {
-            Column sqlField = field.getAnnotation( Column.class ) ;
-
-            result.put( sqlField.name(), new FieldInfo( field.getName(), field.getType() ) ) ;
-        }
-    }
-
-
     public DefaultStoredProcedureInvoker( DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
 	{
 		super( dataSource, "" ) ;
@@ -196,30 +71,6 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         this( dataSource, name, sqlLobValueFactory, databaseSchema ) ;
         declareReturnParameter( resultType ) ;
-    }
-
-    /**
-     * Převod DB typu
-     *
-     * @param array             Převáděné pole
-     * @param returnType        typu položky převedeněného pole
-     * @return převedené pole
-     */
-    private <T> List<T> extractFromArray( Object[] array, Class<T> returnType )
-    {
-        if ( array == null )
-        {
-            return null ;
-        }
-
-        List<T> result = new ArrayList<T>() ;
-
-        for( Object v : array )
-        {
-            result.add( extractFromObject( v, returnType ) ) ;
-        }
-
-        return result ;
     }
 
     /**
@@ -651,7 +502,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný DB objekt není funkce" ) ;
         }
 
-        return extractResult(execute(), returnType) ;
+        return execute().extractResult( returnType ) ;
     }
 
     @Override
@@ -662,7 +513,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný DB objekt není funkce" ) ;
         }
 
-        return extractResult( execute(), returnType ) ;
+        return execute().extractResult( returnType ) ;
     }
 
     @Override
@@ -673,7 +524,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 			throw new IllegalStateException( "Volaný objekt není funkce" ) ;
 		}
 
-        return extractResultArray(execute(), returnType) ;
+        return execute().extractResultArray( returnType ) ;
 	}
 
     @Override
@@ -684,7 +535,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný objekt není funkce" ) ;
         }
 
-        return extractRecord(execute(), RETURN_VALUE_NAME, returnType) ;
+        return execute().extractRecord( RETURN_VALUE_NAME, returnType) ;
     }
 
     @Override
@@ -701,50 +552,28 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný objekt není funkce" ) ;
         }
 
-        return extractTable(execute(), RETURN_VALUE_NAME, returnType) ;
+        return execute().extractTable( RETURN_VALUE_NAME, returnType) ;
     }
 
     @Override
+    @Deprecated
     public <T> T extractResult( StoredProcedureResult resultMap, Class<T> returnType )
     {
-        Object obj = resultMap.get(RETURN_VALUE_NAME) ;
-
-        return extractFromObject( obj, returnType) ;
+        return resultMap.extractResult(returnType) ;
     }
 
     @Override
+    @Deprecated
     public <T> List<T> extractResultArray( StoredProcedureResult resultMap, Class<T> returnType )
     {
-        Object obj = resultMap.get(RETURN_VALUE_NAME) ;
-
-        if ( obj instanceof List )
-        {
-            //noinspection unchecked
-            return (List<T>) obj;
-        }
-        else if ( obj instanceof ARRAY )
-        {
-            try
-            {
-                return extractFromArray( (Object[])((ARRAY) obj).getArray(), returnType ) ;
-            }
-            catch (SQLException e)
-            {
-                throw new IllegalStateException( "Chyba při převodu DB pole na JAVA pole", e )  ;
-            }
-        }
-        else if ( obj != null )
-        {
-            throw new IllegalStateException( "Návratová hodnota má špatný typ:" + obj.getClass() )  ;
-        }
-
-        return null ;
+        return resultMap.extractResultArray( returnType  ) ;
     }
 
     @Override
+    @Deprecated
     public <T> List<T> extractResultTable(StoredProcedureResult resultMap, Class<T> returnType)
     {
-        return extractTable( resultMap, RETURN_VALUE_NAME, returnType ) ;
+        return resultMap.extractResultTable(returnType) ;
     }
 
     @Override
@@ -757,7 +586,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         try
         {
-            return new StoredProcedureResult( execute( inputs ) ) ;
+            return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
         }
         catch ( DataAccessException e )
         {
@@ -767,7 +596,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
                 if ( sqlException.getErrorCode() == 4068 ) //Balík byl změněn
                 {
-                    return new StoredProcedureResult( execute( inputs ) ) ;
+                    return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
                 }
             }
 
@@ -989,23 +818,23 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     private void generateDeclareArrayVariables( StringBuilder query, RecordParameter parameter )
     {
-        for( Map.Entry<String, FieldInfo> field : getFieldMaps( parameter.getTargetEntity() ).entrySet() )
+        for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
         {
             String variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;
 
             query.append( variableName ).append( " " ) ;
 
-            if ( isNumeric( field.getValue() ) )
+            if ( ObjectHelper.isNumeric(field.getValue()) )
             {
-               query.append( " " + getDatabaseSchema() + ".NUMBER_TABLE := " + getDatabaseSchema() + ".NUMBER_TABLE() " ) ;
+               query.append( " " ).append( getDatabaseSchema() ).append(  ".NUMBER_TABLE := " ).append( getDatabaseSchema() ).append( ".NUMBER_TABLE() " ) ;
             }
-            else if ( isDate(field.getValue()) )
+            else if ( ObjectHelper.isDate(field.getValue()) )
             {
-                query.append( " " + getDatabaseSchema() + ".DATE_TABLE := " + getDatabaseSchema() + ".DATE_TABLE() " ) ;
+                query.append(" ").append(getDatabaseSchema()).append(".DATE_TABLE := ").append(getDatabaseSchema()).append(".DATE_TABLE() ");
             }
             else
             {
-                query.append( " " + getDatabaseSchema() + ".VARCHAR_TABLE := " + getDatabaseSchema() + ".VARCHAR_TABLE() " ) ;
+                query.append(" ").append(getDatabaseSchema()).append(".VARCHAR_TABLE := ").append(getDatabaseSchema()).append(".VARCHAR_TABLE() ");
             }
 
             query.append( " ;\n" ) ;
@@ -1054,7 +883,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         Object sourceValue = ( load ) ? inputs.get( parameter.getVariableName() ) : null ;
 
-        for( Map.Entry<String, FieldInfo> field : getFieldMaps( parameter.getTargetEntity() ).entrySet() )
+        for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
         {
             String parameterName ;
             String variableName ;
@@ -1072,7 +901,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
             if ( load )
             {
-                if ( ( isBoolean( field.getValue().type ) ) && ( field.getValue().isPrimitive() ) )
+                if ( ( ObjectHelper.isBoolean(field.getValue().getType()) ) && ( field.getValue().isPrimitive() ) )
                 {
                     query.append( variableName ).append( " := ( ? = 'A' ) ;\n" ) ;
                 }
@@ -1081,13 +910,13 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
                     query.append( variableName ).append( " := ? ;\n" ) ;
                 }
 
-                newParameterList.add( createInputParameter( new SqlParameter( parameterName, convertToSqlType( field.getValue() ) ), getFieldValue(field.getValue().fieldName, sourceValue, field.getValue().type) ) ) ;
+                newParameterList.add( createInputParameter( new SqlParameter( parameterName, convertToSqlType( field.getValue() ) ), getFieldValue(field.getValue().getFieldName(), sourceValue, field.getValue().getType()) ) ) ;
             }
             else
             {
                 parameterName = "o" + parameterName ;
 
-                if ( ( isBoolean( field.getValue().type ) ) && ( field.getValue().isPrimitive() ) )
+                if ( ( ObjectHelper.isBoolean(field.getValue().getType()) ) && ( field.getValue().isPrimitive() ) )
                 {
                     query.append( " if " ).append( variableName ).append( " then " ).append( "\n" )
                                   .append( "  ob := 'A' ;\n")
@@ -1125,7 +954,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             {
                 for( int i=0; i<sourceList.size(); i++ )
                 {
-                    for( Map.Entry<String, FieldInfo> field : getFieldMaps( parameter.getTargetEntity() ).entrySet() )
+                    for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
                     {
                         String parameterName ;
                         String variableName ;
@@ -1141,7 +970,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
                             variableName = parameter.getVariableName() + "(" + i + ")." + field.getKey() ;
                         }
 
-                        if ( ( isBoolean( field.getValue().type ) )  && ( field.getValue().isPrimitive() ) )
+                        if ( ( ObjectHelper.isBoolean(field.getValue().getType()) )  && ( field.getValue().isPrimitive() ) )
                         {
                             query.append( variableName ).append( " := ( ? = 'A' ) ;\n" ) ;
                         }
@@ -1150,7 +979,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
                             query.append( variableName ).append( " := ? ;\n" ) ;
                         }
 
-                        newParameterList.add( createInputParameter( new SqlParameter( parameterName, convertToSqlType( field.getValue() ) ), getFieldValue(field.getValue().fieldName, sourceList.get( i ), field.getValue().type) ) ) ;
+                        newParameterList.add( createInputParameter( new SqlParameter( parameterName, convertToSqlType( field.getValue() ) ), getFieldValue(field.getValue().getFieldName(), sourceList.get( i ), field.getValue().getType()) ) ) ;
                     }
                 }
             }
@@ -1168,7 +997,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             query.append("loop\n") ;
             query.append( "if " ).append( parameter.getVariableName() ).append(".exists( i ) then \n" ) ;
 
-            for( Map.Entry<String, FieldInfo> field : getFieldMaps( parameter.getTargetEntity() ).entrySet() )
+            for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
             {
                 String  variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;
 
@@ -1187,18 +1016,18 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             query.append( "end loop ;\n") ;
             query.append("end if ;\n") ;
 
-            for( Map.Entry<String, FieldInfo> field : getFieldMaps( parameter.getTargetEntity() ).entrySet() )
+            for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
             {
                 parameterName = compressName( "o" + parameter.getVariableName() + "_" + field.getKey() ) ;
                 String variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;
 
                 query.append( " ? := " ).append( variableName ).append("; \n ") ;
 
-                if ( isNumeric( field.getValue() ) )
+                if ( ObjectHelper.isNumeric(field.getValue()) )
                 {
                     newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, getDatabaseSchema() + ".NUMBER_TABLE" ) ) ;
                 }
-                else if ( isDate(field.getValue()) )
+                else if ( ObjectHelper.isDate(field.getValue()) )
                 {
                     newParameterList.add( new SqlOutParameter( parameterName, Types.ARRAY, getDatabaseSchema() + ".DATE_TABLE" ) ) ;
                 }
@@ -1233,7 +1062,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
            || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_NUMERIC ) )
         )
         {
-            return extractFromObject( sourceValue, returnType ) ;
+            return ObjectHelper.extractFromObject( sourceValue, returnType ) ;
         }
 
         return ObjectHelper.getValue( fieldName, sourceValue, returnType ) ;
@@ -1248,11 +1077,11 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     private int convertToSqlType( FieldInfo fieldInfo )
     {
-        if ( isNumeric( fieldInfo ) )
+        if ( ObjectHelper.isNumeric(fieldInfo) )
         {
             return Types.NUMERIC ;
         }
-        else if ( isDate( fieldInfo ) )
+        else if ( ObjectHelper.isDate(fieldInfo) )
         {
             return Types.TIMESTAMP ;
         }
@@ -1260,362 +1089,77 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
         return Types.VARCHAR ;
     }
 
-    /**
-     * @param type typ
-     * @return true jedna se logickou hodnotu
-     */
-    private static boolean isBoolean( Class<?> type )
-    {
-        return ( ( type == Boolean.class ) || ( type == boolean.class ) ) ;
-    }
-
-    /**
-     * @param fieldInfo     položka
-     * @return true položka je číslo
-     */
-    private static boolean isNumeric( FieldInfo fieldInfo )
-    {
-        return isNumeric( fieldInfo.type ) ;
-    }
-
-    /**
-     * @param type typ
-     * @return true položka je číslo
-     */
-    private static boolean isNumeric( Class<?> type )
-    {
-        return ( ( type == Integer.class ) || ( type == Long.class ) || ( type == BigDecimal.class )  || ( type == int.class ) || ( type == long.class ) ) ;
-    }
-
-    /**
-     * @param fieldInfo     položka
-     * @return true položka je číslo
-     */
-    private static boolean isDate( FieldInfo fieldInfo )
-    {
-        return isDate(fieldInfo.type) ;
-    }
-
-    /**
-     * @param type typ
-     * @return true položka je číslo
-     */
-    private static boolean isDate( Class<?> type )
-    {
-        return ( type == Date.class )  ;
-    }
-
-    /**
-     * @param type typ
-     * @return true položka jsou znaky
-     */
-    private static boolean isString( Class<?> type )
-    {
-        return ( type == String.class )  ;
-    }
-
-
+    @Override
+    @Deprecated
     public <T> List<T> extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
-        List<T> result = new ArrayList<T>() ;
-
-        long count = ObjectHelper.extractLong( resultMap.get( name + "_COUNT" ) ) ;
-
-        Map<FieldInfo, List<?>> dataFromDB = new HashMap<FieldInfo, List<?>>() ;
-
-        extractFromTable( resultMap, "o" + name, returnType, dataFromDB  ) ;
-
-        if ( dataFromDB.size() == 1 )
-        {
-            FieldInfo fi = (FieldInfo) dataFromDB.keySet().toArray() [ 0 ] ;
-
-            if ( fi.isPrimitive() )
-            {
-                for ( Object value : dataFromDB.get( fi ) )
-                {
-                    //noinspection unchecked
-                    result.add((T) extractFromObject( value, fi.type ) ) ;
-                }
-
-                return result ;
-            }
-        }
-
-        for( int i=0; i<count; i++ )
-        {
-            T record = ObjectHelper.newInstance( returnType ) ;
-
-            extractFromTable( dataFromDB, i, record ) ;
-
-            result.add( record ) ;
-        }
-
-        return result ;
+        return resultMap.extractTable( name, returnType ) ;
     }
 
     @Override
+    @Deprecated
     public <T> void extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType)
     {
-        List<T> novySeznam = extractTable(resultMap, name, returnType) ;
-
-        if ( mergeType == MergeType.REPLACE )
-        {
-            target.clear() ;
-        }
-
-        if ( ( novySeznam != null ) && ( ! novySeznam.isEmpty() ) )
-        {
-            if ( mergeType == MergeType.ALL )
-            {
-                target.addAll( novySeznam ) ;
-            }
-            else
-            {
-                for( T item : novySeznam )
-                {
-                    if ( ! target.contains( item ) )
-                    {
-                        target.add( item ) ;
-                    }
-                }
-            }
-        }
+        resultMap.extractTable( name, returnType, target, mergeType ) ;
     }
-
-
-
-    /**
-     *
-     * Převod jednoho řádku tabulky
-     *
-     * @param source            zdrojová data
-     * @param index             index řáadku
-     * @param target            cilový objket
-     *
-     */
-    private <T> void extractFromTable( Map<FieldInfo, List<?>> source, int index, T target )
-    {
-        for( FieldInfo fieldName : source.keySet() )
-        {
-            List<?> fieldData = source.get( fieldName ) ;
-
-            ObjectHelper.setValue( fieldName.fieldName, target, ( fieldData == null ) ? null : extractFromObject( fieldData.get( index ), fieldName.type ) ) ;
-        }
-    }
-
-    /**
-     * Generování mapy zdrojových dat
-     *
-     * @param resultMap     Data z databáze
-     * @param name          jmeno proměnné
-     * @param returnType    návratový typ (typ polozky)
-     * @param target        vygenerovaný seznam zdrojových dat
-     */
-    private <T> void extractFromTable( StoredProcedureResult resultMap, String name, Class<T> returnType, Map<FieldInfo, List<?>> target )
-    {
-        for( Map.Entry<String, FieldInfo> field : getFieldMaps( returnType ).entrySet() )
-        {
-            String parameterName = compressName( name + "_" + field.getKey() ) ;
-
-            target.put( field.getValue(), extractFromArray( resultMap.get( parameterName ), field.getValue().type ) ) ;
-        }
-    }
-
 
     @Override
+    @Deprecated
     public <T> T extractRecord(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
-        if ( isBoolean(returnType) )
-        {
-            //noinspection unchecked
-            return (T)ObjectHelper.extractBoolean(resultMap.get("o" + name + "." + FIELD_BOOLEAN)) ;
-        }
-        else if ( isNumeric(returnType) )
-        {
-            //noinspection unchecked
-            return extractFromObject(resultMap.get("o" + name + "." + FIELD_NUMERIC), returnType) ;
-        }
-        else if ( isDate(returnType) )
-        {
-            //noinspection unchecked
-            return extractFromObject( resultMap.get( "o" + name + "." + FIELD_DATE ), returnType ) ;
-        }
-        else if ( isString( returnType ) )
-        {
-            //noinspection unchecked
-            return extractFromObject( resultMap.get( "o" + name + "." + FIELD_STRING ), returnType ) ;
-        }
-        else
-        {
-            T result = ObjectHelper.newInstance( returnType ) ;
-
-            boolean found = extractRecord(resultMap, name, result) ;
-
-            return ( found ) ? result : null ;
-        }
+        return resultMap.extractRecord( name, returnType ) ;
     }
 
+    @Override
+    @Deprecated
     public <T> boolean extractRecord(StoredProcedureResult resultMap, String name, T returnValue)
     {
-        boolean found = false ;
-
-        for( Map.Entry<String, FieldInfo> field : getFieldMaps( returnValue.getClass() ).entrySet() )
-        {
-            String parameterName = "o" + name + "." + field.getKey() ;
-            Object value = null ;
-
-            if ( resultMap.containsKey( parameterName ) )
-            {
-                value = resultMap.get( parameterName ) ;
-                found = true ;
-            }
-
-            ObjectHelper.setValue( field.getValue().fieldName, returnValue, extractFromObject( value, field.getValue().type ) ) ;
-        }
-
-        return found ;
-    }
-
-    /**
-     * Převod objektu na cílový typ
-     *
-     * @param value             Převáděný objekt
-     * @param returnType        požadovaný typ
-     * @return převedená hodnota
-     */
-    private <T> T extractFromObject( Object value, Class<T> returnType )
-    {
-        if ( value instanceof STRUCT )
-        {
-            try
-            {
-                StructConvertable sc = (StructConvertable) returnType.newInstance() ;
-
-                //noinspection unchecked
-                return (T)extractFromStructure( value, sc ) ;
-            }
-            catch (InstantiationException e)
-            {
-                throw new IllegalStateException( e ) ;
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new IllegalStateException( e ) ;
-            }
-        }
-        else
-        {
-            return ObjectHelper.extractFromObject( value, returnType ) ;
-        }
-    }
-
-    /**
-     * Převod objektu na cílový typ
-     *
-     * @param source             Převáděný objekt
-     * @param target             Cílový objekt
-     * @return cílový objekt
-     */
-    private <E extends StructConvertable> E extractFromStructure( Object source, E target )
-    {
-        if ( target == null )
-        {
-            throw new IllegalArgumentException( "Není určen cílový objekt" ) ;
-        }
-
-        if ( source instanceof STRUCT )
-        {
-            try
-            {
-                target.setStructureAttributes( ((STRUCT) source).getAttributes() ) ;
-
-                return target ;
-            }
-            catch (SQLException e)
-            {
-                throw new IllegalStateException( e ) ;
-            }
-        }
-
-        throw new IllegalStateException( "Zdrojový objekt není typu STRUCT") ;
-    }
-
-    /**
-     * Převod objektu na cílový typ
-     *
-     * @param obj             Převáděný objekt
-     * @param itemType        Typ položky seznamu
-     * @return cílový objekt
-     */
-    private <T> List<T> extractFromArray( Object obj, Class<T> itemType )
-    {
-        if ( obj instanceof List )
-        {
-            //noinspection unchecked
-            return (List<T>) obj;
-        }
-        else if ( obj instanceof ARRAY )
-        {
-            try
-            {
-                return extractFromArray( (Object[])((ARRAY) obj).getArray(), itemType );
-            }
-            catch (SQLException e)
-            {
-                throw new IllegalStateException( "Chyba při převodu DB pole na JAVA pole", e )  ;
-            }
-        }
-        else if ( obj != null )
-        {
-            throw new IllegalStateException( "Návratová hodnota má špatný typ:" + obj.getClass() )  ;
-        }
-
-        return null ;
+        return resultMap.extractRecord( name, returnValue ) ;
     }
 
     @Override
+    @Deprecated
     public <T> T extract(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
-        Object obj = resultMap.get( name ) ;
-
-        return extractFromObject( obj, returnType ) ;
+        return resultMap.extract(name, returnType) ;
     }
 
     @Override
+    @Deprecated
     public <T extends StructConvertable> T extractStruct(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
-        Object obj = resultMap.get( name ) ;
-
-        return extractFromObject( obj, returnType ) ;
+        return resultMap.extractStruct(name, returnType) ;
     }
 
     @Override
+    @Deprecated
     public <T> List<T> extractArray(StoredProcedureResult resultMap, String name, Class<T> returnType)
     {
-        Object obj = resultMap.get( name ) ;
-
-        return extractFromArray( obj, returnType ) ;
+        return resultMap.extractArray(name, returnType) ;
     }
 
     @Override
+    @Deprecated
     public Boolean extractBoolean(StoredProcedureResult resultMap, String name)
     {
-        return extractRecord( resultMap, name, Boolean.class ) ;
+        return resultMap.extractBoolean( name ) ;
     }
 
     @Override
+    @Deprecated
     public <T extends StructConvertable> T extractResultStruct(StoredProcedureResult resultMap, Class<T> returnType)
     {
-        return extractStruct( resultMap, RETURN_VALUE_NAME, returnType ) ;
+        return resultMap.extractResultStruct(returnType) ;
     }
 
     @Override
     public <T> T extractResultRecord(StoredProcedureResult resultMap, Class<T> returnType)
     {
-        return extractRecord( resultMap, RETURN_VALUE_NAME, returnType ) ;
+        return resultMap.extractResultRecord(returnType) ;
     }
 
-    public String getDatabaseSchema() {
-        return databaseSchema;
+    public String getDatabaseSchema() 
+    {
+       return databaseSchema;
     }
 }

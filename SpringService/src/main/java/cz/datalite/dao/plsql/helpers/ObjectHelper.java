@@ -1,12 +1,17 @@
 package cz.datalite.dao.plsql.helpers;
 
+import cz.datalite.dao.plsql.FieldInfo;
+import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
 import cz.datalite.helpers.ReflectionHelper;
+import oracle.sql.STRUCT;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * Date: 6/13/13
@@ -194,7 +199,7 @@ public final class ObjectHelper
 
     public static <T> T getValue(String fieldName, Object obj, Class<T> returnType)
     {
-        return ObjectHelper.extractFromObject(getValue(fieldName, obj), returnType);
+        return extractFromObject(getValue(fieldName, obj), returnType);
     }
 
     public static void setValue(String fieldName, Object obj, Object value)
@@ -239,7 +244,25 @@ public final class ObjectHelper
      */
     public static <T> T extractFromObject(Object value, Class<T> returnType)
     {
-        if ((returnType == Integer.class) || (returnType == int.class))
+        if ( value instanceof STRUCT)
+        {
+            try
+            {
+                StructConvertable sc = (StructConvertable) returnType.newInstance() ;
+
+                //noinspection unchecked
+                return (T)extractFromStructure( value, sc ) ;
+            }
+            catch (InstantiationException e)
+            {
+                throw new IllegalStateException( e ) ;
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new IllegalStateException( e ) ;
+            }
+        }
+        else if ((returnType == Integer.class) || (returnType == int.class))
         {
             //noinspection unchecked
             return (T) extractInteger(value);
@@ -405,5 +428,90 @@ public final class ObjectHelper
         }
 
         return (value != null) ? BooleanHelper.isTrue(String.valueOf(value)) : null;
+    }
+
+    /**
+     * @param type typ
+     * @return true jedna se logickou hodnotu
+     */
+    public static boolean isBoolean( Class<?> type )
+    {
+        return ( ( type == Boolean.class ) || ( type == boolean.class ) ) ;
+    }
+
+    /**
+     * @param fieldInfo     položka
+     * @return true položka je číslo
+     */
+    public static boolean isNumeric( FieldInfo fieldInfo )
+    {
+        return isNumeric( fieldInfo.getType() ) ;
+    }
+
+    /**
+     * @param type typ
+     * @return true položka je číslo
+     */
+    public static boolean isNumeric( Class<?> type )
+    {
+        return ( ( type == Integer.class ) || ( type == Long.class ) || ( type == BigDecimal.class )  || ( type == int.class ) || ( type == long.class ) ) ;
+    }
+
+    /**
+     * @param fieldInfo     položka
+     * @return true položka je číslo
+     */
+    public static boolean isDate( FieldInfo fieldInfo )
+    {
+        return isDate(fieldInfo.getType()) ;
+    }
+
+    /**
+     * @param type typ
+     * @return true položka je číslo
+     */
+    public static boolean isDate( Class<?> type )
+    {
+        return ( type == Date.class )  ;
+    }
+
+    /**
+     * @param type typ
+     * @return true položka jsou znaky
+     */
+    public static boolean isString( Class<?> type )
+    {
+        return ( type == String.class )  ;
+    }
+
+    /**
+     * Převod objektu na cílový typ
+     *
+     * @param source             Převáděný objekt
+     * @param target             Cílový objekt
+     * @return cílový objekt
+     */
+    public static <E extends StructConvertable> E extractFromStructure( Object source, E target )
+    {
+        if ( target == null )
+        {
+            throw new IllegalArgumentException( "Není určen cílový objekt" ) ;
+        }
+
+        if ( source instanceof STRUCT )
+        {
+            try
+            {
+                target.setStructureAttributes( ((STRUCT) source).getAttributes() ) ;
+
+                return target ;
+            }
+            catch (SQLException e)
+            {
+                throw new IllegalStateException( e ) ;
+            }
+        }
+
+        throw new IllegalStateException( "Zdrojový objekt není typu STRUCT") ;
     }
 }

@@ -14,6 +14,11 @@ public interface StoredProcedureInvoker
      * Název proměnné pro uložení výsledku funkce
      */
 	public static final String RETURN_VALUE_NAME = "RETURN_VALUE" ;
+    public static final String FIELD_BOOLEAN = "b" ;
+    public static final String FIELD_NUMERIC = "n" ;
+    public static final String FIELD_STRING = "s" ;
+    public static final String FIELD_DATE = "d" ;
+
 
     /**
      * @param name     jmeno databazoveho objektu, který se má spouštět
@@ -371,6 +376,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> T extract(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
@@ -382,6 +388,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T extends StructConvertable> T extractStruct(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
@@ -393,6 +400,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> List<T> extractArray(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
@@ -404,6 +412,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> T extractRecord(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
@@ -415,6 +424,7 @@ public interface StoredProcedureInvoker
      *
      * @return true pokud byla ve vysledku alespon jedna hodnota polozky ciloveho objektu
      */
+    @Deprecated
     <T> boolean extractRecord(StoredProcedureResult resultMap, String name, T returnValue) ;
 
     /**
@@ -427,6 +437,7 @@ public interface StoredProcedureInvoker
      *
      * @return seznam vyzvednutých záznamů
      */
+    @Deprecated
     <T> List<T> extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType) ;
 
     /**
@@ -439,6 +450,7 @@ public interface StoredProcedureInvoker
      * @param target              cílový seznam
      * @param mergeType           způsob spojení seznamu z dba a cilového seznamu
      */
+    @Deprecated
     <T> void extractTable(StoredProcedureResult resultMap, String name, Class<T> returnType, List<T> target, MergeType mergeType) ;
 
     /**
@@ -449,6 +461,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     Boolean extractBoolean(StoredProcedureResult resultMap, String name) ;
 
     /**
@@ -459,6 +472,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> T extractResult(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
@@ -469,6 +483,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T extends StructConvertable> T extractResultStruct(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
@@ -479,6 +494,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> List<T> extractResultArray(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
@@ -489,6 +505,7 @@ public interface StoredProcedureInvoker
      *
      * @return vyzvednuta hodnota
      */
+    @Deprecated
     <T> List<T> extractResultTable(StoredProcedureResult resultMap, Class<T> returnType) ;
 
     /**
