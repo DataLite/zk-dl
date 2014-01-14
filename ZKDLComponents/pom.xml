@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.4.4.14</version>
+    <version>1.4.4.15</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controlls - listbox, lovbox, combobox.</description>
 
@@ -90,4 +90,21 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>metainfo/zk/lang-addon.xml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>metainfo/zk/lang-addon.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

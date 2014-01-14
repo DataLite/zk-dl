@@ -25,6 +25,9 @@
         <zk-version>6.5.0</zk-version><!-- or later -->
     </version>
 
+    <!-- Need to update version in case of browser cache, update after javascript change -->
+    <javascript-module name="dlzklib" version="${project.version}"/>
+
     <zscript language="Java">
 	  import cz.datalite.zk.components.*;
           import cz.datalite.zk.util.*;

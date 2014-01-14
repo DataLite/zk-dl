@@ -7,7 +7,7 @@ function (out) {
 
     if (this.getImageLabel()) {
         out.push('<div id="', uuid, '-label-btn" class="', zcls, '-label-btn z-button-dtl">');
-        out.push(this.getImageLabel());
+        out.push('<span class="fl">',this.getImageLabel(),'</span>');
 
         out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
         out.push('</div>');
