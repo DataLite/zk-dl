@@ -36,6 +36,13 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
 //        unusedListbox = ( DLListbox ) comp.getFellow( "unusedListbox" );
 
         final List<Map<String, Object>> columnModels = ( List<Map<String, Object>> ) arg.get( "columnModels" );
+        
+        java.util.Collections.sort( columnModels, new java.util.Comparator<Map<String, Object>>() {
+
+            public int compare( final Map<String, Object> object1, final Map<String, Object> object2 ) {
+                return object1.get( "label" ) != null ? (( String ) object1.get( "label" ) ).compareTo((String ) object2.get( "label" )) : 0;
+            }
+        } );
 
         for ( Map<String, Object> map : columnModels ) {
             if (StringHelper.isNull((String) map.get( "label" ) )) {
