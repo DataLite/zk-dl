@@ -57,7 +57,7 @@ public class
         this.listboxController.addListener( DLListboxEvents.ON_DLSELECT, new EventListener() {
 
             public void onEvent( final Event event ) {
-                onSelect( true );
+                    onSelect( ! DLLovboxGeneralController.this.getLovBox().isMultiple() ) ;
             }
         } );
         this.listboxController.lockModel();
