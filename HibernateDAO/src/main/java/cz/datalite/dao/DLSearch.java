@@ -587,7 +587,7 @@ public class DLSearch<T> {
     public String addAliasesForProperty(String pathWithProperty, JoinType joinType) {
         String[] path = parsePath(pathWithProperty);
         if (path.length > 1) {
-           return addAliases(pathWithProperty.substring(0, pathWithProperty.indexOf(".")), joinType)
+           return addAliases(pathWithProperty.substring(0, pathWithProperty.lastIndexOf(".")), joinType)
                    + "." + path[path.length-1];
         } else {
             return pathWithProperty;
