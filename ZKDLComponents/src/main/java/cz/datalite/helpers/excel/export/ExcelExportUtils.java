@@ -24,11 +24,6 @@ public final class ExcelExportUtils {
     private ExcelExportUtils() {
     }
     
-    @Deprecated // format cannot be reusable across more than one workbook
-    private static final WritableCellFormat DATE_CELL_FORMAT = new WritableCellFormat(new DateFormat("d.M.yyyy"));
-    @Deprecated // format cannot be reusable across more than one workbook
-    private static final WritableCellFormat DATETIME_CELL_FORMAT = new WritableCellFormat(new DateFormat("d.M.yyyy HH:mm"));
-
     /**
      * <p>Převede řetězec, kterým se v Excelu identifikují sloupce na číslo.
      * Jedná se o rekurzivní metodu.</p>
@@ -266,37 +261,37 @@ public final class ExcelExportUtils {
      * @return připravená buňka
      * @throws jxl.write.WriteException
      */
-    public static WritableCell createCell( final Cell cell ) throws WriteException {
+    public static WritableCell createCell( final Cell cell, final CellFormats formats ) throws WriteException {
         Object value = cell.getValue();
         WritableCellFormat format = cell.getFormat();
 
         if ( value == null ) { // no information about format
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont() );
+                format = formats.getString(cell.getFont());
                 cell.setFormat( format );
             }
             return new jxl.write.Blank( cell.getX(), cell.getY(), format );
         } else if ( value instanceof Integer ) {
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER );
+                format = formats.getInteger(cell.getFont());
                 cell.setFormat( format );
             }
             return new jxl.write.Number( cell.getX(), cell.getY(), ( Integer ) value, format );
         } else if ( value instanceof Long ) {
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont(), NumberFormats.INTEGER );
+                format = formats.getInteger(cell.getFont());
                 cell.setFormat( format );
             }
             return new jxl.write.Number( cell.getX(), cell.getY(), (( Long ) value), format );
         } else if ( value instanceof BigDecimal ) {  // BigDecimal type
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT );
+                format = formats.getFloat(cell.getFont());
                 cell.setFormat( format );
             }
             return new jxl.write.Number( cell.getX(), cell.getY(), (( BigDecimal ) value).doubleValue(), format );
         } else if ( value instanceof Double ) {  // double type
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont(), NumberFormats.FLOAT );
+                format = formats.getFloat(cell.getFont());
                 cell.setFormat( format );
             }
             return new jxl.write.Number( cell.getX(), cell.getY(), ( Double ) value, format );
@@ -307,10 +302,9 @@ public final class ExcelExportUtils {
 
                 // if the time contains hours and minutes, set date time format
                 if (dateValue.get(Calendar.HOUR) != 0 || dateValue.get(Calendar.MINUTE) != 0) {
-                    // bug fix, format cannot be reused across more than one workbook
-                    format = new WritableCellFormat(new DateFormat("d.M.yyyy HH:mm"));
+                    format = formats.getDateWithTime();
                 } else {
-                    format = new WritableCellFormat(new DateFormat("d.M.yyyy"));
+                    format = formats.getDate();
                 }
 
                 cell.setFormat( format );
@@ -318,19 +312,19 @@ public final class ExcelExportUtils {
             return new DateTime( cell.getX(), cell.getY(), ( Date ) value, format );
         } else if ( value instanceof Enum ) {
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont() );
+                format = formats.getString(cell.getFont());
                 cell.setFormat( format );
             }
             return new Label( cell.getX(), cell.getY(), value.toString(), format );
         } else if ( value instanceof Boolean) {
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont() );
+                format = formats.getString( cell.getFont() );
                 cell.setFormat( format );
             }
             return new Label( cell.getX(), cell.getY(), (Boolean)value ? "Y" : "N", format );
         } else { // string or other object type
             if ( format == null ) {
-                format = new WritableCellFormat( cell.getFont() );
+                format = formats.getString( cell.getFont() );
                 cell.setFormat( format );
             }
             return new Label( cell.getX(), cell.getY(), String.valueOf( value ), cell.getFormat() );
@@ -354,9 +348,10 @@ public final class ExcelExportUtils {
             final ByteArrayOutputStream os = createStream();
             final WritableWorkbook workbook = createWorkbook( os );
             final WritableSheet sheet = insertSheet( workbook, sheetName );
+            final CellFormats cellFormats = new CellFormats();
 
             for ( Cell cell : dataSource.getCells() ) { // zapsání buněk
-                sheet.addCell( createCell( cell ) );
+                sheet.addCell( createCell( cell,  cellFormats) );
             }
 
             // nastavení autofit
