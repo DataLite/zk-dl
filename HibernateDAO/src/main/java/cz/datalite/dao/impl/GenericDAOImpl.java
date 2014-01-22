@@ -127,6 +127,16 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         return entity;
     }
 
+    public T findById(final ID id, int timeout) {
+        assert id != null : INVALID_ARGUMENT_ID_MISSING;
+        LockOptions lockOptions = new LockOptions(LockMode.PESSIMISTIC_WRITE);
+        lockOptions.setTimeOut(timeout);
+        T entity = (T) getSession().load(getPersistentClass(), id, lockOptions);
+
+        return entity;
+    }
+
+
     public List<T> findAll() {
         return findByCriteria();
     }

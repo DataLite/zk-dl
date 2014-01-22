@@ -757,5 +757,14 @@ public class DLSearch<T> {
         addAlias( path, JoinType.parse(joinType) );
     }
 
+    @Override
+    public String toString() {
+        return "DLSearch<" + persistentClass + "> {" +
+                ", criterions=" + Arrays.toString(criterions.toArray()) +
+                ", sorts=" + Arrays.toString(sorts.toArray()) +
+                ", rowCount=" + rowCount +
+                ", firstRow=" + firstRow +
+                '}';
+    }
 }
 
