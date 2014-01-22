@@ -157,7 +157,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         out.push('">');
         out.push('<div class="', zcls, '-btn-icon"></div></i>');
 
-        out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"/>');
+        out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
 
         this.redrawpp_(out);
 
