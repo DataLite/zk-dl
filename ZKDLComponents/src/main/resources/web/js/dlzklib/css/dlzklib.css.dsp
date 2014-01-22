@@ -6,7 +6,7 @@
 .nonselectable { cursor : default!important; }
 
 /* -- Quickfilter component -- */
-.z-quickfilter { font-size: 12px; margin-left: 7px; }
+.z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
 .z-quickfilter span { display: block; }
 .z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
@@ -34,7 +34,8 @@
 
 /* -- Listcontrol component -- */
 .z-listcontrol { height: 20px; padding: 2px 0px 7px 5px; }
-.z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto 0 30px; text-align: center; vertical-align: middle; }
+.z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
+.z-listcontrol-aux-content-sep { width: 3px; }
 .z-listcontrol .z-quickfilter { float: left; }
 
 /* -- Lovbox component -- */
