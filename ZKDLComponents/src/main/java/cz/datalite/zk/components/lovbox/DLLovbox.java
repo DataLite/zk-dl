@@ -260,7 +260,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         }
 
         // if the composer not set via ZUL (apply="xxx"), call doAfterCompose() manually to bind lovbox and controller
-        if (getAttribute("$composer", Component.COMPONENT_SCOPE) == null && controller != null) {
+        if (getAttribute("$composer", COMPONENT_SCOPE) == null && controller != null) {
             try {
                 controller.doAfterCompose(this);
             } catch (Exception e) {
