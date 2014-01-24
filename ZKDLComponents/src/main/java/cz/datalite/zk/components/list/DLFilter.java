@@ -253,7 +253,7 @@ public final class DLFilter {
             // prevent compilation of rules with arity higher or equal to 1 
             // to prevent null pointer exception on value1.compareTo(value2)
             // what is common implementation of comparison
-            if (unit.getOperator().getArity() >= 1 & unit.getValue(1) == null) {
+            if (unit.getOperator() != null && unit.getOperator().getArity() >= 1 & unit.getValue(1) == null) {
                 
                 // if the filter is not in disjunction mode then the rule cannot 
                 // be satisfied. If the filter is in the disjunction mode

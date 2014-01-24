@@ -542,20 +542,23 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void clearAllModel() {
         model.clear();
-        
+
+        managerController.fireChanges();
+        quickFilterController.fireChanges();
+        easyFilterController.fireChanges();
+
         getListboxController().fireColumnModelChanges();
         getListboxController().fireOrderChanges();        
         
         autosaveModel();
         
-        managerController.fireChanges();        
-        quickFilterController.fireChanges();
-        easyFilterController.fireChanges();
         if (profileManagerController != null)
             profileManagerController.onLoadProfile(false);
 
         if (listboxController.isLoadDataOnCreate())
             refreshDataModel();
+        else
+            this.getListboxController().fireOrderChanges(); // clear data
     }
 
     public void clearFilterModel() {

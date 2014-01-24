@@ -28,8 +28,7 @@ import java.util.Set;
  * @param <T> main entity class in this component
  * @author Karel Cemus
  */
-public class
-        DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
+public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
     protected final static Logger LOGGER = LoggerFactory.getLogger( DLLovboxGeneralController.class );
     // controller

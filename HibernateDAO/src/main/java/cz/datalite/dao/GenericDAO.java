@@ -18,6 +18,12 @@ import java.util.List;
  */
 public interface GenericDAO<T, ID extends Serializable>
 {
+    /**
+     * Find entity with optimistic lock type
+     * @param id entity identifier
+     * @return requested entity
+     */
+    T findById(ID id);
 
     /**
      * Find entity by Id using optimistic or pesimistic lock
@@ -28,11 +34,14 @@ public interface GenericDAO<T, ID extends Serializable>
     T findById(ID id, boolean lock);
 
     /**
-     * Find entity with optimistic lock type
-     * @param id entity identifier
+     * Find entity by Id using optimistic or pesimistic lock
+     * @param id entity identifir
+     * @param timeout use pesimistic lock and wait for the lock timeout in milliseconds.
+     *                You can use {@link org.hibernate.LockOptions#NO_WAIT} and
+     *                {@link org.hibernate.LockOptions#WAIT_FOREVER} constants.
      * @return requested entity
      */
-    T findById(ID id);
+    public T findById(final ID id, int timeout);
 
     /**
      * Return the persistent instance of the given entity class with the given identifier,

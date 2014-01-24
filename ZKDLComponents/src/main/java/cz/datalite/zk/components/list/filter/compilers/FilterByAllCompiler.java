@@ -45,6 +45,12 @@ public class FilterByAllCompiler implements FilterCompiler {
         // occurrence of this value is tested in the each column
         final String needle = (String) values[1];
 
+        if (model.isEmpty()) {
+            // compare by toString()
+            String value = values[0] == null ? "" : values[0].toString();
+            return needle != null && value.toLowerCase().contains(needle.toLowerCase());
+        }
+
         // for each column
         for (DLColumnUnitModel unit : model) {
 

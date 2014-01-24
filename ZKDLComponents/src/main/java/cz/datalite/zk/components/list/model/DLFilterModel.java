@@ -101,7 +101,7 @@ public class DLFilterModel {
         
         final DLColumnUnitModel column =  quickFilter.getModel();
         final NormalFilterUnitModel unit = column == null ? new NormalFilterUnitModel( quickFilter.getKey() ) : new NormalFilterUnitModel( column );
-        if ( QuickFilterModel.CONST_ALL.equals( quickFilter.getKey() ) ) { // quickfilter key == ALL 
+        if ( QuickFilterModel.CONST_ALL.equals( quickFilter.getKey() ) ) { // quickfilter key == ALL
             unit.setValue( 1, quickFilter.getValue() );
             // ZK-161 this is hack to support filter operator ALL in DLFilter which runs without 
             // an access to a database. Since now the filter wasn't able to support this operator

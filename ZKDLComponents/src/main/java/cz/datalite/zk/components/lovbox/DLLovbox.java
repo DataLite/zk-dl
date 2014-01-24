@@ -541,12 +541,15 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @return formated string
      */
     protected String getDisplayValueForModel(T model) {
+        // empty model (if cleared multiple)
+        if (model == null)
+            return "";
 
         final int size = this.labelProperties.length;
 
         // special case without labelProperties -> just return toString().
         if (size == 0)
-            return model == null ? "" : model.toString();
+            return model.toString();
 
         Object[] values = new Object[ size ]; // values of properties
         for ( int i = 0; i < size; i++ ) {
