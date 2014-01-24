@@ -2,3 +2,7 @@ target/
 rebel.xml
 .idea/
 *.iml
+.settings/
+.project
+.classpath
+nb-configuration.xml
