@@ -173,7 +173,6 @@
         <module>ZKStatistics</module>
         <module>ZKLiferay</module>
         <module>DLBind</module>
-        <module>testy</module>
     </modules>
 
     <repositories>

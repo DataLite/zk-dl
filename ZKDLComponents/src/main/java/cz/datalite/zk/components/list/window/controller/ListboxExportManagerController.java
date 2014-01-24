@@ -15,6 +15,7 @@ import java.util.Map;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Textbox;
 
 /**
  * Controller for the export manager
@@ -33,6 +34,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     // view
     DLListbox usedListbox;
     DLListbox unusedListbox;
+    Textbox   quickFilter;
     
     // controller
     protected ListboxSelectorController selector;
@@ -72,7 +74,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
             }
         } );
 
-        selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox );
+        selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox, quickFilter );
     }
 
     protected Map<String, Object> prepareMap(final Map<String, Object> map) {
