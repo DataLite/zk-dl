@@ -1,13 +1,21 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.view.DLListbox;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.InputEvent;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Textbox;
 
 /**
  * Controller for component consists from two listboxes which can move items
@@ -24,27 +32,61 @@ public class ListboxSelectorController {
     // view
     protected DLListbox usedListbox;
     protected DLListbox unusedListbox;
+    protected Textbox quickFilter;
 
 
     protected static final String CONST_USED_LISTBOX = "usedListbox";
     protected static final String CONST_UNUSED_LISTBOX = "unusedListbox";
     protected static final String CONST_USED_MODEL = "usedModel";
     protected static final String CONST_UNUSED_MODEL = "unusedModel";
+    protected static final String CONST_UNUSED_MODEL_ITEM_VISIBLE = "unusedModelItemVisible";
     protected static final String CONST_SOURCE_MODEL = "sourceModel";
 
-    public ListboxSelectorController( final List<Map<String, Object>> usedModel, final List<Map<String, Object>> unusedModel, final DLListbox usedListbox, final DLListbox unusedListbox ) {
+    public ListboxSelectorController( final List<Map<String, Object>> usedModel, final List<Map<String, Object>> unusedModel, final DLListbox usedListbox, final DLListbox unusedListbox, final Textbox quickFilter ) {
         this.usedModel = usedModel;
         this.unusedModel = unusedModel;
         this.usedListbox = usedListbox;
         this.unusedListbox = unusedListbox;
+        this.quickFilter = quickFilter;
 
         for ( Map<String, Object> map : unusedModel ) {
             map.put( CONST_SOURCE_MODEL, CONST_UNUSED_MODEL );
+            map.put( CONST_UNUSED_MODEL_ITEM_VISIBLE, true );
         }
 
         for ( Map<String, Object> map : usedModel ) {
             map.put( CONST_SOURCE_MODEL, CONST_USED_MODEL );
         }
+        
+		if (quickFilter != null) {
+			quickFilter.addEventListener(Events.ON_CHANGING, new EventListener<Event>() {
+				@Override
+				public void onEvent(Event event) throws Exception {
+					if (event instanceof InputEvent) {
+						String quickFilterValue = (((InputEvent) event).getValue());
+
+						if (!StringHelper.isNull(quickFilterValue)) {
+							for (Map<String, Object> map : unusedModel) {
+								if (!StringHelper.isNull((String) map.get("label"))) {
+									if (((String) map.get("label")).toLowerCase().contains(
+											quickFilterValue.toLowerCase())) {
+										map.put(CONST_UNUSED_MODEL_ITEM_VISIBLE, true);
+									} else {
+										map.put(CONST_UNUSED_MODEL_ITEM_VISIBLE, false);
+									}
+								}
+							}
+						} else {
+							for (Map<String, Object> map : unusedModel) {
+								map.put(CONST_UNUSED_MODEL_ITEM_VISIBLE, true);
+							}
+						}
+						
+						ZKBinderHelper.loadComponent(unusedListbox);
+					}
+				}
+			});
+		}
     }
 
     public List<Map<String, Object>> getUnusedModel() {
@@ -70,6 +112,9 @@ public class ListboxSelectorController {
 
         // update source model note
         ( (Map<String, Object>) dragged.getValue() ).put( CONST_SOURCE_MODEL, isUsedTarget ? CONST_USED_MODEL : CONST_UNUSED_MODEL );
+        if (!isUsedTarget) {
+        	this.onClearQuickFilter();
+        }
 
         // refresh
         ZKBinderHelper.loadComponent( usedListbox.getFellow( isUsedTarget ? CONST_USED_LISTBOX : CONST_UNUSED_LISTBOX ) );
@@ -88,6 +133,9 @@ public class ListboxSelectorController {
 
         // update note about source model
         ( (Map<String, Object>) dragged.getValue() ).put( CONST_SOURCE_MODEL, isUsedTarget ? CONST_USED_MODEL : CONST_UNUSED_MODEL );
+        if (!isUsedTarget) {
+        	this.onClearQuickFilter();
+        }
 
         // refresh
         ZKBinderHelper.loadComponent( usedListbox.getFellow( isUsedTarget ? CONST_USED_LISTBOX : CONST_UNUSED_LISTBOX ) );
@@ -140,6 +188,7 @@ public class ListboxSelectorController {
             unusedModel.add( map );
         }
         usedModel.clear();
+        this.onClearQuickFilter();
 
         ZKBinderHelper.loadComponent( unusedListbox );
         ZKBinderHelper.loadComponent( usedListbox );
@@ -158,25 +207,33 @@ public class ListboxSelectorController {
 
             for(Listitem item : copy)
             {
-                if ( usedListbox.getSelectedItem() == null )
-                {
-                    moveItem( item, usedListbox );
-                }
-                else
-                {
-                    moveItem( item, usedListbox.getSelectedItem() );
-                    usedListbox.setSelectedIndex(selected);
-                }
+            	Map<String, Object> value = (Map<String, Object>) item.getValue();
+            	if ((Boolean) value.get(CONST_UNUSED_MODEL_ITEM_VISIBLE)) {
+	            	if ( usedListbox.getSelectedItem() == null )
+	                {
+	                    moveItem( item, usedListbox );
+	                }
+	                else
+	                {
+	                    moveItem( item, usedListbox.getSelectedItem() );
+	                    usedListbox.setSelectedIndex(selected);
+	                }
+            	}
             }
         }
     }
 
     public void onUnusedToUsedAllMove() {
-        for ( Map<String, Object> map : unusedModel ) {
-            map.put( CONST_SOURCE_MODEL, CONST_USED_MODEL );
-            usedModel.add( map );
+    	Iterator<Map<String, Object>> it = unusedModel.iterator();
+        while ( it.hasNext() ) {
+        	Map<String, Object> map = it.next();
+        	if ((Boolean) map.get(CONST_UNUSED_MODEL_ITEM_VISIBLE)) {
+        		map.put( CONST_SOURCE_MODEL, CONST_USED_MODEL );
+        		usedModel.add( map );
+        		it.remove();
+        	}
         }
-        unusedModel.clear();
+        
         ZKBinderHelper.loadComponent( unusedListbox );
         ZKBinderHelper.loadComponent( usedListbox );
     }
@@ -212,4 +269,12 @@ public class ListboxSelectorController {
 
         usedListbox.setSelectedIndex( usedListbox.getItemCount() - 1 );
     }
+    
+	public void onClearQuickFilter() {
+		if (this.quickFilter != null) {
+			this.quickFilter.setValue(null);
+			this.quickFilter.invalidate();
+			Events.sendEvent(new InputEvent(Events.ON_CHANGING, this.quickFilter, null, null));									
+		}
+    }   
 }
