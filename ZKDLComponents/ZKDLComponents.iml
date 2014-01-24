@@ -12,6 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLBind:1.4.4" level="project" />
+    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLHelpers:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: cz.datalite.zk-dl:ZKComponents:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zk:6.5.2" level="project" />
@@ -24,7 +25,7 @@
     <orderEntry type="library" name="Maven: org.zkoss.zk:zhtml:6.5.2" level="project" />
     <orderEntry type="module" module-name="DLBind" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zkbind:6.5.2.2-DATALITE" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.4.4" level="project" />
+    <orderEntry type="module" module-name="zkplus" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="module" module-name="DLHelpers" />
     <orderEntry type="module" module-name="ZKComponents" />
