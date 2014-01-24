@@ -924,13 +924,10 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public void service(AuRequest request, boolean everError) {
         final String cmd = request.getCommand();
         if (cmd.equals("onClear")) {
-//           getController().setSelectedItem(null);
-           getController().getListboxExtController().setSelected( null ) ; //Aby došlo k uzavření
+           getController().setSelectedItem(null);
         }
-        else
-        {
-            super.service(request, everError);
-        }
+
+        super.service(request, everError);
     }
     
     /**
