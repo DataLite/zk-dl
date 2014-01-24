@@ -22,9 +22,14 @@
                 <label value="${c:l('listbox.columnManager.hidden')}" sclass="bold margin-bottom10" />
                 <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
-                        <listcell label="@{row.label}" />
+                        <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}" />
                     </listitem>
                 </listbox>
+                <hbox width="250px" hflex="1" align="center">
+                	<label value="${c:l('listbox.columnManager.quickFilter')}:" sclass="bold" />	
+                	<textbox id="quickFilter" hflex="1" />
+                	<image src="${zkdl:i('remove16x16.png')}" sclass="margin-left4" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.selector.onClearQuickFilter()" />
+                </hbox>
             </vbox>
 
             <vbox sclass="margin-top50 margin-right5 margin-left5">

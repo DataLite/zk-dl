@@ -364,8 +364,24 @@ public interface StoredProcedureInvoker
 	 * Funkce pro spuštění a získání mapy hodnot výstupních parametrů
 	 *
 	 * @return map hodnot výstupních parametrů
+     * @deprecated pouzit executeIndex() nebo executeName()
 	 */
+    @Deprecated
     StoredProcedureResult execute() ;
+
+    /**
+     * Funkce pro spuštění a získání mapy hodnot výstupních parametrů - parametry zasilané v pořadí podle zadaní
+     *
+     * @return map hodnot výstupních parametrů
+     */
+    StoredProcedureResult executeIndex() ;
+
+    /**
+     * Funkce pro spuštění a získání mapy hodnot výstupních parametrů - parametry zasilané s názvem
+     *
+     * @return map hodnot výstupních parametrů
+     */
+    StoredProcedureResult executeName() ;
 
     /**
      * Vyzvednutí hodnot parametru

@@ -4,6 +4,7 @@ import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.view.DLListbox;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
+import org.zkoss.zul.Textbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     // view
     public DLListbox usedListbox;
     public DLListbox unusedListbox;
+    public Textbox quickFilter;
     // controller
     protected ListboxSelectorController selector;
 
@@ -62,7 +64,7 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
             }
         } );
 
-        selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox );
+        selector = new ListboxSelectorController( usedModel, unusedModel, usedListbox, unusedListbox, quickFilter );        
     }
 
     protected Map<String, Object> prepareMap( final Map<String, Object> map ) {

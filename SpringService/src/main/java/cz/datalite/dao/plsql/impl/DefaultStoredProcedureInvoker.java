@@ -577,38 +577,17 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     }
 
     @Override
+    @Deprecated
     public StoredProcedureResult execute()
     {
-        if ( wrapNeed )
-        {
-            generateWrappedQuery() ;
-        }
-
-        try
-        {
-            return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
-        }
-        catch ( DataAccessException e )
-        {
-            if ( e.getCause() instanceof SQLException )
-            {
-                SQLException sqlException = (SQLException) e.getCause() ;
-
-                if ( sqlException.getErrorCode() == 4068 ) //Balík byl změněn
-                {
-                    return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
-                }
-            }
-
-            throw e ;
-        }
+        return executeIndex() ;
     }
-
 
     /**
      * Generování wraperu pro získání PL/SQL recordu
+     * @param named     příznak, zda zasilat parametry s jménem (true) nebo podle pořadí (false)
      */
-    private void generateWrappedQuery()
+    private void generateWrappedQuery( boolean named )
     {
         StringBuilder sb = new StringBuilder() ;
 
@@ -626,7 +605,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         generateUsingVariables(sb, newInputParameter, true) ;
 
-        generateCall( sb ) ;
+        generateCall( sb, named ) ;
 
         generateUsingVariables( sb, newOutputParameter, false ) ;
 
@@ -690,8 +669,9 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      * Generování PL/SQL scriptu - volání procedury
      *
      * @param query     aktuální generovaný dotaz
+     * @param named     příznak, zda zasilat parametry s jménem (true) nebo podle pořadí (false)
      */
-    private void generateCall( StringBuilder query )
+    private void generateCall( StringBuilder query, boolean named )
     {
         if ( ! StringHelper.isNull(getSql()) )
         {
@@ -723,6 +703,11 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
                     if ( ! isFunction() )
                     {
+                        if ( named )
+                        {
+                            query.append( sqlParameter.getName() ).append( "=>" ) ;
+                        }
+
                         if ( sqlParameter instanceof RecordParameter )
                         {
                             query.append( ((RecordParameter) sqlParameter).getVariableName() ).append( ", " ) ;
@@ -737,10 +722,20 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
                 }
                 else if ( sqlParameter instanceof RecordParameter )
                 {
+                    if ( named )
+                    {
+                        query.append( sqlParameter.getName() ).append( "=>" ) ;
+                    }
+
                     query.append( ((RecordParameter) sqlParameter).getVariableName() ).append( ", " ) ;
                 }
                 else
                 {
+                    if ( named )
+                    {
+                        query.append( sqlParameter.getName() ).append( "=>" ) ;
+                    }
+
                     query.append( "?, " ) ;
                 }
             }
@@ -1161,5 +1156,54 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     public String getDatabaseSchema() 
     {
        return databaseSchema;
+    }
+
+
+    @Override
+    public StoredProcedureResult executeIndex()
+    {
+       return execute( false ) ;
+    }
+
+    @Override
+    public StoredProcedureResult executeName()
+    {
+        return execute( true ) ;
+    }
+
+
+    /**
+     *
+     * Spuštění PL/SQL kodu
+     *
+     * @param named     příznak, zda zasilat parametry s jménem (true) nebo podle pořadí (false)
+     *
+     * @return výsledk spuštění
+     */
+    private StoredProcedureResult execute( boolean named )
+    {
+        if ( ( wrapNeed ) || ( named ) )
+        {
+            generateWrappedQuery( named ) ;
+        }
+
+        try
+        {
+            return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
+        }
+        catch ( DataAccessException e )
+        {
+            if ( e.getCause() instanceof SQLException )
+            {
+                SQLException sqlException = (SQLException) e.getCause() ;
+
+                if ( sqlException.getErrorCode() == 4068 ) //Balík byl změněn
+                {
+                    return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
+                }
+            }
+
+            throw e ;
+        }
     }
 }
