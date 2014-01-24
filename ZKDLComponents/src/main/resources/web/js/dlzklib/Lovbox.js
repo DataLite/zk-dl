@@ -74,6 +74,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
     _doClear: function (evt) {
         this.fire("onClear", null, {});
+        evt.stop();
     },
 
     doMouseOut_: function () {
