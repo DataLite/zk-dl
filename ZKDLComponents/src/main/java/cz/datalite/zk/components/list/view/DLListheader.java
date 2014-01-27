@@ -59,6 +59,9 @@ public class DLListheader extends Listheader {
 
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
+
+    /** quick filter operator - if null, default operator for data type is used. */
+    protected DLFilterOperator quickFilterOperator;
     
     /** defines class which generates default component for filter value in normal filter */
     protected FilterComponentFactory filterComponentFactory;
@@ -93,6 +96,7 @@ public class DLListheader extends Listheader {
         model.setColumnType( columnType );
         model.setConverter( converter, this, Collections.<String,String>emptyMap() );
         model.setQuickFilter( quickFilter );
+        model.setQuickFilterOperator(quickFilterOperator);
         model.setFilter( filter );
         model.setExportable( exportable );
         model.setFilterOperators( operators );
@@ -316,6 +320,10 @@ public class DLListheader extends Listheader {
             }
             operators.add( DLFilterOperator.strToEnum( op ) );
         }
+    }
+
+    public void setQuickFilterOperator(final String op) {
+        this.quickFilterOperator = DLFilterOperator.strToEnum( op );
     }
 
     public void setFilterComponent( final CloneableFilterComponent filterComponent ) {
