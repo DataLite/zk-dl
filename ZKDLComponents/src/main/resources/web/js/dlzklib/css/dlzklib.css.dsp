@@ -12,7 +12,9 @@
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
 .z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
-.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 4px 0 0 3px; }
+.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) center no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; /*ie8*/margin/*\**/: 3px 0 0 3px\9; }
+.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px 0 0 2px; /*ie8*/background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; margin-right: -1px; }
+.z-quickfilter-magnifier:active { background-color: #C2C2C2; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
@@ -116,13 +118,19 @@
 .z-404 .btn,
 .z-criticalError,
 .z-criticalError .z-criticalError-header,
-.z-criticalError .btn { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
+.z-criticalError .btn,
+.z-quickfilter-magnifier { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
 
 /* border-radius */
 .z-quickfilter-real {
 -moz-border-radius: 2px 2px 2px 2px;
 -webkit-border-radius: 2px 2px 2px 2px; 
 border-radius: 2px 2px 2px 2px;
+}
+.z-quickfilter-magnifier {
+-moz-border-radius: 3px 3px 3px 3px;
+-webkit-border-radius: 3px 3px 3px 3px;
+border-radius: 3px 3px 3px 3px;
 }
 .z-login .z-login-submit,
 .z-404,
@@ -269,4 +277,9 @@ box-shadow: 0px 0px 5px #007eff;
 -moz-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 -webkit-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
+}
+.z-quickfilter-magnifier:hover {
+-moz-box-shadow: 0px 0px 2px #808080; 
+-webkit-box-shadow: 0px 0px 2px #808080; 
+box-shadow: 0px 0px 2px #808080;
 }
