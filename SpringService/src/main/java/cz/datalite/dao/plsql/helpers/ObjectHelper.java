@@ -171,16 +171,24 @@ public final class ObjectHelper
         try
         {
             Field field = ReflectionHelper.getDeclaredField(obj.getClass(), fieldName);
+            Method m = getFieldGetter( field.getDeclaringClass(), field ) ;
 
-            if (field.isAccessible())
+            if ( m != null )
             {
+                return m.invoke( obj ) ;
+            }
+
+            boolean f = field.isAccessible() ;
+
+            try
+            {
+                field.setAccessible( true ) ;
+
                 return field.get(obj);
             }
-            else
+            finally
             {
-                Method m = getFieldGetter( field.getDeclaringClass(), field ) ;
-
-                return m.invoke( obj ) ;
+                field.setAccessible( f ) ;
             }
         }
         catch (NoSuchFieldException e)
@@ -207,16 +215,23 @@ public final class ObjectHelper
         try
         {
             Field field = ReflectionHelper.getDeclaredField(obj.getClass(), fieldName);
+            Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
-            if (field.isAccessible())
+            if ( m != null )
             {
+                m.invoke( obj, value ) ;
+            }
+
+            boolean f = field.isAccessible() ;
+
+            try
+            {
+                field.setAccessible( true ) ;
                 field.set( obj, value ) ;
             }
-            else
+            finally
             {
-                Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
-
-                m.invoke( obj, value ) ;
+                field.setAccessible( f ) ;
             }
         }
         catch (NoSuchFieldException e)
