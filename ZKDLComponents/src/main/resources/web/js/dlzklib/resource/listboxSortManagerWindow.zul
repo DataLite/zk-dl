@@ -13,7 +13,7 @@
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
-            <image src="${zkdl:i('sort_big.png')}" />
+            <image src="${zkdl:i('sort_big.png')}" height="32px" />
             <label sclass="bold margin-left10" style="font-size: 150%" value="${c:l('listbox.sortingManager.title')}" />
         </hbox>
         
@@ -39,8 +39,8 @@
         </grid>
         
         <div sclass="fr">
-            <button label="${c:l('listbox.ok')}" forward="onOk" />
-            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+            <ok-button label="${c:l('listbox.ok')}" forward="onOk" />
+            <cancel-button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </div>
         
         <n:br class="clear" />

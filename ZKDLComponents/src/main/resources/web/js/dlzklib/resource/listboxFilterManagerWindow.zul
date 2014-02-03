@@ -13,11 +13,11 @@
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
-            <image src="${zkdl:i('filter_big.png')}" />
+            <image src="${zkdl:i('filter_big.png')}" height="32px" />
             <label sclass="bold margin-left10" style="font-size: 150%" value="${c:l('listbox.filterManager.title')}" />
         </hbox>
         
-        <grid model="@{ctl.rows}" sclass="margin-bottom15" width="700px">
+        <grid model="@{ctl.rows}" sclass="margin-bottom15" width="99,6%">
             <columns sizable="false">
                 <column label="${c:l('listbox.filterManager.column')}"/>
                 <column label="${c:l('listbox.filterManager.operator')}" width="20%"/>
@@ -40,12 +40,15 @@
             </rows>
         </grid>
         
-        <div sclass="fr">
+        <div>
+          <div sclass="fl">
             <button label="${c:l('listbox.filterManager.add')}" forward="onAdd" />
             <button label="${c:l('listbox.filterManager.removeAll')}" forward="onRemoveAll"/>
-            <space width="50px"/>
-            <button label="${c:l('listbox.ok')}" forward="onOk" />
-            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+          </div>
+          <div sclass="fr">
+            <ok-button label="${c:l('listbox.ok')}" forward="onOk" />
+            <cancel-button label="${c:l('listbox.storno')}" forward="onStorno"/>
+          </div>
         </div>
         
         <n:br class="clear" />

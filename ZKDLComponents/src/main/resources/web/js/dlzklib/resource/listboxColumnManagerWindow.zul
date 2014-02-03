@@ -13,7 +13,7 @@
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
-            <image src="${zkdl:i('menu_items_big.png')}" />
+            <image src="${zkdl:i('menu_items_big.png')}" height="32px" />
             <label  style="font-size: 150%; font-weight: bold; margin-left: 10px;" value="${c:l('listbox.columnManager.title')}" />
         </hbox>
 
@@ -57,8 +57,8 @@
         </hbox>
 
         <div sclass="fr">
-            <button label="${c:l('listbox.ok')}" forward="onOk" />
-            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+            <ok-button label="${c:l('listbox.ok')}" forward="onOk" />
+            <cancel-button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </div>
         
         <n:br class="clear" />

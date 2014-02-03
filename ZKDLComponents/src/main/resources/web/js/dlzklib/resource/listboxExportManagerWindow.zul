@@ -6,14 +6,14 @@
 <?page title="Listbox manager"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
-    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="680px" id="winListboxManager" closable="true" 
+    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="660px" id="winListboxManager" closable="true" 
              border="normal"  self="@{define(content)}"
              apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController" 
              sclass="window">
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
-            <image src="${zkdl:i('excel_big.png')}" />
+            <image src="${zkdl:i('excel_big.png')}" height="32px" />
             <label style="font-size: 150%" value="${c:l('listbox.exportManager.title')}" sclass="bold margin-left10" />
         </hbox>
 
@@ -78,8 +78,8 @@
         </grid>
 
         <div sclass="fr">
-            <button label="${c:l('listbox.ok')}" forward="onOk" />
-            <button label="${c:l('listbox.storno')}" forward="onStorno"/>
+            <ok-button label="${c:l('listbox.ok')}" forward="onOk" />
+            <cancel-button label="${c:l('listbox.storno')}" forward="onStorno"/>
         </div>
         
         <n:br class="clear" />
