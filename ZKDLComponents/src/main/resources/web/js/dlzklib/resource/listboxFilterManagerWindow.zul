@@ -46,8 +46,8 @@
             <button label="${c:l('listbox.filterManager.removeAll')}" forward="onRemoveAll"/>
           </div>
           <div sclass="fr">
-            <ok-button label="${c:l('listbox.ok')}" forward="onOk" />
-            <cancel-button label="${c:l('listbox.storno')}" forward="onStorno"/>
+            <button label="${c:l('listbox.ok')}" forward="onOk" src="${zkdl:i('ok.png')}" />
+            <button label="${c:l('listbox.storno')}" forward="onStorno" src="${zkdl:i('cancel.png')}" />
           </div>
         </div>
         

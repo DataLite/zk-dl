@@ -72,8 +72,8 @@
                 <button id="deleteButton" label="${c:l('listbox.profileManager.delete')}"
                         onClick="@command('delete')"
                         visible="@load(not empty vm.profile.id)"/>
-                <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" />
-                <button label="${c:l('listbox.storno')}" onClick="@command('close')" />
+                <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" src="${zkdl:i('ok.png')}" />
+                <button label="${c:l('listbox.storno')}" onClick="@command('close')" src="${zkdl:i('cancel.png')}" />
             </div>
             <n:br class="clear" />
 
