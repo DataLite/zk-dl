@@ -2,6 +2,11 @@ package cz.datalite.zk.components.list.filter.config;
 
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.components.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.util.Configuration;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,9 +23,23 @@ import java.util.Map;
  * @author Karel Cemus
  */
 public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilterDatatypeConfig.class);
+
+    /**
+     * Prefix of zk.xml preference to define/override default datatype config for filters.
+     * E.g.:
+     * <preference>
+     *   <name>zk-dl.listbox.FilterDatatypeConfig.java.lang.String</name>
+     *   <value>my.fancy.FilterDatatypeConfigClass</value>
+     * </preference>
+     * FilterDatatypeConfigClass mus extend FilterDatatypeConfig and have default constructor
+     */
+    public static final String ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG = "zk-dl.listbox.FilterDatatypeConfig";
+
 
     /** Map of supported datatypes */
     public static final Map<Class, FilterDatatypeConfig> DEFAULT_CONFIGURATION = init();
+
     /** List of normal filter operators for the specific datatype */
     protected final List<DLFilterOperator> operators;
     /** quick filter operator */
@@ -36,11 +55,25 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return operators;
     }
 
+    /**
+     * Return quick filter operator for datatype.
+     * @param value it may be useful to select operator based on value - e.g. for string use like or equlas based on wildcards.
+     * @return quick operator
+     */
+    public DLFilterOperator getQuickOperator(String value) {
+        return quickOperator;
+    }
+
+    /**
+     * Return default quick filter operator for datatype.
+     * @return quick operator
+     */
     public DLFilterOperator getQuickOperator() {
         return quickOperator;
     }
 
-    private static List<DLFilterOperator> createStringOperators() {
+
+    public static List<DLFilterOperator> createStringOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
@@ -53,7 +86,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return operators;
     }
 
-    private static List<DLFilterOperator> createCharOperators() {
+    public static List<DLFilterOperator> createCharOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
@@ -96,7 +129,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return config;
     }
 
-    private static List<DLFilterOperator> createNumberOperators() {
+    public static List<DLFilterOperator> createNumberOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
@@ -178,7 +211,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return config;
     }
 
-    private static List<DLFilterOperator> createDateOperators() {
+    public static List<DLFilterOperator> createDateOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
@@ -209,7 +242,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return config;
     }
 
-    private static List<DLFilterOperator> createBooleanOperators() {
+    public static List<DLFilterOperator> createBooleanOperators() {
         final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
@@ -279,6 +312,54 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         config.put( Boolean.class, booleanConfig );
         config.put( Boolean.TYPE, booleanConfig );
 
+        Configuration configuration = Executions.getCurrent().getSession().getWebApp().getConfiguration();
+
+        for (String preference : configuration.getPreferenceNames()) {
+            if (preference.startsWith(ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG)) {
+                String dataTypeClassName = preference.substring(ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG.length()+1);
+                String configClassName = configuration.getPreference(preference, null);
+                addCustomConfig(config, dataTypeClassName, configClassName);
+            }
+        }
+
         return config;
     }
+
+    /**
+     * Register custom datatype filter configuration based on zk.xml preference
+     * @param config config to put new preference
+     * @param dataTypeClassName datatype to define
+     * @param configClassName classname extending FilterDatatypeConfig
+     */
+    private static void addCustomConfig(Map<Class, FilterDatatypeConfig> config, String dataTypeClassName, String configClassName) {
+        Class dataTypeClass;
+        try {
+            dataTypeClass = Class.forName(dataTypeClassName);
+        } catch (Throwable e) {
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. DataType class '{}' not found.", e,
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, dataTypeClassName);
+            return;
+        }
+
+        Class configClass;
+        try {
+            configClass = Class.forName(configClassName);
+        } catch (Throwable e) {
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. Config class '{}' not found.", e,
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName);
+            return;
+        }
+
+        FilterDatatypeConfig customConfig;
+        try {
+            customConfig = (FilterDatatypeConfig) configClass.newInstance();
+        } catch (Throwable e) {
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. Unable to create new instance of class '{}'.", e,
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName);
+            return;
+        }
+
+        config.put(dataTypeClass, customConfig);
+    }
+
 }

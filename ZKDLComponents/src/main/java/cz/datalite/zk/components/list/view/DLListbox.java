@@ -46,6 +46,9 @@ public class DLListbox extends Listbox {
     /** autosave model (columns and filters settings) to session */
     private boolean autosave = Boolean.valueOf(Library.getProperty("zk-dl.listbox.autosave", "true"));
 
+    /** Empty message - hide empty message if user did not run the filter yet.*/
+    private String emptyMessage;
+
     @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
     public DLListbox() {
         super();
@@ -290,6 +293,9 @@ public class DLListbox extends Listbox {
                 // new data binding uses the special renderer
                 if ( ZKBinderHelper.version( DLListbox.this ) == 2 )
                     setItemRenderer( new DLListitemRenderer() );
+            } else {
+                // no controller to change emptyMessage behaviour
+                setEmptyMessageVisible(true);
             }
         }
     }
@@ -310,4 +316,33 @@ public class DLListbox extends Listbox {
 	public void setAutosave(boolean autosave) {
 		this.autosave = autosave;
 	}
+
+    @Override
+    public String getEmptyMessage() {
+        return emptyMessage;
+    }
+
+    /**
+     * Show this message if the listbox does not contain any data.
+     * If listbox controller exists and loadDataOnCreate=false, this message is not shown until the user runs
+     * a query {@see setEmptyMessage}
+     * @param emptyMessage message to show
+     */
+    @Override
+    public void setEmptyMessage(String emptyMessage) {
+        this.emptyMessage = emptyMessage;
+    }
+
+    /**
+     * Show the empty message on client.
+     *
+     * Allow hiding of empty message before the user sets any filter.
+     * @param visible show / hide the message
+     */
+    public void setEmptyMessageVisible(boolean visible) {
+        if (visible)
+            super.setEmptyMessage(emptyMessage);
+        else
+            super.setEmptyMessage("");
+    }
 }

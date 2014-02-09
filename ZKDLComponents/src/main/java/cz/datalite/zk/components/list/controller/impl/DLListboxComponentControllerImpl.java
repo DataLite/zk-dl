@@ -252,6 +252,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 setSelected( listboxModel.get( 0 ) );
                 notifyOnSelect = true;
             }
+
+            listbox.setEmptyMessageVisible(true);
         }
     }
 

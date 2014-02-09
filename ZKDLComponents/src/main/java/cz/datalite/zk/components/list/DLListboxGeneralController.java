@@ -417,6 +417,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         getListboxController().setListboxModel(Collections.<T>emptyList());
         getListboxController().fireDataChanges();
         setSelectedItem(null);
+        getListbox().setEmptyMessageVisible(false);
     }
 
     public DLResponse<T> loadData( final int rowLimit ) {
@@ -541,24 +542,29 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public void clearAllModel() {
+        // clear current column and data model
         model.clear();
+        clearDataModel();
 
-        managerController.fireChanges();
-        quickFilterController.fireChanges();
-        easyFilterController.fireChanges();
-
+        // reload columns and ordering from listbox definition
         getListboxController().fireColumnModelChanges();
         getListboxController().fireOrderChanges();        
         
         autosaveModel();
-        
+
+        // setup conrollers
+        managerController.fireChanges();
+        quickFilterController.fireChanges();
+        easyFilterController.fireChanges();
+        pagingController.fireChanges();
+
+        // apply profile without data reload
         if (profileManagerController != null)
             profileManagerController.onLoadProfile(false);
 
+        // reload data depending on loadDataOnCreate setup
         if (listboxController.isLoadDataOnCreate())
             refreshDataModel();
-        else
-            this.getListboxController().fireOrderChanges(); // clear data
     }
 
     public void clearFilterModel() {
