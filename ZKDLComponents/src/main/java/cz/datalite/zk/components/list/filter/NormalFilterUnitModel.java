@@ -186,6 +186,11 @@ public class NormalFilterUnitModel implements Cloneable {
         return columnModel == null ? null : columnModel.getQuickFilterOperator();
     }
 
+    public DLFilterOperator getQuickFilterOperator(String value) {
+        return columnModel == null ? null : columnModel.getQuickFilterOperator(value);
+    }
+
+
     public NormalFilterUnitModel getTemplate() {
         return template;
     }

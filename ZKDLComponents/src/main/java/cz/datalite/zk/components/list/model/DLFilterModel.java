@@ -112,13 +112,13 @@ public class DLFilterModel {
             unit.setValue(2, columnModel.getColumnModels());
         } else if ( unit.getFilterCompiler() != null ) { // has own compiler
             unit.setValue( 1, quickFilter.getValue() );
-            unit.setOperator( unit.getQuickFilterOperator() );
+            unit.setOperator( unit.getQuickFilterOperator( quickFilter.getValue() ) );
         } else if ( column == null ) { // quickfilter column model not found
             throw new IllegalStateException( "Column "
                     + quickFilter.getKey()
                     + " was not found in column model. This can happen when column is java primitive type (filter by primitive is not supported)." );
         } else { // standard case
-            unit.setOperator( column.getQuickFilterOperator(), true );
+            unit.setOperator( column.getQuickFilterOperator( quickFilter.getValue()  ), true );
             final Object value = column.getColumnType() == null ? quickFilter.getValue() : TypeConverter.convertToSilent( quickFilter.getValue(), column.getColumnType() );
             unit.setValue( 1, value ); // can be null if conversion failed
         }

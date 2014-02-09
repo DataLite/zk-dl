@@ -371,21 +371,36 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     }
 
     public DLFilterOperator getQuickFilterOperator() {
-        if ( quickFilterOperator == null ) {
-            if ( columnType == null ) { // Is this type defined?
-                quickFilterOperator = DLFilterOperator.EQUAL;
+        return getQuickFilterOperator(null);
+    }
+
+    /**
+     * Return quickFilterOperator based on a value. If quickFilterOperator is set directly to the listheader,
+     * it is always returned as is. However, for operator based on datatype it may be changed according to a value.
+     * For example - compare strings with EQUAL operator until it contains some kind of wildcard - than use LIKE
+     * @param value actual filter value for which the operator should be created
+     * @return operator - always not null, if not defined use EQUAL
+     */
+    public DLFilterOperator getQuickFilterOperator(String value) {
+        if ( quickFilterOperator != null ) {
+            return quickFilterOperator;
+        }
+
+        if ( columnType == null ) { // Is this type defined?
+            return DLFilterOperator.EQUAL;
+        } else {
+            if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) { // Is the default configuration known for this type?
+                if (value != null)
+                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator(value);
+                else
+                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator();
             } else {
-                if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) { // Is the default configuration known for this type?
-                    quickFilterOperator = FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator();
-                } else {
-                    LOGGER.debug( "Unknown datatype was used in listbox quick filter. For type '{}' have been used EQUAL operator.", columnType.getCanonicalName() );
-                    quickFilterOperator = DLFilterOperator.EQUAL;
-                }
+                LOGGER.debug( "Unknown datatype was used in listbox quick filter. For type '{}' have been used EQUAL operator.", columnType.getCanonicalName() );
+                return DLFilterOperator.EQUAL;
             }
         }
-        return quickFilterOperator;
-
     }
+
 
     public FilterComponent<?> createFilterComponent() {
         return getFilterComponentFactory().createFilterComponent();
