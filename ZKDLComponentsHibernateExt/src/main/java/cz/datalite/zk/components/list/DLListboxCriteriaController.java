@@ -164,7 +164,7 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
             return compileCriteria( unit, search, joinType );
         } else if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( type ) ) {
             try {
-                unit.setOperator( FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( type ).getQuickOperator() );
+                unit.setOperator( FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( type ).getQuickOperator(value) );
                 unit.setValue( 1, TypeConverter.convertTo( value, type ) );
                 return compileCriteria( unit, search, joinType );
             } catch ( Exception ex ) {
