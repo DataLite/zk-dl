@@ -2,7 +2,9 @@ package cz.datalite.zk.components.list.filter.compilers;
 
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.zkoss.lang.Library;
 
 /**
  * This compiler class serves to compile filter operators to Hibernate
@@ -16,6 +18,20 @@ import org.hibernate.criterion.Restrictions;
  * @author Karel Cemus
  */
 public class FilterCriterionCompiler extends AbstractFilterCompiler {
+
+    // Operator LIKE and NOT LIKE default match mode
+    private static MatchMode FILTER_CRITERION_LIKE_MATCH_MODE = MatchMode.ANYWHERE;
+
+    static {
+        String property = Library.getProperty(FilterCriterionCompiler.class.getName() + ".FILTER_CRITERION_LIKE_MATCH_MODE");
+        if (property != null) {
+            try {
+                FILTER_CRITERION_LIKE_MATCH_MODE = MatchMode.valueOf(property);
+            } catch (IllegalArgumentException e) {
+
+            }
+        }
+    }
 
     /**
      * Converts condition to the hiberanate criterion according to the operand
@@ -67,24 +83,24 @@ public class FilterCriterionCompiler extends AbstractFilterCompiler {
 
     @Override
     protected Criterion compileOperatorLike( final String key, final Object... values ) {
-        return Restrictions.ilike( key, values[0].toString(), org.hibernate.criterion.MatchMode.ANYWHERE );
+        return Restrictions.ilike( key, values[0].toString(), FILTER_CRITERION_LIKE_MATCH_MODE );
 
     }
 
     @Override
     protected Criterion compileOperatorNotLike( final String key, final Object... values ) {
-        return Restrictions.not( Restrictions.ilike( key, values[0].toString(), org.hibernate.criterion.MatchMode.ANYWHERE ) );
+        return Restrictions.not( Restrictions.ilike( key, values[0].toString(), FILTER_CRITERION_LIKE_MATCH_MODE ) );
     }
 
     @Override
     protected Criterion compileOperatorStartWith( final String key, final Object... values ) {
-        return Restrictions.ilike( key, values[0].toString(), org.hibernate.criterion.MatchMode.START );
+        return Restrictions.ilike( key, values[0].toString(), MatchMode.START );
 
     }
 
     @Override
     protected Criterion compileOperatorEndWith( final String key, final Object... values ) {
-        return Restrictions.ilike( key, values[0].toString(), org.hibernate.criterion.MatchMode.END );
+        return Restrictions.ilike( key, values[0].toString(), MatchMode.END );
 
     }
 
