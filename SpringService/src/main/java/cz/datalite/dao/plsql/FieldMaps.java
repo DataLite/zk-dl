@@ -27,6 +27,11 @@ public class FieldMaps
     static Map<Class<?>, Map<String, FieldInfo>> fieldsMap = new HashMap<Class<?>, Map<String, FieldInfo>>() ;
 
     /**
+     * Příznak zda povolit
+     */
+    static boolean allowedHibernateAnnotations = true ;
+
+    /**
      * Získání SQL pro převod vstupní struktury na PL/SQL strukturu
      *
      * @param entityClass          zdrojová entita
@@ -100,11 +105,21 @@ public class FieldMaps
 
             result.put(sqlField.value(), new FieldInfo( field.getName(), field.getType() ) ) ;
         }
-        else if ( field.isAnnotationPresent( Column.class ) )
+        else if ( ( allowedHibernateAnnotations ) && ( field.isAnnotationPresent( Column.class ) ) )
         {
             Column sqlField = field.getAnnotation( Column.class ) ;
 
             result.put( sqlField.name(), new FieldInfo( field.getName(), field.getType() ) ) ;
         }
+    }
+
+    /**
+     * Nastavení příznaku zda použít    annotace pro hibernate
+     *
+     * @param allowedHibernateAnnotations           hodnota příznaku
+     */
+    public static void setAllowedHibernateAnnotations(boolean allowedHibernateAnnotations)
+    {
+        FieldMaps.allowedHibernateAnnotations = allowedHibernateAnnotations;
     }
 }
