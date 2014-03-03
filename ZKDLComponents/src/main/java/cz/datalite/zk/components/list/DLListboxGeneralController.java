@@ -414,7 +414,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void clearDataModel() {
         model.getPagingModel().clear();
-        getListboxController().setListboxModel(Collections.<T>emptyList());
+        getListboxController().setListboxModel( new ArrayList<T>() );
         getListboxController().fireDataChanges();
         setSelectedItem(null);
         getListbox().setEmptyMessageVisible(false);
