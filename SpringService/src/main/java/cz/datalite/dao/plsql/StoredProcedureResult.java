@@ -2,7 +2,9 @@ package cz.datalite.dao.plsql;
 
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import oracle.sql.ARRAY;
+import sun.security.util.BigInt;
 
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -451,5 +453,15 @@ public class StoredProcedureResult extends HashMap<String, Object>
     public <T> T getResultValue( Class<T> type )
     {
         return extract( StoredProcedureInvoker.RETURN_VALUE_NAME, type ) ;
+    }
+
+    public BigInteger getBigInteger( String name )
+    {
+        return extract( name, BigInteger.class ) ;
+    }
+
+    public Integer getInteger( String name )
+    {
+        return extract( name, Integer.class ) ;
     }
 }

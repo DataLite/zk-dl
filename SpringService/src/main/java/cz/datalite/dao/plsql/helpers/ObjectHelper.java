@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -307,6 +308,11 @@ public final class ObjectHelper
             //noinspection unchecked
             return (T) extractString(value);
         }
+        else if (returnType == BigInteger.class)
+        {
+            //noinspection unchecked
+            return (T) extractBigInteger(value);
+        }
         else if ( returnType.isEnum() )
         {
             return (T)EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
@@ -417,6 +423,28 @@ public final class ObjectHelper
         }
 
         return (value != null) ? new BigDecimal(String.valueOf(value)) : null;
+    }
+
+    /**
+     * @param value převáděná hodnota
+     * @return převedená hodnota
+     */
+    public static BigInteger extractBigInteger(Object value)
+    {
+        if (value instanceof Long)
+        {
+            return BigInteger.valueOf( (Long)value ) ;
+        }
+        else if (value instanceof BigDecimal)
+        {
+            return ((BigDecimal) value).toBigInteger() ;
+        }
+        else if (value instanceof Integer)
+        {
+            return BigInteger.valueOf(((Integer) value)) ;
+        }
+
+        return (value != null) ? new BigInteger(String.valueOf(value)) : null;
     }
 
     /**

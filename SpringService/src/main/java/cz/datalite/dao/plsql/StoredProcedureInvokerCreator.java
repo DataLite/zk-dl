@@ -141,6 +141,12 @@ public interface StoredProcedureInvokerCreator
     StoredProcedureInvoker create(String name) ;
 
     /**
+     * @param name       jmeno spoustene funkce
+     * @return spoustec ulozenych procedur
+     */
+    StoredProcedureInvoker create( String name, int resultType ) ;
+
+    /**
      * @param dataSource        zdroj data
      * @return spoustec ulozenych procedur
      */

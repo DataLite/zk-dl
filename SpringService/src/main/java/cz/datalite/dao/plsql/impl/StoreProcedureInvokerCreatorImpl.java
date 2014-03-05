@@ -40,6 +40,12 @@ class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
         return create( dataSource, name ) ;
     }
 
+    @Override
+    public StoredProcedureInvoker create(String name, int resultType)
+    {
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema() ) ;
+    }
+
     public StoredProcedureInvoker create( DataSource dataSource )
     {
         return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema() ) ;
