@@ -1,8 +1,13 @@
 package cz.datalite.zk.components.list.view;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
 import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import org.zkoss.lang.Library;
 import org.zkoss.lang.Strings;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.au.AuRequest;
@@ -15,16 +20,18 @@ import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.impl.InputElement;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
 /**
  * Component for tool which allows user to quickly filter in the listbox.
  * @author Karel Cemus
  * @author Jiri Bubnik
  */
 public class DLQuickFilter extends InputElement {
+
+	/**
+	 * Quick filter search value will be cleared after search {@link DLColumnUnitModel column} (property) change. (If {@link Library#getProperty(String) library property} is set to <code>true</code>.)
+	 */
+	public static final String LIBRARY_CLEAR_VALUE_AFTER_COLUMN_CHANGE = "zk-dl.quickFilter.clearValueAfterColumnChange";
+
     static {
         addClientEvent(DLQuickFilter.class, "onOpenPopup", CE_IMPORTANT|CE_NON_DEFERRABLE);
     }
@@ -193,6 +200,11 @@ public class DLQuickFilter extends InputElement {
 		}
 
 		public void onEvent(final org.zkoss.zk.ui.event.Event event) {
+			if (Boolean.valueOf(Library.getProperty(LIBRARY_CLEAR_VALUE_AFTER_COLUMN_CHANGE, Boolean.FALSE.toString()))) {
+				setValue("");
+				controller.getModel().setValue("");
+			}
+
 			controller.getModel().setKey(column);
 			controller.getModel().setModel(model);
 			setActiveFilter(item);
