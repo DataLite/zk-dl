@@ -219,6 +219,10 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         return sortType;
     }
 
+    /**
+     * Setup sort type for this column and recalculate sortOrder of other columns to hold consistent state.
+     * @param sortType new sort type
+     */
     public void setSortType( final DLSortType sortType ) {
         // if there was setted NATURAL and won't be then active sort order
         if ( DLSortType.NATURAL.equals( this.sortType ) && !DLSortType.NATURAL.equals( sortType ) ) {
@@ -232,8 +236,18 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
             }
             sortOrder = 0;
         }
+
+        setSortTypeDirectly(sortType);
+    }
+
+    /**
+     * Directly set the value of sort type without modification of other columns (e.g. setup of sortOrder)
+     * @param sortType new sort type
+     */
+    public void setSortTypeDirectly(final DLSortType sortType) {
         this.sortType = sortType;
     }
+
 
     public boolean isDBSortable() {
         return sortable && !sortZk && existSortColumn();

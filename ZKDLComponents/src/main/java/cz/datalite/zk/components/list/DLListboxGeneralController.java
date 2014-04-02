@@ -753,16 +753,21 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
                     column = "column" + i;
                 }
 
-                if (columnModelJsonObject != null && columnModelJsonObject.containsKey(column)) {
-                    String visible = (((JSONObject) columnModelJsonObject.get(column)).get("visible")).toString();
-                    String order = (((JSONObject) columnModelJsonObject.get(column)).get("order")).toString();
-                    String sortOrder = (((JSONObject) columnModelJsonObject.get(column)).get("sortOrder")).toString();
-                    String sortType = (((JSONObject) columnModelJsonObject.get(column)).get("sortType")).toString();
+                if (columnModelJsonObject != null) {
+                    if (columnModelJsonObject.containsKey(column)) {
+                        String visible = (((JSONObject) columnModelJsonObject.get(column)).get("visible")).toString();
+                        String order = (((JSONObject) columnModelJsonObject.get(column)).get("order")).toString();
+                        String sortOrder = (((JSONObject) columnModelJsonObject.get(column)).get("sortOrder")).toString();
+                        String sortType = (((JSONObject) columnModelJsonObject.get(column)).get("sortType")).toString();
 
-                    unit.setVisibleDirectly(Boolean.valueOf(visible));
-                    unit.setOrderDirectly(Integer.valueOf(order));
-                    unit.setSortOrder(Integer.valueOf(sortOrder));
-                    unit.setSortType(DLSortType.getByStringValue(sortType));
+                        unit.setVisibleDirectly(Boolean.valueOf(visible));
+                        unit.setOrderDirectly(Integer.valueOf(order));
+                        unit.setSortOrder(Integer.valueOf(sortOrder));
+                        unit.setSortTypeDirectly(DLSortType.getByStringValue(sortType));
+                    } else {
+                        // column not part of profile (usually new column, hide it)
+                        unit.setVisibleDirectly(false);
+                    }
                 }
 
                 /*
@@ -787,7 +792,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             }
 
             // refresh filters
-            model.getFilterModel().getNormal().addAll( savedModel );
+            model.getFilterModel().getNormal().addAll(savedModel);
 
             applyProfileCustomJsonData(parseJsonObject(profile.getCustomJsonData()));
         }
