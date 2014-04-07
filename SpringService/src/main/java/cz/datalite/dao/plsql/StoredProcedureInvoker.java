@@ -533,4 +533,11 @@ public interface StoredProcedureInvoker
      * @return vyzvednuta hodnota
      */
     <T> T extractResultRecord(StoredProcedureResult resultMap, Class<T> returnType) ;
+
+    /**
+     * Nastavení timout spoustene procedury
+     *
+     * @param timeout       cas v sekundach
+     */
+    void setQueryTimeout( int timeout ) ;
 }
