@@ -107,6 +107,10 @@ public class DLQuickFilter extends InputElement {
 			});
 		}
 
+		if (model == null) {
+			return;
+		}
+
         for ( final Entry<DLColumnUnitModel, String> entry : model ) {
         	// ZK-197 - include even invisible columns, use quickFilter="false" to hide a column
 
