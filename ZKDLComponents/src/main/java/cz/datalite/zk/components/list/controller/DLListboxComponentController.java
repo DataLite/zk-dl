@@ -219,4 +219,11 @@ public interface DLListboxComponentController<T> {
      *      DLListboxController.updateItem, which will notify listeners and paging of a change.
      */
     boolean updateItem(T item);
+
+    /**
+     * Vynulování příznaku, že se jedná o změnu stránky
+     *
+     * @return původní hodnota příznaku
+     */
+    boolean clearInPagingEvents() ;
 }

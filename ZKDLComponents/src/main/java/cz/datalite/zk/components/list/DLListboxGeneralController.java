@@ -105,6 +105,8 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
     /** model lock - if model is locked it cannot be changed */
     protected boolean lock = false;
+    /** příznak zda byla změna modelu vyvolaná změnou stránky **/
+    protected boolean inPagingEvents = false ;
     
     /** profile service used to load/store profiles from/to session */
     private ProfileService profileServiceSessionImpl;
@@ -255,6 +257,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         if ( lock ) {
             return;
         }
+        inPagingEvents = true ;
         refreshDataModel();
         pagingController.fireChanges();
         autosaveModel();
@@ -963,4 +966,13 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected void applyProfileCustomJsonData(JSONObject jsonObject) {
     }
 
+    @Override
+    public boolean clearInPagingEvents()
+    {
+        boolean r = inPagingEvents ;
+
+        inPagingEvents = false ;
+
+        return r ;
+    }
 }

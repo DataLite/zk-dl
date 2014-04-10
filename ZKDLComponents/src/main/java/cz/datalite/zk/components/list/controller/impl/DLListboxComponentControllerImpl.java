@@ -779,4 +779,10 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
      public List<T> getListboxModel() {
         return listboxModel;
     }
+
+    @Override
+    public boolean clearInPagingEvents()
+    {
+        return masterController.clearInPagingEvents() ;
+    }
 }

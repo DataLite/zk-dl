@@ -168,4 +168,11 @@ public interface DLListboxExtController<T> extends DLListboxController<T>, Compo
      * @return session name
      */
 	String getSessionName();
+
+    /**
+     * Vynulování příznaku, že se jedná o změnu stránky
+     *
+     * @return původní hodnota příznaku
+     */
+    boolean clearInPagingEvents() ;
 }
