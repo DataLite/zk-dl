@@ -279,6 +279,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
     public void setSortOrder( final Integer sortOrder ) {
         this.sortOrder = sortOrder;
+        //DTL-VK: Zdůvodů ukládání položky sortOrder do profilu musím posunout maximální id až za nastavovanou hodnotu
+        while ( this.sortOrder > columnModel.getSortMaxIndex() )
+        {
+            columnModel.autoIncSortMaxIndex() ;
+        }
     }
 
     /**
