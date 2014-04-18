@@ -12,9 +12,7 @@ import cz.datalite.zk.components.list.view.DLListheader;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.*;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.SelectEvent;
+import org.zkoss.zk.ui.event.*;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.metainfo.NodeInfo;
 import org.zkoss.zk.ui.metainfo.PageDefinition;
@@ -158,6 +156,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 		}
 
         applyDefaultConverters();
+
+        initDragDropChangeOrder();
     }
 
     public void onSort( final DLListheader listheader ) {
@@ -784,5 +784,29 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     public boolean clearInPagingEvents()
     {
         return masterController.clearInPagingEvents() ;
+    }
+
+    /**
+     * Enable drag&drop on column headers to create a convenient way for the user to reorder visible columns.
+     */
+    private void initDragDropChangeOrder() {
+        for (final DLListheader listheader : listbox.getListheaders()) {
+            String draggableText = getClass().getName() + ".draggable";
+            listheader.setDraggable(draggableText);
+            listheader.setDroppable(draggableText);
+
+            listheader.addEventListener(Events.ON_DROP, new org.zkoss.zk.ui.event.EventListener<DropEvent>() {
+                @Override
+                public void onEvent(DropEvent event) throws Exception {
+                    if (event.getDragged() instanceof DLListheader) {
+                        DLColumnUnitModel otherModel = ((DLListheader)event.getDragged()).getModel();
+                        otherModel.setOrder(listheader.getModel().getOrder());
+                        fireOrderChanges();
+                        // we need to reload data and autosave model, onSortChange can be utilized to do this
+                        masterController.onSortChange();
+                    }
+                }
+            });
+        }
     }
 }

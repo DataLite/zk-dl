@@ -12,7 +12,7 @@ import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentF
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import org.zkoss.lang.Strings;
 import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.SortEvent;
+import org.zkoss.zk.ui.event.*;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.ListitemComparator;
 
@@ -120,43 +120,7 @@ public class DLListheader extends Listheader {
             throw new UnsupportedOperationException( "Unknown sortType." );
         }
     }
-    /**
-     * Identifier for searching help in the database
-     */
-    private String helpId;
-    /**
-     * Text displayed in the help
-     */
-    private String helpText;
-    /**
-     * Identifier for the internationalization (i18n)
-     */
-    private String languageId;
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public void setHelpId( final String helpId ) {
-        this.helpId = helpId;
-    }
-
-    public String getHelpId() {
-        return helpId;
-    }
-
-    public void getHelpText( final String helpText ) {
-        this.helpText = helpText;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public void setLanguageId( final String languageId ) {
-        this.languageId = languageId;
-    }
-
-    public String getLanguageId() {
-        return languageId;
-    }
 
     /**
      * If header doesn't containt tooltiptext, label is default tooltip.
