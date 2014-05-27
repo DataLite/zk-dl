@@ -1,38 +1,13 @@
 package cz.datalite.zk.components.list;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.JsonHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.utils.HashMapAutoCreate;
-import cz.datalite.zk.components.list.controller.DLEasyFilterController;
-import cz.datalite.zk.components.list.controller.DLListboxComponentController;
-import cz.datalite.zk.components.list.controller.DLListboxExtController;
-import cz.datalite.zk.components.list.controller.DLManagerController;
-import cz.datalite.zk.components.list.controller.DLProfileManagerController;
-import cz.datalite.zk.components.list.controller.DLQuickFilterController;
-import cz.datalite.zk.components.list.controller.impl.DLDefaultEasyFilterControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLDefaultManagerControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLDefaultPagingControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLDefaultQuickFilterControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLEasyFilterControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLListboxComponentControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLManagerControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLPagingControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLProfileManagerControllerImpl;
-import cz.datalite.zk.components.list.controller.impl.DLQuickFilterControllerImpl;
+import cz.datalite.zk.components.list.controller.*;
+import cz.datalite.zk.components.list.controller.impl.*;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.enums.DLFiterType;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
@@ -66,6 +41,9 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Paging;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Main controller for the extended listbox component. This controller is the
@@ -113,7 +91,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
 	/** Library property: load data after profile change, even if <code>loadDataOnCreate="false"</code> @see #applyProfile */
     private static final String LIBRARY_PROFILE_LOAD_DATA_AFTER_CHANGE = "zk-dl.listbox.profile.loadDataAfterChange";
-	private static final boolean profileLoadDataAfterChange = Boolean.TRUE.equals(Library.getProperty(LIBRARY_PROFILE_LOAD_DATA_AFTER_CHANGE, "true"));
+	private static final boolean profileLoadDataAfterChange = Boolean.valueOf(Library.getProperty(LIBRARY_PROFILE_LOAD_DATA_AFTER_CHANGE, "true"));
 
 	/**
      * Create instance of the general controller

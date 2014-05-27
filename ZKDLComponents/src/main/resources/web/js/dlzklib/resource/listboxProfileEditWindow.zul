@@ -16,7 +16,8 @@
                     <label value="${c:l('listbox.profileManager.profile.name')}" sclass="bold"
                             tooltiptext="@bind(vm.profile.id)"/>
                 </n:legend>
-                <textbox value="@bind(vm.profile.name)" width="98%" constraint="no empty" maxlength="255"/>
+                <textbox value="@bind(vm.profile.name)" width="98%" constraint="no empty" maxlength="255"
+                         readonly="@load(vm.profile.publicProfile and not vm.dlProfileManager.allowCreatePublic)"/>
             </n:fieldset>
 
             <n:fieldset class="margin-bottom5 wb">
@@ -55,13 +56,15 @@
                     <checkbox id="saveColumnModelCheckbox" width="90%"
                               label="${c:l('listbox.profileManager.profile.saveColumnModel')}"
                               checked="@load(vm.dlProfileManager.showColumnSettings and empty vm.profile.id)"
-                              tooltiptext="${c:l('listbox.profileManager.profile.saveColumnModel.tooltip')}"/>
+                              tooltiptext="${c:l('listbox.profileManager.profile.saveColumnModel.tooltip')}"
+                              disabled="@load(vm.profile.publicProfile and not vm.dlProfileManager.allowCreatePublic)"/>
                 </div>
                 <div visible="@load(vm.dlProfileManager.showFilterSettings)">
                     <checkbox id="saveColumnFilterCheckbox" width="90%"
                               label="${c:l('listbox.profileManager.profile.saveFilterModel')}"
                               checked="@load(vm.dlProfileManager.showFilterSettings and empty vm.profile.id)"
-                              tooltiptext="${c:l('listbox.profileManager.profile.saveFilterModel.tooltip')}"/>
+                              tooltiptext="${c:l('listbox.profileManager.profile.saveFilterModel.tooltip')}"
+                              disabled="@load(vm.profile.publicProfile and not vm.dlProfileManager.allowCreatePublic)"/>
                 </div>
             </n:fieldset>
 
@@ -71,7 +74,7 @@
             <div sclass="fr">
                 <button id="deleteButton" label="${c:l('listbox.profileManager.delete')}"
                         onClick="@command('delete')"
-                        visible="@load(not empty vm.profile.id)"/>
+                        visible="@load(not empty vm.profile.id and (not vm.profile.publicProfile or vm.dlProfileManager.allowCreatePublic))"/>
                 <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" src="${zkdl:i('ok.png')}" />
                 <button label="${c:l('listbox.storno')}" onClick="@command('close')" src="${zkdl:i('cancel.png')}" />
             </div>
