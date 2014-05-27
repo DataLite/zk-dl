@@ -1,5 +1,9 @@
 package cz.datalite.zk.components.list.view;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
@@ -10,15 +14,12 @@ import cz.datalite.zk.components.list.filter.components.CloneableFilterComponent
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import org.zkoss.lang.Library;
 import org.zkoss.lang.Strings;
 import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.event.*;
+import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.ListitemComparator;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * ZK component DLListheader is extended component from standard Listheader
@@ -29,6 +30,12 @@ import java.util.List;
 public class DLListheader extends Listheader {
 
 	private static final long serialVersionUID = 5081334044887334444L;
+
+	/**
+	 * If set to {@code true}, column width is set from profile column information. Default is {@code false}.
+	 */
+	private static final String LIBRARY_PROFILE_SET_COLUMN_WIDTH = "zk-dl.listbox.profile.setColumnWidth";
+	private static final boolean setColumnWidth = Boolean.valueOf(Library.getProperty(LIBRARY_PROFILE_SET_COLUMN_WIDTH, "false"));
 
 	/** should be this column sorted in the default */
     protected DLSortType defaultSort = DLSortType.NATURAL;
@@ -102,7 +109,10 @@ public class DLListheader extends Listheader {
         model.setFilterOperators( operators );
         model.setFilterComponentFactory( filterComponentFactory );
         model.setFilterCompiler( filterCompiler );
+		model.setWidth(getWidth());
     }
+
+
 
     /**
      * Sets default sort on this column
@@ -230,9 +240,20 @@ public class DLListheader extends Listheader {
             setVisible( getModel().isVisible() );
         }
         setSortStyle();
+		setWidth();
     }
 
-    public void setController( final DLListboxComponentController controller ) {
+	/**
+	 * Set the column width according to information from the {@link cz.datalite.zk.components.list.model.DLColumnUnitModel#width},
+	 * if {@link cz.datalite.zk.components.list.view.DLListheader#LIBRARY_PROFILE_SET_COLUMN_WIDTH} is set to {@code true}.
+	 */
+	private void setWidth() {
+		if (setColumnWidth && model.getWidth() != null) {
+			setWidth(model.getWidth());
+		}
+	}
+
+	public void setController( final DLListboxComponentController controller ) {
         this.controller = controller;
     }
 

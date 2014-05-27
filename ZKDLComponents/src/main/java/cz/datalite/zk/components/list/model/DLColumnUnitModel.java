@@ -1,5 +1,9 @@
 package cz.datalite.zk.components.list.model;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import cz.datalite.dao.DLSortType;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
@@ -8,14 +12,10 @@ import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.converter.ConverterResolver;
 import cz.datalite.zk.converter.ZkConverter;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.util.Composer;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.util.Composer;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -88,6 +88,9 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
         
     /** redefines filter compiler which is used to compile filter operators */
     private FilterCompiler filterCompiler;
+
+	/** Column width */
+	private String width;
     
     /** logger */
     protected final static Logger LOGGER = LoggerFactory.getLogger( DLColumnUnitModel.class );
@@ -494,8 +497,16 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 
 	public void setExportColumn(String exportColumn) {
 		this.exportColumn = exportColumn;
-	}  
-	  
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
 	@Override
 	public String toString() {
 		return "DLColumnUnitModel [column=" + column + ", columnType=" + columnType + ", converter=" + converter
@@ -504,6 +515,6 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 				+ sortZk + ", sortable=" + sortable + ", quickFilter=" + quickFilter + ", quickFilterOperator="
 				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", filterOperators="
 				+ filterOperators + ", filterComponentFactory=" + filterComponentFactory + ", exportColumn="
-				+ exportColumn + ", filterCompiler=" + filterCompiler + "]";
+				+ exportColumn + ", filterCompiler=" + filterCompiler + ", width=" + width + "]";
 	}
 }
