@@ -18,15 +18,39 @@
  */
 package cz.datalite.zk.annotation.processor;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import cz.datalite.helpers.ReflectionHelper;
-import cz.datalite.zk.annotation.*;
-import cz.datalite.zk.annotation.invoke.*;
+import cz.datalite.zk.annotation.ZkAsync;
+import cz.datalite.zk.annotation.ZkBinding;
+import cz.datalite.zk.annotation.ZkBindings;
+import cz.datalite.zk.annotation.ZkBlocking;
+import cz.datalite.zk.annotation.ZkConfirm;
+import cz.datalite.zk.annotation.ZkEvent;
+import cz.datalite.zk.annotation.ZkEvents;
+import cz.datalite.zk.annotation.ZkException;
+import cz.datalite.zk.annotation.ZkExceptions;
+import cz.datalite.zk.annotation.ZkRole;
+import cz.datalite.zk.annotation.invoke.CommandInvoker;
+import cz.datalite.zk.annotation.invoke.Invoke;
+import cz.datalite.zk.annotation.invoke.MethodInvoker;
+import cz.datalite.zk.annotation.invoke.ZkAsyncHandler;
+import cz.datalite.zk.annotation.invoke.ZkBindingHandler;
+import cz.datalite.zk.annotation.invoke.ZkBlockingHandler;
+import cz.datalite.zk.annotation.invoke.ZkConfirmHandler;
+import cz.datalite.zk.annotation.invoke.ZkEventContext;
+import cz.datalite.zk.annotation.invoke.ZkExceptionHandler;
+import cz.datalite.zk.annotation.invoke.ZkRoleHandler;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * <p>Annotation Processor handles all ZK annotations on the methods. For each
@@ -58,6 +82,12 @@ public class AnnotationProcessor<T> {
     /** configuration key in property files */
     private static final String CONFIG = "zk-dl.annotation.cache";
 
+	/**
+	 * Library property key prefix to redefine annotation {@link cz.datalite.zk.annotation.invoke.Handler}s. Prefix key is followed by a class FQN.
+	 * For example {@code zk-dl.annotation.handler.cz.datalite.zk.annotation.ZkException=mypackage.MyExceptionHandler} replace default {@link cz.datalite.zk.annotation.invoke.ZkExceptionHandler} with custom one.
+	 */
+	private static final String CONFIG_HANDLER_PREFIX = "zk-dl.annotation.handler";
+
     /** caching is enabled / disabled */
     private static boolean cache = true;
 
@@ -66,20 +96,20 @@ public class AnnotationProcessor<T> {
         initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
         initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
 
-        wrappers.add( new GeneralWrapperProcessor( ZkException.class, ZkExceptionHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkExceptions.class, ZkExceptionHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkBinding.class, ZkBindingHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkBindings.class, ZkBindingHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkConfirm.class, ZkConfirmHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkRole.class, ZkRoleHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkBlocking.class, ZkBlockingHandler.class ) );
-        wrappers.add( new GeneralWrapperProcessor( ZkAsync.class, ZkAsyncHandler.class ) );
+        wrappers.add(createProcessor(ZkException.class));
+        wrappers.add(createProcessor(ZkExceptions.class));
+        wrappers.add(createProcessor(ZkBinding.class));
+        wrappers.add(createProcessor(ZkBindings.class));
+        wrappers.add(createProcessor(ZkConfirm.class));
+        wrappers.add(createProcessor(ZkRole.class));
+        wrappers.add(createProcessor(ZkBlocking.class));
+        wrappers.add(createProcessor(ZkAsync.class));
 
         // loading property of caching or not
         cache = Boolean.parseBoolean( System.getProperty( CONFIG, Library.getProperty( CONFIG, "true" ) ) );
     }
 
-    /** List of cached ZkEvents */
+	/** List of cached ZkEvents */
     private Map<Method,Set<MethodCache>> zkEvents = new HashMap<Method, Set<MethodCache>>();
     
     /** List of cached Commands */
@@ -282,4 +312,57 @@ public class AnnotationProcessor<T> {
             this.methodInvoker = methodInvoker;
         }
     }
+
+
+	/**
+	 * Creates a new processor
+	 * @param annotation
+	 * @param <U>
+	 * @return
+	 */
+	private static <U> GeneralWrapperProcessor<U> createProcessor(Class<U> annotation) {
+		return new GeneralWrapperProcessor<U>(annotation, findHandler(annotation));
+	}
+
+	/**
+	 * Finds handler according to library property {@link cz.datalite.zk.annotation.processor.AnnotationProcessor#CONFIG_HANDLER_PREFIX} or default one.
+	 * @param annotation {@link cz.datalite.zk.annotation}
+	 * @return
+	 */
+	private static Class<?> findHandler(Class annotation) {
+		Class defaultHandler = findDefaultHandler(annotation);
+		String handlerClassName = Library.getProperty(
+				String.format("%s.%s", CONFIG_HANDLER_PREFIX, annotation.getName()));
+
+		try {
+			return handlerClassName == null ? defaultHandler : Class.forName(handlerClassName);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(
+					String.format("Handler '%s' for '%s' was not found, default handler: '%s'. See Zk library property %s.",
+							handlerClassName, annotation, defaultHandler, CONFIG_HANDLER_PREFIX
+					), e);
+		}
+	}
+
+	/**
+	 * Default handler configuration
+	 * @param annotation
+	 * @return
+	 */
+	private static Class findDefaultHandler(Class annotation) {
+		if (annotation.isAssignableFrom(ZkException.class) || annotation.isAssignableFrom(ZkExceptions.class)) {
+			return ZkExceptionHandler.class;
+		} else if (annotation.isAssignableFrom(ZkBinding.class) || annotation.isAssignableFrom(ZkBindings.class)) {
+			return ZkBindingHandler.class;
+		} else if (annotation.isAssignableFrom(ZkConfirm.class)) {
+			return ZkConfirmHandler.class;
+		} else if (annotation.isAssignableFrom(ZkRole.class)) {
+			return ZkRoleHandler.class;
+		} else if (annotation.isAssignableFrom(ZkBlocking.class)) {
+			return ZkBlockingHandler.class;
+		} else if (annotation.isAssignableFrom(ZkAsync.class)) {
+			return ZkAsyncHandler.class;
+		}
+		throw new IllegalArgumentException(String.format("Cannot find default handler for annotation %s.", annotation));
+	}
 }
