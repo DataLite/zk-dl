@@ -17,6 +17,7 @@
 .z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px 0 0 2px; /*ie8*/background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; margin-right: -1px; }
 .z-quickfilter-magnifier:active,
 .z-quickfilter-list:active { background-color: #C2C2C2; }
+.z-lovbox-popup .z-quickfilter-magnifier:hover { margin: 3px 0 -1px 2px;}
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }

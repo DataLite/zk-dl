@@ -125,7 +125,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
     /**If set to false, listbox will always have selectedItem=null and some value will be only temprarily
      * to transfer user selection. */
-    protected boolean synchronizeListboxSelectedItem = true;
+    protected boolean synchronizeListboxSelectedItem = Boolean.valueOf(Library.getProperty("zk-dl.lovbox.synchronizeListboxSelectedItem", "false"));
 
     // mark status before afterCompose is called
     private boolean initialized = false;
@@ -742,7 +742,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             {
                 listboxExtController.refreshDataModel();
 
-                if (!isSynchronizeListboxSelectedItem()) {
+                if (isSynchronizeListboxSelectedItem()) {
                     listboxExtController.setSelectedItem( this.getSelectedItem() );
                     listboxExtController.setSelectedItems( Collections.singleton( this.getSelectedItem() ) );
                 }

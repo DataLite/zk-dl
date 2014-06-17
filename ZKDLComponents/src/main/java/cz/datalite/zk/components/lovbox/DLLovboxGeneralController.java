@@ -98,6 +98,10 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             lovbox.close();
         }
         callListeners();
+
+        // clear listbox setup (paging, filter, ...)
+        if (!lovbox.isSynchronizeListboxSelectedItem())
+            invalidateListboxModel();
     }
 
     public void callListeners() {
@@ -131,7 +135,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
                 // changed model
                 // clear selection directly (without any events)
                 // more clear solution will be to try select correct item, but it might be not loaded yet
-                getListboxExtController().getListbox().getController().setSelectedItem(null);
+                getListboxExtController().getListbox().setSelectedItem(null);
                 getListboxExtController().getListbox().getController().setSelectedItems(Collections.emptySet());
                 getListboxExtController().getListbox().setSelectedIndex(-1);
         }
@@ -156,6 +160,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
 
         // clear selection
         listboxController.setSelectedItem(null);
+        listboxController.setSelectedItems(Collections.<T>emptySet());
         onSelect( false );
 
         // clear data and ensure onOpen will fire (back to initial state before first onOpen)
@@ -178,9 +183,13 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
     }
 
     public void invalidateListboxModel() {
-        if (!getListboxController().isLocked())
-           getListboxController().clearDataModel();
-        getListboxController().lockModel();
+        if (!getListboxController().isLocked()) {
+            // clear all model without loading data and lock (will be unlocked and refreshed on next lovbox popup open)
+            getListboxController().setSelectedItem(null);
+            getListboxController().setSelectedItems(Collections.<T>emptySet());
+            getListboxController().lockModel();
+            getListboxController().clearAllModel();
+        }
     }
 
     public void addListener( final String event, final EventListener listener ) {
