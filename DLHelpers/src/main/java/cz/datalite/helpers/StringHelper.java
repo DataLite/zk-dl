@@ -1,5 +1,7 @@
 package cz.datalite.helpers;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -228,4 +230,8 @@ public abstract class StringHelper
     {
         return (StringHelper.isNull(key1)) ? key2 : key1;
     }
+
+	public static String abbreviate(String text) {
+		return StringUtils.abbreviate(text, 0, 20);
+	}
 }

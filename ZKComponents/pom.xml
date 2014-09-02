@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.4</version>
+        <version>1.4.5</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComponents</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
     <name>ZKComponents</name>
     <description>Other imporvements of basic ZK components - please check the documentation for each overriden component.</description>
 
