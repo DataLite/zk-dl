@@ -2,8 +2,6 @@ package cz.datalite.localization;
 
 public enum TestEnum implements Localizable {
 
-	//Zmeny pronaset do zurnalu!
-
 	FOO("foo.bar");
 
 	private String key;
