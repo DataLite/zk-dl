@@ -21,7 +21,7 @@
     <orderEntry type="library" name="Maven: org.zkoss.zk:zhtml:6.5.2" level="project" />
     <orderEntry type="module" module-name="DLBind" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zkbind:6.5.2.2-DATALITE" level="project" />
-    <orderEntry type="module" module-name="zkplus" />
+    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="module" module-name="DLHelpers" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
