@@ -15,7 +15,9 @@ import java.util.Map;
  *
  * Tato třída slouží jako cache pro jeden export (do jednoho sheet/workbook). Nelze ji sdílet přes více
  * exportů.
+ * @deprecated since 1.4.5.2 use {@link cz.datalite.helpers.excel.export.poi.POICellStyles}
  */
+@Deprecated
 public class CellFormats {
     Map<DisplayFormat, Map<WritableFont, WritableCellFormat>> cache = new HashMap<DisplayFormat, Map<WritableFont, WritableCellFormat>>();
 

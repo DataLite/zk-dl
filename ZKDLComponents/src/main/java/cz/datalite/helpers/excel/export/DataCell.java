@@ -9,7 +9,9 @@ import jxl.write.WritableFont;
  * {@link cz.datalite.helpers.excel.export.ExcelExportUtils} a
  * využívající knihovnu jExcelApi<p>
  * @author Karel Cemus
+ * @deprecated since 1.4.5.2 use {@link cz.datalite.helpers.excel.export.poi.POICell}
  */
+@Deprecated
 public class DataCell implements Cell {
 
     /** <p>souřadnice X, číslo sloupce - volitelné</p> */

@@ -1,21 +1,24 @@
 package cz.datalite.helpers.excel.export;
 
+import jxl.CellType;
+import jxl.Workbook;
+import jxl.write.*;
+import org.zkoss.util.media.AMedia;
+
 import java.io.*;
 import java.lang.Boolean;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-import jxl.CellType;
-import jxl.Workbook;
-import jxl.write.*;
-import org.zkoss.util.media.AMedia;
 
 /**
  * <p>Metoda usnadňuje exportování dat do excelu, soubor XLS. Využívá ke své práci
  * knihovnu jExcelApi. Umožňuje uivateli využí zcela automatický exportSimple stejně jako
  * použít pouze pomocné metody a celkový postup si udělat dle sebe.</p>
  * @author Karel Cemus
+ * @deprecated since 1.4.5.2 use {@link cz.datalite.helpers.excel.export.poi.POIExcelExportUtils}
  */
+@Deprecated
 public final class ExcelExportUtils {
 
     /**
