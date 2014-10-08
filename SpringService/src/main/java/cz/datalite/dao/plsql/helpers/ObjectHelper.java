@@ -5,6 +5,7 @@ import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import oracle.sql.STRUCT;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -171,7 +172,8 @@ public final class ObjectHelper
 
         try
         {
-            Field field = ReflectionHelper.getDeclaredField(obj.getClass(), fieldName);
+            Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
+            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
             Method m = getFieldGetter( field.getDeclaringClass(), field ) ;
 
             if ( m != null )
@@ -215,7 +217,8 @@ public final class ObjectHelper
     {
         try
         {
-            Field field = ReflectionHelper.getDeclaredField(obj.getClass(), fieldName);
+            Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
+            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
             Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
             if ( m != null )
