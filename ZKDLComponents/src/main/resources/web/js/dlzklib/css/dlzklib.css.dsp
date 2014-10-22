@@ -5,6 +5,9 @@
 .selectable { cursor : pointer!important; }
 .nonselectable { cursor : default!important; }
 
+/* Listbox */
+.z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
+
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
 .z-quickfilter span { display: block; }

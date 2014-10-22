@@ -5,6 +5,7 @@ import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.JsonHelper;
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.utils.HashMapAutoCreate;
 import cz.datalite.zk.components.list.controller.*;
 import cz.datalite.zk.components.list.controller.impl.*;
@@ -29,6 +30,7 @@ import cz.datalite.zk.components.profile.DLProfileManager;
 import cz.datalite.zk.components.profile.ProfileService;
 import cz.datalite.zk.components.profile.impl.DLListboxProfileImpl;
 import cz.datalite.zk.components.profile.impl.ProfileServiceSessionImpl;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.LoggerFactory;
 import org.zkoss.json.JSONObject;
 import org.zkoss.json.JSONValue;
@@ -39,6 +41,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zul.Paging;
 
@@ -383,7 +386,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     }
 
     public void refreshDataModel() {
-        refreshDataModel( false );
+        refreshDataModel(false);
     }
 
     public void refreshDataModel( final boolean clearPaging ) {
@@ -416,6 +419,43 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         pagingController.fireChanges();
 
         callListeners( new Event( DLListboxEvents.ON_MODEL_CHANGE, getListbox() ) );
+
+        highlight();
+    }
+
+    /**
+     * Highlight listcell values by search term
+     * @see cz.datalite.zk.components.list.view.DLListbox#highlightQuickFilter
+     * @see cz.datalite.zk.components.list.view.DLListbox#highlightValue
+     */
+    protected void highlight() {
+        if (Boolean.TRUE.equals(getListbox().getHighlightQuickFilter())) {
+            highlight(getModel().getFilterModel().getQuick().getValue());
+        }
+        if (!StringHelper.isNull(getListbox().getHighlightValue())) {
+            highlight(getListbox().getHighlightValue());
+        }
+    }
+
+    /**
+     * Highlight listcell values
+     *
+     * @param searchTerm search pattern to be highlighted
+     * @see DLListboxGeneralController#highlight()
+     */
+    protected void highlight(String searchTerm) {
+        final String cellSelector = String.format("#%s td.z-listcell div", getListboxUuid());
+        final String javaScript = String.format("$(\"%s\").each(\n" +
+                        "\tfunction(index, el) {\n" +
+                        "\t\tvar searched = '%s';\n" +
+                        "\t\tvar html = $(el).html();\n" +
+                        "\t\thtml = html.replace(searched, \"<span class='highlighted'>\"+searched+\"</span>\");\n" +
+                        "\t\t$(el).html(html);\n" +
+                        "\t}\n" +
+                        ");",
+                cellSelector,
+                StringEscapeUtils.escapeJavaScript(searchTerm));
+        Clients.evalJavaScript(javaScript);
     }
 
     public void clearDataModel() {
