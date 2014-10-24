@@ -1,9 +1,6 @@
 package cz.datalite.zk.components.list.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import cz.datalite.dao.DLNullPrecedence;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
@@ -20,6 +17,10 @@ import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.ListitemComparator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ZK component DLListheader is extended component from standard Listheader
@@ -39,7 +40,10 @@ public class DLListheader extends Listheader {
 
 	/** should be this column sorted in the default */
     protected DLSortType defaultSort = DLSortType.NATURAL;
-    
+
+    /** null precedence for ORDER BY clause */
+    private DLNullPrecedence nullPrecedence = DLNullPrecedence.NONE;
+
     /** column name in the database which coresponds to this col - for sorting */
     protected String sortColumn = "";
     
@@ -93,9 +97,10 @@ public class DLListheader extends Listheader {
 
     public void initModel() {
         model.setLabel( getLabel() );
-        model.setSortable( sortable );
-        model.setSortZk( sortZk );
-        model.setSortType( defaultSort );
+        model.setSortable(sortable);
+        model.setSortZk(sortZk);
+        model.setSortType(defaultSort);
+        model.setNullPrecedence(nullPrecedence);
         model.setSortColumn( sortColumn );
         model.setVisible( (defaultVisible != null) ? defaultVisible : isVisible() );
         model.setColumn( column );
@@ -129,6 +134,10 @@ public class DLListheader extends Listheader {
         } else {
             throw new UnsupportedOperationException( "Unknown sortType." );
         }
+    }
+
+    public void setNullPrecedence(final String nullPrecedence) {
+       this.nullPrecedence = DLNullPrecedence.parse(nullPrecedence);
     }
 
 

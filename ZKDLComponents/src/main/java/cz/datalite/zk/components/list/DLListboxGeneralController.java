@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list;
 
+import cz.datalite.dao.DLNullPrecedence;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
@@ -807,12 +808,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
                         String order = columnJson.get("order").toString();
                         String sortOrder = columnJson.get("sortOrder").toString();
                         String sortType = columnJson.get("sortType").toString();
+                        String nullPrecedence = columnJson.get("nullPrecedence") != null ? columnJson.get("nullPrecedence").toString() : null;
                         String width = columnJson.get("width") != null ? columnJson.get("width").toString() : null;
 
                         unit.setVisibleDirectly(Boolean.valueOf(visible));
                         unit.setOrderDirectly(Integer.valueOf(order));
                         unit.setSortOrder(Integer.valueOf(sortOrder));
                         unit.setSortTypeDirectly(DLSortType.getByStringValue(sortType));
+                        unit.setNullPrecedence(DLNullPrecedence.parse(nullPrecedence));
                         unit.setWidth(width);
                     } else {
                         // column not part of profile (usually new column, hide it)

@@ -1,9 +1,6 @@
 package cz.datalite.dao.impl;
 
-import cz.datalite.dao.DLResponse;
-import cz.datalite.dao.DLSearch;
-import cz.datalite.dao.DLSort;
-import cz.datalite.dao.GenericDAO;
+import cz.datalite.dao.*;
 import cz.datalite.dao.support.JpaEntityInformation;
 import cz.datalite.dao.support.JpaEntityInformationSupport;
 import cz.datalite.hibernate.OrderBySqlFormula;
@@ -347,16 +344,30 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
                 } else {
                     switch ( sort.getSortType() ) {
                         case ASCENDING:
-                            criteria.addOrder( Order.asc( search.getAliasForFullPath(sort.getColumn()) ) );
+                            criteria.addOrder(Order.asc(search.getAliasForFullPath(sort.getColumn())).nulls(getNullPrecedence(sort.getNullPrecedence())));
                             break;
                         case DESCENDING:
-                            criteria.addOrder( Order.desc( search.getAliasForFullPath(sort.getColumn()) ) );
+                            criteria.addOrder(Order.desc(search.getAliasForFullPath(sort.getColumn())).nulls(getNullPrecedence(sort.getNullPrecedence())));
                             break;
                         default:
                     }
                 }
             }
         }
+    }
+
+    protected NullPrecedence getNullPrecedence(DLNullPrecedence dlNullPrecedence) {
+        if (dlNullPrecedence != null) {
+            switch (dlNullPrecedence) {
+                case NONE:
+                    return NullPrecedence.NONE;
+                case FIRST:
+                    return NullPrecedence.FIRST;
+                case LAST:
+                    return NullPrecedence.LAST;
+            }
+        }
+        return NullPrecedence.NONE;
     }
 
     public DLResponse<T> searchAndCount( final DLSearch<T> search ) {
