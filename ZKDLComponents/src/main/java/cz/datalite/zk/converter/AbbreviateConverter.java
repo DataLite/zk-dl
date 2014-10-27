@@ -6,7 +6,7 @@ import org.zkoss.bind.Converter;
 import org.zkoss.zk.ui.Component;
 
 /**
- * Trim text to specified length.
+ * Trim text to specified length, followed by "..." characters
  */
 public class AbbreviateConverter
 		implements Converter<String, String, Component> {
@@ -18,8 +18,8 @@ public class AbbreviateConverter
 		if (beanProp == null) {
 			return null;
 		}
-		final Integer length = (Integer) ctx.getConverterArg("length");
-		return StringUtils.abbreviate(beanProp, 0, length != null ? length : DEFAULT_LENGTH);
+		final Long maxWidth = (Long) ctx.getConverterArg("maxWidth");
+		return StringUtils.abbreviate(beanProp, 0, maxWidth != null ? maxWidth.intValue() : DEFAULT_LENGTH);
 	}
 
 	@Override
