@@ -41,7 +41,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}.1</version>
+            <version>${cz.datalite.zk-dl.version}.2</version>
         </dependency>
 
         <dependency>
