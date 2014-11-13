@@ -29,7 +29,9 @@ public class DLListhead extends Listhead {
 			@Override
 			public void onEvent(ColSizeEvent event) throws Exception {
 				DLColumnUnitModel model = ((DLListheader) event.getColumn()).model;
-				model.setWidth(event.getWidth());
+				if (model != null) {
+					model.setWidth(event.getWidth());
+				}
 			}
 		});
 	}
