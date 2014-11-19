@@ -778,7 +778,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	
     	// reset to default
     	this.model.clear();
-        this.getQuickFilterController().getQuickFilter().fireChanges();
+        this.getQuickFilterController().fireChanges();
         model.getFilterModel().getNormal().clear();
         this.getListboxController().fireColumnModelChanges();
 
