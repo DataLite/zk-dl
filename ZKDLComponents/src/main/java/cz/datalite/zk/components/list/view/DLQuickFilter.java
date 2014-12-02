@@ -42,6 +42,8 @@ public class DLQuickFilter extends InputElement {
     protected String quickFilterDefault;
     /** If set, show button with this label instead of magnifier glass icon. */
     protected String quickFilterButton;
+    /** If set, show button with custom css class. */
+    protected String quickFilterButtonClass;
     /** Should the filter run for onchanging event (use only for fast queries) */
     protected boolean autocomplete = false;
 
@@ -241,6 +243,12 @@ public class DLQuickFilter extends InputElement {
     public String getQuickFilterButton() {
         return quickFilterButton;
     }
+    /**
+     * If set, show button with custom css class.
+     */
+    public String getQuickFilterButtonClass() {
+        return quickFilterButtonClass;
+    }
 
     /**
      * If set, show button with this label instead of magnifier glass icon.
@@ -249,6 +257,14 @@ public class DLQuickFilter extends InputElement {
     public void setQuickFilterButton(String quickFilterButton) {
         this.quickFilterButton = quickFilterButton;
         smartUpdate("quickFilterButton", quickFilterButton);
+    }
+    /**
+     * If set, show button with custom css class.
+     * @param quickFilterButtonClass label for button.
+     */
+    public void setQuickFilterButtonClass(String quickFilterButtonClass) {
+        this.quickFilterButtonClass = quickFilterButtonClass;
+        smartUpdate("quickFilterButtonClass", quickFilterButtonClass);
     }
 
     /** Should the filter run for onchanging event (use only for fast queries) */
@@ -286,6 +302,7 @@ public class DLQuickFilter extends InputElement {
 
         render(renderer, "label", label);
         render(renderer, "quickFilterButton", quickFilterButton);
+        render(renderer, "quickFilterButtonClass", quickFilterButtonClass);
     }
 
     @Override

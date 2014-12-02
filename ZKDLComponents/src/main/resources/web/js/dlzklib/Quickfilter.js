@@ -1,6 +1,7 @@
 dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
     _label: '',
     _quickFilterButton: null,
+    _quickFilterButtonClass: null,
 
     $define: {
         label: function (val) {
@@ -9,6 +10,11 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
         },
 
         quickFilterButton: function (val) {
+            if (this.desktop)
+                this.rerender();
+        },
+        
+        quickFilterButtonClass: function (val) {
             if (this.desktop)
                 this.rerender();
         }

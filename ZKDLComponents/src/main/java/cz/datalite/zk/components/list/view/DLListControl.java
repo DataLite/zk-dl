@@ -164,6 +164,14 @@ public class DLListControl extends Div {
     public void setQuickFilterButton(String quickFilterButton) {
         this.qFilterComponent.setQuickFilterButton(quickFilterButton);
     }
+    
+    public String getQuickFilterButtonClass() {
+        return qFilterComponent.getQuickFilterButtonClass();
+    }
+
+    public void setQuickFilterButtonClass(String quickFilterButtonClass) {
+        this.qFilterComponent.setQuickFilterButtonClass(quickFilterButtonClass);
+    }
 
     public void setWysiwyg( boolean wysiwyg ) {
         this.wysiwyg = wysiwyg;

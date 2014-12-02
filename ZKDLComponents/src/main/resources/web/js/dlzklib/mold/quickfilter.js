@@ -13,7 +13,29 @@ function (out) {
     out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
     out.push('<input id="', uuid, '-real" class="', zcls, '-real" type="text" value="',this.getValue(),'"/>');
     out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
-    out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
+    
+//    if (this.getQuickFilterButton()) {
+//        
+//        $class = "-button z-button-os";
+//        $text = this.getQuickFilterButton();
+//    }
+//    else {
+//        $class = "-magnifier";
+//        $text = "";
+//    }
+    if (this.getQuickFilterButton()) {
+        
+        $class = "-button ";
+        if (this.getQuickFilterButtonClass()) {
+            $class += this.getQuickFilterButtonClass();
+        }
+        $text = this.getQuickFilterButton();
+        out.push('<button type="button" id="', uuid, '-magnifier" class="', zcls, $class, '">' + $text + '</button>');
+    }
+    else {
+        out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
+    }
+    
     out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
 }
