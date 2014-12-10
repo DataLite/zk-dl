@@ -7,6 +7,8 @@ import cz.datalite.hibernate.OrderBySqlFormula;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.hibernate.sql.JoinType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @SuppressWarnings( "unchecked" )
 public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
+    private final static Logger LOGGER = LoggerFactory.getLogger(GenericDAOImpl.class);
 
     public static final String INVALID_ARGUMENT_ID_MISSING = "Invalid argument in GenericDAO. Id is missing";
     private static final String INVALID_ARGUMENT_ENTITY_MISSING = "Invalid argument in GenericDAO. Entity is missing";
@@ -60,7 +63,12 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     @PersistenceContext
     public void setEntityManager( final EntityManager entityManager ) {
         this.entityManager = entityManager;
-        this.entityInformation = JpaEntityInformationSupport.getMetadata(persistentClass, entityManager);
+
+        try {
+            this.entityInformation = JpaEntityInformationSupport.getMetadata(persistentClass, entityManager);
+        } catch (Exception e) {
+            LOGGER.warn("Unable to load entityInformation from metamodel, get(Entity) method will not be available.", e);
+        }
     }
 
     public EntityManager getEntityManager() {
@@ -93,11 +101,18 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
 
     public T get( final T entity ) {
         assert entity != null : INVALID_ARGUMENT_ID_MISSING;
+        if (entityInformation == null) {
+            throw new IllegalStateException("Entity information is not available, unable to resolve ID column.");
+        }
         return ( T ) getSession().get( getPersistentClass(), entityInformation.getId(entity) );
     }
 
     public T get( final T entity, String ... path ) {
         assert entity != null : INVALID_ARGUMENT_ID_MISSING;
+        if (entityInformation == null) {
+            throw new IllegalStateException("Entity information is not available, unable to resolve ID column.");
+        }
+
         Criteria criteria = getSession().createCriteria( getPersistentClass() );
         criteria.add(Restrictions.idEq( entityInformation.getId(entity) ));
 

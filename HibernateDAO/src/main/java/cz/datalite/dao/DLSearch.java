@@ -28,17 +28,15 @@ public class DLSearch<T> {
     /** Sorts - order by definition */
     private List<DLSort> sorts;
     /** Requested rowCount - if it is 0 then request all rows*/
-    private int rowCount;
+    private int rowCount = 0;
     /** First row in selection */
-    private int firstRow;
+    private int firstRow = 0;
     /** Return distinct values. */
     private boolean distinct;
     /** Aliases are used for hierarchy structure */
     private final Set<Alias> aliases = new HashSet<Alias>();
     /** Projection type like distinct or row count */
     private final List<Projection> projections = new LinkedList<Projection>();
-    /** Defines constant for disabled paging */
-    public static final int NOT_PAGING = -1;
 
     /** Class of the main entity. If persistence class is set, all properties are validated against this class.
      *  It is mandatory to set persistentClass if @Embedded annotation is used - we need to check if embeddable
@@ -66,7 +64,7 @@ public class DLSearch<T> {
      * @param sorts order by definition
      */
     public DLSearch( final List<DLSort> sorts ) {
-        this( sorts, 0, DLSearch.NOT_PAGING );
+        this( sorts, 0, 0 );
     }
 
     /**
