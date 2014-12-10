@@ -12,6 +12,7 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.sql.JoinType;
 
 import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -550,12 +551,16 @@ public class DLSearch<T> {
             field = ReflectionHelper.getDeclaredField(clazz, property);
         } catch (NoSuchFieldException e) { }
 
-        if (field != null && ReflectionHelper.findAnnotation(field, Embedded.class) != null)
+        if (field != null && (
+                ReflectionHelper.findAnnotation(field, Embedded.class) != null ||
+                ReflectionHelper.findAnnotation(field, EmbeddedId.class) != null))
             return true;
 
         // if not found, check the method
         Method method = ReflectionHelper.getFieldGetter(clazz, property);
-        if (method != null && ReflectionHelper.findAnnotation(method, Embedded.class) != null)
+        if (method != null && (
+               ReflectionHelper.findAnnotation(method, Embedded.class) != null ||
+               ReflectionHelper.findAnnotation(method, EmbeddedId.class) != null))
             return true;
 
         // neither field nor property - this property is not found at all!

@@ -329,7 +329,6 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
 
         // write aliases
         for ( DLSearch.Alias alias : search.getAliases() ) {
-            alias.getFullPath();
             criteria.createAlias( alias.getPath(), alias.getAlias(), alias.getJoinType() );
         }
 
