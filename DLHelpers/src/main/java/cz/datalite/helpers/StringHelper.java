@@ -27,7 +27,7 @@ public abstract class StringHelper
     /**
      * @param key1 Prvni retezec
      * @param key2 Druhy retezec
-     * @return true        pokud jsou retezce schodne
+     * @return true        pokud jsou retezce shodne
      */
     public static boolean isEquals(String key1, String key2)
     {
@@ -41,7 +41,7 @@ public abstract class StringHelper
     /**
      * @param key1 Prvni retezec
      * @param key2 Druhy retezec
-     * @return true        pokud jsou retezce schodne
+     * @return true        pokud jsou retezce shodne
      */
     public static boolean isEqualsIgnoreCase(String key1, String key2)
     {
