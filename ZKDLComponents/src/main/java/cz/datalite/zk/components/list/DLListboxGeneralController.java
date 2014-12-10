@@ -665,19 +665,6 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
                     getListboxController().getListbox().getModel().getSize());
             pagingController.fireChanges();
         }
-
-        // update selected item to the new reference (may contain same entity by ID, but different instance)
-        if (item.equals(getSelectedItem())) {
-            setSelectedItem(item);
-        }
-
-        // same for selected items array
-        if (getSelectedItems().contains(item)) {
-            Set<T> selectedItems = new HashSet<T>(getSelectedItems());
-            selectedItems.remove(item);
-            selectedItems.add(item);
-            setSelectedItems(selectedItems);
-        }
     }
 
     public DLEasyFilterController getEasyFilterController() {

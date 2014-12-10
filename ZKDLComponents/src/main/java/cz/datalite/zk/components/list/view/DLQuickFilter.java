@@ -149,9 +149,6 @@ public class DLQuickFilter extends InputElement {
 		// model wasn't found in the menu list
 		if (popup.getChildren().size() > 0) {
 			setActiveFilter((Menuitem) popup.getFirstChild());
-			setVisible(true);
-		} else {
-			setVisible(false);
 		}
     }
 
