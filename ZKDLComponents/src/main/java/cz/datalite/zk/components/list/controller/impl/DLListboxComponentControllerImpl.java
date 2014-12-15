@@ -826,13 +826,10 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         T selectedItem = getSelectedItem();
         if (selectedItem != null) {
             int index = getListboxModel().indexOf(selectedItem);
-            if (index < 0) {
-                // not found, clear the selection
-                setSelected(null);
-            } else {
+            if (index >= 0) {
                 // found, update reference only. This is the same object by .equals, but another reference
                 setSelectedItem(getListboxModel().get(index));
-            }
+            } // not found scenario is ok as well! selected item is not on current page or even not in current filter
         }
 
         // the same for other items
