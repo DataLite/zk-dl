@@ -2,9 +2,14 @@ package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.view.DLListbox;
+import org.zkoss.lang.Library;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
+import org.zkoss.zul.Textbox;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,10 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Textbox;
 
 /**
  * Controller for the export manager
@@ -30,6 +31,12 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     protected Integer rows;
     protected String sheetName = "data";
     protected String fileName = "report";
+
+
+	/**
+	 * Max rows allowed to be exported
+	 */
+	public static int exportMaxRows = Integer.valueOf(Library.getProperty("zk-dl.listbox.export.maxRows", "65535"));
     
     // view
     DLListbox usedListbox;
@@ -132,4 +139,9 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     public void setSheetName( final String sheetName ) {
         this.sheetName = sheetName;
     }
+
+	public String getRecordCountLabel() {
+		// ${c:l2(...) did not work...
+		return Labels.getLabel("listbox.exportManager.recordCount", new Object[] {exportMaxRows});
+	}
 }

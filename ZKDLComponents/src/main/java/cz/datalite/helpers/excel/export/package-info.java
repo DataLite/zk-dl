@@ -1,5 +1,5 @@
 /**
- * Export to excel via Apache POI.
+ * Export to excel via jExcelApi
  */
 
 package cz.datalite.helpers.excel.export;

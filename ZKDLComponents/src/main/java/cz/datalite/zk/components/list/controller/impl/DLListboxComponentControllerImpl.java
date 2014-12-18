@@ -37,7 +37,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
     /** logger */
     protected static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger( DLListboxComponentControllerImpl.class );
-    
+
     // master controller
     protected final DLListboxExtController<T> masterController;
     // model
@@ -77,14 +77,14 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         this.columnModel = columnModel;
         this.listbox = listbox;
         this.listbox.setController( DLListboxComponentControllerImpl.this );
-     
+
         // on select updates model
         listbox.addEventListener( Events.ON_SELECT, new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) throws Exception {
                 try {
                     // ignore events from method on init render
                     if ( listbox.isOnInitRender() ) return;
-                    
+
                     // just selected, do not fire it again, prevent endless loop
                     notifyOnSelect = false;
 
@@ -125,7 +125,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 masterController.getEasyFilterController().onClearEasyFilter( true );
             }
         } );
-        
+
         // direct export listener
         listbox.addEventListener(DLListbox.ON_DIRECT_EXPORT, new org.zkoss.zk.ui.event.EventListener<Event>() {
             public void onEvent(Event event) throws Exception {
@@ -135,22 +135,22 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         // init default headers model
         defaultHeaders.addAll( listbox.getListheaders() );
-        
+
         // init column model
         initListheaderModels( listbox.getListheaders() );
-        
+
         // test if the component is written using new databinding
         // if so, initiate it properly
         Set<String> templates = listbox.getTemplateNames();
-        
+
         if (templates.isEmpty()) {
         	this.template = null;
-        } else if (templates.size() > 1) {        	
+        } else if (templates.size() > 1) {
 			throw new RuntimeException("Only one template element is allowed as direct child of DLListbox element. Check zul file.");
 		} else if (templates.size() == 1) {
 			// zul uses new databinding, list of cells is defined as template
 			this.template = listbox.getTemplate(templates.iterator().next());
-			this.setRendererTemplate(this.template);						
+			this.setRendererTemplate(this.template);
 		} else {
 			this.template = null;
 		}
@@ -226,7 +226,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 //        for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
 //            listcellIndicies.add( null );
 //        }
-        
+
         masterController.onCreate();
     }
 
@@ -254,6 +254,8 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
 
             listbox.setEmptyMessageVisible(true);
+
+            updateSelectedItemsReference();
         }
     }
 
@@ -261,7 +263,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         initListheaderModels( defaultHeaders );
 
 		if (ZKBinderHelper.version(listbox) == 1) {
-			// if using old style template, init model from cell template 
+			// if using old style template, init model from cell template
 			this.initRendererTemplate(this.defaultHeaders, this.defaultRendererCellTemplates);
 		} else if (ZKBinderHelper.version(listbox) == 2) {
 			// otherwise init model from template
@@ -298,14 +300,14 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     public void refreshBindingAll() {
-         ZKBinderHelper.loadComponent( listbox );
+         ZKBinderHelper.loadComponent(listbox);
     }
 
     @SuppressWarnings( "unchecked" )
     public void fireOrderChanges() {
         // update order of listheaders
         updateListhead();
-        
+
         if ( ZKBinderHelper.version( listbox ) == 1 ) {
             // if using old style template, update it
             updateTemplateVersion1();
@@ -320,7 +322,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         fireChanges();
 
     }
-    
+
     /** update the template if it uses old data binding (v1.0) */
     private void updateTemplateVersion1() {
         if ( renderTemplate == null ) {
@@ -340,11 +342,11 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
         }
     }
-    
+
     /** update the template if it uses new data binding (v2.0) */
     private void updateTemplateVersion2() {
         final List<DLColumnUnitModel> unorderedModel = new LinkedList( columnModel.getColumnModels() );
-        
+
         for( int i = 0; i < columnModel.getColumnModels().size() + 1; ++i ) {
             listcellIndicies.add( null );
         }
@@ -362,15 +364,15 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
         listcellIndicies.set( max, null );
     }
-    
+
     private void updateListhead() {
         // model is not initialized
         if ( listheaderTemplates.isEmpty() ) return;
-        
+
         final Listhead listhead = listbox.getListhead();
         // remove all children
         listhead.getChildren().clear();
-        
+
         // add children to template and listhead according the model
         List<DLColumnUnitModel> orderedModel = new LinkedList(columnModel.getColumnModels());
         Collections.sort(orderedModel);
@@ -379,7 +381,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             if ( unit.isVisible() ) listhead.appendChild( listheaderTemplates.get( unit ) );
         }
     }
-    
+
     /** updates the listitem (order of cells) when it uses the new databinding */
     public void updateListItem( Listitem item ) {
         // test wheather the listcell indicies is initialized
@@ -411,7 +413,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
         initRendererTemplate( listbox.getListheaders(), defaultRendererCellTemplates );
     }
-    
+
     public void setRendererTemplate( final Template template ) {
         try {
             this.listbox.setAttribute( "cmpCtl", DLListboxComponentControllerImpl.this );
@@ -425,7 +427,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                         unit.setColumnType( getFieldType( masterController.getEntityClass(), unit.getColumn() ) );
                     }
                 }
-                
+
                 return;
             }
 
@@ -442,7 +444,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
 
             initTemplate( defaultHeaders, cellTemplates );
-            
+
         } catch ( Exception ex ) {
             LOGGER.error( "Template couldn't be loaded from the databinding.", ex );
             throw new RuntimeException( "Template couldn't be loaded from the databinding.", ex );
@@ -479,7 +481,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         // if column isn't loaded from the listheader nor from binding
         // this column will be very handicapped
          listheaderTemplates.clear();
-        
+
         int i = 0;
         for ( NodeInfo cell : listcells ) {
             final DLListheader header = headers.get( i++ );
@@ -515,16 +517,16 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             }
 
             if ( columnMap.get( header ).getColumn() == null && bindingText != null ) // set column from binding
-            
+
                 if ( bindingText.indexOf( '.' ) == -1 ) // if there is whole entity without any property
                     columnMap.get( header ).setColumn( null );
                 else // if there is define some property
                     columnMap.get( header ).setColumn( bindingText.substring( bindingText.indexOf( '.' ) + 1 ) );
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
-            
+
                 columnMap.get( header ).setConverter( converter, listbox, converterArgs );
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
-            
+
                 columnMap.get( header ).setColumnType( getFieldType( masterController.getEntityClass(), columnMap.get( header ).getColumn() ) );
         }
     }
@@ -611,11 +613,11 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     public T getSelectedItem() {
         return selectedItem;
     }
-    
+
     public void setSelected( final T selectedItem ) {
         setSelected( selectedItem, selectedItem == null ? Collections.<T>emptySet() : Collections.singleton( selectedItem ) );
     }
-    
+
     public void setSelected( final T selectedItem, final Set<T> selectedItems ) {
         setSelectedItem( selectedItem );
         setSelectedItems( selectedItems );
@@ -640,7 +642,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
             Events.postEvent( new SelectEvent ( Events.ON_SELECT, listbox, listbox.getSelectedItems(), selectedItems, listbox, null, 0 ) );
         }
-    }    
+    }
 
     public void setSelectedItem( final T selectedItem ) {
         if ( masterController.isLocked() || listboxModel == null ) return;
@@ -659,7 +661,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     public int getSelectedIndex() {
-        return listboxModel.indexOf( selectedItem );
+        return listboxModel.indexOf(selectedItem);
     }
 
     public void setSelectedIndex( final int selectedIndex ) {
@@ -705,6 +707,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
             // update the value
             listboxModel.set(index, item);
+
+            // ensure selected item(s) does not point to the old reference
+            updateSelectedItemsReference();
 
             return true;
         }
@@ -775,7 +780,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         builder.append( masterController.getQuickFilterUuid() );
         return builder.toString();
     }
-    
+
      public List<T> getListboxModel() {
         return listboxModel;
     }
@@ -808,5 +813,34 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 }
             });
         }
+    }
+
+    /**
+     * After change of listbox model, reference to selected items should be updated.
+     * Although selected item may contain same entity in terms of .equals(), it is still another reference.
+     * We need to find new object instance in the list and update selected item with the new instance.
+     * This is the case usually after data reload from database. The selected item contains exiting row
+     * which is same in terms of equals, but is a stale instance.
+     */
+    private void updateSelectedItemsReference() {
+        T selectedItem = getSelectedItem();
+        if (selectedItem != null) {
+            int index = getListboxModel().indexOf(selectedItem);
+            if (index >= 0) {
+                // found, update reference only. This is the same object by .equals, but another reference
+                setSelectedItem(getListboxModel().get(index));
+            } // not found scenario is ok as well! selected item is not on current page or even not in current filter
+        }
+
+        // the same for other items
+        Set<T> newSelectedItems = new HashSet<>();
+        for (T item : getSelectedItems()) {
+            int index = getListboxModel().indexOf(selectedItem);
+            if (index >= 0) {
+                newSelectedItems.add(getListboxModel().get(index));
+            }
+        }
+        // update the references
+        setSelectedItems(newSelectedItems);
     }
 }

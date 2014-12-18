@@ -192,15 +192,11 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
      */
     private Object getFieldValue(String field, Object o) {
         try {
-            return ReflectionHelper.getFieldValue(field, deproxy(o));
+            return ReflectionHelper.getForcedFieldValue(field, deproxy(o));
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException("Field " + field + " not found on entity " + o.getClass() + " instance " + o, e);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Field getter " + field + " not found on entity " + o.getClass() + " instance " + o, e);
         } catch (InvocationTargetException e) {
             throw new IllegalStateException("Error while invoking field " + field + " of class " + o.getClass() + " instance " + o, e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Not accessible field " + field + " on class " + o.getClass() + " instance " + o, e);
         }
     }
 

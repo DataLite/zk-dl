@@ -118,8 +118,10 @@ public class DLColumnModel {
         // writing db sorts
         for ( DLColumnUnitModel unit : getColumnModels() ) {
             if ( unit.isSorted() && unit.isDBSortable() ) {
-                sorts.set( unit.getSortOrder() - 1, new DLSort( unit.getSortColumn(), unit.getSortType() ) );
-        }
+                final DLSort sort = DLSort.byColumn(unit.getSortColumn(), unit.getSortType());
+                sort.setNullPrecedence(unit.getNullPrecedence());
+                sorts.set( unit.getSortOrder() - 1, sort);
+            }
         }
 
 

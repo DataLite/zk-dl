@@ -5,6 +5,9 @@
 .selectable { cursor : pointer!important; }
 .nonselectable { cursor : default!important; }
 
+/* Listbox */
+.z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
+
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
 .z-quickfilter span { display: block; }
@@ -13,6 +16,7 @@
 .z-quickfilter-list:hover { border: 1px solid #808080; margin: 7px 3px 0 -1px; padding: 1px 0; /*ie8*/background-color/*\**/:#D6D6D6\9; }
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
 .z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
+.z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
 .z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) center no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; /*ie8*/margin/*\**/: 3px 0 0 3px\9; }
 .z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px 0 0 2px; /*ie8*/background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; margin-right: -1px; }
 .z-quickfilter-magnifier:active,

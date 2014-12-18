@@ -4,12 +4,12 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.4</version>
+        <version>1.4.5</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComposer</artifactId>
-    <version>1.4.4.3</version>
+    <version>1.4.5</version>
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
 

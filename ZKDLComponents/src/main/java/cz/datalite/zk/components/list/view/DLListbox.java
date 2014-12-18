@@ -49,6 +49,15 @@ public class DLListbox extends Listbox {
     /** Empty message - hide empty message if user did not run the filter yet.*/
     private String emptyMessage;
 
+    /**
+     * Value to be highlighted in listbox cells
+     */
+    private String highlightValue;
+    /**
+     * Highlight quick filter search value in listbox cells
+     */
+    private Boolean highlightQuickFilter = Boolean.FALSE;
+
     @SuppressWarnings( "ResultOfObjectAllocationIgnored" )
     public DLListbox() {
         super();
@@ -344,5 +353,21 @@ public class DLListbox extends Listbox {
             super.setEmptyMessage(emptyMessage);
         else
             super.setEmptyMessage("");
+    }
+
+    public String getHighlightValue() {
+        return highlightValue;
+    }
+
+    public void setHighlightValue(String highlightValue) {
+        this.highlightValue = highlightValue;
+    }
+
+    public Boolean getHighlightQuickFilter() {
+        return highlightQuickFilter;
+    }
+
+    public void setHighlightQuickFilter(Boolean highlightQuickFilter) {
+        this.highlightQuickFilter = highlightQuickFilter;
     }
 }

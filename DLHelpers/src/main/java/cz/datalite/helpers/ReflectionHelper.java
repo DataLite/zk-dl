@@ -232,15 +232,16 @@ public abstract class ReflectionHelper
             // continue looking up until field is found or there is no more parents
         } while ( field == null && !Object.class.equals(type) );
 
-        if ( field == null )
-            throw new NoSuchElementException( String.format( "Field '%1$s' is not present in '%1$s' class.", name, source.getClass() ) );
+        // try existence of getter
+        Method getter = getFieldGetter( source.getClass(), name );
 
         try {
-            // try existence of getter
-            Method getter = getFieldGetter( source.getClass(), field );
             if ( getter == null ) {
                 // getter doesn't exists,
                 // try direct access to field
+
+                if ( field == null )
+                    throw new NoSuchElementException( String.format( "Field '%1$s' is not present in '%1$s' class.", name, source.getClass() ) );
 
                 boolean accessible = field.isAccessible();
                 field.setAccessible( true );

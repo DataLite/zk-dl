@@ -16,6 +16,11 @@ public class DLSort {
     private final String sqlFormula;
 
     /**
+     * precedence of null values within {@code ORDER BY} clause
+     */
+    private DLNullPrecedence nullPrecedence;
+
+    /**
      * Create Sort container
      * @param column column name - full path
      * @param sortType sortType: 1: ascending; 0: no sort;  -1: descending
@@ -28,6 +33,7 @@ public class DLSort {
         this.column = column;
         this.sortType = sortType;
         this.sqlFormula = null;
+        this.nullPrecedence = null;
     }
 
     /**
@@ -39,6 +45,7 @@ public class DLSort {
         this.column = sort.column;
         this.sortType = sort.sortType;
         this.sqlFormula = sort.sqlFormula;
+        this.nullPrecedence = sort.nullPrecedence;
     }
 
     /**
@@ -65,7 +72,7 @@ public class DLSort {
     @Override
     public String toString() {
         if (column != null)
-            return "Sort by " + column + " type " + sortType;
+            return String.format("Sort by %s type %s, null precedence %s", column, sortType, nullPrecedence);
         else
             return "sqlFormula sort " + sqlFormula;
     }
@@ -80,6 +87,14 @@ public class DLSort {
 
     public String getSqlFormula() {
         return sqlFormula;
+    }
+
+    public DLNullPrecedence getNullPrecedence() {
+        return nullPrecedence;
+    }
+
+    public void setNullPrecedence(DLNullPrecedence nullPrecedence) {
+        this.nullPrecedence = nullPrecedence;
     }
 
     /**

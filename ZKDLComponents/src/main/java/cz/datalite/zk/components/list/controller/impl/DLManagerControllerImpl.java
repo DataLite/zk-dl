@@ -2,7 +2,9 @@ package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ZKDLResourceResolver;
-import cz.datalite.helpers.excel.export.*;
+import cz.datalite.helpers.excel.export.poi.POICell;
+import cz.datalite.helpers.excel.export.poi.POICellStyles;
+import cz.datalite.helpers.excel.export.poi.POIExcelExportUtils;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.controller.DLManagerController;
 import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
@@ -11,13 +13,10 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.config.FilterDatatypeConfig;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
+import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import cz.datalite.zk.converter.ZkConverter;
-import java.io.IOException;
-import java.util.*;
-import jxl.format.Colour;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WriteException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Classes;
@@ -26,10 +25,13 @@ import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.Messagebox;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -43,6 +45,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
     // should the user be asked for reset confirmation?
     private static boolean confirmReset = Boolean.valueOf(Library.getProperty("zk-dl.listbox.confirmReset", "true"));
+
 
     // master controller
     protected final DLListboxExtController<T> masterController;
@@ -145,7 +148,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         final Map<String, Object> args = new HashMap<String, Object>();
 //        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
         final NormalFilterModel templateModels = new NormalFilterModel();
-        
+
         final boolean wysiwyg = masterController.getModel().getFilterModel().isWysiwyg();
 
         for ( int index = 0; index < masterController.getColumnModel().getColumnModels().size(); index++ ) {
@@ -211,7 +214,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             LOGGER.error( "Something went wrong.", ex );
         }
     }
-    
+
     /**
      * exports current view in listbox and returns the AMedia response.
      */
@@ -404,50 +407,50 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     }
 
     protected void export(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
-        final AMedia file = ExcelExportUtils.exportSimple(fileName, sheetName, prepareSource(model, rows));
+
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final Workbook workbook = POIExcelExportUtils.createWorkbook();
+
+		List<List<POICell>> cells = prepareSource(model, rows);
+		headerStyle(cells.get(0), workbook);
+		final AMedia file = POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
         masterController.onExportManagerOk(file);
     }
-    
-    protected AMedia exportDirect(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
-        final AMedia file = ExcelExportUtils.exportSimple(fileName, sheetName, prepareSource(model, rows));
+
+	protected AMedia exportDirect(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
+
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final Workbook workbook = POIExcelExportUtils.createWorkbook();
+
+		List<List<POICell>> cells = prepareSource(model, rows);
+		headerStyle(cells.get(0), workbook);
+		final AMedia file = POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
         return file;
     }
 
-    protected DataSource prepareSource(final List<Map<String, Object>> model, final int rows) {
-        return new DataSource() {
+	private void headerStyle(List<POICell> row, Workbook workbook) {
+		CellStyle cellStyle = POICellStyles.headerCellStyle(workbook);
+		for (POICell cell : row) {
+			cell.setStyle(cellStyle);
+		}
+	}
 
-            public List<Cell> getCells() {
-                try {
-                    return prepareCells(model, rows);
-                } catch (WriteException ex) {
-                    throw new UiException("Error in Excel export.", ex);
-                }
-            }
+	private List<List<POICell>> prepareSource(List<Map<String, Object>> model, int rows) {
 
-            @Override
-            public int getCellCount() {
-                return model.size();
-            }
-        };
-    }
+		List<List<POICell>> result = new LinkedList<>();
 
-    protected List<Cell> prepareCells(final List<Map<String, Object>> model, int rows) throws WriteException {
-        final List<HeadCell> heads = new ArrayList<HeadCell>();
+        final List<POICell> heads = new ArrayList<>();
 
-        // list of columns that need to be visible only for the purpose of export 
+        // list of columns that need to be visible only for the purpose of export
         // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
-        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<>();
 
-        final WritableCellFormat headFormat = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
-        headFormat.setBackground(Colour.LIGHT_GREEN);
-        int column = 0;
-        int row = 0;
-        for (Map<String, Object> unit : model) {
-            heads.add(new HeadCell(unit.get("label"), column, row, headFormat));
-            column++;
+
+		for (Map<String, Object> unit : model) {
+            heads.add(new POICell(unit.get("label")));
         }
 
-        // load data 
+        // load data
         List<T> data;
         try {
             // ensure, that column is visible in the model (is hidden if the user has added it only for export)
@@ -460,7 +463,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             }
 
             // and load data
-            data = masterController.loadData((rows == 0) ? 36000 : Math.min(rows, 36000)).getData();
+			int exportMaxRows = ListboxExportManagerController.exportMaxRows;
+            data = masterController.loadData((rows == 0) ? exportMaxRows : Math.min(rows, exportMaxRows)).getData();
         } finally {
             // after processing restore previous state
             for (DLColumnUnitModel hide : hideOnFinish) {
@@ -468,14 +472,12 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             }
         }
 
-        final List<Cell> cells = new LinkedList<Cell>();
         if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
-            cells.addAll(heads);
-            row++;
+            result.add(heads);
         }
 
         for (Object entity : data) {
-            column = 0;
+			final List<POICell> row = new LinkedList<>();
             for (Map<String, Object> unit : model) {
                 try {
                     final String columnName = (String) unit.get("column");
@@ -502,16 +504,15 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                         value = converter.convertToView( value );
                     }
 
-                    cells.add(new DataCell(row, value, heads.get(column)));
+                    row.add(new POICell(value));
                 } catch (Exception ex) { // ignore
                     LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
                 }
-                column++;
             }
+			result.add(row);
 
-            row++;
         }
-        return cells;
+        return result;
     }
 
 }

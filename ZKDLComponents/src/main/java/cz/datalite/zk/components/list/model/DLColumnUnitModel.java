@@ -1,9 +1,6 @@
 package cz.datalite.zk.components.list.model;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import cz.datalite.dao.DLNullPrecedence;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
@@ -16,6 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Composer;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Column model - model for the listheader in the listbox - it
@@ -54,7 +55,10 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     protected Integer sortOrder = 0;
     
     /** actual sort type */
-    protected DLSortType sortType = DLSortType.NATURAL; 
+    protected DLSortType sortType = DLSortType.NATURAL;
+
+    /** null precedence for ORDER BY clause */
+    private DLNullPrecedence nullPrecedence = DLNullPrecedence.NONE;
     
     /** column name for the sorting */
     protected String sortColumn;
@@ -507,11 +511,19 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 		this.width = width;
 	}
 
-	@Override
+    public DLNullPrecedence getNullPrecedence() {
+        return nullPrecedence;
+    }
+
+    public void setNullPrecedence(DLNullPrecedence nullPrecedence) {
+        this.nullPrecedence = nullPrecedence;
+    }
+
+    @Override
 	public String toString() {
 		return "DLColumnUnitModel [column=" + column + ", columnType=" + columnType + ", converter=" + converter
 				+ ", controller=" + controller + ", label=" + label + ", order=" + order + ", visible=" + visible
-				+ ", sortOrder=" + sortOrder + ", sortType=" + sortType + ", sortColumn=" + sortColumn + ", sortZk="
+				+ ", sortOrder=" + sortOrder + ", sortType=" + sortType + ", nullPrecedence=" + nullPrecedence + ", sortColumn=" + sortColumn + ", sortZk="
 				+ sortZk + ", sortable=" + sortable + ", quickFilter=" + quickFilter + ", quickFilterOperator="
 				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", filterOperators="
 				+ filterOperators + ", filterComponentFactory=" + filterComponentFactory + ", exportColumn="

@@ -12,6 +12,7 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.sql.JoinType;
 
 import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -28,17 +29,15 @@ public class DLSearch<T> {
     /** Sorts - order by definition */
     private List<DLSort> sorts;
     /** Requested rowCount - if it is 0 then request all rows*/
-    private int rowCount;
+    private int rowCount = 0;
     /** First row in selection */
-    private int firstRow;
+    private int firstRow = 0;
     /** Return distinct values. */
     private boolean distinct;
     /** Aliases are used for hierarchy structure */
     private final Set<Alias> aliases = new HashSet<Alias>();
     /** Projection type like distinct or row count */
     private final List<Projection> projections = new LinkedList<Projection>();
-    /** Defines constant for disabled paging */
-    public static final int NOT_PAGING = -1;
 
     /** Class of the main entity. If persistence class is set, all properties are validated against this class.
      *  It is mandatory to set persistentClass if @Embedded annotation is used - we need to check if embeddable
@@ -66,7 +65,7 @@ public class DLSearch<T> {
      * @param sorts order by definition
      */
     public DLSearch( final List<DLSort> sorts ) {
-        this( sorts, 0, DLSearch.NOT_PAGING );
+        this( sorts, 0, 0 );
     }
 
     /**
@@ -552,12 +551,16 @@ public class DLSearch<T> {
             field = ReflectionHelper.getDeclaredField(clazz, property);
         } catch (NoSuchFieldException e) { }
 
-        if (field != null && ReflectionHelper.findAnnotation(field, Embedded.class) != null)
+        if (field != null && (
+                ReflectionHelper.findAnnotation(field, Embedded.class) != null ||
+                ReflectionHelper.findAnnotation(field, EmbeddedId.class) != null))
             return true;
 
         // if not found, check the method
         Method method = ReflectionHelper.getFieldGetter(clazz, property);
-        if (method != null && ReflectionHelper.findAnnotation(method, Embedded.class) != null)
+        if (method != null && (
+               ReflectionHelper.findAnnotation(method, Embedded.class) != null ||
+               ReflectionHelper.findAnnotation(method, EmbeddedId.class) != null))
             return true;
 
         // neither field nor property - this property is not found at all!

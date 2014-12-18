@@ -1,5 +1,7 @@
 package cz.datalite.helpers;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -25,7 +27,7 @@ public abstract class StringHelper
     /**
      * @param key1 Prvni retezec
      * @param key2 Druhy retezec
-     * @return true        pokud jsou retezce schodne
+     * @return true        pokud jsou retezce shodne
      */
     public static boolean isEquals(String key1, String key2)
     {
@@ -39,7 +41,7 @@ public abstract class StringHelper
     /**
      * @param key1 Prvni retezec
      * @param key2 Druhy retezec
-     * @return true        pokud jsou retezce schodne
+     * @return true        pokud jsou retezce shodne
      */
     public static boolean isEqualsIgnoreCase(String key1, String key2)
     {
@@ -228,4 +230,8 @@ public abstract class StringHelper
     {
         return (StringHelper.isNull(key1)) ? key2 : key1;
     }
+
+	public static String abbreviate(String text) {
+		return StringUtils.abbreviate(text, 0, 20);
+	}
 }

@@ -7,7 +7,9 @@ import java.util.List;
  * seznam buňek, které mají být zapsány.</p>
  *
  * @author Karel Cemus
+ * @deprecated since 1.4.5.2 use {@link cz.datalite.helpers.excel.export.poi.POIExcelExportUtils}
  */
+@Deprecated
 public abstract class DataSource {
 
     /**

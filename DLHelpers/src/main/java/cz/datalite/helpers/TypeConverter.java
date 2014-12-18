@@ -10,7 +10,9 @@ import java.text.ParseException;
  *  <li>{@link Integer} or int</li>
  *  <li>{@link Long} or long</li>
  *  <li>{@link Double} or double</li>
+ *  <li>{@link Boolean} or boolean</li>
  *  <li>{@link String}</li>
+ *  <li>{@link java.lang.Byte}</li>
  *  <li>{@link java.util.Date}</li>
  * </ul>
  * @author Karel Cemus
@@ -60,6 +62,8 @@ final public class TypeConverter {
             return   Long.valueOf( value );
         } else if ( Boolean.class.isAssignableFrom( type ) || Boolean.TYPE.equals( type.getClass() ) ) {
             return   (BooleanHelper.isTrue(value) ? Boolean.TRUE : (Boolean.valueOf( value )));
+        } else if ( Byte.class.isAssignableFrom( type ) || Byte.TYPE.equals( type.getClass() ) ) {
+            return   Byte.valueOf(value);
         } else if ( type.isEnum() ) {
             for ( T enumValue : type.getEnumConstants() ) {
                 if ( enumValue.toString().equals( value ) ) {

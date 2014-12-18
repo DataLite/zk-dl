@@ -94,7 +94,7 @@ public class DLPaging extends XulElement implements Pageable {
     }
 
     /**
-     * Usable only for set page size from ZUL file.
+     * Event listener
      * @param size page size
      * @throws WrongValueException
      */
@@ -102,6 +102,10 @@ public class DLPaging extends XulElement implements Pageable {
         if (this.pageSize != size) {
             this.pageSize = size;
             smartUpdate("pageSize", size);
+
+            if (controller != null && getPagingModel().getPageSize() != size) {
+                controller.onPageSize(size);
+            }
         }
     }
 

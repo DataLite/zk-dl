@@ -63,7 +63,7 @@
             </columns>
             <rows>
                 <row>
-                    <label value="${c:l('listbox.exportManager.recordCount')}" />
+                    <label value="@{ctl.recordCountLabel}" />
                     <intbox value="@{ctl.rows}" width="98%" />
                 </row>
                 <row>

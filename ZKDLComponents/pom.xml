@@ -4,11 +4,11 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.4</version>
+        <version>1.4.5</version>
     </parent>
 
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.4.4.41</version>
+    <version>1.4.5.11</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controlls - listbox, lovbox, combobox.</description>
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>${cz.datalite.zk-dl.version}.2</version>
         </dependency>
 
         <dependency>
@@ -69,6 +69,7 @@
         </dependency>
 
         <dependency>
+            <!-- deprecated since 1.4.5.3, replaced by Apache POI -->
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
             <version>2.6.10</version>
@@ -78,6 +79,18 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.10-FINAL</version>
         </dependency>
 
         <!-- Test libraries / JUnit, Spring Test for unit test and Selenium/WebDriver
