@@ -18,6 +18,7 @@
  */
 package cz.datalite.zk.annotation.processor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkAsync;
 import cz.datalite.zk.annotation.ZkBinding;
 import cz.datalite.zk.annotation.ZkBindings;
@@ -88,22 +90,37 @@ public class AnnotationProcessor<T> {
 	 */
 	private static final String CONFIG_HANDLER_PREFIX = "zk-dl.annotation.handler";
 
+    /**
+     * Library property key to define list user annotations for invoker. Value separator is comma. Value must be FQN
+     * For example {@code zk-dl.annotation.users=cz.datalite.zk.annotation.ZkAutoConfirm} append new invoker ZkAutoConfirm
+     * For define Handler for user annotations use library property  with prefix zk-dl.annotation.handler
+     */
+    private static final String CONFIG_USER_ANNOTATIONS = "zk-dl.annotation.users";
+
+    /**
+     * Library property key to define system annotation for invoker before they will add custom annotace. Value is FQN class
+     * For example {@code zk-dl.annotation.users.before=cz.datalite.zk.annotation.ZkConfirm} user annotation is adding before cz.datalite.zk.annotation.ZkConfirm
+     */
+    private static final String CONFIG_USER_ANNOTATIONS_BEFORE = "zk-dl.annotation.users.before";
+
     /** caching is enabled / disabled */
     private static boolean cache = true;
 
+
+    private static String userAnnotationsInsertBefore ;
+
     static {
+
+        userAnnotationsInsertBefore = Library.getProperty( CONFIG_USER_ANNOTATIONS_BEFORE ) ;
+
+        //noinspection unchecked
         initializers.add( new GeneralInitializerProcessor( Command.class, CommandInvoker.class ) );
+        //noinspection unchecked
         initializers.add( new GeneralInitializerProcessor( ZkEvent.class, MethodInvoker.class ) );
+        //noinspection unchecked
         initializers.add( new GeneralInitializerProcessor( ZkEvents.class, MethodInvoker.class ) );
 
-        wrappers.add(createProcessor(ZkException.class));
-        wrappers.add(createProcessor(ZkExceptions.class));
-        wrappers.add(createProcessor(ZkBinding.class));
-        wrappers.add(createProcessor(ZkBindings.class));
-        wrappers.add(createProcessor(ZkConfirm.class));
-        wrappers.add(createProcessor(ZkRole.class));
-        wrappers.add(createProcessor(ZkBlocking.class));
-        wrappers.add(createProcessor(ZkAsync.class));
+        generateWrappers() ;
 
         // loading property of caching or not
         cache = Boolean.parseBoolean( System.getProperty( CONFIG, Library.getProperty( CONFIG, "true" ) ) );
@@ -116,12 +133,62 @@ public class AnnotationProcessor<T> {
     private Map<Method,Cache> commands = new HashMap<Method, Cache>();
 
     /**
+     * Generate processor wrapper list
+     */
+    private static void generateWrappers() {
+        addWrapper(ZkException.class);
+        addWrapper(ZkExceptions.class);
+        addWrapper(ZkBinding.class);
+        addWrapper(ZkBindings.class);
+        addWrapper(ZkConfirm.class);
+        addWrapper(ZkRole.class);
+        addWrapper(ZkBlocking.class);
+        addWrapper(ZkAsync.class);
+
+        if ( StringHelper.isNull( userAnnotationsInsertBefore ) ) {
+            addUserAnnotationsWrapper() ;
+        }
+    }
+
+    /**
+     * Add user annotation wrappers
+     */
+    private static void addUserAnnotationsWrapper() {
+        String userAnnotations = Library.getProperty( CONFIG_USER_ANNOTATIONS ) ;
+
+        if ( ! StringHelper.isNull( userAnnotations ) ) {
+            for( String fqn : userAnnotations.split(",") ) {
+                try {
+                    //noinspection unchecked
+                    wrappers.add(createProcessor((Class<? extends Annotation>) Class.forName(fqn))) ;
+                }
+                catch (ClassNotFoundException e) {
+                    throw new IllegalStateException("Class not found: '" + fqn + "'. Check zk.xml parameter " + CONFIG_USER_ANNOTATIONS + ".", e) ;
+                }
+            }
+        }
+    }
+
+    /**
+     * Add annotation class to wrappers list
+     *
+     * @param annotation        added annotation type
+     */
+    private static void addWrapper( Class<? extends Annotation> annotation ) {
+        if ( StringHelper.isEquals( annotation.getCanonicalName(), userAnnotationsInsertBefore ) ) {
+            addUserAnnotationsWrapper() ;
+        }
+        wrappers.add( createProcessor( annotation ) ) ;
+    }
+
+    /**
      * Returns AnnotationProcessor for existing class
      *
      * @param type annotated class
      * @return processor
      */
     public static <T> AnnotationProcessor<T> getProcessor( Class<T> type ) {
+        //noinspection unchecked
         AnnotationProcessor<T> ap = processors.get( type );
         if ( ap == null ) {
             ap = new AnnotationProcessor<T>( type );
@@ -147,6 +214,7 @@ public class AnnotationProcessor<T> {
                 // build the event context
                 final ZkEventContext context = new ZkEventContext( cached.method, cached.invoker, controller, root );
                 // attach listener
+                //noinspection unchecked
                 target.addEventListener( cached.methodInvoker.getEventName(), new InvokeListener( context ) );
             }
         }
@@ -330,16 +398,20 @@ public class AnnotationProcessor<T> {
 	 * @return
 	 */
 	private static Class<?> findHandler(Class annotation) {
-		Class defaultHandler = findDefaultHandler(annotation);
+		Class defaultHandler = null ;
 		String handlerClassName = Library.getProperty(
 				String.format("%s.%s", CONFIG_HANDLER_PREFIX, annotation.getName()));
+
+        if ( StringHelper.isNull( handlerClassName ) ) {
+            defaultHandler = findDefaultHandler(annotation) ;
+        }
 
 		try {
 			return handlerClassName == null ? defaultHandler : Class.forName(handlerClassName);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(
 					String.format("Handler '%s' for '%s' was not found, default handler: '%s'. See Zk library property %s.",
-							handlerClassName, annotation, defaultHandler, CONFIG_HANDLER_PREFIX
+							handlerClassName, annotation, defaultHandler == null ? "missing" : defaultHandler, CONFIG_HANDLER_PREFIX
 					), e);
 		}
 	}
