@@ -13,6 +13,10 @@ public enum PersistenceProblem implements Problem {
 	 * ConstraintViolationException: nesplněna podmínka jedinečnosti
 	 */
 	CONSTRAINT,
+	/**
+	 * javax.validation.ConstraintViolationException: JPA validace
+	 */
+	CONSTRAINT_VALIDATION,
 
 	/**
 	 *  javax.persistence.EntityNotFoundException
