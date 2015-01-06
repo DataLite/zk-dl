@@ -126,6 +126,8 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /**If set to false, listbox will always have selectedItem=null and some value will be only temprarily
      * to transfer user selection. */
     protected boolean synchronizeListboxSelectedItem = Boolean.valueOf(Library.getProperty("zk-dl.lovbox.synchronizeListboxSelectedItem", "false"));
+	/** For autocreated listbox listcells set tooltiptext to same value as label (ensure user can access label even if it is too long). */
+	protected boolean listcellAutoTooltiptext = Boolean.valueOf(Library.getProperty("zk-dl.lovbox.listcellAutoTooltiptext", "false"));
 
     // mark status before afterCompose is called
     private boolean initialized = false;
@@ -201,7 +203,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 // binding template for databinding version 2.0
                 // labelProperties and descriptionProperty may be null - then only one cell is created
                 // and it will contain model value (i.e. toString() ).
-                listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty ) );
+                listbox.setTemplate( "model", new ListitemTemplate( labelProperties, descriptionProperty, listcellAutoTooltiptext ) );
                 this.initHeader(head);
                 
                 if ( searchProperty != null ) // if search property is defined create search column

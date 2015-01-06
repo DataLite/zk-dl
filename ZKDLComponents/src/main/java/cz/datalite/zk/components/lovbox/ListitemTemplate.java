@@ -24,13 +24,17 @@ public class ListitemTemplate implements Template {
 
     private final String description;
 
+	// render tooltiptext to same value as label (ensure user can see whole text if too long)
+	private final boolean listcellAutoTooltiptext;
+
     public ListitemTemplate( String[] labels ) {
-        this( labels, null );
+        this( labels, null, false );
     }
 
-    public ListitemTemplate( String[] labels, String description ) {
+    public ListitemTemplate( String[] labels, String description, boolean listcellAutoTooltiptext) {
         this.labels = labels;
         this.description = description == null ? null : description;
+		this.listcellAutoTooltiptext = listcellAutoTooltiptext;
     }
 
     public Component[] create( Component parent, Component insertBefore, VariableResolver resolver, Composer composer ) {
@@ -63,6 +67,9 @@ public class ListitemTemplate implements Template {
         final Listcell cell = new Listcell();
         parent.appendChild( cell );
         ZKBinderHelper.registerAnnotation( cell, "label", "load", PREFIX + (binding == null ? "" : "." + binding) );
+		if (listcellAutoTooltiptext) {
+			ZKBinderHelper.registerAnnotation( cell, "tooltiptext", "load", PREFIX + (binding == null ? "" : "." + binding) );
+		}
         assert !cell.getAnnotations( "label" ).isEmpty() : "Annotation was not registered successfully";
     }
 
