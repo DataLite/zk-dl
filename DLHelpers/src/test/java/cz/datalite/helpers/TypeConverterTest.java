@@ -18,7 +18,7 @@ public class TypeConverterTest {
 	@Test
 	public void testTryToConvertToInteger() throws Exception {
 		assertEquals(Integer.valueOf(0), TypeConverter.tryToConvertTo("0", Integer.class));
-		assertEquals(Integer.valueOf(1), TypeConverter.tryToConvertTo("1", Integer.class));
+		assertEquals(Integer.valueOf(1), TypeConverter.tryToConvertTo("1", int.class));
 		assertEquals(Integer.valueOf(123456), TypeConverter.tryToConvertTo("123456", Integer.class));
 		assertEquals(Integer.valueOf(-123456), TypeConverter.tryToConvertTo("-123456", Integer.class));
 
@@ -33,7 +33,7 @@ public class TypeConverterTest {
 	@Test
 	public void testTryToConvertToLong() throws Exception {
 		assertEquals(Long.valueOf(0), TypeConverter.tryToConvertTo("0", Long.class));
-		assertEquals(Long.valueOf(1), TypeConverter.tryToConvertTo("1", Long.class));
+		assertEquals(Long.valueOf(1), TypeConverter.tryToConvertTo("1", long.class));
 		assertEquals(Long.valueOf(123456), TypeConverter.tryToConvertTo("123456", Long.class));
 		assertEquals(Long.valueOf(-123456), TypeConverter.tryToConvertTo("-123456", Long.class));
 
@@ -48,7 +48,7 @@ public class TypeConverterTest {
 	@Test
 	public void testTryToConvertToDouble() throws Exception {
 		assertEquals(Double.valueOf(0), TypeConverter.tryToConvertTo("0", Double.class));
-		assertEquals(Double.valueOf(1), TypeConverter.tryToConvertTo("1", Double.class));
+		assertEquals(Double.valueOf(1), TypeConverter.tryToConvertTo("1", double.class));
 		assertEquals(Double.valueOf(123456), TypeConverter.tryToConvertTo("123456", Double.class));
 		assertEquals(Double.valueOf(-123456), TypeConverter.tryToConvertTo("-123456", Double.class));
 		assertEquals(Double.valueOf(3.14), TypeConverter.tryToConvertTo("3.14", Double.class));
@@ -72,7 +72,7 @@ public class TypeConverterTest {
 	@Test
 	public void testTryToConvertToByte() throws Exception {
 		assertEquals(Byte.valueOf((byte) 0), TypeConverter.tryToConvertTo("0", Byte.class));
-		assertEquals(Byte.valueOf((byte) 1), TypeConverter.tryToConvertTo("1", Byte.class));
+		assertEquals(Byte.valueOf((byte) 1), TypeConverter.tryToConvertTo("1", byte.class));
 		assertEquals(Byte.MAX_VALUE, TypeConverter.tryToConvertTo("127", Byte.class));
 		assertEquals(Byte.MIN_VALUE, TypeConverter.tryToConvertTo("-128", Byte.class));
 
