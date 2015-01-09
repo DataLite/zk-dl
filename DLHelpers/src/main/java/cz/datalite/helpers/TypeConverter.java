@@ -54,15 +54,15 @@ final public class TypeConverter {
             return (java.util.Date)( new java.text.SimpleDateFormat( dateFormat, java.util.Locale.getDefault() ).parse( value ) );
         } else if ( String.class.isAssignableFrom( type ) ) {
             return type.cast( value );
-        } else if ( Integer.class.isAssignableFrom( type ) || Integer.TYPE.equals( type.getClass() ) ) {
+        } else if ( Integer.class.isAssignableFrom( type ) || Integer.TYPE.equals( type )) {
             return   Integer.valueOf( value );
-        } else if ( Double.class.isAssignableFrom( type ) || Double.TYPE.equals( type.getClass() ) ) {
+        } else if ( Double.class.isAssignableFrom( type ) || Double.TYPE.equals( type ) ) {
             return  Double.valueOf( value );
-        } else if ( Long.class.isAssignableFrom( type ) || Long.TYPE.equals( type.getClass() ) ) {
+        } else if ( Long.class.isAssignableFrom( type ) || Long.TYPE.equals( type ) ) {
             return   Long.valueOf( value );
-        } else if ( Boolean.class.isAssignableFrom( type ) || Boolean.TYPE.equals( type.getClass() ) ) {
+        } else if ( Boolean.class.isAssignableFrom( type ) || Boolean.TYPE.equals( type ) ) {
             return   (BooleanHelper.isTrue(value) ? Boolean.TRUE : (Boolean.valueOf( value )));
-        } else if ( Byte.class.isAssignableFrom( type ) || Byte.TYPE.equals( type.getClass() ) ) {
+        } else if ( Byte.class.isAssignableFrom( type ) || Byte.TYPE.equals( type ) ) {
             return   Byte.valueOf(value);
         } else if ( type.isEnum() ) {
             for ( T enumValue : type.getEnumConstants() ) {
