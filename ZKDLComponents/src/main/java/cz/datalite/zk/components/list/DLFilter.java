@@ -4,19 +4,21 @@ import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
-import static cz.datalite.zk.components.list.filter.FilterUtils.getConvertedValue;
-import static cz.datalite.zk.components.list.filter.FilterUtils.getValue;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.compilers.FilterByAllCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.SystemException;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.mesg.MCommon;
+
+import java.util.*;
+
+import static cz.datalite.zk.components.list.filter.FilterUtils.getConvertedValue;
+import static cz.datalite.zk.components.list.filter.FilterUtils.getValue;
 
 /**
  * Utility to filter and sort list with entities.
@@ -499,7 +501,7 @@ public final class DLFilter {
         else if (data.size() > firstRow) {
             return new DLResponse<T>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
         } else {
-            final List<T> emptyList = Collections.emptyList(); // just to avoid type safety warning
+            final List<T> emptyList = new LinkedList<>();
             return new DLResponse<T>(emptyList, data.size());
         }
     }
