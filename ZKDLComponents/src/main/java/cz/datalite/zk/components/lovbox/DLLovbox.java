@@ -848,7 +848,17 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         this.synchronizeListboxSelectedItem = synchronizeListboxSelectedItem;
     }
 
-    /**
+	/** For autocreated listbox listcells set tooltiptext to same value as label (ensure user can access label even if it is too long). */
+	public boolean isListcellAutoTooltiptext() {
+		return listcellAutoTooltiptext;
+	}
+
+	/** For autocreated listbox listcells set tooltiptext to same value as label (ensure user can access label even if it is too long). */
+	public void setListcellAutoTooltiptext(boolean listcellAutoTooltiptext) {
+		this.listcellAutoTooltiptext = listcellAutoTooltiptext;
+	}
+
+	/**
      * Allow to select multiple values from the lovbox.
      * @return true if multiple values
      */
