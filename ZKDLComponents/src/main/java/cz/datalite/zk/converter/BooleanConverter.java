@@ -24,10 +24,10 @@ public class BooleanConverter implements Converter<String, Object, Component> {
 	protected String label(Object beanProp, BindContext ctx) {
 		if (Boolean.TRUE.equals(beanProp)) {
 			final String yesLabel = (String) ctx.getConverterArg("yesLabel");
-			return !StringHelper.isNull(yesLabel) ? yesLabel : Labels.getLabel("yes");
+			return !StringHelper.isNull(yesLabel) ? yesLabel : Labels.getLabel("yes", "True");
 		} else {
 			final String noLabel = (String) ctx.getConverterArg("noLabel");
-			return !StringHelper.isNull(noLabel) ? noLabel : Labels.getLabel("no");
+			return !StringHelper.isNull(noLabel) ? noLabel : Labels.getLabel("no", "False");
 		}
 	}
 
