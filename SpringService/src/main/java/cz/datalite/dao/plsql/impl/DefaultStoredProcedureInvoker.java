@@ -805,6 +805,12 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
         return shortName ;
     }
 
+    private Set<Map.Entry<String, FieldInfo>> getFieldEntrySets( Class entityClass )
+    {
+        //noinspection unchecked
+        return FieldMaps.getFieldMaps(entityClass).entrySet() ;
+    }
+
     /**
      * Generování PL/SQL scriptu - deklarování proměnných pro uložení načteného pole
      *
@@ -813,7 +819,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     private void generateDeclareArrayVariables( StringBuilder query, RecordParameter parameter )
     {
-        for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
+        for( Map.Entry<String, FieldInfo>  field : getFieldEntrySets(parameter.getTargetEntity()) )
         {
             String variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;
 
@@ -878,7 +884,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         Object sourceValue = ( load ) ? inputs.get( parameter.getVariableName() ) : null ;
 
-        for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
+        for( Map.Entry<String, FieldInfo> field : getFieldEntrySets(parameter.getTargetEntity()) )
         {
             String parameterName ;
             String variableName ;
@@ -949,7 +955,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             {
                 for( int i=0; i<sourceList.size(); i++ )
                 {
-                    for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
+                    for( Map.Entry<String, FieldInfo> field : getFieldEntrySets(parameter.getTargetEntity()) )
                     {
                         String parameterName ;
                         String variableName ;
@@ -992,7 +998,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             query.append("loop\n") ;
             query.append( "if " ).append( parameter.getVariableName() ).append(".exists( i ) then \n" ) ;
 
-            for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
+            for( Map.Entry<String, FieldInfo> field : getFieldEntrySets(parameter.getTargetEntity()) )
             {
                 String  variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;
 
@@ -1011,7 +1017,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             query.append( "end loop ;\n") ;
             query.append("end if ;\n") ;
 
-            for( Map.Entry<String, FieldInfo> field : FieldMaps.getFieldMaps(parameter.getTargetEntity()).entrySet() )
+            for( Map.Entry<String, FieldInfo> field : getFieldEntrySets(parameter.getTargetEntity()) )
             {
                 parameterName = compressName( "o" + parameter.getVariableName() + "_" + field.getKey() ) ;
                 String variableName = compressName( parameter.getVariableName() + "_" + field.getKey() ) ;

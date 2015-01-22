@@ -120,6 +120,71 @@ public final class ObjectHelper
      * @param field  Polozka
      * @return getter
      */
+    public static Method getFieldGetter(Class aClass, String field)
+    {
+        if (aClass == null)
+        {
+            throw new IllegalArgumentException("Class aClass is null");
+        }
+
+        if (field == null)
+        {
+            throw new IllegalArgumentException("field argument is null");
+        }
+
+        String fieldName = field ;
+        String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+        try
+        {
+            //noinspection unchecked
+            return aClass.getMethod( "get" + fieldName ) ;
+        }
+        catch ( NoSuchMethodException e )
+        {
+            try
+            {
+                //noinspection unchecked
+                return aClass.getMethod("is" + fieldName);
+            }
+            catch (NoSuchMethodException e2)
+            {
+                try
+                {
+                    //noinspection unchecked
+                    return aClass.getMethod("get" + methodName);
+                }
+                catch (NoSuchMethodException e1)
+                {
+                    try
+                    {
+                        //noinspection unchecked
+                        return aClass.getMethod("is" + methodName);
+                    }
+                    catch (NoSuchMethodException e3)
+                    {
+                        if (aClass.getSuperclass() != Object.class)
+                        {
+                            return getFieldGetter(aClass.getSuperclass(), field);
+                        }
+                    }
+                }
+                catch (NullPointerException e4)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Ziskani getteru dane polozky
+     *
+     * @param aClass Trida aktualni instance
+     * @param field  Polozka
+     * @return getter
+     */
     public static Method getFieldSetter(Class aClass, Field field)
     {
         if (aClass == null)
@@ -173,14 +238,14 @@ public final class ObjectHelper
         try
         {
             Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
-            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
-            Method m = getFieldGetter( field.getDeclaringClass(), field ) ;
-
+            Method m = getFieldGetter( clazz, fieldName ) ;
+                
             if ( m != null )
             {
-                return m.invoke( obj ) ;
+                 return m.invoke( obj ) ;
             }
 
+            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
             boolean f = field.isAccessible() ;
 
             try
