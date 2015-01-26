@@ -32,6 +32,7 @@ public final class ObjectHelper
      * @param type typ vytvářeného objektu
      * @return vytvořená instance
      */
+    @SuppressWarnings("TryWithIdenticalCatches")
     public static <T> T newInstance(Class<T> type)
     {
         try
@@ -132,20 +133,19 @@ public final class ObjectHelper
             throw new IllegalArgumentException("field argument is null");
         }
 
-        String fieldName = field ;
-        String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        String methodName = field.substring(0, 1).toUpperCase() + field.substring(1);
 
         try
         {
             //noinspection unchecked
-            return aClass.getMethod( "get" + fieldName ) ;
+            return aClass.getMethod( "get" + field) ;
         }
         catch ( NoSuchMethodException e )
         {
             try
             {
                 //noinspection unchecked
-                return aClass.getMethod("is" + fieldName);
+                return aClass.getMethod("is" + field);
             }
             catch (NoSuchMethodException e2)
             {
@@ -233,6 +233,15 @@ public final class ObjectHelper
         if (obj == null)
         {
             return null;
+        }
+
+        int dot = fieldName.indexOf( "." ) ;
+
+        if ( dot > 0 )
+        {
+            Object value = getValue( fieldName.substring( 0, dot ), obj ) ;
+
+            return  ( value == null ) ? null : getValue( fieldName.substring( dot + 1 ), value ) ;
         }
 
         try
