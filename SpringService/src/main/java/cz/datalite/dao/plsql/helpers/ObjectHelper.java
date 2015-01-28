@@ -634,4 +634,16 @@ public final class ObjectHelper
 
         throw new IllegalStateException( "Zdrojový objekt není typu STRUCT") ;
     }
+
+    /**
+     * Převod na pole
+     *
+     * @param values        převáděné hodnoty
+     * @return převedené hodnoty
+     */
+    @SuppressWarnings({"unchecked", "UnusedDeclaration"})
+    public static <T> T[] asArray( T ... values )
+    {
+        return values ;
+    }
 }
