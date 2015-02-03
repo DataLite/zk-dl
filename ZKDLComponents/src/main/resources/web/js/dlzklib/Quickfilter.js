@@ -2,10 +2,10 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
     _label: '',
     _quickFilterButton: null,
     _quickFilterButtonClass: null,
-
+    _quickFilterPopupSize: 0,
     $define: {
         label: function (val) {
-            if (this.desktop)
+             if (this.desktop)
                 this.$n("text").innerHTML = val;
         },
 
@@ -17,6 +17,10 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
         quickFilterButtonClass: function (val) {
             if (this.desktop)
                 this.rerender();
+        },
+        quickFilterPopupSize: function(val) {
+            if ( this.desktop )
+                this.rerender()
         }
     },
 

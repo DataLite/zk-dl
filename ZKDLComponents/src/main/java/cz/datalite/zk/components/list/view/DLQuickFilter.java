@@ -76,7 +76,6 @@ public class DLQuickFilter extends InputElement {
         }
     };
 
-
     // create popup and register events
     public DLQuickFilter() {
     	super();
@@ -85,7 +84,9 @@ public class DLQuickFilter extends InputElement {
         popup.setSclass("z-quickfilter-popup");
         popup.setStyle("z-index: 100000 !important;");
 
+        //noinspection unchecked
         addEventListener(Events.ON_CHANGE, valueListener);
+        //noinspection unchecked
         addEventListener(Events.ON_OK, searchListener);
     }
 
@@ -274,8 +275,10 @@ public class DLQuickFilter extends InputElement {
         // if changed, attach or detach listener
         if (this.autocomplete != autocomplete) {
             if (autocomplete)
+                //noinspection unchecked
                 addEventListener(Events.ON_CHANGING, searchListener);
             else
+                //noinspection unchecked
                 removeEventListener(Events.ON_CHANGING, searchListener);
         }
 
@@ -286,7 +289,7 @@ public class DLQuickFilter extends InputElement {
      * Label is selected value for the key.
      * @param label selected value for the key.
      */
-    protected void setLabel(String label) {
+    public void setLabel(String label) {
         this.label = label;
         smartUpdate("label", label);
     }
@@ -300,6 +303,7 @@ public class DLQuickFilter extends InputElement {
         render(renderer, "label", label);
         render(renderer, "quickFilterButton", quickFilterButton);
         render(renderer, "quickFilterButtonClass", quickFilterButtonClass);
+        render(renderer, "quickFilterPopupSize", ( popup != null ) ? popup.getChildren().size() : 0 );
     }
 
     @Override

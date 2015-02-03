@@ -10,7 +10,9 @@ function (out) {
 //    </div>
     out.push('<div', this.domAttrs_(), '>');
     out.push('<span id="', uuid, '-text" class="', zcls, '-text', '">', this.getLabel(), '</span>');
-    out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
+    if ( this.getQuickFilterPopupSize() > 1 ) {
+        out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
+    }
     out.push('<input id="', uuid, '-real" class="', zcls, '-real" type="text" value="',this.getValue(),'"/>');
     out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
     
