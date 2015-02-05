@@ -244,9 +244,11 @@ public final class ObjectHelper
             return  ( value == null ) ? null : getValue( fieldName.substring( dot + 1 ), value ) ;
         }
 
+        Class clazz = null ;
+
         try
         {
-            Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
+            clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
             Method m = getFieldGetter( clazz, fieldName ) ;
                 
             if ( m != null )
@@ -270,7 +272,7 @@ public final class ObjectHelper
         }
         catch (NoSuchFieldException e)
         {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Missing field '" + fieldName + "' in '" + clazz + "'" ) ;
         }
         catch (InvocationTargetException e)
         {
@@ -278,7 +280,7 @@ public final class ObjectHelper
         }
         catch (IllegalAccessException e)
         {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Can`t access field '" + fieldName + "' in '" + clazz + "'" ) ;
         }
     }
 
