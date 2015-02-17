@@ -9,11 +9,13 @@ function (out) {
 //        <span class="z-quickfilter-loupe"></span>
 //    </div>
     out.push('<div', this.domAttrs_(), '>');
-    out.push('<span id="', uuid, '-text" class="', zcls, '-text', '">', this.getLabel(), '</span>');
-    if ( this.getQuickFilterPopupSize() > 1 ) {
-        out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
+    if ( this.labelVisible ) {
+        out.push('<span id="', uuid, '-text" class="', zcls, '-text', '">', this.getLabel(), '</span>');
+        if (this.getQuickFilterPopupSize() > 1) {
+            out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
+        }
     }
-    out.push('<input id="', uuid, '-real" class="', zcls, '-real" type="text" value="',this.getValue(),'"/>');
+    out.push('<input placeholder="', this._placeholder, '" id="', uuid, '-real" class="', zcls, '-real" type="text" value="',this.getValue(),'"/>');
     out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
     
 //    if (this.getQuickFilterButton()) {

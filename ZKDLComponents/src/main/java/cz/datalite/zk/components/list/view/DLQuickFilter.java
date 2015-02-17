@@ -59,6 +59,11 @@ public class DLQuickFilter extends InputElement {
     // View
     protected final Menupopup popup;
 
+    /**
+     * Příznak zda zobrazovat label s výběrem položek pro vyhledávání
+     */
+    private boolean labelVisible ;
+
     // sync value from client
     EventListener valueListener = new EventListener<Event>() {
         public void onEvent(Event event) throws Exception {
@@ -304,6 +309,7 @@ public class DLQuickFilter extends InputElement {
         render(renderer, "quickFilterButton", quickFilterButton);
         render(renderer, "quickFilterButtonClass", quickFilterButtonClass);
         render(renderer, "quickFilterPopupSize", ( popup != null ) ? popup.getChildren().size() : 0 );
+        render(renderer, "labelVisible", labelVisible ) ;
     }
 
     @Override
@@ -348,5 +354,19 @@ public class DLQuickFilter extends InputElement {
     // allow add popup below quickfilter
     protected boolean isChildable() {
         return true;
+    }
+
+
+    @SuppressWarnings("unused")
+    public void setLabelVisible( boolean labelVisible )
+    {
+        this.labelVisible = labelVisible ;
+        smartUpdate( "labelVisible", labelVisible ) ;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isLabelVisible( boolean labelVisible )
+    {
+        return this.labelVisible  ;
     }
 }
