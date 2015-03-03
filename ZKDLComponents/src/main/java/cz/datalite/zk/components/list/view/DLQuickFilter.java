@@ -220,26 +220,6 @@ public class DLQuickFilter extends InputElement {
 		}
 	}
 
-	@Override
-	public String getSclass() {
-		// listControll parent may contain default values for class
-		if (getParent() instanceof DLListControl) {
-			return super.getSclass() + " " + ((DLListControl) getParent()).getQFilterClass();
-		} else {
-			return super.getSclass();
-		}
-	}
-
-	@Override
-	public String getStyle() {
-		// listControll parent may contain default values for style
-		if (getParent() instanceof DLListControl) {
-			return super.getStyle() + " " + ((DLListControl) getParent()).getQFilterStyle();
-		} else {
-			return super.getStyle();
-		}
-	}
-
     /**
      * If set, show button with this label instead of magnifier glass icon.
      */
