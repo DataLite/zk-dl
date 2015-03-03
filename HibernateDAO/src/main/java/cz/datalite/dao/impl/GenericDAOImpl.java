@@ -358,10 +358,10 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
                 } else {
                     switch ( sort.getSortType() ) {
                         case ASCENDING:
-                            criteria.addOrder(Order.asc(search.getAliasForFullPath(sort.getColumn())).nulls(getNullPrecedence(sort.getNullPrecedence())));
+                            criteria.addOrder(new OrderNullPrecedence(search.getAliasForFullPath(sort.getColumn()), true, sort.getNullPrecedence()));
                             break;
                         case DESCENDING:
-                            criteria.addOrder(Order.desc(search.getAliasForFullPath(sort.getColumn())).nulls(getNullPrecedence(sort.getNullPrecedence())));
+                            criteria.addOrder(new OrderNullPrecedence(search.getAliasForFullPath(sort.getColumn()), false, sort.getNullPrecedence()));
                             break;
                         default:
                     }
@@ -370,19 +370,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         }
     }
 
-    protected NullPrecedence getNullPrecedence(DLNullPrecedence dlNullPrecedence) {
-        if (dlNullPrecedence != null) {
-            switch (dlNullPrecedence) {
-                case NONE:
-                    return NullPrecedence.NONE;
-                case FIRST:
-                    return NullPrecedence.FIRST;
-                case LAST:
-                    return NullPrecedence.LAST;
-            }
-        }
-        return NullPrecedence.NONE;
-    }
+//    protected NullPrecedence getNullPrecedence(DLNullPrecedence dlNullPrecedence) {
+//        return NullPrecedence.NONE;
+//    }
 
     public DLResponse<T> searchAndCount( final DLSearch<T> search ) {
         assert search != null : INVALID_ARGUMENT_SEARCH_OBJECT_MISSING;
