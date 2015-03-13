@@ -5,7 +5,7 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
     _quickFilterPopupSize: 0,
     $define: {
         label: function (val) {
-             if (this.desktop)
+             if ((this.desktop) && (this.$n("text")))
                 this.$n("text").innerHTML = val;
         },
 
