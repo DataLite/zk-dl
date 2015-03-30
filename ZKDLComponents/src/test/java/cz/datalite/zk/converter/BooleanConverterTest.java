@@ -20,8 +20,10 @@ public class BooleanConverterTest {
 		assertEquals("False", new BooleanConverter().coerceToUi(new Object(), null, bindContext));
 		bindContext.putConverterArgs("yesLabel", "Yes");
 		bindContext.putConverterArgs("noLabel", "No");
+		bindContext.putConverterArgs("nilLabel", "None");
 		assertEquals("Yes", new BooleanConverter().coerceToUi(Boolean.TRUE, null, bindContext));
 		assertEquals("No", new BooleanConverter().coerceToUi(Boolean.FALSE, null, bindContext));
+		assertEquals("None", new BooleanConverter().coerceToUi(null, null, bindContext));
 	}
 
 	@Test
