@@ -17,13 +17,23 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
     @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class )
     public void doExecute( @NotNull SavepointOperation operation )
     {
+        checkException( operation ) ;
+    }
+
+    /**
+     * Spuštění příkazu s odchicením vyjímky
+     *
+     * @param operation     spouštěná operace
+     */
+    private void checkException( @NotNull SavepointOperation operation )
+    {
         try
         {
             operation.doOperation() ;
         }
         catch ( Exception e )
         {
-            //empty
+            throw new Error( e ) ;
         }
     }
 }
