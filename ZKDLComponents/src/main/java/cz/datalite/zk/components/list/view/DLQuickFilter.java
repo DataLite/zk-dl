@@ -62,7 +62,7 @@ public class DLQuickFilter extends InputElement {
     /**
      * Příznak zda zobrazovat label s výběrem položek pro vyhledávání
      */
-    private boolean labelVisible ;
+    private boolean labelVisible = true ;
 
     // sync value from client
     EventListener valueListener = new EventListener<Event>() {

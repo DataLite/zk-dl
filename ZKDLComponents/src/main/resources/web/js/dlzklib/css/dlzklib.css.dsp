@@ -13,15 +13,17 @@
 .z-quickfilter span { display: block; }
 .z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
-.z-quickfilter-list:hover { border: 1px solid #808080; margin: 7px 3px 0 -1px; padding: 1px 0; /*ie8*/background-color/*\**/:#D6D6D6\9; }
-.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
+.z-quickfilter-list:hover { border: 1px solid #808080; margin: 7px 3px 0 -1px; padding: 1px 0; /*ie8*/ background-color/*\**/:#D6D6D6\9; }
+.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; position: relative; top: 2px; }
 .z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) center no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; /*ie8*/margin/*\**/: 3px 0 0 3px\9; }
-.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px 0 0 2px; /*ie8*/background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; margin-right: -1px; }
+.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
+.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px -1px 0 2px; /*ie8*/ background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; }
 .z-quickfilter-magnifier:active,
 .z-quickfilter-list:active { background-color: #C2C2C2; }
-.z-lovbox-popup .z-quickfilter-magnifier:hover { margin: 3px 0 -1px 2px;}
+
+.z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
+.z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
