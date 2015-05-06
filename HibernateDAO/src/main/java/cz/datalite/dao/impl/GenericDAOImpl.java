@@ -418,8 +418,6 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         if (search.getCacheMode() != null) {
             criteria.setCacheable(true);
             criteria.setCacheMode(search.getCacheMode());
-        } else {
-            criteria.setCacheable(false);
         }
     }
 
