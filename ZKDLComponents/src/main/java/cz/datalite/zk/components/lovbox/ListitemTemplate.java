@@ -31,6 +31,11 @@ public class ListitemTemplate implements Template {
         this( labels, null, false );
     }
 
+    public ListitemTemplate( String[] labels, String description)
+    {
+        this( labels, description, false ) ;
+    }
+
     public ListitemTemplate( String[] labels, String description, boolean listcellAutoTooltiptext) {
         this.labels = labels;
         this.description = description == null ? null : description;
