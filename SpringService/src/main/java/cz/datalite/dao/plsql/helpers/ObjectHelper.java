@@ -3,10 +3,12 @@ package cz.datalite.dao.plsql.helpers;
 import cz.datalite.dao.plsql.FieldInfo;
 import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
+import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import oracle.sql.STRUCT;
 import org.hibernate.proxy.HibernateProxyHelper;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +21,7 @@ import java.util.Date;
  * Date: 6/13/13
  * Time: 8:40 AM
  */
+@SuppressWarnings("TryWithIdenticalCatches")
 public final class ObjectHelper
 {
     private ObjectHelper()
@@ -392,6 +395,11 @@ public final class ObjectHelper
             //noinspection unchecked
             return (T) extractBigInteger(value);
         }
+        else if (returnType == Date.class)
+        {
+            //noinspection unchecked
+            return (T) extractDate(value);
+        }
         else if ( returnType.isEnum() )
         {
             return (T)EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
@@ -550,6 +558,36 @@ public final class ObjectHelper
         }
 
         return (value != null) ? BooleanHelper.isTrue(String.valueOf(value)) : null;
+    }
+
+    /**
+     * @param value převáděná hodnota
+     * @return převedená hodnota
+     */
+    public static Date extractDate(Object value)
+    {
+        if (value instanceof Long)
+        {
+            return new Date( (long)value ) ;
+        }
+        else if (value instanceof BigDecimal)
+        {
+            return new Date( ((BigDecimal)value).longValue() ) ;
+        }
+        else if (value instanceof Integer)
+        {
+            return new Date( ((Integer)value).longValue() ) ;
+        }
+        else if ( value instanceof String )
+        {
+            return DateHelper.fromString( (String)value ) ;
+        }
+        else if ( value instanceof XMLGregorianCalendar )
+        {
+            return ((XMLGregorianCalendar) value).toGregorianCalendar().getTime() ;
+        }
+
+        return null ;
     }
 
     /**
