@@ -1,15 +1,23 @@
 package cz.datalite.helpers.excel.export;
 
+import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.converter.ZkConverter;
 import jxl.CellType;
 import jxl.Workbook;
 import jxl.write.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Classes;
+import org.zkoss.lang.Strings;
+import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.zk.ui.UiException;
 
 import java.io.*;
 import java.lang.Boolean;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * <p>Metoda usnadňuje exportování dat do excelu, soubor XLS. Využívá ke své práci
@@ -20,6 +28,8 @@ import java.util.Date;
  */
 @Deprecated
 public final class ExcelExportUtils {
+
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ExcelExportUtils.class);
 
     /**
      * Nelze vytvořit instanci třídy
@@ -369,4 +379,119 @@ public final class ExcelExportUtils {
             throw new IOException( "Chyba přístupu k souboru: " + ex.getMessage() );
         }
     }
+
+    /**
+     * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
+     */
+    public static AMedia exportSimple(String fileName, String sheetName, List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws IOException {
+        return exportSimple(fileName, sheetName, prepareSource(model, rows, masterController));
+    }
+
+    /**
+     * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
+     */
+    private static DataSource prepareSource(final List<Map<String, Object>> model, final int rows, final DLListboxExtController masterController) {
+        return new DataSource() {
+
+            public List<Cell> getCells() {
+                try {
+                    return prepareCells(model, rows, masterController);
+                } catch (WriteException ex) {
+                    throw new UiException("Error in Excel export.", ex);
+                }
+            }
+
+            @Override
+            public int getCellCount() {
+                return model.size();
+            }
+        };
+    }
+
+    /**
+     * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
+     */
+    private static List<Cell> prepareCells(final List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws WriteException {
+        final List<HeadCell> heads = new ArrayList<HeadCell>();
+
+        // list of columns that need to be visible only for the purpose of export
+        // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+
+        final WritableCellFormat headFormat = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
+        headFormat.setBackground(Colour.LIGHT_GREEN);
+        int column = 0;
+        int row = 0;
+        for (Map<String, Object> unit : model) {
+            heads.add(new HeadCell(unit.get("label"), column, row, headFormat));
+            column++;
+        }
+
+        // load data
+        List data;
+        try {
+            // ensure, that column is visible in the model (is hidden if the user has added it only for export)
+            for (Map<String, Object> unit : model) {
+                DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel((Integer) unit.get("index") + 1);
+                if (!columnUnitModel.isVisible()) {
+                    columnUnitModel.setVisible(true);
+                    hideOnFinish.add(columnUnitModel);
+                }
+            }
+
+            // and load data
+            data = masterController.loadData((rows == 0) ? 36000 : Math.min(rows, 36000)).getData();
+        } finally {
+            // after processing restore previous state
+            for (DLColumnUnitModel hide : hideOnFinish) {
+                hide.setVisible(false);
+            }
+        }
+
+        final List<Cell> cells = new LinkedList<Cell>();
+        if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
+            cells.addAll(heads);
+            row++;
+        }
+
+        for (Object entity : data) {
+            column = 0;
+            for (Map<String, Object> unit : model) {
+                try {
+                    final String columnName = (String) unit.get("column");
+
+                    Object value;
+
+                    if (entity instanceof Map) {
+                        value = ((Map) entity).get(columnName);
+                    } else {
+                        value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
+                    }
+
+                    Class columnType = (Class) unit.get("columnType");
+                    if ( value != null && columnType != null) {
+                        try {
+                            value = Classes.coerce(columnType, value);
+                        } catch (ClassCastException e) {
+                            LOGGER.trace("Unable to convert export value {} to columnType {} - {}.", value, columnType, e);
+                        }
+                    }
+
+                    if ((Boolean) unit.get("isConverter")) {
+                        ZkConverter converter = (ZkConverter) unit.get("converter");
+                        value = converter.convertToView( value );
+                    }
+
+                    cells.add(new DataCell(row, value, heads.get(column)));
+                } catch (Exception ex) { // ignore
+                    LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
+                }
+                column++;
+            }
+
+            row++;
+        }
+        return cells;
+    }
+
 }

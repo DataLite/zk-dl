@@ -2,6 +2,7 @@ package cz.datalite.zk.components.list.controller.impl;
 
 import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ZKDLResourceResolver;
+import cz.datalite.helpers.excel.export.ExcelExportUtils;
 import cz.datalite.helpers.excel.export.poi.POICell;
 import cz.datalite.helpers.excel.export.poi.POICellStyles;
 import cz.datalite.helpers.excel.export.poi.POIExcelExportUtils;
@@ -46,6 +47,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     // should the user be asked for reset confirmation?
     private static boolean confirmReset = Boolean.valueOf(Library.getProperty("zk-dl.listbox.confirmReset", "true"));
 
+    // use legacy POI excel export implementation (export to xls)
+    private static boolean useExcelPOI = Boolean.valueOf(Library.getProperty("zk-dl.listbox.export.useExcelPOI", "false"));
 
     // master controller
     protected final DLListboxExtController<T> masterController;
@@ -408,24 +411,27 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
     protected void export(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
 
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		final Workbook workbook = POIExcelExportUtils.createWorkbook();
-
-		List<List<POICell>> cells = prepareSource(model, rows);
-		headerStyle(cells.get(0), workbook);
-		final AMedia file = POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
+        final AMedia file = exportAmedia(fileName, sheetName, model, rows);
         masterController.onExportManagerOk(file);
     }
 
-	protected AMedia exportDirect(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
+    protected AMedia exportDirect(final String fileName, final String sheetName, final List<Map<String, Object>> model, int rows) throws IOException {
+        return exportAmedia(fileName, sheetName, model, rows);
+    }
 
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		final Workbook workbook = POIExcelExportUtils.createWorkbook();
+    private AMedia exportAmedia(String fileName, String sheetName, List<Map<String, Object>> model, int rows) throws IOException {
 
-		List<List<POICell>> cells = prepareSource(model, rows);
-		headerStyle(cells.get(0), workbook);
-		final AMedia file = POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
-        return file;
+        // check if export with deprecated POI library (set by application property)
+        if (useExcelPOI) {
+            return ExcelExportUtils.exportSimple(fileName, sheetName, model, rows, masterController);
+        } else {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            final Workbook workbook = POIExcelExportUtils.createWorkbook();
+
+            List<List<POICell>> cells = prepareSource(model, rows);
+            headerStyle(cells.get(0), workbook);
+            return POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
+        }
     }
 
 	private void headerStyle(List<POICell> row, Workbook workbook) {
@@ -514,5 +520,4 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         }
         return result;
     }
-
 }

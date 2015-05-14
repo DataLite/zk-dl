@@ -7,7 +7,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 
 /**
- * Boolean -> localized String ("yes"/"no"/"nil" Labels or keys defined by "yesLabel"/"noLabel"/"nilLabel" params.)
+ * Boolean -&gt; localized String ("yes"/"no"/"nil" Labels or keys defined by "yesLabel"/"noLabel"/"nilLabel" params.)
  * @see Labels#getLabel(String)
  *
  */
