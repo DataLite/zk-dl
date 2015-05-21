@@ -586,6 +586,10 @@ public final class ObjectHelper
         {
             return ((XMLGregorianCalendar) value).toGregorianCalendar().getTime() ;
         }
+        else if ( value instanceof Date )
+        {
+            return (Date)value ;
+        }
 
         return null ;
     }
