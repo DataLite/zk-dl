@@ -2,24 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>
-        <version>1.4.5.1</version>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>1.5.0</version>
     </parent>
 
-    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComponents</artifactId>
-    <version>1.4.5.1</version>
+    <version>1.5.0</version>
     <name>ZKComponents</name>
-    <description>Other imporvements of basic ZK components - please check the documentation for each overriden component.</description>
-
-    <licenses>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
-            <url>http://www.gnu.org/licenses/lgpl.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <description>Other improvements of basic ZK components - please check the documentation for each overridden component.</description>
 
     <dependencies>
         <dependency>

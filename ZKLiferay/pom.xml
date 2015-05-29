@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>
-        <version>1.4.5.1</version>
+        <version>1.5.0</version>
     </parent>
 
-    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKLiferay</artifactId>
-    <version>1.4.5</version>
+    <version>1.5.0</version>
     <name>ZKLiferay</name>
-
-    <licenses>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
-            <url>http://www.gnu.org/licenses/lgpl.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <dependencies>
         <dependency>
@@ -71,7 +61,7 @@
             <version>1.8.1</version>
             <optional>true</optional>
         </dependency>
-
+      
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>portal-impl</artifactId>

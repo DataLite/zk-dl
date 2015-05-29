@@ -2,23 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>
-        <version>1.4.5.1</version>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>1.5.0</version>
     </parent>
 
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.4.5.44</version>
+    <version>1.5.0</version>
     <name>ZKDLComponents</name>
-    <description>Data driven components with UI controlls - listbox, lovbox, combobox.</description>
-
-    <licenses>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
-            <url>http://www.gnu.org/licenses/lgpl.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <description>Data driven components with UI controls - listbox, lovbox, combobox.</description>
 
     <dependencies>
         
@@ -49,13 +41,13 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}.2</version>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKComponents</artifactId>
-            <version>${cz.datalite.zk-dl.version}.1</version>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
         
         <dependency>
@@ -65,9 +57,12 @@
         </dependency>
         
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
+            <!--<groupId>commons-beanutils</groupId>-->
+            <!--<artifactId>commons-beanutils</artifactId>-->
+            <!--<version>1.8.3</version>-->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -93,12 +88,12 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.10-FINAL</version>
+            <version>3.12-FINAL</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.10-FINAL</version>
+            <version>3.12-FINAL</version>
         </dependency>
 
         <!-- Test libraries / JUnit, Spring Test for unit test and Selenium/WebDriver
@@ -106,7 +101,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -131,7 +126,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>2.4</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
