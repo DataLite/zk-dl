@@ -1,13 +1,12 @@
 package cz.datalite.mime;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import cz.datalite.mime.MimeDetectionUtil;
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test detekce MIME typu.
@@ -36,7 +35,7 @@ public class MimeDetectionUtilTest {
 		assertEquals("image/gif", mimeGif1);
 		assertEquals("image/gif", mimeGif2);
 		assertEquals("text/xml", mimeXml1);
-		assertEquals("text/xml", mimeXml2);
+		assertEquals("application/xml", mimeXml2);
 		assertEquals("application/pdf", mimePdf1);
 		assertEquals("application/pdf", mimePdf2);
 	}

@@ -2,10 +2,10 @@ package cz.datalite.zk.converter;
 
 import cz.datalite.zk.bind.Binder;
 import cz.datalite.zk.bind.ZKBinderHelper;
-import java.util.Map;
 import org.zkoss.bind.Converter;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zkplus.databind.TypeConverter;
+
+import java.util.Map;
 
 /**
  * Wraps instance of converter with adapter implementing {@link ZkConverter}
@@ -20,9 +20,6 @@ public class ConverterResolver {
 
         if ( converter instanceof Converter && ZKBinderHelper.version( component ) == 2 )
             return new ZkConverterAdapter( ( Converter ) converter, ( Binder ) binder, component, attributes );
-
-        if ( converter instanceof TypeConverter && ZKBinderHelper.version( component ) == 1 )
-            return new ZkTypeConverterAdapter( ( TypeConverter ) converter, component );
 
         throw new IllegalArgumentException( String.format("Unsupported class type in converter. "
                     + "'org.zkoss.zkplus.databind.TypeConverter' of "

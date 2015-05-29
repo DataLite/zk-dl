@@ -25,36 +25,36 @@ import java.util.Collections;
         // inner library class, singleton
     }
 
-    public void loadComponent( Component comp ) {
-        if ( Binder.getBinder( comp ) == null )
-            LOGGER.debug( "Binding on the component '{}' cannot be loaded, the component is detached.", comp.getId() );
-        else
-            Binder.getBinder( comp ).loadComponent( comp );
-    }
-
-    public void loadComponentAttribute( Component comp, String attribute ) {
-        if ( Binder.getBinder( comp ) == null )
-            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be loaded, the component is detached.", attribute, comp.getId() );
-        else
-            Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
-    }
-
-    public boolean saveComponent( Component comp ) {
-        if ( Binder.getBinder( comp ) == null ) {
-            LOGGER.debug( "Binding on the component '{}' cannot be saved, the component is detached.", comp.getId() );
-            return false;
-        } else {
-            return Binder.getBinder( comp ).saveComponent( comp );
-        }
-    }
-
-    public boolean saveComponentAttribute( Component comp, String attribute ) {
-        if ( Binder.getBinder( comp ) == null ) {
-            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be saved, the component is detached.", attribute, comp.getId() );
-            return false;
-        } else
-            return Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
-    }
+//    public void loadComponent( Component comp ) {
+//        if ( Binder.getBinder( comp ) == null )
+//            LOGGER.debug( "Binding on the component '{}' cannot be loaded, the component is detached.", comp.getId() );
+//        else
+//            Binder.getBinder( comp ).loadComponent( comp );
+//    }
+//
+//    public void loadComponentAttribute( Component comp, String attribute ) {
+//        if ( Binder.getBinder( comp ) == null )
+//            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be loaded, the component is detached.", attribute, comp.getId() );
+//        else
+//            Binder.getBinder( comp ).loadComponentAttribute( comp, attribute );
+//    }
+//
+//    public boolean saveComponent( Component comp ) {
+//        if ( Binder.getBinder( comp ) == null ) {
+//            LOGGER.debug( "Binding on the component '{}' cannot be saved, the component is detached.", comp.getId() );
+//            return false;
+//        } else {
+//            return Binder.getBinder( comp ).saveComponent( comp );
+//        }
+//    }
+//
+//    public boolean saveComponentAttribute( Component comp, String attribute ) {
+//        if ( Binder.getBinder( comp ) == null ) {
+//            LOGGER.debug( "Binding on the attribute '{}' of the component '{}' cannot be saved, the component is detached.", attribute, comp.getId() );
+//            return false;
+//        } else
+//            return Binder.getBinder( comp ).saveComponentAttribute( comp, attribute );
+//    }
 
     public void loadComponentAttributes( Component comp, String[] attributes ) {
         for ( String attr : attributes ) {
@@ -74,7 +74,7 @@ import java.util.Collections;
         return 2;
     }
 
-    public Object resolveConverter( String converter, Component component ) {
-        return Binder.getBinder( component ).getConverter( converter );
-    }
+//    public Object resolveConverter( String converter, Component component ) {
+//        return Binder.getBinder( component ).getConverter( converter );
+//    }
 }

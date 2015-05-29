@@ -5,13 +5,13 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.5</version>
+        <version>1.5.0</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>HibernateDAO</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.5.5</version>
+    <version>1.5.0</version>
     <name>Hibernate DAO</name>
     <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
 
@@ -26,19 +26,19 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.3.1.Final</version>
+            <version>4.3.2.Final</version>
         </dependency>
     
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}.2</version>
+            <version>${cz.datalite.zk-dl.version}</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

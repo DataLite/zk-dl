@@ -1,222 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.datalite.zk-dl</groupId>
-    <artifactId>zk-dl</artifactId>
-    <version>1.4.5.1</version>
-    <packaging>pom</packaging>
-    <name>DataLite ZKoss framework extension library</name>
-    <description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cz.datalite.zk-dl</groupId>
+	<artifactId>zk-dl</artifactId>
+	<version>1.5.0</version>
+	<packaging>pom</packaging>
+	<name>DataLite ZKoss framework extension library</name>
+	<description>
 
-        Multiple loosely coupled modules which extend ZK framework, originally created by DataLite company.
+		Multiple loosely coupled modules which extend ZK framework, originally created by DataLite company.
 
-        ZKComposer - controll the MVC design with annotations @ZkEvent?, @ZkComponent?, @ZkBinding?, ... (similar to zkspring or zkcdi projects, however without any framework dependencies).
+		ZKComposer - controll the MVC design with annotations @ZkEvent?, @ZkComponent?, @ZkBinding?, ... (similar to
+		zkspring or zkcdi projects, however without any framework dependencies).
 
-        ZKDLComponents splits ZK data driven components (listbox, combobox) to MVC design, adds support for easy large data manipulation and contains many pre-built user controls (filter manager, sort manager, visible listbox columns manager, export to excel, etc.)
+		ZKDLComponents splits ZK data driven components (listbox, combobox) to MVC design, adds support for easy large
+		data manipulation and contains many pre-built user controls (filter manager, sort manager, visible listbox
+		columns manager, export to excel, etc.)
 
-        HibernateDAO &amp; ZKDLComponentsHibernateExtensions - Hibernate generic DAO design with extensions for ZKDLComponents to replace all your plumbing code (filter, sort, lazy loading, CRUD).
+		HibernateDAO &amp; ZKDLComponentsHibernateExtensions - Hibernate generic DAO design with extensions for
+		ZKDLComponents to replace all your plumbing code (filter, sort, lazy loading, CRUD).
 
-        SpringService? - service layer with spring - generic service which speaks to generic DAO. This is the way we use our components at DataLite?, but you can use any integration or DAO at your will.
-    </description>
-    <url>http://zk.datalite.cz</url>
+		SpringService? - service layer with spring - generic service which speaks to generic DAO. This is the way we use
+		our components at DataLite?, but you can use any integration or DAO at your will.
+	</description>
+	<url>http://zk.datalite.cz</url>
 
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/DataLite/zk-dl/issues</url>
-    </issueManagement>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/DataLite/zk-dl/issues</url>
+	</issueManagement>
 
-    <ciManagement>
-        <system>Hudson</system>
-    </ciManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+	</ciManagement>
 
-    <scm>
-        <connection>scm:git:https://github.com/DataLite/zk-dl.git</connection>
-        <url>https://github.com/DataLite/zk-dl</url>
-    </scm>
+	<scm>
+		<connection>scm:git:https://github.com/DataLite/zk-dl.git</connection>
+		<url>https://github.com/DataLite/zk-dl</url>
+	</scm>
 
-    <organization>
-        <name>DataLite</name>
-        <url>http://www.datalite.cz</url>
-    </organization>
+	<organization>
+		<name>DataLite</name>
+		<url>http://www.datalite.cz</url>
+	</organization>
 
-     <!-- Shared version number properties -->
-    <properties>
-    	<java-version>1.7</java-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.hint.license>LGPL</netbeans.hint.license>
-        <org.zkframework.version>6.5.2</org.zkframework.version>
-        <org.springframework.version>3.2.3.RELEASE</org.springframework.version>
-        <org.hibernateframework.version>4.2.0.Final</org.hibernateframework.version>
-        <cz.datalite.zk-dl.version>1.4.5</cz.datalite.zk-dl.version>
-        <org.slf4j.version>1.7.5</org.slf4j.version>
-    </properties>
+	<!-- Shared version number properties -->
+	<properties>
+		<java-version>1.8</java-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<netbeans.hint.license>LGPL</netbeans.hint.license>
+		<org.zkframework.version>8.0.0.FL.20150504-Eval</org.zkframework.version>
+		<org.springframework.version>4.1.6.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.0.1.RELEASE</org.springframework.security.version>
+		<org.hibernateframework.version>4.3.10.Final</org.hibernateframework.version>
+		<cz.datalite.zk-dl.version>1.5.0</cz.datalite.zk-dl.version>
+		<org.slf4j.version>1.7.12</org.slf4j.version>
+	</properties>
 
-    <profiles>
-        
-        <profile>
-            <!-- make a build in development mode -->
-            <!-- include rebel.xml to simplify hot redeploys -->
-            <id>development</id>
-            <build>
-                <plugins>                     
-                    <plugin>
-                        <groupId>org.zeroturnaround</groupId>
-                        <artifactId>jrebel-maven-plugin</artifactId>
-                        <version>1.1.1</version>
-                        <executions>
-                            <execution>
-                                <id>generate-rebel-xml</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        
-        
-        <profile>
-            <!-- The "release" profile ensures that the source and javadoc JARs are included in deployments -->
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                    <goal>test-jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+	<profiles>
 
-    </profiles>
+		<profile>
+			<!-- make a build in development mode -->
+			<!-- include rebel.xml to simplify hot redeploys -->
+			<id>development</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.zeroturnaround</groupId>
+						<artifactId>jrebel-maven-plugin</artifactId>
+						<version>1.1.5</version>
+						<executions>
+							<execution>
+								<id>generate-rebel-xml</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
+		<profile>
+			<!-- The "release" profile ensures that the source and javadoc JARs are included in deployments -->
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.3</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
-                </configuration>
-            </plugin>
-        </plugins>
+	</profiles>
 
-    </build>
 
-    <dependencies>
-    
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-            <type>jar</type>            
-        </dependency>                
-        
-    </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
 
-    <modules>
-        <module>HibernateDAO</module>
-        <module>ZKComposer</module>
-        <module>ZKComponents</module>
-        <module>SpringService</module>
-        <module>ZKDLComponents</module>
-        <module>ZKDLComponentsHibernateExt</module>
-        <module>DLHelpers</module>
-        <module>Selenium</module>
-        <module>ZKStatistics</module>
-        <module>ZKLiferay</module>
-        <module>DLBind</module>
-    </modules>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+				</configuration>
+			</plugin>
+		</plugins>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>jboss</id>
-            <name>JBoss</name>
-            <url>http://repository.jboss.com/maven2</url>
-        </repository>    
-    
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>zkoss</id>
-            <name>ZK Repository</name>
-            <url>http://mavensync.zkoss.org/maven2</url>
-        </repository>
-        
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>Central Maven Repository</name>
-            <url>http://repo2.maven.org/maven2</url>
-        </repository>  
-        
-    </repositories>
+	</build>
 
-    <distributionManagement>
-        <repository>
-            <id>DataLite</id>
-            <name>DataLite-releases</name>
-            <url>http://zealot:8081/artifactory/libs-releases-local</url>
-        </repository>
+	<dependencies>
 
-        <snapshotRepository>
-            <id>DataLite</id>
-            <name>DataLite-snapshots</name>
-            <url>http://zealot:8081/artifactory/libs-snapshots-local</url>
-        </snapshotRepository>
-    </distributionManagement>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${org.slf4j.version}</version>
+			<type>jar</type>
+		</dependency>
+
+	</dependencies>
+
+	<modules>
+		<module>HibernateDAO</module>
+		<module>ZKComposer</module>
+		<module>ZKComponents</module>
+		<module>SpringService</module>
+		<module>ZKDLComponents</module>
+		<module>ZKDLComponentsHibernateExt</module>
+		<module>DLHelpers</module>
+		<module>Selenium</module>
+		<module>ZKStatistics</module>
+		<module>ZKLiferay</module>
+		<module>DLBind</module>
+	</modules>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>jboss</id>
+			<name>JBoss</name>
+			<url>http://repository.jboss.com/maven2</url>
+		</repository>
+
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>zkoss</id>
+			<name>ZK Repository</name>
+			<url>http://mavensync.zkoss.org/maven2</url>
+		</repository>
+
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Maven Repository</name>
+			<url>http://repo2.maven.org/maven2</url>
+		</repository>
+
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>DataLite</id>
+			<name>DataLite-releases</name>
+			<url>http://zealot:8081/artifactory/libs-releases-local</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>DataLite</id>
+			<name>DataLite-snapshots</name>
+			<url>http://zealot:8081/artifactory/libs-snapshots-local</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
