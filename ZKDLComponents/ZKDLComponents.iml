@@ -26,7 +26,7 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss:zsoup:1.8.2.3" level="project" />
     <orderEntry type="module" module-name="DLBind" />
-    <orderEntry type="library" name="Maven: org.zkoss.zk:zkbind:8.0.0.FL.20150504-Eval" level="project" />
+    <orderEntry type="module" module-name="zkbind" />
     <orderEntry type="module" module-name="DLHelpers" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="library" name="Maven: eu.medsea.mimeutil:mime-util:2.1.3" level="project" />

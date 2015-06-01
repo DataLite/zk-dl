@@ -169,6 +169,7 @@
 	</dependencies>
 
 	<modules>
+		<module>zkbind</module>
 		<module>HibernateDAO</module>
 		<module>ZKComposer</module>
 		<module>ZKComponents</module>
