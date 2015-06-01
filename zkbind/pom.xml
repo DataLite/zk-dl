@@ -151,4 +151,18 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>DataLite</id>
+			<name>DataLite-releases</name>
+			<url>http://zealot:8081/artifactory/libs-releases-local</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>DataLite</id>
+			<name>DataLite-snapshots</name>
+			<url>http://zealot:8081/artifactory/libs-snapshots-local</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project> 
