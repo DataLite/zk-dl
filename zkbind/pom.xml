@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.zk.version>8.0.0.FL.20150504-Eval</project.zk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<licenses>

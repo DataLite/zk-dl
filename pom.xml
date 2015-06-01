@@ -170,6 +170,7 @@
 
 	<modules>
 		<module>zkbind</module>
+		<module>zkplus</module>
 		<module>HibernateDAO</module>
 		<module>ZKComposer</module>
 		<module>ZKComponents</module>
