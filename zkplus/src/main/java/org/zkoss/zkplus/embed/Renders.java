@@ -12,36 +12,34 @@ Copyright (C) 2010 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.embed;
 
-import java.io.Writer;
-import java.io.IOException;
+import org.zkoss.web.servlet.http.Https;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Desktop;
+import org.zkoss.zk.ui.Execution;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.GenericRichlet;
+import org.zkoss.zk.ui.Page;
+import org.zkoss.zk.ui.Richlet;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.WebApp;
+import org.zkoss.zk.ui.http.ExecutionImpl;
+import org.zkoss.zk.ui.http.I18Ns;
+import org.zkoss.zk.ui.http.WebManager;
+import org.zkoss.zk.ui.impl.Attributes;
+import org.zkoss.zk.ui.impl.RequestInfoImpl;
+import org.zkoss.zk.ui.metainfo.PageDefinitions;
+import org.zkoss.zk.ui.sys.HtmlPageRenders;
+import org.zkoss.zk.ui.sys.RequestInfo;
+import org.zkoss.zk.ui.sys.SessionCtrl;
+import org.zkoss.zk.ui.sys.UiFactory;
+import org.zkoss.zk.ui.sys.WebAppCtrl;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.zkoss.web.servlet.http.Https;
-
-import org.zkoss.zk.ui.WebApp;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.Execution;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Desktop;
-import org.zkoss.zk.ui.Page;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Richlet;
-import org.zkoss.zk.ui.GenericRichlet;
-import org.zkoss.zk.ui.metainfo.PageDefinitions;
-import org.zkoss.zk.ui.sys.HtmlPageRenders;
-import org.zkoss.zk.ui.sys.WebAppCtrl;
-import org.zkoss.zk.ui.sys.UiFactory;
-import org.zkoss.zk.ui.sys.SessionCtrl;
-import org.zkoss.zk.ui.sys.RequestInfo;
-import org.zkoss.zk.ui.impl.Attributes;
-import org.zkoss.zk.ui.impl.RequestInfoImpl;
-import org.zkoss.zk.ui.http.WebManager;
-import org.zkoss.zk.ui.http.ExecutionImpl;
-import org.zkoss.zk.ui.http.I18Ns;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Utilities to embed ZK component(s) as a native JSF component, a JSP tag, Zimlet or others.
@@ -126,7 +124,6 @@ public class Renders {
 			final RequestInfo ri = new RequestInfoImpl(
 				wapp, sess, desktop, request,
 				PageDefinitions.getLocator(wapp, path));
-			sess.setAttribute(Attributes.GAE_FIX, new Integer(0));
 			((SessionCtrl)sess).notifyClientRequest(true);
 
 			final UiFactory uf = wappc.getUiFactory();
