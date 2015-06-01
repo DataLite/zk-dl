@@ -640,7 +640,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 listbox.setSelectedIndex( index );
             }
 
-            Events.postEvent( new SelectEvent ( Events.ON_SELECT, listbox, listbox.getSelectedItems(), selectedItems, listbox, null, 0 ) );
+            Events.sendEvent(listbox, new SelectEvent<>(Events.ON_SELECT, listbox, listbox.getSelectedItems()));
         }
     }
 

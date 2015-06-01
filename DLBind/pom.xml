@@ -20,12 +20,12 @@
             <!--<version>6.5.2.2-DATALITE</version>-->
             <version>${org.zkframework.version}-DATALITE</version>
         </dependency>
-        <!-- -->
-        <!--<dependency>-->
-            <!--<groupId>cz.datalite.zk-dl</groupId>-->
-            <!--<artifactId>zkplus</artifactId>-->
-            <!--<version>${cz.datalite.zk-dl.version}</version>-->
-        <!--</dependency>-->
+
+        <dependency>
+            <groupId>cz.datalite.zk-dl</groupId>
+            <artifactId>zkplus</artifactId>
+            <version>${cz.datalite.zk-dl.version}</version>
+        </dependency>
         
     </dependencies>
     
