@@ -1,7 +1,7 @@
-Patched org.zkoss.zk:zkbind version.
+# Patched org.zkoss.zk:zkbind version.
 
-# BinderImpl.java
-## Added:
+## BinderImpl.java
+### Added:
 ```Java
         /** Method allowing to load a specific binding */
         protected void loadBinding( Component component, BindingKey binding ) {
@@ -80,16 +80,17 @@ Patched org.zkoss.zk:zkbind version.
     }
 ```
 
-## Modified:
-method ```Java doExecute()``` was changed from ```Java private``` to ```Java protected```.
+### Modified:
+method ```doExecute()``` was changed from ```private``` to ```protected```.
 
-# PropertyBindingHandler.java
+## PropertyBindingHandler.java
 "   dlBeanValidator je kvůli nějakým specialitám pro BeanValidation"
-![modified code](/doc/propertyBindingHandler.png?raw=true "Modified code")
 
-# PropertyImpl.java
-## Modified:
-```Java private final Object _value``` removed final
+![modified code](https://raw.githubusercontent.com/DataLite/zk-dl/1.5.X/zkbind/doc/propertyBindingHandler.png "Modified code")
 
-## Added:
-```Java setValue(Object value)```
+## PropertyImpl.java
+### Modified:
+```private final Object _value``` removed ```final```.
+
+### Added:
+```public void setValue(Object value)```
