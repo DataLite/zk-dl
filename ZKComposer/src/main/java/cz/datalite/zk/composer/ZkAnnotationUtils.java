@@ -86,9 +86,11 @@ public final class ZkAnnotationUtils {
      */
     public static Object get( Object key, Object controller, Map<String, Field> zkModels, Map<String, Field> zkControllers ) {
         if ( zkModels.containsKey( ( String ) key ) )
-            return get( ( String ) key, controller, zkModels );
+            return get((String) key, controller, zkModels);
         else if ( zkControllers.containsKey( ( String ) key ) )
-            return get( ( String ) key, controller, zkControllers );
+              // TODO: ZK8, zkontrolovat - zpusobuje StackOverflowError
+//            return get( ( String ) key, controller, zkControllers );
+              return zkControllers.get(key);
         else if ( zkModels.isEmpty() && zkControllers.isEmpty() )
             return getDefault( ( String ) key, controller );
         else
