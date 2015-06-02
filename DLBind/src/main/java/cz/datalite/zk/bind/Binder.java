@@ -23,76 +23,89 @@ import org.zkoss.zkplus.databind.TypeConverter;
  */
 public class Binder extends AnnotateBinder {
 
-    /** instance of looger */
-    protected static final Logger LOGGER = LoggerFactory.getLogger( Binder.class );
+	/**
+	 * instance of looger
+	 */
+	protected static final Logger LOGGER = LoggerFactory.getLogger(Binder.class);
 
-    public boolean saveComponent( Component comp ) {
-        LOGGER.trace( "Saving the component '{}'.", comp.getClass() );
-        return saveAllBindings( comp );
-    }
+	public Binder() {
+		super();
+	}
 
-    public void loadComponent( Component comp ) {
-        LOGGER.trace( "Loading the component '{}'.", comp.getClass() );
-        super.loadComponent( comp, false );
-    }
 
-    @Deprecated
-    public void loadComponentAttribute( Component comp, String attribute ) {
-        LOGGER.trace( "Loading the attribute '{}' on the component '{}'.", attribute, comp.getClass() );
-        loadBinding( comp, new BindingKey( comp, attribute ) );
-    }
+	public Binder(String qname, String qscope) {
+		super(qname, qscope);
+	}
 
-    @Deprecated
-    public boolean saveComponentAttribute( Component comp, String attribute ) {
-        LOGGER.trace( "Saving the attribute '{}' on the component '{}'.", attribute, comp.getClass() );
-        return saveBinding( comp, new BindingKey( comp, attribute ) );
-    }
+	public static Binder getBinder(Component comp) {
+		return (Binder) comp.getAttribute("binder", true);
+	}
 
-    public static Binder getBinder( Component comp ) {
-        return ( Binder ) comp.getAttribute( "binder", true );
-    }
+	public boolean saveComponent(Component comp) {
+		LOGGER.trace("Saving the component '{}'.", comp.getClass());
+		return saveAllBindings(comp);
+	}
 
-    @Override
-    public Converter getConverter( String name ) {
-        try {
-            return super.getConverter( name );
-        } catch ( ClassCastException ex ) {
-            // converter found but class doesn't meet requirements
-            // try to find adapter
-            return resolveConverterAdapter( name );
-        } catch ( UiException ex ) {
-            // this allows to use method converters
-            // syntax is then like 'ctl.coerceToValue'
-            return new MethodConverter( name, ex.getMessage() );
-        }
-    }
+	public void loadComponent(Component comp) {
+		LOGGER.trace("Loading the component '{}'.", comp.getClass());
+		super.loadComponent(comp, false);
+	}
 
-    /** Support for TypeConverter and MethodConverter */
-    private Converter resolveConverterAdapter( String name ) {
-        try {
+	@Deprecated
+	public void loadComponentAttribute(Component comp, String attribute) {
+		LOGGER.trace("Loading the attribute '{}' on the component '{}'.", attribute, comp.getClass());
+		loadBinding(comp, new BindingKey(comp, attribute));
+	}
+
+	@Deprecated
+	public boolean saveComponentAttribute(Component comp, String attribute) {
+		LOGGER.trace("Saving the attribute '{}' on the component '{}'.", attribute, comp.getClass());
+		return saveBinding(comp, new BindingKey(comp, attribute));
+	}
+
+	@Override
+	public Converter getConverter(String name) {
+		try {
+			return super.getConverter(name);
+		} catch (ClassCastException ex) {
+			// converter found but class doesn't meet requirements
+			// try to find adapter
+			return resolveConverterAdapter(name);
+		} catch (UiException ex) {
+			// this allows to use method converters
+			// syntax is then like 'ctl.coerceToValue'
+			return new MethodConverter(name, ex.getMessage());
+		}
+	}
+
+	/**
+	 * Support for TypeConverter and MethodConverter
+	 */
+	private Converter resolveConverterAdapter(String name) {
+		try {
 //            Class converter = Classes.forNameByThread( name ); // XXX v ZK8 neni?
-            Class converter = Class.forName( name );
-            if ( TypeConverter.class.isAssignableFrom( converter ) ) {
-                LOGGER.debug( "Converter '{}' is not directly support in ZK 6 and later. You should consider conversion to 'org.zkoss.bind.Converter'.", converter.getClass() );
-                return new TypeConverterAdapter( ( TypeConverter ) converter.newInstance() );
-            } else
-                throw new ClassNotFoundException( "Convertor has to implement 'Converter' or 'TypeConverter' interface." );
-        } catch ( InstantiationException | IllegalAccessException ex ) {
-            LOGGER.error( "Converter adapter couldn't be created.", ex );
-            throw new UiException( ex );
-        } catch ( ClassNotFoundException ex ) {
-            throw new UiException( ex );
-        }
-    }
+			Class converter = Class.forName(name);
+			if (TypeConverter.class.isAssignableFrom(converter)) {
+				LOGGER.debug("Converter '{}' is not directly support in ZK 6 and later. You should consider conversion to 'org.zkoss.bind.Converter'.", converter.getClass());
+				return new TypeConverterAdapter((TypeConverter) converter.newInstance());
+			} else
+				throw new ClassNotFoundException("Convertor has to implement 'Converter' or 'TypeConverter' interface.");
+		} catch (InstantiationException | IllegalAccessException ex) {
+			LOGGER.error("Converter adapter couldn't be created.", ex);
+			throw new UiException(ex);
+		} catch (ClassNotFoundException ex) {
+			throw new UiException(ex);
+		}
+	}
 
-    @Override
-    public Validator getValidator( String name ) {
-        try {
-            return super.getValidator( name );
-        } catch ( org.zkoss.zk.ui.UiException ex ) {
-            // this allows to use method converters
-            // syntax is then like 'ctl.coerceToValue'
-            return new MethodValidator( name, ex.getMessage() );
-        }
-    }
+	@Override
+	public Validator getValidator(String name) {
+		try {
+			return super.getValidator(name);
+		} catch (org.zkoss.zk.ui.UiException ex) {
+			// this allows to use method converters
+			// syntax is then like 'ctl.coerceToValue'
+			return new MethodValidator(name, ex.getMessage());
+		}
+	}
 }
