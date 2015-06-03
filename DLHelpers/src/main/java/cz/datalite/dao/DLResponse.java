@@ -76,4 +76,14 @@ public class DLResponse<T> {
     public Integer getRows() {
         return rows;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DLResponse{");
+        sb.append("data.size=").append(data != null ? data.size() : null);
+        sb.append(", rows=").append(rows);
+        sb.append('}');
+        return sb.toString();
+    }
+
 }
