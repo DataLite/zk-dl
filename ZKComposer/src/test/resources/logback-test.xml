@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss} [%logger{0}:%L].%method\(\) %-3level - %message%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+	</appender>
+
+	<logger name="cz.datalite" level="TRACE"/>
+
+	<root level="INFO">
+		<appender-ref ref="Console"/>
+	</root>
+
+</configuration>
