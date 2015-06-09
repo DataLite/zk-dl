@@ -160,6 +160,7 @@ public class DLProfileManager<T> extends Hlayout {
     }    
 
 	public void setProfilesLovboxController(DLLovboxGeneralController<DLListboxProfile> controller) {
+		// FIXME: SPM-11 ZK8 this method cause JS error in rendering component (wgt variable is undefined)
 		this.profilesListbox.setHeight(this.popupHeight);
 		
 		final Listhead head = new DLListhead();
