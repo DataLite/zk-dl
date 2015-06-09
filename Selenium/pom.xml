@@ -4,10 +4,9 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.5</version>
+        <version>1.5.0</version>
     </parent>
 
-    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>Selenium</artifactId>
     <version>1.4.5</version>
     <name>Selenium</name>
@@ -23,7 +22,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>2.20.0</version>
+            <version>2.46.0</version>
             <exclusions>
                 <exclusion>
                     <!-- Problem with surfire when TestNG is on classpath -->
@@ -41,7 +40,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.12</version>
             <optional>true</optional>
         </dependency>
         
