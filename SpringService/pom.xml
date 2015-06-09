@@ -73,6 +73,18 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security.version}</version>
+            <exclusions>
+                <!-- bez toho pada context:property-placeholder-->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-expression</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 		<dependency>
 			<groupId>cz.datalite.zk-dl</groupId>
