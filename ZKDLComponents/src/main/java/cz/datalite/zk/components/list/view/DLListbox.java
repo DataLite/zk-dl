@@ -12,7 +12,6 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -144,12 +143,12 @@ public class DLListbox extends Listbox {
                     model.addToSelection( getModel().getElementAt( 0 ) );
                     Set selected = Collections.singleton( getModel().getElementAt( 0 ) );
 //                  ZK8 upgrade Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, getSelectedItems(), selected, DLListbox.this, null, 0 ) );
-                    Events.sendEvent(DLListbox.this, new SelectEvent<>(Events.ON_SELECT, DLListbox.this, getSelectedItems()));
+                    Events.sendEvent(new Event(Events.ON_SELECT, DLListbox.this, getSelectedItems()));
                 }
                 return true;
             } else {
 //              ZK8 upgrade Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, Collections.emptySet(), Collections.emptySet(), DLListbox.this, null, 0 ) );
-                Events.sendEvent(DLListbox.this, new SelectEvent<>(Events.ON_SELECT, DLListbox.this, getSelectedItems()));
+                Events.sendEvent(new Event(Events.ON_SELECT, DLListbox.this, getSelectedItems()));
                 return false;
             }
         return false;
@@ -246,8 +245,8 @@ public class DLListbox extends Listbox {
                         model.addToSelection( selected );
                     }
                     onInitRender = true;
-//                  ZK8 upgrade Events.sendEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems(), controller.getSelectedItems(), this, null, 0 ) );
-                    Events.sendEvent(DLListbox.this, new SelectEvent<>(Events.ON_SELECT, this, controller.getSelectedItems()));
+//                  TODO zkontrolovat ZK8 upgrade Events.sendEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems(), controller.getSelectedItems(), this, null, 0 ) );
+                    Events.sendEvent(new Event(Events.ON_SELECT, this, controller.getSelectedItems()));
                     onInitRender = false;
                 } else
                     LOGGER.warn( "Model wasn't recognized, the first row was not selected." );
