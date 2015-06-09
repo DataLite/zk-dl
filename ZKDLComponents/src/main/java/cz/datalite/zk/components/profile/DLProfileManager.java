@@ -1,20 +1,5 @@
 package cz.datalite.zk.components.profile;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.zkoss.util.resource.Labels;
-import org.zkoss.xel.VariableResolver;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.HtmlBasedComponent;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.util.Composer;
-import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.*;
-
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLProfileManagerController;
@@ -24,9 +9,27 @@ import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.lovbox.DLLovbox;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.lovbox.DLLovboxPopupComponentPosition;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.xel.VariableResolver;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.Template;
+import org.zkoss.zul.Bandpopup;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Hlayout;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.ListitemRenderer;
 
-import javax.activation.CommandObject;
-import javax.activation.DataHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Bar with advanced tools for managing the listbox profiles.
@@ -157,6 +160,7 @@ public class DLProfileManager<T> extends Hlayout {
     }    
 
 	public void setProfilesLovboxController(DLLovboxGeneralController<DLListboxProfile> controller) {
+		// FIXME: SPM-11 ZK8 this method cause JS error in rendering component (wgt variable is undefined)
 		this.profilesListbox.setHeight(this.popupHeight);
 		
 		final Listhead head = new DLListhead();
