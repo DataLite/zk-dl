@@ -136,7 +136,7 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
      * Setup HtmlUnit driver with FIREFOX_3 compatibility and javascript enabled (mandatory for ZK functionality).
      */
     protected void initHtmlUnitDriver() {
-        final HtmlUnitDriver htmlDriver = new HtmlUnitDriver( BrowserVersion.FIREFOX_3 );
+        final HtmlUnitDriver htmlDriver = new HtmlUnitDriver( BrowserVersion.FIREFOX_38 );
         htmlDriver.setJavascriptEnabled( true );
         webDriver = htmlDriver;
     }
