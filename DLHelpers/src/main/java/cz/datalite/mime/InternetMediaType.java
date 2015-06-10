@@ -3,9 +3,10 @@ package cz.datalite.mime;
 /**
  * An Internet media type, originally called a MIME type after MIME
  * (Multipurpose Internet Mail Extensions) and sometimes a Content-type.
- * 
- * @url http://en.wikipedia.org/wiki/Internet_media_type
- * 
+ * <p>
+ * <a href="http://en.wikipedia.org/wiki/Internet_media_type">wiki Internet Media Type</a>
+ * </p>
+ *
  * @author mstastny
  */
 public enum InternetMediaType {
@@ -74,11 +75,11 @@ public enum InternetMediaType {
 	 * Binarni data
 	 */
 	X_DOSEXEC("application/x-dosexec", "exe"),
-	
+
 	/**
 	 * Comma separated values
 	 */
-	CSV("text/csv","csv");
+	CSV("text/csv", "csv");
 
 	private String contentType;
 
@@ -88,7 +89,6 @@ public enum InternetMediaType {
 	private String filenameExtension;
 
 	/**
-	 * 
 	 * @param contentType
 	 * @param filenameExtension
 	 */
@@ -98,22 +98,6 @@ public enum InternetMediaType {
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public String getContentType() {
-		return contentType;
-	}
-
-	/**
-	 * @return the filenameExtension
-	 */
-	public String getFilenameExtension() {
-		return filenameExtension;
-	}
-
-	/**
-	 * 
 	 * @param value
 	 * @return
 	 */
@@ -128,7 +112,20 @@ public enum InternetMediaType {
 	}
 
 	/**
-	 * 
+	 * @return
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @return the filenameExtension
+	 */
+	public String getFilenameExtension() {
+		return filenameExtension;
+	}
+
+	/**
 	 * @return Klic polozky enumu, pouzitelny k lokalizaci
 	 */
 	public String getLocalizationKey() {

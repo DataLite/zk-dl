@@ -16,7 +16,6 @@ import java.util.Map.Entry;
  * Singleton - jednotna konfigurace aplikace. Vlastni hodnoty konfiguracnich polozek se prebiraji ze zdroju - {@link ConfigurationSource},
  * ktere jsou serazeny podle priority - {@link ConfigurationSource#getPrecedence()}. Zdroje s vyssi prioritou jsou razeny pred zdroje s
  * nizsi prioritou.
- * <p/>
  * <p>
  * Konfigurace neresi konkurencni pristupy, to maji na starosti zdroje.
  * </p>
