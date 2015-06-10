@@ -1,15 +1,11 @@
 package cz.datalite.config;
 
-import java.util.Date;
-
-import cz.datalite.config.Configuration;
-import cz.datalite.config.ConfigurationKey;
-import cz.datalite.config.SimpleSource;
-import cz.datalite.config.VirtualConfigurationKey;
 import cz.datalite.time.DateTimeUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 

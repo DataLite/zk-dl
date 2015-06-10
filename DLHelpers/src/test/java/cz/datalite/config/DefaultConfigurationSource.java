@@ -1,8 +1,5 @@
 package cz.datalite.config;
 
-import cz.datalite.config.ConfigurationKey;
-import cz.datalite.config.ConfigurationSource;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;

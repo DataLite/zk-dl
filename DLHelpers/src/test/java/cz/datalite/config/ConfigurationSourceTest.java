@@ -1,8 +1,5 @@
 package cz.datalite.config;
 
-import cz.datalite.config.ConfigurationKey;
-import cz.datalite.config.ConfigurationSource;
-import cz.datalite.config.ConfigurationValueType;
 import org.junit.Assert;
 import org.junit.Test;
 

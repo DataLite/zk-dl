@@ -126,7 +126,7 @@ public class UserMockFactory
     {
         List<Address> addresses =  AddressLocalServiceUtil.getAddresses(CompanyMockFactory.DEFAULT_COMPANY_ID, "com.liferay.portal.model.Contact", contact.getContactId());
         if (addresses == null)
-            addresses = new ArrayList<Address>();
+            addresses = new ArrayList<>();
         addresses.add(address);
 
         when(AddressLocalServiceUtil.getAddresses(CompanyMockFactory.DEFAULT_COMPANY_ID, "com.liferay.portal.model.Contact", contact.getContactId())).thenReturn(addresses);

@@ -1,8 +1,8 @@
 package cz.datalite.helpers;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.Locale;
 
 /**
@@ -34,7 +34,7 @@ public abstract class NumberHelper
 
     public static Double round(Double cislo, int pocetMist ) {
         BigDecimal zaokrouhleno = new BigDecimal(cislo);
-        zaokrouhleno = zaokrouhleno.setScale(pocetMist, BigDecimal.ROUND_HALF_UP);
+        zaokrouhleno = zaokrouhleno.setScale(pocetMist, RoundingMode.HALF_UP);
         return (Double) zaokrouhleno.doubleValue();
     }
 

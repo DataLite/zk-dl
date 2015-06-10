@@ -20,7 +20,6 @@ package cz.datalite.zk.annotation.processor;
 
 import cz.datalite.zk.annotation.invoke.Invoke;
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Interface which processors what produce wrapping Invoke object have to

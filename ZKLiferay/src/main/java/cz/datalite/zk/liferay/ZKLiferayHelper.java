@@ -10,8 +10,6 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Borderlayout;
 import org.zkoss.zul.Script;
 
-import java.util.List;
-
 /**
  * Helper methods for Liferay with ZK
  */

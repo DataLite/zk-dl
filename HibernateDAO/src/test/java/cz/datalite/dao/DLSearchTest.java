@@ -1,15 +1,18 @@
 package cz.datalite.dao;
 
-import static org.junit.Assert.*;
-
 import org.hibernate.sql.JoinType;
 import org.junit.Test;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.AssertTrue;
 import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by bubnik on 1.10.13.
@@ -77,7 +80,7 @@ public class DLSearchTest {
     @Test
     public void testAddAliasWithEntityClass() throws Exception {
         // search object with entity class information - check actual property with class definition
-        DLSearch<Entity> dlSearch = new DLSearch<Entity>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
+        DLSearch<Entity> dlSearch = new DLSearch<>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
 
         // basic checks (how alias is created)
         assertEquals("Basic alias", "manyToOneEntityAlias", dlSearch.addAlias("manyToOneEntity"));
@@ -97,13 +100,13 @@ public class DLSearchTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddAliasWithEntityClassUnknownProperty() throws Exception {
         // search object with entity class information - check actual property with class definition
-        DLSearch<Entity> dlSearch = new DLSearch<Entity>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
+        DLSearch<Entity> dlSearch = new DLSearch<>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
         assertEquals("unknown property should fail", "unknownAlias", dlSearch.addAlias("unknown"));
     }
 
     @Test
     public void isEmbeddableField() throws Exception {
-        DLSearch dlSearch = new DLSearch<Entity>(Collections.<DLSort>emptyList(), 10, 1, Entity.class);
+        DLSearch dlSearch = new DLSearch<>(Collections.<DLSort>emptyList(), 10, 1, Entity.class);
 
         assertTrue("@Embedded on field resolved", dlSearch.isEmbeddableField(Entity.class, "embeddedEntity"));
         assertTrue("@Embedded on method resolved", dlSearch.isEmbeddableField(Entity.class, "embeddedEntityMethod"));
@@ -117,7 +120,7 @@ public class DLSearchTest {
     @Test
     public void testAddAliasForEmbbedded() throws Exception {
         // search object with entity class information - check actual property with class definition
-        DLSearch<Entity> dlSearch = new DLSearch<Entity>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
+        DLSearch<Entity> dlSearch = new DLSearch<>(Collections.<DLSort>emptyList(), 10, 0, Entity.class);
 
         assertEquals("Embedded alias", "recursiveManyToOneEntityAlias", dlSearch.addAliases("embeddedEntity.recursiveManyToOneEntity"));
         assertNull("Alias for embedded entity not created", dlSearch.getAliasForPath("embeddedEntity"));
@@ -133,7 +136,7 @@ public class DLSearchTest {
     @Test
     public void testAddAliasesForProperty() {
         // search object with entity class information - check actual property with class definition
-        DLSearch<Entity> dlSearch = new DLSearch<Entity>();
+        DLSearch<Entity> dlSearch = new DLSearch<>();
 
         dlSearch.addAliasesForProperty("inner.property", JoinType.INNER_JOIN);
         assertNotNull("Alias created", dlSearch.getAlias("innerAlias"));

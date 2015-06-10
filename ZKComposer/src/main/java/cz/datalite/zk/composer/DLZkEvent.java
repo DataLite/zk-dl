@@ -30,7 +30,7 @@ import org.zkoss.zul.impl.XulElement;
 public class DLZkEvent
 {
     private final Method method;
-    private final List<DLZkBindingCommand> bindings = new LinkedList<DLZkBindingCommand>();
+    private final List<DLZkBindingCommand> bindings = new LinkedList<>();
     private final ZkEvent zkEvent;
     private final DLZkConfirmCommand confirm;
     private final DLComposer controller;

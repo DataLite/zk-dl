@@ -1,8 +1,5 @@
 package org.zkoss.zk.ui.http;
 
-import org.zkoss.web.portlet.RenderHttpServletRequest;
-
-import javax.portlet.RenderRequest;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.BufferedReader;

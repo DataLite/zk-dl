@@ -463,7 +463,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         else
             cnt = count( search );
 
-        return new DLResponse<T>( result, cnt );
+        return new DLResponse<>(result, cnt);
     }
 
     /**
@@ -478,7 +478,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
      */
     protected DLResponse<T> searchAndCount( final Criteria criteria, final DLSearch<T> search ) {
         addCacheMode(criteria, search);
-        return new DLResponse<T>( search( criteria, search ), count( criteria ) );
+        return new DLResponse<>(search(criteria, search), count(criteria));
     }
 
     /**

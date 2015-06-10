@@ -115,13 +115,12 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
 
 
     protected List<Criterion> compile( final List<NormalFilterUnitModel> filter, final DynamicQuery dynamicQuery ) {
-        final List<Criterion> criterions = new LinkedList<Criterion>();
-        for ( final Iterator<NormalFilterUnitModel> it = filter.iterator(); it.hasNext(); ) {
-            final NormalFilterUnitModel unit = it.next();
+        final List<Criterion> criterions = new LinkedList<>();
+        for (final NormalFilterUnitModel unit : filter) {
             if (NormalFilterModel.ALL.equals(unit.getColumn())) {
-                criterions.add( compileKeyAll( ( String ) unit.getValue( 1 ), dynamicQuery ) );
+                criterions.add(compileKeyAll((String) unit.getValue(1), dynamicQuery));
             } else {
-                criterions.add( compileCriteria( unit, dynamicQuery ) );
+                criterions.add(compileCriteria(unit, dynamicQuery));
             }
         }
         return criterions;

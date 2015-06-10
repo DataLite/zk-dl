@@ -90,7 +90,7 @@ public class LiferayMock implements ServletContextAware
         if (liferayPortletXml == null)
         {
             LOGGER.warn( "The file /WEB-INF/liferay-portlet.xml does not exists, role mapper will not be available" );
-            liferayRoleMapper = new HashMap<String, String>();
+            liferayRoleMapper = new HashMap<>();
         }
         else
             liferayRoleMapper = new LiferayRoleMapper(liferayPortletXml);

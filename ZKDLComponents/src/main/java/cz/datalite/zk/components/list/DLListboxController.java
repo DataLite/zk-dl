@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.list;
 
-import cz.datalite.zk.components.list.controller.DLQuickFilterController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.model.DLMasterModel;
 import cz.datalite.zk.components.list.view.DLListbox;

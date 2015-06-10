@@ -1,12 +1,28 @@
 package cz.datalite.helpers;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * Utility pro praci s objekty
@@ -682,7 +698,7 @@ public abstract class ReflectionHelper
     public static <T> List<Class<?>> getTypeArguments(
             Class<T> baseClass, Class<? extends T> childClass)
     {
-        Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
+        Map<Type, Type> resolvedTypes = new HashMap<>();
         Type type = childClass;
         // start walking up the inheritance hierarchy until we hit baseClass
         while (!getClass(type).equals(baseClass)) {
@@ -713,7 +729,7 @@ public abstract class ReflectionHelper
         } else {
             actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
         }
-        List<Class<?>> typeArgumentsAsClasses = new ArrayList<Class<?>>();
+        List<Class<?>> typeArgumentsAsClasses = new ArrayList<>();
         // resolve types by chasing down type variables.
         for (Type baseType : actualTypeArguments) {
             while (resolvedTypes.containsKey(baseType)) {
@@ -732,7 +748,7 @@ public abstract class ReflectionHelper
      */
     public static List<Field> getAllFields(Class clazz)
     {
-        List<Field> fields = new LinkedList<Field>();
+        List<Field> fields = new LinkedList<>();
 
         Class objOrSuper = clazz;
         do {
@@ -751,7 +767,7 @@ public abstract class ReflectionHelper
      */
     public static List<Method> getAllMethods(Class clazz)
     {
-        List<Method> methods = new LinkedList<Method>();
+        List<Method> methods = new LinkedList<>();
 
         Class objOrSuper = clazz;
         do {
@@ -821,8 +837,7 @@ public abstract class ReflectionHelper
         }
 
         Class[] superInterfaces = classObject.getInterfaces();
-        for (int i = 0; i < superInterfaces.length; i++) {
-            Class superInterface = superInterfaces[i];
+        for (Class superInterface : superInterfaces) {
             generalizations.addAll(getGeneralizations(superInterface));
         }
 

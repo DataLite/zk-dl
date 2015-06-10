@@ -24,10 +24,8 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.Clients;
 
 import javax.portlet.PortletPreferences;
-import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -256,7 +254,7 @@ public class ZkConfigutationController<T extends DLMainModel> extends DLComposer
     {
         try {
             Enumeration<String> keys = getPreferences().getNames();
-            List<String> keysToReset = new ArrayList<String>();
+            List<String> keysToReset = new ArrayList<>();
             while(keys.hasMoreElements())
                 keysToReset.add(keys.nextElement());
             

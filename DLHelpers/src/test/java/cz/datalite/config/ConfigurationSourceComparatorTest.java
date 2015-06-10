@@ -1,17 +1,14 @@
 package cz.datalite.config;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import cz.datalite.config.ConfigurationKey;
-import cz.datalite.config.ConfigurationSource;
-import cz.datalite.config.ConfigurationSourceComparator;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Test komparatoru zdroju konfiguraci.

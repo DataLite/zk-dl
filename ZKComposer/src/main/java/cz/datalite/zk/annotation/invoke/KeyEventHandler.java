@@ -41,7 +41,7 @@ import org.zkoss.zul.impl.XulElement;
 public class KeyEventHandler extends Handler {
     
     /** instance of logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger( MethodInvoker.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyEventHandler.class);
 
     /** has to be used ctrl or not */
     private final boolean ctrl;

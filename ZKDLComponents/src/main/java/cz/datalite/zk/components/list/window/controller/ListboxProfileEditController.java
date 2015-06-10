@@ -1,8 +1,6 @@
 package cz.datalite.zk.components.list.window.controller;
 
-import cz.datalite.zk.components.list.DLListboxController;
 import cz.datalite.zk.components.list.DLListboxFilterController;
-import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.lovbox.DLLovboxController;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.profile.DLListboxProfile;
@@ -10,8 +8,6 @@ import cz.datalite.zk.components.profile.DLListboxProfileCategory;
 import cz.datalite.zk.components.profile.DLProfileManager;
 import cz.datalite.zk.components.profile.impl.DLListboxProfileCategoryImpl;
 import cz.datalite.zk.events.SaveProfileEvent;
-import org.zkoss.bind.BindContext;
-import org.zkoss.bind.Converter;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -22,8 +18,6 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Radio;
-import org.zkoss.zul.Radiogroup;
 
 import java.util.ArrayList;
 import java.util.Collections;

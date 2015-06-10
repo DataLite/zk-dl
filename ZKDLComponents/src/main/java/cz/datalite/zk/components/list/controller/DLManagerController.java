@@ -2,7 +2,6 @@ package cz.datalite.zk.components.list.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.zkoss.util.media.AMedia;
 

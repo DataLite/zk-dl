@@ -62,7 +62,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 			throw new IllegalArgumentException("The given domain class does not contain an id attribute!");
 		}
 
-		this.idMetadata = new IdMetadata<T>((IdentifiableType<T>) type);
+		this.idMetadata = new IdMetadata<>((IdentifiableType<T>) type);
 		this.versionAttribute = findVersionAttribute(type);
 	}
 
@@ -154,7 +154,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 	 */
 	public Iterable<String> getIdAttributeNames() {
 
-		List<String> attributeNames = new ArrayList<String>(idMetadata.attributes.size());
+		List<String> attributeNames = new ArrayList<>(idMetadata.attributes.size());
 
 		for (SingularAttribute<? super T, ?> attribute : idMetadata.attributes) {
 			attributeNames.add(attribute.getName());
