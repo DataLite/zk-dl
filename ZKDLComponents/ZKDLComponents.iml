@@ -5,15 +5,12 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLBind:1.4.4" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLHelpers:1.4.4" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:ZKComponents:1.4.4" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zk:6.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.common:zweb:6.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.common:zcommon:6.5.2" level="project" />

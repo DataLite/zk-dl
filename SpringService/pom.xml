@@ -8,9 +8,13 @@
     </parent>
 
     <artifactId>SpringService</artifactId>
-    <version>1.4.5.10</version>
+    <version>1.4.5.11</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
+
+    <properties>
+        <org.springframework.security.version>3.2.5.RELEASE</org.springframework.security.version>
+    </properties>
 
     <dependencies>
         <!--
@@ -70,6 +74,18 @@
             <version>${org.springframework.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security.version}</version>
+            <exclusions>
+                <!-- bez toho pada context:property-placeholder-->
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-expression</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 
         <dependency>
