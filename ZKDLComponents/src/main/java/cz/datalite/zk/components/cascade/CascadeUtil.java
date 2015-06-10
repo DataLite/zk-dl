@@ -1,12 +1,13 @@
 package cz.datalite.zk.components.cascade;
 
 import cz.datalite.zk.bind.ZKBinderHelper;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.UiException;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.UiException;
 
 /**
  * Utility methods for cascading.
@@ -30,7 +31,7 @@ public class CascadeUtil<T> {
     /**
      * Call fireParentChanges on all followers
      * @throws NoSuchMethodException
-     * @throws ModificationException
+     * @throws java.util.ConcurrentModificationException
      */
     public void dofireParentChanges() {
         for ( CascadableExt follower : followers ) {

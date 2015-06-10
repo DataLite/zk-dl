@@ -13,7 +13,7 @@ public interface CascadableExt<T> extends Cascadable<T> {
      * @param parent parent who changed.
      *
      * @throws NoSuchMethodException
-     * @throws ModificationException
+     * @throws java.util.ConcurrentModificationException
      */
     void fireParentChanges( final Cascadable parent );
 

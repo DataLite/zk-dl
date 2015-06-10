@@ -52,7 +52,7 @@ public class ArrayUtil {
 	/**
 	 * Zda pole obsahuje ne-null polozky.
 	 * @param array
-	 * @return <code>false</code> pokud je pole prazdne nebo obsahuje pouze <code>null</code> polozky, jinak <code>true</code>
+	 * @return {@code false} pokud je pole prazdne nebo obsahuje pouze {@code null} polozky, jinak {@code true}
 	 * @throws NullPointerException pokud je vstupni pole null
 	 * @see CollectionUtil#containsNotNull(java.util.Collection)
 	 */

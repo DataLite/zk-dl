@@ -3,7 +3,7 @@ package cz.datalite.dao;
 /**
  * Defines precedence of null values within {@code ORDER BY} clause.
  * <p>
- * Partial copy of <code>org.hibernate.NullPrecedence</code>.
+ * Partial copy of {@code org.hibernate.NullPrecedence}.
  * </p>
  */
 public enum DLNullPrecedence {

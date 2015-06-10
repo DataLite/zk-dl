@@ -83,16 +83,16 @@ public @interface ZkException {
      * impossibility of localy disabling i18n and each message have to be
      * localized. Application configuration file <strong>zk.xml</strong>
      * allows definining of library properties. Write in this code
-     * to enable complete localization of Zk annotations {@link ZkException}, 
+     * to enable complete localization of Zk annotations ,
      * {@link ZkConfirm}.
-     * <pre><code>
+     * <pre>{@code
      * &lt;!-- Enables required localization of &#064;ZkException
      *      and &#064;ZkConfirm annotations. --&gt;
      *  &lt;library-property&gt;
      *      &lt;name&gt;zk-dl.annotation.i18n&lt;/name&gt;
      *          &lt;value&gt;true&lt;/value&gt;
      *  &lt;/library-property&gt;
-     * </code></pre>
+     * }</pre>
      * </p>
      *
      * <h3>Note:</h3>
@@ -114,7 +114,7 @@ public @interface ZkException {
      * users to define their own filter. If a user makes a mistake then
      * the Exception is thrown. In the method we don't want to handle
      * every generated exception but only UnsupportedFilterException.</p>
-     * <pre><code>
+     * <pre>{@code
      *  &#064;ZkException(
      *      title="Invalid filter"
      *      class=some.framework.SomeFrameworkException.class
@@ -122,10 +122,10 @@ public @interface ZkException {
      *  public void onFilter() {
      *      // there is some code
      *  }
-     * </code></pre>
+     * }</pre>
      * <p>This annotation handles each exception thrown from this framework
      * including a lot of undesired ones.</p>
-     * <pre><code>
+     * <pre>{@code
      *  &#064;ZkException(
      *      title="Invalid filter"
      *      class=our.project.UnsupportedFilterException.class
@@ -134,7 +134,7 @@ public @interface ZkException {
      *  public void onFilter() {
      *      // there is some code
      *  }
-     * </code></pre>
+     * }</pre>
      * <p>This annotaion catches each thrown exception and tries to find out if there is
      * any cause with this UnsupportedFilterException class. If the cause is found then the
      * message is shown otherwise the exception is thrown through.</p>
@@ -149,7 +149,7 @@ public @interface ZkException {
      *
      * <p>Project configuration file <strong>zk.xml</strong> allows to write in library
      * properties. Type in this code to generally enable exception unwrapping.
-     * <pre><code>
+     * <pre>{@code
      *  &lt;!-- Enables automatical exception unwrapping for &#064;ZkException.
      *      This can have performance impact if there is a lot of &#064;ZkException
      *      with deep stack. --&gt;
@@ -157,7 +157,7 @@ public @interface ZkException {
      *      &lt;name&gt;zk-dl.annotation.exception.unwrap&lt;/name&gt;
      *          &lt;value&gt;true&lt;/value&gt;
      *  &lt;/library-property&gt;
-     * </code></pre>
+     * }</pre>
      * </p>
      *
      * <h3>Note:</h3>

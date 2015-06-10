@@ -55,7 +55,7 @@ public class WindowElement extends ZkElement {
      *
      * @return the button (or throws NoSuchElementException if not found)
      *
-     * @throws NoSuchElementException If no matching elements are found.
+     * @throws java.util.NoSuchElementException If no matching elements are found.
      */
     public ButtonElement findButton( final String id ) {
         return new ButtonElement( getZkDriver(), this, id );

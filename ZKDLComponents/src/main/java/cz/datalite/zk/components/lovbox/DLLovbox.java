@@ -596,6 +596,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @param descriptionProperty property in the main entity
      * @deprecated
      */
+    @Deprecated
     public void setDescriptionProperty( final String descriptionProperty ) {
         this.descriptionProperty = descriptionProperty;
 

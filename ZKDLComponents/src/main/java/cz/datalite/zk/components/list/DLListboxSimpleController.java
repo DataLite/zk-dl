@@ -14,23 +14,14 @@ import java.util.List;
 public abstract class DLListboxSimpleController<T> extends DLListboxGeneralController<T>
 {
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxSimpleController( ) {
         this( null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxSimpleController( final String identifier ) {
         this( identifier, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxSimpleController( final String identifier, final Class<T> clazz ) {
         super( identifier, clazz );
     }

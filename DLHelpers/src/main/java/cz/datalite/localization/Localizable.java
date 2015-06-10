@@ -5,7 +5,7 @@ package cz.datalite.localization;
  * Aby se preklady nemusely definovat dvakrat, budou vzdy dva enumy z ziveho a zurnaloveho objektu vracet pro odpovidajici polozky stejny klic.
  *
  * <p>
- *     Note: Puvodne se jmenoval <code>JournalEnum</code>.
+ *     Note: Puvodne se jmenoval {@code JournalEnum}.
  * </p>
  * @author pmarek
  */

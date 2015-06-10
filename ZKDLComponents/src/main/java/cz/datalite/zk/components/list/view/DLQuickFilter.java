@@ -28,7 +28,7 @@ import org.zkoss.zul.impl.InputElement;
 public class DLQuickFilter extends InputElement {
 
 	/**
-	 * Quick filter search value will be cleared after search {@link DLColumnUnitModel column} (property) change. (If {@link Library#getProperty(String) library property} is set to <code>true</code>.)
+	 * Quick filter search value will be cleared after search {@link DLColumnUnitModel column} (property) change. (If {@link Library#getProperty(String) library property} is set to {@code true}.)
 	 */
 	public static final String LIBRARY_CLEAR_VALUE_AFTER_COLUMN_CHANGE = "zk-dl.quickFilter.clearValueAfterColumnChange";
 

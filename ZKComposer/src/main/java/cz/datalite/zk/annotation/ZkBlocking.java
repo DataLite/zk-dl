@@ -75,14 +75,14 @@ public @interface ZkBlocking {
      * <strong>zk.xml</strong> allows definining of library properties. Write in
      * this code to enable complete localization of Zk annotations {@link ZkException},
      * {@link ZkConfirm}.
-     * <pre><code>
+     * <pre>{@code
      * &lt;!-- Enables required localization of &#064;ZkException
      *      and &#064;ZkConfirm annotations. --&gt;
      *  &lt;library-property&gt;
      *      &lt;name&gt;zk-dl.annotation.i18n&lt;/name&gt;
      *          &lt;value&gt;true&lt;/value&gt;
      *  &lt;/library-property&gt;
-     * </code></pre> </p>
+     * }</pre> </p>
      *
      * <h3>Note:</h3> <p>In default the localization is disabled.</p>
      *

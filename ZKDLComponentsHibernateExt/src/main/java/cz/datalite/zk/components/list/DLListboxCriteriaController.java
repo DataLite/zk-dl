@@ -35,23 +35,14 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
     protected final FilterCriterionCompiler compiler;
     protected static final Logger LOGGER = LoggerFactory.getLogger( DLListboxCriteriaController.class );
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxCriteriaController( ) {
         this(null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxCriteriaController( final String identifier ) {
         this( identifier, null );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public DLListboxCriteriaController( final String identifier, final Class<T> clazz ) {
         super( identifier, clazz );
         compiler = getCompiler();

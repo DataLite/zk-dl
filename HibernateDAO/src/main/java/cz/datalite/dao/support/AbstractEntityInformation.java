@@ -14,7 +14,7 @@ public abstract class AbstractEntityInformation<T, ID extends Serializable> impl
     private final Class<T> domainClass;
 
     /**
-     * Creates a new {@link AbstractEntityInformation} from the given domain class.
+     * Creates a new  from the given domain class.
      *
      * @param domainClass
      */

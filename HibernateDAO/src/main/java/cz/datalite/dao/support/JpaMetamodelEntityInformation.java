@@ -42,7 +42,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 	private final SingularAttribute<? super T, ?> versionAttribute;
 
 	/**
-	 * Creates a new {@link JpaMetamodelEntityInformation} for the given domain class and {@link javax.persistence.metamodel.Metamodel}.
+	 * Creates a new  for the given domain class and {@link javax.persistence.metamodel.Metamodel}.
 	 *
 	 * @param domainClass must not be {@literal null}.
 	 * @param metamodel must not be {@literal null}.

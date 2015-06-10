@@ -17,13 +17,13 @@ public final class Checker {
 
 	/**
 	 * Kontrola pole zda je null nebo prazdne. Ale pozor, nekontroluje, jestli
-	 * je pole slozene pouze z <code>null</code> hodnot. To muze byt problem pri
+	 * je pole slozene pouze z {@code null} hodnot. To muze byt problem pri
 	 * pouziti na DAO.
 	 * 
 	 * @param array
 	 *            pole objektu
 	 * 
-	 * @return <code>true</code> pokud je vstupni parametr null nebo nema zadne
+	 * @return {@code true} pokud je vstupni parametr null nebo nema zadne
 	 *         prvky
 	 */
 	public static <T> boolean isNullOrEmpty(T[] array) {
@@ -32,13 +32,13 @@ public final class Checker {
 
 	/**
 	 * Kontrola kolekce zda je null nebo prazdna. Ale pozor, nekontroluje,
-	 * jestli je kolekce slozena pouze z <code>null</code> hodnot. To muze byt
+	 * jestli je kolekce slozena pouze z {@code null} hodnot. To muze byt
 	 * problem pri pouziti na DAO.
 	 * 
 	 * @param collection
 	 *            kolekce objektu
 	 * 
-	 * @return <code>true</code> pokud je vstupni parametr null nebo nema zadne
+	 * @return {@code true} pokud je vstupni parametr null nebo nema zadne
 	 *         prvky
 	 */
 	public static boolean isNullOrEmpty(Collection<?> collection) {
@@ -51,7 +51,7 @@ public final class Checker {
 	 * @param map
 	 *            mapa objektu
 	 * 
-	 * @return <code>true</code> pokud je vstupni parametr null nebo nema zadne
+	 * @return {@code true} pokud je vstupni parametr null nebo nema zadne
 	 *         prvky
 	 */
 	public static boolean isNullOrEmpty(Map<?, ?> map) {
@@ -72,7 +72,7 @@ public final class Checker {
 	 * @param value
 	 *            kontrolovany retezec, muze byt null
 	 * 
-	 * @return <code>true</code> pokud je retezec null nebo prazdny
+	 * @return {@code true} pokud je retezec null nebo prazdny
 	 * 
 	 * @see #isBlank(String)
 	 */
@@ -95,7 +95,7 @@ public final class Checker {
 	 * @param value
 	 *            kontrolovany retezec, muze byt null
 	 * 
-	 * @return <code>true</code> pokud je retezec null, prazdny nebo obsahuje
+	 * @return {@code true} pokud je retezec null, prazdny nebo obsahuje
 	 *         pouze whitespace znaky
 	 * 
 	 * @see #isNullOrEmpty(String)

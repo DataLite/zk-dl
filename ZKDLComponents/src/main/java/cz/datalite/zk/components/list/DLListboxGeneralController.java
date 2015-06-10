@@ -95,7 +95,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /** profile service used to load/store profiles from/to session */
     private ProfileService profileServiceSessionImpl;
 
-	/** Library property: load data after profile change, even if <code>loadDataOnCreate="false"</code> @see #applyProfile */
+	/** Library property: load data after profile change, even if {@code loadDataOnCreate="false"} @see #applyProfile */
     private static final String LIBRARY_PROFILE_LOAD_DATA_AFTER_CHANGE = "zk-dl.listbox.profile.loadDataAfterChange";
 	private static final boolean profileLoadDataAfterChange = Boolean.valueOf(Library.getProperty(LIBRARY_PROFILE_LOAD_DATA_AFTER_CHANGE, "true"));
 
@@ -496,6 +496,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param filter criterias
      * @return coresponding model
      */
+    @Deprecated
     protected abstract DLResponse<String> loadDistinctColumnValues( final String column, final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<cz.datalite.dao.DLSort> sorts );
 
     public DLResponse<String> loadDistinctValues( final String column, final String qFilterValue, final int firstRow, final int rowCount ) {

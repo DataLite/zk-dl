@@ -29,48 +29,48 @@ public interface ConfigurationSource {
 
 	/**
 	 * @param key
-	 * @return {@link String} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje. Pokud dojde k
+	 * @return {@link String} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
 	public String getString(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return pole {@link String} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje
+	 * @return pole {@link String} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje
 	 */
 	public String[] getStringArray(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return {@link BigDecimal} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje. Pokud dojde
+	 * @return {@link BigDecimal} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde
 	 *         k chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
 	public BigDecimal getBigDecimal(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return {@link Integer} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje. Pokud dojde k
+	 * @return {@link Integer} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
 	public Integer getInteger(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return {@link Long} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje. Pokud dojde k
+	 * @return {@link Long} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
 	public Long getLong(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return {@link Boolean} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje. Pokud dojde k
+	 * @return {@link Boolean} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
 	public Boolean getBoolean(ConfigurationKey key);
 
 	/**
 	 * @param key
-	 * @return {@link Date} pro dany klic, nebo <code>null</code>, pokud zdroj tento klic neobsahuje
+	 * @return {@link Date} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje
 	 */
 	public Date getDate(ConfigurationKey key);
 

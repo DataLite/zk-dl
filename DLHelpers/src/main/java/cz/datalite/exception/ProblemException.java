@@ -20,7 +20,7 @@ public class ProblemException
 	private Map<Problem, List<Object>> problems = null;
 
 	/**
-	 * Zprava z root cause (muze byt <code>null</code>)
+	 * Zprava z root cause (muze byt {@code null})
 	 */
 	private String rootCauseMessage = null;
 
@@ -133,7 +133,7 @@ public class ProblemException
 
 	/**
 	 * @param problem
-	 * @return <code>true</code> pokud je na vyjimce specifikovany problem, jinak <code>false</code>
+	 * @return {@code true} pokud je na vyjimce specifikovany problem, jinak {@code false}
 	 */
 	public boolean hasProblem(Problem problem) {
 		return problems != null && problems.containsKey(problem);
@@ -199,10 +199,10 @@ public class ProblemException
 	}
 
 	/**
-	 * Vrati <code>true</code> pokud ma byt stacktrace utlumeny (nezalogovany), jinak <code>false</code>. Pokud je definovany problem, bere
+	 * Vrati {@code true} pokud ma byt stacktrace utlumeny (nezalogovany), jinak {@code false}. Pokud je definovany problem, bere
 	 * se tato informace z neho. Pokud neni, koukame na standardni
 	 * 
-	 * @return <code>true</code> pokud ma byt StackTrace utlumeny (nezalogovany), jinak <code>false</code>
+	 * @return {@code true} pokud ma byt StackTrace utlumeny (nezalogovany), jinak {@code false}
 	 */
 	public boolean isStackTraceMuted() {
 		return getProblem() != null ? getProblem().isStackTraceMuted() : isStackTraceMutedByDefault();

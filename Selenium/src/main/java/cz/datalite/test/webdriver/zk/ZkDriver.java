@@ -4,13 +4,19 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.google.common.base.Function;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.webdriver.VisibilityOfElementLocated;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -212,9 +216,7 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
      * &lt;?page title="Page title" id="myModulePage"?&gt;<br/>
      * &lt;window id="myModuleWindow"&gt;
      *
-     * @param pageId ZUL Page ID
      * @param windowId ZUL Window ID
-     * @param wait wait for the page to load.
      *
      * @return the window
      *
@@ -231,7 +233,6 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
      * &lt;?page title="Page title" id="myModulePage"?&gt;<br/>
      * &lt;window id="myModuleWindow"&gt;
      *
-     * @param pageId ZUL Page ID
      * @param windowId ZUL Window ID
      * @param wait wait for the page to load.
      *
@@ -282,7 +283,6 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
      *
      * @param url the URL to go to.
      *
-     * @see WebDriver#get(String)
      */
     public void get( final String url ) {
         if ( url.startsWith( "http://" ) ) {
@@ -322,7 +322,6 @@ public class ZkDriver implements WebDriver, Wait<WebDriver> {
      * variable, as if the function were called via "Function.apply"
      *
      * @param script The javascript to execute
-     * @param args The arguments to the script. May be empty
      * @return One of Boolean, Long, String, List or WebElement. Or null.
      */
     public Object executeScript( final String script ) {

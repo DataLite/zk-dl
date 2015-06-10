@@ -113,9 +113,9 @@ public interface GenericService<T, ID extends Serializable> {
     Integer count( DLSearch<T> search );
 
     /**
-     * Returns a <code>DLResponse</code> object that includes both the list of
-     * results like <code>search()</code> and the total length like
-     * <code>count()</code>.
+     * Returns a {@code DLResponse} object that includes both the list of
+     * results like {@code search()} and the total length like
+     * {@code count()}.
      * @param search search parameters
      * @return result list with total length
      */
