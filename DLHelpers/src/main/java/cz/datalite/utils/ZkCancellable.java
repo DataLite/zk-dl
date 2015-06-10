@@ -118,10 +118,10 @@ public class ZkCancellable {
     }
 
     /**
-     * {@link ZkCancellable} uses mechanism to detect cancellable thread based
+     *  uses mechanism to detect cancellable thread based
      * on testing {@link #CURRENT} property. It has to be set to any non-null
      * value to signalize cancellable thread. This method sets empty
-     * implementation of {@link ZkCancellable} class to signalize that.
+     * implementation of  class to signalize that.
      */
     public static void setCancellable() {
         // if not set

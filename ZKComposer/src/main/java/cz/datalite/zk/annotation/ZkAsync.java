@@ -85,14 +85,14 @@ public @interface ZkAsync {
      * <strong>zk.xml</strong> allows definining of library properties. Write in
      * this code to enable complete localization of Zk annotations {@link ZkException},
      * {@link ZkConfirm}.
-     * <pre><code>
+     * <pre>{@code
      * &lt;!-- Enables required localization of &#064;ZkException
      *      and &#064;ZkConfirm annotations. --&gt;
      *  &lt;library-property&gt;
      *      &lt;name&gt;zk-dl.annotation.i18n&lt;/name&gt;
      *          &lt;value&gt;true&lt;/value&gt;
      *  &lt;/library-property&gt;
-     * </code></pre> </p>
+     * }</pre> </p>
      *
      * <h3>Note:</h3> <p>In default the localization is disabled.</p>
      *
@@ -116,7 +116,7 @@ public @interface ZkAsync {
      * desktop. Such things has to be done in a synchronous event. To let things
      * be done properly (including binding etc.), after finishing the async
      * operation another event is fired. The default name of such event is
-     * <code>onLongOperationAfter</code> but this attribute defines it. Such
+     * {@code onLongOperationAfter} but this attribute defines it. Such
      * following event is free to be annotated by all standard annotations
      * including this one.
      *

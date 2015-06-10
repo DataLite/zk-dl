@@ -88,7 +88,7 @@ public class ReadWriteDictionary<K, V> implements Serializable {
 	 * 
 	 * @param key
 	 * @param value
-	 * @return puvodni hodnotu pod danym klicem; <code>null</code>, pokud doslo k vlozeni nove hodnoty
+	 * @return puvodni hodnotu pod danym klicem; {@code null}, pokud doslo k vlozeni nove hodnoty
 	 */
 	public V putNew(K key, V value) {
 
@@ -147,7 +147,7 @@ public class ReadWriteDictionary<K, V> implements Serializable {
 	}
 
 	/**
-	 * @return <code>true</code> je-li slovnik prazdny, jinak <code>false</code>
+	 * @return {@code true} je-li slovnik prazdny, jinak {@code false}
 	 */
 	public boolean isEmpty() {
 		rl.lock();

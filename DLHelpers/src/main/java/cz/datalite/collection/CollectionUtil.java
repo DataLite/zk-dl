@@ -4,14 +4,14 @@ import java.util.Collection;
 
 /**
  * Utility pro praci s kolekci.
- * Hled na <code>org.apache.commons.collections.*</code>!
+ * Hled na {@code org.apache.commons.collections.*}!
  */
 public class CollectionUtil {
 
 	/**
 	 * Zda kolekce obsahuje ne-null polozky.
 	 * @param collection
-	 * @return <code>false</code> pokud je kolekce prazdna nebo obsahuje pouze <code>null</code> polozky, jinak <code>true</code>
+	 * @return {@code false} pokud je kolekce prazdna nebo obsahuje pouze {@code null} polozky, jinak {@code true}
 	 * @throws NullPointerException pokud je vstupni kolekce null
 	 * @see cz.datalite.collection.ArrayUtil#containsNotNull(Object[])
 	 */

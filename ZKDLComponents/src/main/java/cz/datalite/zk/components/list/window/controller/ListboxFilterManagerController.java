@@ -11,6 +11,8 @@ import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
 import cz.datalite.zk.components.list.filter.components.RequireController;
 import cz.datalite.zk.components.list.model.RowModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -23,8 +25,6 @@ import org.zkoss.zul.Space;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Controller for the listbox filter manager which allows advanced settings for
@@ -258,7 +258,6 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
      * @param <T>
      * @param unitModel
      * @param valueIndex
-     * @param parent
      * @return
      */
     protected <T> org.zkoss.zk.ui.Component createComponent( final NormalFilterUnitModel unitModel, final int valueIndex ) {

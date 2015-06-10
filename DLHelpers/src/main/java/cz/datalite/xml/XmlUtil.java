@@ -201,7 +201,7 @@ public final class XmlUtil {
 
 	/**
 	 * @param date
-	 *        Je-li <code>null</code>, pouzije se aktualni cas
+	 *        Je-li {@code null}, pouzije se aktualni cas
 	 * @return novou instanci {@link XMLGregorianCalendar} odpovidajici zadanemu casu
 	 */
 	public static XMLGregorianCalendar newXMLGregorianCalendar(Date date) {

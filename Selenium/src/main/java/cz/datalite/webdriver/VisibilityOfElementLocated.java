@@ -48,7 +48,7 @@ public class VisibilityOfElementLocated implements ExpectedCondition<Boolean>
      * @param driver the driver
      * @return always true (throws exception if the element is not found)
      *
-     * @throws NoSuchElementException If no matching elements are found
+     * @throws java.util.NoSuchElementException If no matching elements are found
      */
     public Boolean apply(WebDriver driver) {
             if (parent == null)

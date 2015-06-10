@@ -16,7 +16,7 @@ public interface DataLoader {
 
     /**
      * Load distinct values for coresponding row
-     * @param unitModel row model
+     * @param filter row model
      * @return distinct hodnot distinct
      */
     DLResponse<String> loadData( final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts ) ;

@@ -36,8 +36,7 @@ public class FilterCriterionCompiler extends AbstractFilterCompiler {
     /**
      * Converts condition to the hiberanate criterion according to the operand
      * @param key column name
-     * @param values[0] 1st operand
-     * @param values[1] 2nd operand
+     * @param values {@code values[0]}: 1st operand, {@code values[1]} 2nd operand
      * @return compiled criterion
      */
     @Override

@@ -49,7 +49,7 @@ public interface Cell {
      * pozadí, ohraničení, datový typ atd. Pokud není definován, je
      * použit defaultní font a formát se automaticky generuje z 
      * datového typu v knihovní metodě
-     * {@link cz.datalite.helpers.excel.export.ExcelExportUtils#createCell(cz.datalite.helpers.excel.export.Cell)}</p>
+     * {@link cz.datalite.helpers.excel.export.ExcelExportUtils#createCell(Cell, CellFormats)}</p>
      * @return formát pro výpis buňky.
      */
     WritableCellFormat getFormat();

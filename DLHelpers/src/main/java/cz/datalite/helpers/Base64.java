@@ -11,9 +11,9 @@ import java.nio.CharBuffer;
  * 
  * <p>Example:</p>
  * 
- * <code>String encoded = Base64.encode( myByteArray );</code>
+ * {@code String encoded = Base64.encode( myByteArray );}
  * 
- * <code>byte[] myByteArray = Base64.decode( encoded );</code>
+ * {@code byte[] myByteArray = Base64.decode( encoded );}
  *
  * <p>The <tt>options</tt> parameter, which appears in a few places, is used to pass 
  * several pieces of information to the encoder. In the "higher level" methods such as 
@@ -30,7 +30,7 @@ import java.nio.CharBuffer;
  * <p>The constants defined in Base64 can be OR-ed together to combine options, so you 
  * might make a call like this:</p>
  *
- * <code>String encoded = Base64.encodeBytes( mybytes, Base64.GZIP | Base64.DONT_BREAK_LINES );</code>
+ * {@code String encoded = Base64.encodeBytes( mybytes, Base64.GZIP | Base64.DONT_BREAK_LINES );}
  *
  * <p>to compress the data before encoding it and then making the output have no newline characters.</p>
  *
@@ -518,8 +518,8 @@ public class Base64
 
 
     /**
-     * Performs Base64 encoding on the <code>raw</code> ByteBuffer,
-     * writing it to the <code>encoded</code> ByteBuffer.
+     * Performs Base64 encoding on the {@code raw} ByteBuffer,
+     * writing it to the {@code encoded} ByteBuffer.
      * This is an experimental feature. Currently it does not
      * pass along any options (such as {@link #DO_BREAK_LINES}
      * or {@link #GZIP}.
@@ -542,8 +542,8 @@ public class Base64
 
 
     /**
-     * Performs Base64 encoding on the <code>raw</code> ByteBuffer,
-     * writing it to the <code>encoded</code> CharBuffer.
+     * Performs Base64 encoding on the {@code raw} ByteBuffer,
+     * writing it to the {@code encoded} CharBuffer.
      * This is an experimental feature. Currently it does not
      * pass along any options (such as {@link #DO_BREAK_LINES}
      * or {@link #GZIP}.
@@ -611,9 +611,9 @@ public class Base64
      *   DO_BREAK_LINES: break lines at 76 characters
      * </pre>
      * <p>
-     * Example: <code>encodeObject( myObj, Base64.GZIP )</code> or
+     * Example: {@code encodeObject( myObj, Base64.GZIP )} or
      * <p>
-     * Example: <code>encodeObject( myObj, Base64.GZIP | Base64.DO_BREAK_LINES )</code>
+     * Example: {@code encodeObject( myObj, Base64.GZIP | Base64.DO_BREAK_LINES )}
      *
      * @param serializableObject The object to encode
      * @param options Specified options
@@ -702,9 +702,9 @@ public class Base64
      *     <i>Note: Technically, this makes your encoding non-compliant.</i>
      * </pre>
      * <p>
-     * Example: <code>encodeBytes( myData, Base64.GZIP )</code> or
+     * Example: {@code encodeBytes( myData, Base64.GZIP )} or
      * <p>
-     * Example: <code>encodeBytes( myData, Base64.GZIP | Base64.DO_BREAK_LINES )</code>
+     * Example: {@code encodeBytes( myData, Base64.GZIP | Base64.DO_BREAK_LINES )}
      *
      *  
      * <p>As of v 2.3, if there is an error with the GZIP stream,
@@ -770,9 +770,9 @@ public class Base64
      *     <i>Note: Technically, this makes your encoding non-compliant.</i>
      * </pre>
      * <p>
-     * Example: <code>encodeBytes( myData, Base64.GZIP )</code> or
+     * Example: {@code encodeBytes( myData, Base64.GZIP )} or
      * <p>
-     * Example: <code>encodeBytes( myData, Base64.GZIP | Base64.DO_BREAK_LINES )</code>
+     * Example: {@code encodeBytes( myData, Base64.GZIP | Base64.DO_BREAK_LINES )}
      *
      *  
      * <p>As of v 2.3, if there is an error with the GZIP stream,
@@ -1554,7 +1554,7 @@ public class Base64
         
         
         /**
-         * Constructs a {@link Base64.InputStream} in DECODE mode.
+         * Constructs a  in DECODE mode.
          *
          * @param in the <tt>java.io.InputStream</tt> from which to read data.
          * @since 1.3
@@ -1565,7 +1565,7 @@ public class Base64
         
         
         /**
-         * Constructs a {@link Base64.InputStream} in
+         * Constructs a  in
          * either ENCODE or DECODE mode.
          * <p>
          * Valid options:<pre>
@@ -1574,7 +1574,7 @@ public class Base64
          *     (only meaningful when encoding)</i>
          * </pre>
          * <p>
-         * Example: <code>new Base64.InputStream( in, Base64.DECODE )</code>
+         * Example: {@code new Base64.InputStream( in, Base64.DECODE )}
          *
          *
          * @param in the <tt>java.io.InputStream</tt> from which to read data.
@@ -1769,7 +1769,7 @@ public class Base64
         private byte[]  decodabet;  // Local copies to avoid extra method calls
         
         /**
-         * Constructs a {@link Base64.OutputStream} in ENCODE mode.
+         * Constructs a  in ENCODE mode.
          *
          * @param out the <tt>java.io.OutputStream</tt> to which data will be written.
          * @since 1.3
@@ -1780,7 +1780,7 @@ public class Base64
         
         
         /**
-         * Constructs a {@link Base64.OutputStream} in
+         * Constructs a  in
          * either ENCODE or DECODE mode.
          * <p>
          * Valid options:<pre>
@@ -1789,7 +1789,7 @@ public class Base64
          *     (only meaningful when encoding)</i>
          * </pre>
          * <p>
-         * Example: <code>new Base64.OutputStream( out, Base64.ENCODE )</code>
+         * Example: {@code new Base64.OutputStream( out, Base64.ENCODE )}
          *
          * @param out the <tt>java.io.OutputStream</tt> to which data will be written.
          * @param options Specified options.

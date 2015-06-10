@@ -1,10 +1,11 @@
 
 package cz.datalite.hibernate.transformers;
 
+import org.hibernate.transform.ResultTransformer;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.transform.ResultTransformer;
 
 /**
  * Transform result to HashMap.
@@ -24,9 +25,6 @@ public class AliasToEntityMapResultTransformer implements ResultTransformer {
 	private AliasToEntityMapResultTransformer() {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Object transformTuple(Object[] tuple, String[] aliases) {
 		Map result = new HashMap(tuple.length);
 		for ( int i=0; i<tuple.length; i++ ) {
@@ -47,9 +45,6 @@ public class AliasToEntityMapResultTransformer implements ResultTransformer {
 		return INSTANCE;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public List transformList(List list) {
             return list;
 	}

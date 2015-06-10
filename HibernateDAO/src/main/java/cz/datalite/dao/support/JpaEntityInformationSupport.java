@@ -31,7 +31,7 @@ public abstract class JpaEntityInformationSupport<T, ID extends Serializable> ex
 		implements JpaEntityInformation<T, ID> {
 
 	/**
-	 * Creates a new {@link JpaEntityInformationSupport} with the given domain class.
+	 * Creates a new  with the given domain class.
 	 *
 	 * @param domainClass must not be {@literal null}.
 	 */
