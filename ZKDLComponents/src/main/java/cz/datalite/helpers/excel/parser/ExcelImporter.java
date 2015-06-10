@@ -1,5 +1,11 @@
 package cz.datalite.helpers.excel.parser;
 
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import org.zkoss.util.media.Media;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -8,11 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import org.zkoss.util.media.Media;
 
 /**
  *
@@ -123,10 +124,7 @@ public class ExcelImporter<T extends ExcelImportStructure> {
                 _sheet = _workbook.getSheet(0);
             }
         }
-        catch ( IOException ex ) {
-            throw new ExcelImportException( "Workbook couldn't be loaded.", ex );
-        }
-        catch ( BiffException ex ) {
+        catch ( IOException | BiffException ex ) {
             throw new ExcelImportException( "Workbook couldn't be loaded.", ex );
         }
     }
@@ -183,7 +181,7 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * @return instance importeru
      */
     public ExcelImporter<T> mapColumnNameIndex( final Map<String, String> map ) {
-        _mapIndex = new HashMap<String, Integer>();
+        _mapIndex = new HashMap<>();
         for ( String key : map.keySet() ) {
             _mapIndex.put( key, Integer.valueOf( ExcelImportUtils.convertStringIndexToInt( map.get( key ) ) ) );
         }
@@ -229,7 +227,7 @@ public class ExcelImporter<T extends ExcelImportStructure> {
             _firstRow = Math.max( 0, _firstRow );
             _lastRow = Math.min( getColumnLastRow( _firstRow, _mainColumn ), _lastRow );
 
-            final List<T> data = new ArrayList<T>( Math.max( 0, _lastRow - _firstRow + 1 ) );
+            final List<T> data = new ArrayList<>(Math.max(0, _lastRow - _firstRow + 1));
 
             for ( int row = 0; row < _lastRow - _firstRow + 1; row++ ) {
                 final T instance = _clazz.newInstance();
@@ -270,10 +268,7 @@ public class ExcelImporter<T extends ExcelImportStructure> {
         catch ( NoSuchFieldException ex ) {
             throw new ExcelImportException( "Data structure is broken.", ex );
         }
-        catch ( InstantiationException ex ) {
-            throw new ExcelImportException( "Data structure couldn't be created.", ex );
-        }
-        catch ( IllegalAccessException ex ) {
+        catch ( InstantiationException | IllegalAccessException ex ) {
             throw new ExcelImportException( "Data structure couldn't be created.", ex );
         }
     }
@@ -335,11 +330,11 @@ public class ExcelImporter<T extends ExcelImportStructure> {
         if ( _mapIndex != null ) return;
 
         if ( _mapName == null ) {
-            _mapIndex = new HashMap<String, Integer>();
+            _mapIndex = new HashMap<>();
             return;
         }
 
-        _mapIndex = new HashMap<String, Integer>();
+        _mapIndex = new HashMap<>();
 
         for ( String key : _mapName.keySet() ) {
             final int index = getIndexOfColumnName( _mapName.get( key ) );

@@ -47,7 +47,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
 
     protected FilterDatatypeConfig( final List<DLFilterOperator> operators, final DLFilterOperator quickOperator ) {
         super( "java.lang.Object" );
-        this.operators = new ArrayList<DLFilterOperator>( operators );
+        this.operators = new ArrayList<>(operators);
         this.quickOperator = quickOperator;
     }
 
@@ -74,7 +74,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
 
 
     public static List<DLFilterOperator> createStringOperators() {
-        final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
+        final List<DLFilterOperator> operators = new ArrayList<>(10);
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
         operators.add( DLFilterOperator.LIKE );
@@ -87,7 +87,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
     }
 
     public static List<DLFilterOperator> createCharOperators() {
-        final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
+        final List<DLFilterOperator> operators = new ArrayList<>(10);
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
         operators.add( DLFilterOperator.EMPTY );
@@ -130,7 +130,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
     }
 
     public static List<DLFilterOperator> createNumberOperators() {
-        final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
+        final List<DLFilterOperator> operators = new ArrayList<>(10);
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
         operators.add( DLFilterOperator.GREATER_EQUAL );
@@ -212,7 +212,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
     }
 
     public static List<DLFilterOperator> createDateOperators() {
-        final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
+        final List<DLFilterOperator> operators = new ArrayList<>(10);
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
         operators.add( DLFilterOperator.GREATER_EQUAL );
@@ -243,7 +243,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
     }
 
     public static List<DLFilterOperator> createBooleanOperators() {
-        final List<DLFilterOperator> operators = new ArrayList<DLFilterOperator>( 10 );
+        final List<DLFilterOperator> operators = new ArrayList<>(10);
         operators.add( DLFilterOperator.EQUAL );
         operators.add( DLFilterOperator.NOT_EQUAL );
         return operators;
@@ -267,7 +267,7 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
     }
 
     private static Map<Class, FilterDatatypeConfig> init() {
-        final Map<Class, FilterDatatypeConfig> config = new HashMap<Class, FilterDatatypeConfig>();
+        final Map<Class, FilterDatatypeConfig> config = new HashMap<>();
 
         // String configuration
         config.put( String.class, createStringConfig() );

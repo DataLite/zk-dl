@@ -81,13 +81,13 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        final Map<String, Object> args = new HashMap<String, Object>();
-        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
+        final Map<String, Object> args = new HashMap<>();
+        final List<Map<String, Object>> columnModels = new LinkedList<>();
 
         for ( int index = 0; index < masterController.getColumnModel().getColumnModels().size(); index++ ) {
             final DLColumnUnitModel unit = masterController.getColumnModel().getColumnModels().get( index );
 
-            final Map<String, Object> unitMap = new HashMap<String, Object>();
+            final Map<String, Object> unitMap = new HashMap<>();
             unitMap.put( "label", unit.getLabel() );
             unitMap.put( "index", index );
             unitMap.put( "order", unit.getOrder() );
@@ -113,15 +113,15 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        final Map<String, Object> args = new HashMap<String, Object>();
-        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
+        final Map<String, Object> args = new HashMap<>();
+        final List<Map<String, Object>> columnModels = new LinkedList<>();
 
         for ( int index = 0; index < masterController.getColumnModel().getColumnModels().size(); index++ ) {
             final DLColumnUnitModel unit = masterController.getColumnModel().getColumnModels().get( index );
             if ( !unit.isDBSortable() || !unit.isVisible() ) {
                 continue;
             }
-            final Map<String, Object> unitMap = new HashMap<String, Object>();
+            final Map<String, Object> unitMap = new HashMap<>();
 
             unitMap.put( "label", unit.getLabel() );
             unitMap.put( "column", unit.getSortColumn() );
@@ -149,7 +149,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        final Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<>();
 //        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
         final NormalFilterModel templateModels = new NormalFilterModel();
 
@@ -279,8 +279,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      * @return new model containing information about current view
      */
     private Map<String, Object> takeCurrentViewSnapshoot() {
-        final Map<String, Object> args = new HashMap<String, Object>();
-        final List<Map<String, Object>> columnModels = new LinkedList<Map<String, Object>>();
+        final Map<String, Object> args = new HashMap<>();
+        final List<Map<String, Object>> columnModels = new LinkedList<>();
 
         for ( int index = 0; index < masterController.getColumnModel().getColumnModels().size(); index++ ) {
             final DLColumnUnitModel unit = masterController.getColumnModel().getColumnModels().get( index );
@@ -304,7 +304,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 //            edit ends
 //          ****************************************
 
-            final Map<String, Object> unitMap = new HashMap<String, Object>();
+            final Map<String, Object> unitMap = new HashMap<>();
             unitMap.put( "label", unit.getLabel() );
             unitMap.put( "column", (unit.getExportColumn() != null) ? unit.getExportColumn() : unit.getColumn() );
             unitMap.put("columnType", unit.getColumnType());
@@ -382,7 +382,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
     @Override
     public List<String> getFilters() {
-        final List<String> filters = new LinkedList<String>();
+        final List<String> filters = new LinkedList<>();
         for ( NormalFilterUnitModel unit : masterController.getNormalFilterModel() ) {
             final StringBuffer filter = new StringBuffer();
             filter.delete( 0, filter.length() );

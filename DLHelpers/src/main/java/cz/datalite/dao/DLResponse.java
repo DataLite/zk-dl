@@ -33,7 +33,7 @@ public class DLResponse<T> {
      * @param data result list
      */
     public static <T> DLResponse<T> response(List<T> data) {
-        return new DLResponse<T>(data);
+        return new DLResponse<>(data);
     }
 
     /**
@@ -42,7 +42,7 @@ public class DLResponse<T> {
      * @param rows total length
      */
     public static <T> DLResponse<T> response(List<T> data, final Integer rows) {
-        return new DLResponse<T>(data, rows);
+        return new DLResponse<>(data, rows);
     }
 
     /**

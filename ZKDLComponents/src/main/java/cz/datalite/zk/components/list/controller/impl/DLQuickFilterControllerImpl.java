@@ -83,7 +83,7 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
      * @return model for the quick filter
      */
     protected List<Entry<DLColumnUnitModel, String>> getQuickFilterModel() {
-        final List<Entry<DLColumnUnitModel, String>> quickFilterModel = new LinkedList<Entry<DLColumnUnitModel, String>>();
+        final List<Entry<DLColumnUnitModel, String>> quickFilterModel = new LinkedList<>();
         final boolean wysiwyg = masterController.getModel().getFilterModel().isWysiwyg();
         for ( final DLColumnUnitModel unit : masterController.getColumnModel().getColumnModels() ) {
             if ( unit.isColumn() && unit.isQuickFilter() && unit.isFilter() ) {

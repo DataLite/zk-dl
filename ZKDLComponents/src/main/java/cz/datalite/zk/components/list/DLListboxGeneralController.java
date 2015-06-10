@@ -86,7 +86,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /** component identifier */
     protected final String identifier;
     /** list of the listeners */
-    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
+    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<>(EventListeners.class);
     /** model lock - if model is locked it cannot be changed */
     protected boolean lock = false;
     /** příznak zda byla změna modelu vyvolaná změnou stránky **/

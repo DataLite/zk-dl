@@ -311,7 +311,7 @@ public class DLListheader extends Listheader {
 	}
 
 	public void setFilterOperators( final String ops ) {
-        operators = new ArrayList<DLFilterOperator>();
+        operators = new ArrayList<>();
         if ( Strings.isEmpty( ops ) ) {
             return;
         }

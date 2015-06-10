@@ -23,7 +23,7 @@ public class SelectedItemsConverter implements TypeConverter, java.io.Serializab
         Listbox lbx = (Listbox) comp;
         final ListModel xmodel = lbx.getModel();
         Set selectedModels = (Set) val;
-        Set<Listitem> selectedItems = new HashSet<Listitem>();
+        Set<Listitem> selectedItems = new HashSet<>();
 
         if (selectedModels == null)
             return selectedItems;
@@ -37,8 +37,7 @@ public class SelectedItemsConverter implements TypeConverter, java.io.Serializab
                 }
             } else if (xmodel == null) { //no model case, assume Listitem.value to be used with selectedItem
                 //iterate to find the selected item assume the value (select mold)
-                for (final Iterator it = lbx.getItems().iterator(); it.hasNext(); ) {
-                    final Listitem li = (Listitem) it.next();
+                for (final Listitem li : lbx.getItems()) {
                     if (val.equals(li.getValue())) {
                         selectedItems.add(li);
                     }

@@ -14,14 +14,12 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Master extended controller for listbox. This implementation uses Hibernate
@@ -95,19 +93,18 @@ public abstract class DLListboxCriteriaController<T> extends DLListboxGeneralCon
 
     protected DLSearch<T> getDefaultSearchObject( final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts ) {
         // Vytvoření DLSearch objektu s nastaveným stránkováním a řazením
-        final DLSearch<T> search = new DLSearch<T>( sorts, rowCount, firstRow, getEntityClass() );
+        final DLSearch<T> search = new DLSearch<>(sorts, rowCount, firstRow, getEntityClass());
         search.addFilterCriterions( compile( filter, search ) );
         return search;
     }
 
     protected List<Criterion> compile( final List<NormalFilterUnitModel> filter, final DLSearch<T> search ) {
-        final List<Criterion> criterions = new LinkedList<Criterion>();
-        for ( final Iterator<NormalFilterUnitModel> it = filter.iterator(); it.hasNext(); ) {
-            final NormalFilterUnitModel unit = it.next();
-            if ( NormalFilterModel.ALL.equals( unit.getColumn() ) ) {
-                criterions.add( compileKeyAll( ( String ) unit.getValue( 1 ), search ) );
+        final List<Criterion> criterions = new LinkedList<>();
+        for (final NormalFilterUnitModel unit : filter) {
+            if (NormalFilterModel.ALL.equals(unit.getColumn())) {
+                criterions.add(compileKeyAll((String) unit.getValue(1), search));
             } else {
-                criterions.add( compileCriteria( unit, search ) );
+                criterions.add(compileCriteria(unit, search));
             }
         }
         return criterions;

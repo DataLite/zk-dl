@@ -1,13 +1,14 @@
 package cz.datalite.zk.converter;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.Binder;
 import org.zkoss.bind.Converter;
 import org.zkoss.bind.impl.BindContextImpl;
 import org.zkoss.bind.impl.BindContextUtil;
 import org.zkoss.zk.ui.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Adapter above {@link Converter}
@@ -27,7 +28,7 @@ public class ZkConverterAdapter implements ZkConverter {
 
     public ZkConverterAdapter( Converter converter, Binder binder, Component component, Map<String, String> attributes ) {
         this.converter = converter;
-        this.attributes = new HashMap<String, String>( attributes );
+        this.attributes = new HashMap<>(attributes);
         this.binder = binder;
         this.component = component;
     }
@@ -36,7 +37,7 @@ public class ZkConverterAdapter implements ZkConverter {
 
         // init contex
         final BindContext context = BindContextUtil.newBindContext( binder, null, false, "manual", component, null );
-        context.setAttribute( BindContextImpl.CONVERTER_ARGS, new HashMap<String, String>( attributes ) );
+        context.setAttribute( BindContextImpl.CONVERTER_ARGS, new HashMap<>(attributes) );
 
         // perform conversion
         return converter.coerceToUi( value, component, context );

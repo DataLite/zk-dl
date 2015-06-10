@@ -430,7 +430,7 @@ public final class ExcelExportUtils {
 
         // list of columns that need to be visible only for the purpose of export
         // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
-        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<>();
 
         final WritableCellFormat headFormat = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
         headFormat.setBackground(Colour.LIGHT_GREEN);

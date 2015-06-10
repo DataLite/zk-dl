@@ -2,13 +2,13 @@ package cz.datalite.webdriver.components;
 
 import cz.datalite.webdriver.By;
 import cz.datalite.webdriver.ZkComponents;
-import cz.datalite.webdriver.ZkDriver;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -30,8 +30,8 @@ public class GridForm extends Grid {
 
     public GridForm( final Window window ) {
         super( window, findElement( ZkComponents.GRID.getBy(), window ) );
-        elements = new HashMap<String, InputElement>( 30 );
-        values = new HashMap<String, String>( 30 );
+        elements = new HashMap<>(30);
+        values = new HashMap<>(30);
         this.window = window;
     }
 

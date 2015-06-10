@@ -37,12 +37,12 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
     protected CascadeUtil<T> cascadeUtil;
     // model
     /** model for this component. There is stored selected entity for example */
-    protected DLLovboxModel<T> model = new DLLovboxModel<T>();
+    protected DLLovboxModel<T> model = new DLLovboxModel<>();
     // view
     /** component which user can see */
     protected DLLovbox<T> lovbox;
     /** list of the listeners */
-    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
+    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<>(EventListeners.class);
 
     /**
      * Creates lovbox controller with this multifuncion listbox controller
@@ -60,7 +60,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             }
         } );
         this.listboxController.lockModel();
-        cascadeUtil = new CascadeUtil<T>( this );
+        cascadeUtil = new CascadeUtil<>(this);
     }
 
     @SuppressWarnings( "unchecked" )

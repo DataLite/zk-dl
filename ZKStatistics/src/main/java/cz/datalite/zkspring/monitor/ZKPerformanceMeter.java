@@ -1,10 +1,11 @@
 package cz.datalite.zkspring.monitor;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.PerformanceMeter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Performance utility class
@@ -54,7 +55,7 @@ public class ZKPerformanceMeter implements PerformanceMeter
         
         if (map == null)
         {
-            map = new HashMap<String, ZKRequestMonitor>();
+            map = new HashMap<>();
             exec.getDesktop().getSession().setAttribute("RequestStatisticsMap", map);
         }
 

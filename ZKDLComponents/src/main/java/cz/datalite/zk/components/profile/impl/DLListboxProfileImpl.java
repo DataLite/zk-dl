@@ -47,7 +47,7 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 	private Integer columnsHashCode;
 
     /** List of categories this profile is in (0:N) */
-    private List<DLListboxProfileCategory> categories = new ArrayList<DLListboxProfileCategory>();
+    private List<DLListboxProfileCategory> categories = new ArrayList<>();
 	
 	public DLListboxProfileImpl() {
 		

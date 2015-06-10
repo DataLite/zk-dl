@@ -18,9 +18,9 @@ import java.util.Set;
 public class CascadeUtil<T> {
 
     /** list of the follower - they must be notified when value is changed */
-    protected Set<CascadableExt> followers = new HashSet<CascadableExt>();
+    protected Set<CascadableExt> followers = new HashSet<>();
     /** list of the parents - there are defined pairs column - parent - it means which parent affects which value */
-    protected Map<Cascadable, String> parentMap = new HashMap<Cascadable, String>();
+    protected Map<Cascadable, String> parentMap = new HashMap<>();
     /** this */
     protected CascadableExt<T> thisCtl;
 

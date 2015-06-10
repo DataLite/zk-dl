@@ -165,7 +165,7 @@ public class ListboxSelectorController {
 
         if ( usedListbox.getSelectedItems() != null )
         {
-            Set<Listitem> copy = new HashSet<Listitem>(usedListbox.getSelectedItems());
+            Set<Listitem> copy = new HashSet<>(usedListbox.getSelectedItems());
 
             for(Listitem item : copy)
             {
@@ -203,7 +203,7 @@ public class ListboxSelectorController {
 
         if ( unusedListbox.getSelectedItems() != null )
         {
-            Set<Listitem> copy = new HashSet<Listitem>(unusedListbox.getSelectedItems());
+            Set<Listitem> copy = new HashSet<>(unusedListbox.getSelectedItems());
 
             for(Listitem item : copy)
             {

@@ -41,10 +41,10 @@ import java.util.Set;
 public class ZkCancellable {
 
     /** instance of ZkCancellable bound to the current thread */
-    protected static final ThreadLocal<ZkCancellable> CURRENT = new ThreadLocal<ZkCancellable>();
+    protected static final ThreadLocal<ZkCancellable> CURRENT = new ThreadLocal<>();
 
     /** Collection of known cancel commands to be used to cancel thread */
-    protected final Set<ZkCancelCommand> commands = new HashSet<ZkCancelCommand>();
+    protected final Set<ZkCancelCommand> commands = new HashSet<>();
 
     /**
      * Request for interrupting execution of a bound thread. This method invokes

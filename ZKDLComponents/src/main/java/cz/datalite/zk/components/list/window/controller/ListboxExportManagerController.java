@@ -28,8 +28,8 @@ import java.util.Map;
 public class ListboxExportManagerController extends GenericAutowireComposer {
 
     // model
-    protected List<Map<String, Object>> usedModel = new ArrayList<Map<String, Object>>();
-    protected List<Map<String, Object>> unusedModel = new ArrayList<Map<String, Object>>();
+    protected List<Map<String, Object>> usedModel = new ArrayList<>();
+    protected List<Map<String, Object>> unusedModel = new ArrayList<>();
     protected Integer rows;
     protected String sheetName = "data";
     protected String fileName = "report";
@@ -87,12 +87,12 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     }
 
     protected Map<String, Object> prepareMap(final Map<String, Object> map) {
-        return new java.util.HashMap<String, Object>(map);
+        return new java.util.HashMap<>(map);
     }
     
     public void onExport() {
         try {
-            Map<String, Object> args = new HashMap<String, Object>();
+            Map<String, Object> args = new HashMap<>();
             args.put( "filename", fileName );
             args.put( "sheetname", StringHelper.isNull(sheetName) ? "data" : sheetName );
             args.put( "model", usedModel );

@@ -1,7 +1,5 @@
 package cz.datalite.zkspring.monitor;
 
-import org.zkoss.zk.ui.Executions;
-
 import java.io.Serializable;
 import java.util.Stack;
 
@@ -36,7 +34,7 @@ public class ZKRequestMonitor implements Serializable {
 
         parentInvocation = new ZKRequestMonitorMethod("Server request");
         parentInvocation.setStartTime(System.currentTimeMillis());
-        currentInvocationStack = new Stack<ZKRequestMonitorMethod>();
+        currentInvocationStack = new Stack<>();
         currentInvocationStack.add(parentInvocation);
     }
 

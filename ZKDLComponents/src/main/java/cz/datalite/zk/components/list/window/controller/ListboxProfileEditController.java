@@ -61,9 +61,9 @@ public class ListboxProfileEditController {
 
         // init categories
         if (profileCategories != null)
-            this.profileCategories = new ArrayList<DLListboxProfileCategory>(profileCategories);
+            this.profileCategories = new ArrayList<>(profileCategories);
         else
-            this.profileCategories = new ArrayList<DLListboxProfileCategory>();
+            this.profileCategories = new ArrayList<>();
 
         categoriesDefined = !this.profileCategories.isEmpty();
 
@@ -140,13 +140,13 @@ public class ListboxProfileEditController {
     }
 
     // lovbox to add selected item
-    DLLovboxController<DLListboxProfileCategory> categoryLovbox = new DLLovboxGeneralController<DLListboxProfileCategory>(
+    DLLovboxController<DLListboxProfileCategory> categoryLovbox = new DLLovboxGeneralController<>(
             new DLListboxFilterController<DLListboxProfileCategory>() {
-        @Override
-        protected List<DLListboxProfileCategory> loadData() {
-            return profileCategories;
-        }
-    });
+                @Override
+                protected List<DLListboxProfileCategory> loadData() {
+                    return profileCategories;
+                }
+            });
 
     public DLLovboxController<DLListboxProfileCategory> getCategoryLovbox() {
        return categoryLovbox;

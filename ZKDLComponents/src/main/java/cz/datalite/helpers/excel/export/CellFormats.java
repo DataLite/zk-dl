@@ -19,11 +19,11 @@ import java.util.Map;
  */
 @Deprecated
 public class CellFormats {
-    Map<DisplayFormat, Map<WritableFont, WritableCellFormat>> cache = new HashMap<DisplayFormat, Map<WritableFont, WritableCellFormat>>();
+    Map<DisplayFormat, Map<WritableFont, WritableCellFormat>> cache = new HashMap<>();
 
     private boolean containsCache(DisplayFormat type, WritableFont font) {
         if (!cache.containsKey(type))
-            cache.put(type, new HashMap<WritableFont, WritableCellFormat>());
+            cache.put(type, new HashMap<>());
 
         return cache.get(type).containsKey(font);
     }

@@ -122,7 +122,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     /** Watermark in input field */
     protected String watermark;
     /** Components to add before or after listbox in popup window */
-    protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<DLLovboxPopupComponentPosition, Component>();
+    protected HashMap<DLLovboxPopupComponentPosition, Component> additionalComponents = new HashMap<>();
     /**If set to false, listbox will always have selectedItem=null and some value will be only temprarily
      * to transfer user selection. */
     protected boolean synchronizeListboxSelectedItem = Boolean.valueOf(Library.getProperty("zk-dl.lovbox.synchronizeListboxSelectedItem", "false"));
@@ -405,7 +405,7 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         if (initialized)
             throw new UiException("Composer can be set manually only before afterCompose is called.");
 
-        controller = new DLLovboxGeneralController<T>(listboxController);
+        controller = new DLLovboxGeneralController<>(listboxController);
     }
 
     /**

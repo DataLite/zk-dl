@@ -13,14 +13,14 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -257,7 +257,7 @@ public class ZkDriver {
      * @return loaded properties
      */
     private static Map<Property, String> loadProperties() {
-        final Map<Property, String> propertyMap = new EnumMap<Property, String>( Property.class );
+        final Map<Property, String> propertyMap = new EnumMap<>(Property.class);
         final Properties propertyFile = loadPropertyFile();
         final Map<String, String> env = System.getenv();
 

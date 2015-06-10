@@ -15,7 +15,7 @@ public class DLColumnModel {
     // maximal used index in the sorting
     protected int sortMaxIndex = 0;
     // all column model
-    protected List<DLColumnUnitModel> columnModels = new LinkedList<DLColumnUnitModel>();
+    protected List<DLColumnUnitModel> columnModels = new LinkedList<>();
     // maximal used index for visible columns
     protected int orderMaxIndex = 0;
     // reference to master model
@@ -110,7 +110,7 @@ public class DLColumnModel {
      * @return unmodifyable collection of sorts
      */
     public List<DLSort> getSorts() {
-        final List<DLSort> sorts = new ArrayList<DLSort>();
+        final List<DLSort> sorts = new ArrayList<>();
         for ( int i = 0; i < sortMaxIndex; i++ ) {
             sorts.add( null );
         }

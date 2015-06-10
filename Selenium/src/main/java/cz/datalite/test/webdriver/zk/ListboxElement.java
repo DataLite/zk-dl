@@ -3,10 +3,11 @@ package cz.datalite.test.webdriver.zk;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.webdriver.VisibilityOfElementLocated;
-import java.util.LinkedList;
-import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -72,7 +73,7 @@ public class ListboxElement extends ZkElement {
      * @return listheaders
      */
     public List<ListheaderElement> findListheaders() {
-        final List<ListheaderElement> headers = new LinkedList<ListheaderElement>();
+        final List<ListheaderElement> headers = new LinkedList<>();
 
         for ( WebElement el : findListhead().findElements( By.tagName( "th" ) ) ) {
             headers.add( new ListheaderElement( getZkDriver(), this, el ) );
@@ -195,7 +196,7 @@ public class ListboxElement extends ZkElement {
 
             // find all columns
             final WebElement popup = getZkDriver().findElement( By.className( "datalite-listbox-qfiltr-popup" ) );
-            final List<String> quickFilterColumns = new LinkedList<String>();
+            final List<String> quickFilterColumns = new LinkedList<>();
             for ( WebElement column : popup.findElements( By.tagName( "a" ) ) ) {
                 if ( !StringHelper.isNull( column.getText() ) ) {
                     quickFilterColumns.add( column.getText() );
