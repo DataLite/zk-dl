@@ -114,6 +114,18 @@
 								<goals>
 									<goal>jar</goal>
 								</goals>
+								<configuration>
+									<!-- JDK8 strict javadoc (http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html) -->
+									<additionalparam>-Xdoclint:none</additionalparam>
+									<!-- XXX: javadoc: error - com.sun.tools.doclets.internal.toolkit.util.DocletAbortException: com.sun.tools.javac.code.Symbol$CompletionFailure: class file for javax.validation.ConstraintViolation not found -->
+									<additionalDependencies>
+										<additionnalDependency>
+											<groupId>javax.validation</groupId>
+											<artifactId>validation-api</artifactId>
+											<version>1.0.0.GA</version>
+										</additionnalDependency>
+									</additionalDependencies>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
