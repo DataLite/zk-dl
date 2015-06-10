@@ -24,7 +24,7 @@ public class FieldMaps
     /**
      * Cache pro uložení mapování položek
      */
-    static Map<Class<?>, Map<String, FieldInfo>> fieldsMap = new HashMap<Class<?>, Map<String, FieldInfo>>() ;
+    static Map<Class<?>, Map<String, FieldInfo>> fieldsMap = new HashMap<>() ;
 
     /**
      * Příznak zda povolit
@@ -63,7 +63,7 @@ public class FieldMaps
      */
     public static Map<String, FieldInfo> generateFieldMaps( Class<?> entityClass )
     {
-        Map<String, FieldInfo> result = new HashMap<String, FieldInfo>() ;
+        Map<String, FieldInfo> result = new HashMap<>() ;
 
         if ( ObjectHelper.isBoolean(entityClass) )
         {

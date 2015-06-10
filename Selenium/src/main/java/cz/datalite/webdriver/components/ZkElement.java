@@ -5,9 +5,15 @@ import cz.datalite.webdriver.ElementFactory;
 import cz.datalite.webdriver.SeleniumUnitTest;
 import cz.datalite.webdriver.ZkDriver;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import static cz.datalite.webdriver.ZkComponents.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>This is base element for all ZK elements on the page. There are
@@ -405,7 +409,7 @@ public class ZkElement {
     @SuppressWarnings("unchecked")
     public <T extends ZkElement> List<T> findAll( final By by ) {
         final List<WebElement> webElements = findElements( by, this );
-        final List<T> elements = new ArrayList<T>( webElements.size() );
+        final List<T> elements = new ArrayList<>(webElements.size());
 
         for ( WebElement element : webElements ) {
             final T zkElement = ( T ) ElementFactory.create( element, this );
@@ -490,7 +494,7 @@ public class ZkElement {
 
     public Set<Listbox> findListboxes() {
         final List<WebElement> elements = findElements( LISTBOX.getBy(), this );
-        final Set<Listbox> listboxes = new HashSet<Listbox>();
+        final Set<Listbox> listboxes = new HashSet<>();
         for ( WebElement element : elements ) {
             if ( element.isDisplayed() ) {
                 listboxes.add( new Listbox( this, element ) );

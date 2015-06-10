@@ -1,11 +1,5 @@
 package cz.datalite.helpers;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import java.util.Queue;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.UiException;
@@ -14,6 +8,12 @@ import org.zkoss.zkplus.databind.DataBinder;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.impl.XulElement;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 /**
  * Pomocne metody pro praci s ZK plus bindingem
@@ -187,7 +187,7 @@ public abstract class ZKBinderHelper {
      * @author Karel Cemus
      */
     public static void registerAnnotation( final org.zkoss.zk.ui.AbstractComponent component, final String property, final String annotName, final String value ) {
-        final java.util.Map<String, String[]> map = new java.util.HashMap<String, String[]>();
+        final java.util.Map<String, String[]> map = new java.util.HashMap<>();
         map.put( annotName, new String[]{ value } );
         component.addAnnotation( property, "default", map );
     }

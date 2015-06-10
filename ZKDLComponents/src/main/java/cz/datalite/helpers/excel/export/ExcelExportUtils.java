@@ -412,11 +412,11 @@ public final class ExcelExportUtils {
      * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
      */
     private static List<Cell> prepareCells(final List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws WriteException {
-        final List<HeadCell> heads = new ArrayList<HeadCell>();
+        final List<HeadCell> heads = new ArrayList<>();
 
         // list of columns that need to be visible only for the purpose of export
         // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
-        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<DLColumnUnitModel>();
+        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<>();
 
         final WritableCellFormat headFormat = new WritableCellFormat(new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD));
         headFormat.setBackground(Colour.LIGHT_GREEN);
@@ -448,7 +448,7 @@ public final class ExcelExportUtils {
             }
         }
 
-        final List<Cell> cells = new LinkedList<Cell>();
+        final List<Cell> cells = new LinkedList<>();
         if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
             cells.addAll(heads);
             row++;

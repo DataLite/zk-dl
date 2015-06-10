@@ -112,7 +112,7 @@ public class DLProfileManager<T> extends Hlayout {
 		super();
 
 		// init lovbox
-		this.profilesLovbox = new DLLovbox<DLListboxProfile>();
+		this.profilesLovbox = new DLLovbox<>();
 		this.profilesLovbox.setCreateQuickFilter(false);
 		this.profilesLovbox.setQuickFilterAll(false);
 		this.profilesLovbox.setCreatePaging(false);
@@ -420,7 +420,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 		@Override
 		public Map<String, Object> getParameters() {
-			Map<String, Object> parameters = new HashMap<String, Object>();
+			Map<String, Object> parameters = new HashMap<>();
 			// set binding variable
 			parameters.put("var", "item");
 

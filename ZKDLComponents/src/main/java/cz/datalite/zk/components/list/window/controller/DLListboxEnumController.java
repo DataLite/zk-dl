@@ -18,7 +18,7 @@ import java.util.List;
 public class DLListboxEnumController<T extends Enum> extends DLListboxGeneralController<T> {
 
     // Actual enum values
-    List<T> enums = new ArrayList<T>();
+    List<T> enums = new ArrayList<>();
 
     /**
      * Creates simple controller which can operate without database. This can

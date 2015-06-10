@@ -56,7 +56,7 @@ public final class DLFilter {
 	 */
 	public static <T> List<T> filter(final List<NormalFilterUnitModel> filterModel, final int firstRow,
 			final int rowCount, final List<DLSort> sorts, final List<T> list) {
-		final List<T> data = new LinkedList<T>(list);
+		final List<T> data = new LinkedList<>(list);
 
 		sort(sorts, data);
 		return filter(filterModel, data, firstRow, rowCount, null, rowCount == 0);
@@ -84,13 +84,13 @@ public final class DLFilter {
 	 */
 	public static <T> List<Object> filterDistinct(final List<NormalFilterUnitModel> filterModel, final int firstRow,
 			final int rowCount, final List<DLSort> sorts, final List<T> list, final String distinct) {
-		List<T> data = new LinkedList<T>(list);
+		List<T> data = new LinkedList<>(list);
 
 		sort(sorts, data);
 
 		data = filter(filterModel, data, firstRow, rowCount, distinct, rowCount == 0);
 
-		final List<Object> distinctData = new LinkedList<Object>();
+		final List<Object> distinctData = new LinkedList<>();
 		for (T entity : data) {
 			try {
 				distinctData.add(getValue(entity, distinct));
@@ -116,7 +116,7 @@ public final class DLFilter {
 	 */
 	public static <T> List<Object> filterDistinct(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final String distinct) {
-		return filterDistinct(filterModel, 0, 0, new LinkedList<DLSort>(), list, distinct);
+		return filterDistinct(filterModel, 0, 0, new LinkedList<>(), list, distinct);
 	}
 
 	/**
@@ -207,10 +207,10 @@ public final class DLFilter {
 		}
                 
 		try {
-			final Set<Object> values = new HashSet<Object>();
+			final Set<Object> values = new HashSet<>();
 
 			int records = -firstRow;
-			final List<T> output = new LinkedList<T>();
+			final List<T> output = new LinkedList<>();
 
 			for (T entity : list) {
 				if (columnName != null && values.contains(getValue(entity, columnName))) {
@@ -439,7 +439,7 @@ public final class DLFilter {
 	 */
 	public static <T> DLResponse<T> filterAndCount(final List<NormalFilterUnitModel> filterModel, final List<T> list,
 			final int firstRow, final int rowCount) {
-		return filterAndCount(filterModel, list, firstRow, rowCount, new LinkedList<DLSort>());
+		return filterAndCount(filterModel, list, firstRow, rowCount, new LinkedList<>());
 	}
 
 	/**
@@ -496,13 +496,13 @@ public final class DLFilter {
 
         if (rowCount == 0)
         {
-            return new DLResponse<T>(data, data.size()); // all data
+            return new DLResponse<>(data, data.size()); // all data
         }
         else if (data.size() > firstRow) {
-            return new DLResponse<T>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
+            return new DLResponse<>(data.subList(firstRow, Math.min(data.size(), firstRow + rowCount)), data.size());
         } else {
             final List<T> emptyList = new LinkedList<>();
-            return new DLResponse<T>(emptyList, data.size());
+            return new DLResponse<>(emptyList, data.size());
         }
     }
 

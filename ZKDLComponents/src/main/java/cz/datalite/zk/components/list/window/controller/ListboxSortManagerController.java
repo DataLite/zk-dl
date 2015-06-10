@@ -35,11 +35,11 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
 
     }
 
-    protected List<Map<String, Object>> model = new java.util.ArrayList<Map<String, Object>>();
+    protected List<Map<String, Object>> model = new java.util.ArrayList<>();
     protected final List<DLSortType> sortTypes;
 
     public ListboxSortManagerController() {
-        sortTypes = new LinkedList<DLSortType>( Arrays.asList( DLSortType.values() ) );
+        sortTypes = new LinkedList<>(Arrays.asList(DLSortType.values()));
         }
         
     @Override
@@ -69,7 +69,7 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
         final List<DLSortType> modelSortTypes = getModelSortTypes();
 
         // column types
-        final List<Entry<Integer, String>> modelColumns = new LinkedList<Entry<Integer, String>>();
+        final List<Entry<Integer, String>> modelColumns = new LinkedList<>();
 
         // model setting
         int order = 0;
@@ -110,7 +110,7 @@ public class ListboxSortManagerController extends GenericAutowireComposer {
 
     protected Map<String, Object> prepareMap( final Integer number, final Map<String, Object> unitMap,
             final List<Entry<Integer, String>> modelColumns, final List<DLSortType> modelSortTypes ) {
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final Map<String, Object> map = new HashMap<>();
         map.put( "number", number + "." );
         map.put( "numberInt", number );
         map.put( "column", unitMap == null ? null : modelColumns.get( modelColumns.size() - 1 ) );

@@ -166,7 +166,7 @@ public final class ZkAnnotationUtils {
 	}
 
 	private static Map<String, Field> loadModelFields(final Class cls) {
-		final Map<String, Field> fields = new java.util.HashMap<String, Field>();
+		final Map<String, Field> fields = new java.util.HashMap<>();
 		for (Field field : ReflectionHelper.getAllFields(cls)) {
 			for (Annotation annotation : field.getDeclaredAnnotations()) {
 				if (annotation instanceof ZkModel) {
@@ -187,7 +187,7 @@ public final class ZkAnnotationUtils {
 	}
 
 	private static Map<String, Field> loadModelMethod(final Class cls) {
-		final Map<String, Field> fields = new java.util.HashMap<String, Field>();
+		final Map<String, Field> fields = new java.util.HashMap<>();
 		for (Method method : ReflectionHelper.getAllMethods(cls)) {
 			for (Annotation annotation : method.getDeclaredAnnotations()) {
 				if (annotation instanceof ZkModel) {
@@ -200,7 +200,7 @@ public final class ZkAnnotationUtils {
 	}
 
 	private static Map<String, Field> loadControllerFields(final Class cls) {
-		final Map<String, Field> fields = new java.util.HashMap<String, Field>();
+		final Map<String, Field> fields = new java.util.HashMap<>();
 		for (Field field : ReflectionHelper.getAllFields(cls)) {
 			for (Annotation annotation : field.getDeclaredAnnotations()) {
 				if (annotation instanceof ZkController) {
@@ -221,7 +221,7 @@ public final class ZkAnnotationUtils {
 	}
 
 	private static Map<String, Field> loadControllerMethod(final Class cls) {
-		final Map<String, Field> fields = new java.util.HashMap<String, Field>();
+		final Map<String, Field> fields = new java.util.HashMap<>();
 		for (Method method : ReflectionHelper.getAllMethods(cls)) {
 			for (Annotation annotation : method.getDeclaredAnnotations()) {
 				if (annotation instanceof ZkController) {

@@ -53,7 +53,7 @@ public class StoredProcedureResult extends HashMap<String, Object>
             return null ;
         }
 
-        List<T> result = new ArrayList<T>() ;
+        List<T> result = new ArrayList<>() ;
 
         for( Object v : array )
         {
@@ -263,11 +263,11 @@ public class StoredProcedureResult extends HashMap<String, Object>
      */
     public <T> List<T> extractTable( String name, Class<T> returnType )
     {
-        List<T> result = new ArrayList<T>() ;
+        List<T> result = new ArrayList<>() ;
 
         long count = ObjectHelper.extractLong(get(name + "_COUNT")) ;
 
-        Map<FieldInfo, List<?>> dataFromDB = new HashMap<FieldInfo, List<?>>() ;
+        Map<FieldInfo, List<?>> dataFromDB = new HashMap<>() ;
 
         extractFromTable( "o" + name, returnType, dataFromDB  ) ;
 

@@ -22,7 +22,7 @@ public class ProfileServiceSessionImpl implements ProfileService {
 	public List<DLListboxProfile> findAll(String dlListboxId) {
 		DLListboxProfile profile = (DLListboxProfile) Sessions.getCurrent().getAttribute(PROFILE_SESS_ATTR + dlListboxId);
 		
-		ArrayList<DLListboxProfile> profiles = new ArrayList<DLListboxProfile>(1);
+		ArrayList<DLListboxProfile> profiles = new ArrayList<>(1);
 		
 		if (profile != null) {
 			profiles.add(profile);

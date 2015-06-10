@@ -35,18 +35,18 @@ public class DLDistinctLovbox extends DLLovbox<Box> {
     public void setParent( final Component parent ) {
         super.setParent( parent );
         this.afterCompose();
-        this.setController( new DLLovboxGeneralController<Box>( new DLListboxSimpleController<Box>( "" ) {
+        this.setController(new DLLovboxGeneralController<>(new DLListboxSimpleController<Box>("") {
 
             @Override
-            protected DLResponse<Box> loadData( final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts ) {
-                final DLResponse<String> response = loader.loadData( filter, firstRow, rowCount, sorts );
-                final List<Box> boxes = new ArrayList<Box>( response.getData().size() );
-                for ( String string : response.getData() ) {
-                    boxes.add( new Box( string ) );
+            protected DLResponse<Box> loadData(final List<NormalFilterUnitModel> filter, final int firstRow, final int rowCount, final List<DLSort> sorts) {
+                final DLResponse<String> response = loader.loadData(filter, firstRow, rowCount, sorts);
+                final List<Box> boxes = new ArrayList<>(response.getData().size());
+                for (String string : response.getData()) {
+                    boxes.add(new Box(string));
                 }
-                return new DLResponse<Box>( boxes, response.getRows() );
+                return new DLResponse<>(boxes, response.getRows());
             }
-        } ) );
+        }) );
         (new AnnotateDataBinder( this )).loadAll();
         if ( notCtl != null ) {
             setItem( notCtl );

@@ -41,7 +41,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
     // master controller
     protected DLListboxExtController masterController;
     // view
-    protected List<RowModel> rows = new LinkedList<RowModel>();
+    protected List<RowModel> rows = new LinkedList<>();
 
     @Override
     @SuppressWarnings( "unchecked" )

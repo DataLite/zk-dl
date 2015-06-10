@@ -29,7 +29,7 @@ import java.util.*;
  */
 class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredProcedureInvoker
 {
-	Map<String, Object> inputs = new HashMap<String, Object>();
+	Map<String, Object> inputs = new HashMap<>();
 
     // Oracle neumi az do verze 11g vybalit z DBCP pool native connection. Je potreba pomoci prostredku springu.
     NativeJdbcExtractor nativeJdbcExtractor = new CommonsDbcpNativeJdbcExtractor();
@@ -288,7 +288,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareOutParameter( new RecordOutParameter<T>( name, entityClass, name, dbType ) ) ;
+        return declareOutParameter(new RecordOutParameter<>(name, entityClass, name, dbType) ) ;
     }
 
     @Override
@@ -302,7 +302,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareOutParameter( new RecordOutParameter<T>( name, entityClass, name, dbType, true ) ) ;
+        return declareOutParameter(new RecordOutParameter<>(name, entityClass, name, dbType, true) ) ;
     }
 
     @Override
@@ -376,7 +376,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareParameter(new RecordInOutParameter<T>(name, entityClass, name, dbType), value) ;
+        return declareParameter(new RecordInOutParameter<>(name, entityClass, name, dbType), value) ;
     }
 
     @Override
@@ -396,7 +396,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareParameter(new RecordInOutParameter<T>(name, entityClass, name, dbType, true ), value) ;
+        return declareParameter(new RecordInOutParameter<>(name, entityClass, name, dbType, true), value) ;
     }
 
     @Override
@@ -471,7 +471,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareParameter( new RecordInParameter<T>( name, entityClass, name, dbType ), value ) ;
+        return declareParameter(new RecordInParameter<>(name, entityClass, name, dbType), value ) ;
     }
 
     @Override
@@ -491,7 +491,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
     {
         wrapNeed = true ;
 
-        return declareParameter( new RecordInParameter<T>( name, entityClass, name, dbType, true ), value ) ;
+        return declareParameter(new RecordInParameter<>(name, entityClass, name, dbType, true), value ) ;
     }
 
     @Override
@@ -597,8 +597,8 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         generateDeclarePlSqlVariables(sb) ;
 
-        List<SqlParameter> newInputParameter = new ArrayList<SqlParameter>() ;
-        List<SqlParameter> newOutputParameter = new ArrayList<SqlParameter>() ;
+        List<SqlParameter> newInputParameter = new ArrayList<>() ;
+        List<SqlParameter> newOutputParameter = new ArrayList<>() ;
 
 
         sb.append( "begin\n" ) ;
@@ -611,7 +611,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
 
         sb.append( "end ;\n" ) ;
 
-        generateNewParameterList( newInputParameter, newOutputParameter, new ArrayList<SqlParameter>( getDeclaredParameters() ) ) ;
+        generateNewParameterList( newInputParameter, newOutputParameter, new ArrayList<>(getDeclaredParameters()) ) ;
 
         setName(sb.toString()) ;
         setSqlReadyForUse( true ) ;
@@ -785,7 +785,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
         }
     }
 
-    private Map<String, String> long2shortName = new HashMap<String, String>() ;
+    private Map<String, String> long2shortName = new HashMap<>() ;
 
     /**
      * @param original  originalni nazev

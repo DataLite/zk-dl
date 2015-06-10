@@ -80,7 +80,7 @@ public class ListitemTemplate implements Template {
 
     public Map<String, Object> getParameters() {
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         //set binding variable
         parameters.put( "var", "item" );
 

@@ -1,9 +1,10 @@
 package cz.datalite.test.webdriver.zk;
 
-import java.util.LinkedList;
-import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -31,7 +32,7 @@ public class ListitemElement extends ZkElement {
      * @return listcells
      */
     public List<ListcellElement> findListcells() {
-        final List<ListcellElement> cells = new LinkedList<ListcellElement>();
+        final List<ListcellElement> cells = new LinkedList<>();
 
         for ( WebElement el : findElements( By.tagName( "td" ) ) ) {
             cells.add( new ListcellElement( getZkDriver(), this, el ) );

@@ -42,11 +42,11 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     protected final DLListboxExtController<T> masterController;
     // model
     /** data model - empty list on start */
-    protected List<T> listboxModel = new ArrayList<T>();
+    protected List<T> listboxModel = new ArrayList<>();
     /** listheader models */
     protected final DLColumnModel columnModel;
     /** listheader - listheader model map */
-    protected final Map<DLListheader, DLColumnUnitModel> columnMap = new HashMap<DLListheader, DLColumnUnitModel>();
+    protected final Map<DLListheader, DLColumnUnitModel> columnMap = new HashMap<>();
     /** renderer template for changing when order of the column is changed */
     @Deprecated
     protected Listitem renderTemplate;
@@ -54,19 +54,19 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     protected final Template template;
     /** map model - cell in the renderer because of breaking and creating relations */
     @Deprecated
-    protected final Map<DLColumnUnitModel, Listcell> rendererCellTemplates = new HashMap<DLColumnUnitModel, Listcell>();
+    protected final Map<DLColumnUnitModel, Listcell> rendererCellTemplates = new HashMap<>();
     /** map listheader - model for changing cols order model */
-    protected final Map<DLColumnUnitModel, DLListheader> listheaderTemplates = new HashMap<DLColumnUnitModel, DLListheader>();
+    protected final Map<DLColumnUnitModel, DLListheader> listheaderTemplates = new HashMap<>();
     /** current mapping of listcells against the default template. The array uses the catch at the beginning. It is the 0 */
-    protected final List<Integer> listcellIndicies = new ArrayList<Integer>();
+    protected final List<Integer> listcellIndicies = new ArrayList<>();
     /** selected item */
     protected T selectedItem;
     /** selected items */
     protected Set<T> selectedItems = Collections.emptySet();
     // default model
-    protected final List<DLListheader> defaultHeaders = new LinkedList<DLListheader>();
+    protected final List<DLListheader> defaultHeaders = new LinkedList<>();
     @Deprecated
-    protected final List<Listcell> defaultRendererCellTemplates = new LinkedList<Listcell>();
+    protected final List<Listcell> defaultRendererCellTemplates = new LinkedList<>();
     // view
     protected final DLListbox listbox;
     /** local flag used to enable/disable emitting the event on the select. */
@@ -96,7 +96,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                     }
 
                     // multiple selected items
-                    final Set<T> selectedItems = new HashSet<T>();
+                    final Set<T> selectedItems = new HashSet<>();
                     for ( Listitem listitem : ( Set<Listitem> ) listbox.getSelectedItems() ) {
                         selectedItems.add( listboxModel.get( listitem.getIndex() ) );
                     }
@@ -387,7 +387,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         // test wheather the listcell indicies is initialized
         if (listcellIndicies.size() == 1 ) return;
 
-        List<Component> listcellBuffer = new ArrayList<Component>();
+        List<Component> listcellBuffer = new ArrayList<>();
         listcellBuffer.addAll( item.getChildren() );
 
         // remove all current listcells from the listitem
@@ -431,7 +431,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 return;
             }
 
-            final List<NodeInfo> cellTemplates = new ArrayList<NodeInfo>();
+            final List<NodeInfo> cellTemplates = new ArrayList<>();
 
             TemplateInfo info = ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
             // start from <listitem> children
@@ -507,7 +507,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 converter = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ) != null
                         ? info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttribute( "value" )
                         : null;
-                converterArgs = new HashMap<String, String>();
+                converterArgs = new HashMap<>();
                 Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttributes();
                 for ( String key : attrs.keySet() ) {
                     if ( attrs.get( key ).length > 0 )

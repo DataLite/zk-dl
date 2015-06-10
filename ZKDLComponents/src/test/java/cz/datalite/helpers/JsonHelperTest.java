@@ -134,14 +134,14 @@ public class JsonHelperTest {
 	
 	@Test
 	public void testEnumCollection() {
-		List<TestEnum> value = new ArrayList<TestEnum>();
+		List<TestEnum> value = new ArrayList<>();
 		value.add(TestEnum.ONE);
 		value.add(TestEnum.TWO);
 		
 		Assert.assertEquals(value, JsonHelper.fromJsonObject(JsonHelper.toJsonObject(value),
 			value.getClass().getName() + "#" + TestEnum.class.getName()));
 		
-		Set<TestEnum> value2 = new HashSet<TestEnum>();
+		Set<TestEnum> value2 = new HashSet<>();
 		value2.add(TestEnum.ONE);
 		value2.add(TestEnum.TWO);
 		
@@ -155,14 +155,14 @@ public class JsonHelperTest {
 	
 	@Test
 	public void testStringCollection() {
-		List<String> value = new ArrayList<String>();
+		List<String> value = new ArrayList<>();
 		value.add("STR1");
 		value.add("STR2");
 		
 		Assert.assertEquals(value, JsonHelper.fromJsonObject(JsonHelper.toJsonObject(value),
 			value.getClass().getName() + "#" + String.class.getName()));
 		
-		Set<String> value2 = new HashSet<String>();
+		Set<String> value2 = new HashSet<>();
 		value2.add("STR1");
 		value2.add("STR2");
 		
@@ -176,14 +176,14 @@ public class JsonHelperTest {
 	
 	@Test
 	public void testDateCollection() {
-		List<Date> value = new ArrayList<Date>();
+		List<Date> value = new ArrayList<>();
 		value.add(new Date());
 		value.add(new Date());
 		
 		Assert.assertEquals(value, JsonHelper.fromJsonObject(JsonHelper.toJsonObject(value),
 			value.getClass().getName() + "#" + Date.class.getName()));
 		
-		Set<Date> value2 = new HashSet<Date>();
+		Set<Date> value2 = new HashSet<>();
 		value.add(new Date());
 		value.add(new Date());
 		
@@ -197,14 +197,14 @@ public class JsonHelperTest {
 	
 	@Test
 	public void testLongCollection() {
-		List<Long> value = new ArrayList<Long>();
+		List<Long> value = new ArrayList<>();
 		value.add(1L);
 		value.add(2L);
 		
 		Assert.assertEquals(value, JsonHelper.fromJsonObject(JsonHelper.toJsonObject(value),
 			value.getClass().getName() + "#" + Long.class.getName()));
 		
-		Set<Long> value2 = new HashSet<Long>();
+		Set<Long> value2 = new HashSet<>();
 		value2.add(1L);
 		value2.add(2L);
 		

@@ -30,15 +30,7 @@ public final class EnumHelper
             //noinspection unchecked
             return (Object[])m.invoke( null ) ;
         }
-        catch (NoSuchMethodException e)
-        {
-            throw new IllegalArgumentException( e ) ;
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new IllegalArgumentException( e ) ;
-        }
-        catch (IllegalAccessException e)
+        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
         {
             throw new IllegalArgumentException( e ) ;
         }
@@ -63,15 +55,7 @@ public final class EnumHelper
             //noinspection unchecked
             return (String)m.invoke( value ) ;
         }
-        catch (NoSuchMethodException e)
-        {
-            throw new IllegalArgumentException( e ) ;
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new IllegalArgumentException( e ) ;
-        }
-        catch (IllegalAccessException e)
+        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
         {
             throw new IllegalArgumentException( e ) ;
         }
@@ -110,11 +94,7 @@ public final class EnumHelper
 
             return null ;
         }
-        catch (InvocationTargetException e)
-        {
-            throw new IllegalArgumentException( e ) ;
-        }
-        catch (IllegalAccessException e)
+        catch (InvocationTargetException | IllegalAccessException e)
         {
             throw new IllegalArgumentException( e ) ;
         }

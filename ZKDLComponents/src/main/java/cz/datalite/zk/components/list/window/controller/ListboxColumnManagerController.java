@@ -17,9 +17,9 @@ import java.util.Map;
 public class ListboxColumnManagerController extends GenericAutowireComposer {
 
     // model
-    protected List<Map<String, Object>> usedModel = new ArrayList<Map<String, Object>>();
-    protected List<Map<String, Object>> unusedModel = new ArrayList<Map<String, Object>>();
-    protected List<Map<String, Object>> hiddenModel = new ArrayList<Map<String, Object>>();
+    protected List<Map<String, Object>> usedModel = new ArrayList<>();
+    protected List<Map<String, Object>> unusedModel = new ArrayList<>();
+    protected List<Map<String, Object>> hiddenModel = new ArrayList<>();
 
     // view
     public DLListbox usedListbox;
@@ -68,7 +68,7 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
     }
 
     protected Map<String, Object> prepareMap( final Map<String, Object> map ) {
-        return new java.util.HashMap<String, Object>( map );
+        return new java.util.HashMap<>(map);
     }
 
     public void onOk() {

@@ -84,7 +84,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     /** component identifier */
     protected final String identifier;
     /** list of the listeners */
-    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<String, EventListeners>( EventListeners.class );
+    protected Map<String, EventListeners> listeners = new HashMapAutoCreate<>(EventListeners.class);
     /** model lock - if model is locked it cannot be changed */
     protected boolean lock = false;
     /** příznak zda byla změna modelu vyvolaná změnou stránky **/
@@ -177,7 +177,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param comp listbox component
      */
     protected void initListbox( final DLListbox comp ) {
-        listboxController = new DLListboxComponentControllerImpl<T>( this, model.getColumnModel(), comp );
+        listboxController = new DLListboxComponentControllerImpl<>(this, model.getColumnModel(), comp);
         this.autosave = comp.isAutosave();
     }
 
@@ -186,7 +186,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param comp manager component
      */
     protected void initManager( final DLListboxManager comp ) {
-        managerController = new DLManagerControllerImpl<T>( this, comp );
+        managerController = new DLManagerControllerImpl<>(this, comp);
     }
 
     /**
@@ -202,7 +202,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
      * @param comp profile manager component
      */
 	protected void initProfileManager(final DLProfileManager<T> comp) {
-		this.profileManagerController = new DLProfileManagerControllerImpl<T>(this, comp, this.getProfileService());
+		this.profileManagerController = new DLProfileManagerControllerImpl<>(this, comp, this.getProfileService());
     }
 	
 	/**
@@ -260,7 +260,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         final boolean normal = model.getFilterModel().getNormal().isEmpty();
 
         // There are defined active filters - true means that filter is active
-        final Map<DLFiterType, Boolean> filters = new EnumMap<DLFiterType, Boolean>( DLFiterType.class );
+        final Map<DLFiterType, Boolean> filters = new EnumMap<>(DLFiterType.class);
         filters.put( DLFiterType.EASY, !easy );
         filters.put( DLFiterType.QUICK, !quick );
         filters.put( DLFiterType.NORMAL, !normal );
@@ -461,7 +461,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
     public void clearDataModel() {
         model.getPagingModel().clear();
-        getListboxController().setListboxModel( new ArrayList<T>() );
+        getListboxController().setListboxModel(new ArrayList<>() );
         getListboxController().fireDataChanges();
         setSelectedItem(null);
         getListbox().setEmptyMessageVisible(false);
@@ -794,7 +794,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
             NormalFilterModel savedModel = new NormalFilterModel();
 
             int i = 0;
-            List<String> columns = new ArrayList<String>();
+            List<String> columns = new ArrayList<>();
 
             for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
                 String column = unit.getColumn();
@@ -891,12 +891,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	DLColumnModel columnModel = masterModel.getColumnModel(); // linkedlist		
     	DLFilterModel filterModel = masterModel.getFilterModel();
 
-    	HashMap<String, Map<String, Object>> allColumnsInfo = new HashMap<String, Map<String,Object>>();
-    	List<String> columns = new ArrayList<String>();
+    	HashMap<String, Map<String, Object>> allColumnsInfo = new HashMap<>();
+    	List<String> columns = new ArrayList<>();
 
     	int i = 0;
     	for (DLColumnUnitModel unit : columnModel.getColumnModels()) {
-    		HashMap<String, Object> columnInfo = new HashMap<String, Object>();
+    		HashMap<String, Object> columnInfo = new HashMap<>();
     		columnInfo.put("visible", String.valueOf(unit.isVisible()));
     		columnInfo.put("order", String.valueOf(unit.getOrder().toString()));
     		columnInfo.put("sortOrder", String.valueOf(unit.getSortOrder()));
@@ -929,35 +929,33 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     	/**
     	 * FILTER
     	 */		
-    	allColumnsInfo = new HashMap<String, Map<String,Object>>();
-    	Iterator<NormalFilterUnitModel> nfumIterator = filterModel.getNormal().iterator();
+    	allColumnsInfo = new HashMap<>();
 
-		while (nfumIterator.hasNext()) {
-			NormalFilterUnitModel normalFilterUnitModel = nfumIterator.next();
-			HashMap<String, Object> filterInfo = new HashMap<String, Object>();
-			try {
-				Object value1 = normalFilterUnitModel.getValue(1);
-				Object value2 = normalFilterUnitModel.getValue(2);
-				
-				String value1Type = JsonHelper.getType(value1);
-				String value2Type = JsonHelper.getType(value2);
-				
-				filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
-				filterInfo.put("value1", JsonHelper.toJsonObject(value1));
-				filterInfo.put("value1Type", value1Type);
-				filterInfo.put("value2", JsonHelper.toJsonObject(value2));
-				filterInfo.put("value2Type", value2Type);			
-				
-				String column = normalFilterUnitModel.getColumn();
+        for (NormalFilterUnitModel normalFilterUnitModel : filterModel.getNormal()) {
+            HashMap<String, Object> filterInfo = new HashMap<>();
+            try {
+                Object value1 = normalFilterUnitModel.getValue(1);
+                Object value2 = normalFilterUnitModel.getValue(2);
 
-				// filter unit must have column
-				if (column != null) {
-					allColumnsInfo.put(column, filterInfo);
-				}
-			} catch (IllegalArgumentException iex) {
-				iex.printStackTrace();
-			}
-    	}		
+                String value1Type = JsonHelper.getType(value1);
+                String value2Type = JsonHelper.getType(value2);
+
+                filterInfo.put("operator", normalFilterUnitModel.getOperator().getShortName());
+                filterInfo.put("value1", JsonHelper.toJsonObject(value1));
+                filterInfo.put("value1Type", value1Type);
+                filterInfo.put("value2", JsonHelper.toJsonObject(value2));
+                filterInfo.put("value2Type", value2Type);
+
+                String column = normalFilterUnitModel.getColumn();
+
+                // filter unit must have column
+                if (column != null) {
+                    allColumnsInfo.put(column, filterInfo);
+                }
+            } catch (IllegalArgumentException iex) {
+                iex.printStackTrace();
+            }
+        }
 
     	json = new JSONObject();
     	json.putAll(allColumnsInfo);
