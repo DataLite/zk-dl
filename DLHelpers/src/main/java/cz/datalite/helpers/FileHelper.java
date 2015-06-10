@@ -9,7 +9,7 @@ public abstract class FileHelper {
 
     /**
      * Funkce rozpoznává základní content type a vrací ho jako string.
-     * For  mor information goto <a href="http://en.wikipedia.org/wiki/Internet_media_type>Wikipedia / Internet_media_type</a>.
+     * For  mor information goto <a href="http://en.wikipedia.org/wiki/Internet_media_type">Wikipedia / Internet_media_type</a>.
      * @param filename celé jméno souboru (obrazek.jpg)
      * @return string contentType (image/jpeg)
      */

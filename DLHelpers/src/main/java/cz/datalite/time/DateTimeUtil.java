@@ -46,10 +46,10 @@ public final class DateTimeUtil {
 	 * Vraci dobu trvani naformatovanou jako text:
 	 * 
 	 * <pre>
-	 *  longFormat & !trimZeros => "0 days 10 hours 0 minutes 47 seconds 972 miliseconds"
-	 *  longFormat &  trimZeros => "10 hours 47 seconds 972 miliseconds"
-	 * !longFormat & !trimZeros => "0d 10h 0m 47s 972ms"
-	 * !longFormat &  trimZeros => "10h 47s 972ms"
+	 *  longFormat & !trimZeros =&gt; "0 days 10 hours 0 minutes 47 seconds 972 miliseconds"
+	 *  longFormat &  trimZeros =&gt; "10 hours 47 seconds 972 miliseconds"
+	 * !longFormat & !trimZeros =&gt; "0d 10h 0m 47s 972ms"
+	 * !longFormat &  trimZeros =&gt; "10h 47s 972ms"
 	 * </pre>
 	 * 
 	 * @param duration
