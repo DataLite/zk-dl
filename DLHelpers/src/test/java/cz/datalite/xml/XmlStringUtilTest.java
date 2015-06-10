@@ -1,6 +1,5 @@
 package cz.datalite.xml;
 
-import cz.datalite.xml.XmlStringUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

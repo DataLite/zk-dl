@@ -18,16 +18,6 @@
  */
 package cz.datalite.zk.annotation.processor;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkAsync;
@@ -54,6 +44,16 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.Component;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * <p>Annotation Processor handles all ZK annotations on the methods. For each
  * annotation there is defined specific annotation processor which handles that
@@ -72,14 +72,14 @@ import org.zkoss.zk.ui.Component;
 public class AnnotationProcessor<T> {
 
     /** Map of created processors. Serves as annotation cache */
-    private static final Map< Class, AnnotationProcessor> processors = new HashMap<Class, AnnotationProcessor>();
+    private static final Map< Class, AnnotationProcessor> processors = new HashMap<>();
 
     /** list of processors producing method invokers or similar */
-    private static final List<Initializer> initializers = new ArrayList<Initializer>();
+    private static final List<Initializer> initializers = new ArrayList<>();
     
     /** list of processors producing wrappers for invoke object providing additional
      * functionality */
-    private static final List<Wrapper> wrappers = new ArrayList<Wrapper>();
+    private static final List<Wrapper> wrappers = new ArrayList<>();
 
     /** configuration key in property files */
     private static final String CONFIG = "zk-dl.annotation.cache";
@@ -127,10 +127,10 @@ public class AnnotationProcessor<T> {
     }
 
 	/** List of cached ZkEvents */
-    private Map<Method,Set<MethodCache>> zkEvents = new HashMap<Method, Set<MethodCache>>();
+    private Map<Method,Set<MethodCache>> zkEvents = new HashMap<>();
     
     /** List of cached Commands */
-    private Map<Method,Cache> commands = new HashMap<Method, Cache>();
+    private Map<Method,Cache> commands = new HashMap<>();
 
     /**
      * Generate processor wrapper list
@@ -191,7 +191,7 @@ public class AnnotationProcessor<T> {
         //noinspection unchecked
         AnnotationProcessor<T> ap = processors.get( type );
         if ( ap == null ) {
-            ap = new AnnotationProcessor<T>( type );
+            ap = new AnnotationProcessor<>(type);
             if ( cache ) // if caching is enabled
                 processors.put( type, ap );
         }
@@ -271,7 +271,7 @@ public class AnnotationProcessor<T> {
             final Invoke wrapper = wrapped.get( i );
             
             if ( invoker instanceof MethodInvoker ) {
-                if ( zkEvents.get( method ) == null ) zkEvents.put( method, new HashSet<MethodCache>() );
+                if ( zkEvents.get( method ) == null ) zkEvents.put( method, new HashSet<>() );
                 // store method invoker
                 zkEvents.get( method ).add( new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
             } else {
@@ -298,7 +298,7 @@ public class AnnotationProcessor<T> {
      */
     private List<Invoke> processInvokerAnnotations( Method method ) {
         // core invokers
-        List<Invoke> invokers = new ArrayList<Invoke>();
+        List<Invoke> invokers = new ArrayList<>();
         
         // read all core invokers
         for ( Initializer initializer : initializers ) {
@@ -325,11 +325,11 @@ public class AnnotationProcessor<T> {
      */
     private List<Invoke> processWrappingAnnotations( Method method, List<Invoke> invokers ) {
         // wrapped invokers
-        List<Invoke> invokes = new ArrayList<Invoke>();
+        List<Invoke> invokes = new ArrayList<>();
         
         if ( !invokers.isEmpty() ) {
             invokes.addAll( invokers );
-            final List<Invoke> output = new LinkedList<Invoke>();
+            final List<Invoke> output = new LinkedList<>();
             for ( Invoke invoke : invokes ) {
                 output.add( processWrappers( method, invoke) );
             }
@@ -389,7 +389,7 @@ public class AnnotationProcessor<T> {
 	 * @return
 	 */
 	private static <U> GeneralWrapperProcessor<U> createProcessor(Class<U> annotation) {
-		return new GeneralWrapperProcessor<U>(annotation, findHandler(annotation));
+		return new GeneralWrapperProcessor<>(annotation, findHandler(annotation));
 	}
 
 	/**

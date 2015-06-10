@@ -21,7 +21,6 @@ package cz.datalite.zk.annotation.invoke;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.annotation.ZkException;
 import cz.datalite.zk.annotation.ZkExceptions;
-import java.lang.reflect.InvocationTargetException;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.util.Clients;

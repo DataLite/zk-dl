@@ -1,7 +1,6 @@
 package cz.datalite.dao.impl;
 
 import cz.datalite.dao.DLNullPrecedence;
-import cz.datalite.hibernate.OrderBySqlFormula;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.CriteriaQuery;

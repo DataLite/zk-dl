@@ -1,6 +1,5 @@
 package cz.datalite.exception;
 
-import cz.datalite.exception.ProblemUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

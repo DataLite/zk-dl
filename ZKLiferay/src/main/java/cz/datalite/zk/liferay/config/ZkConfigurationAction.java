@@ -5,7 +5,6 @@
 package cz.datalite.zk.liferay.config;
 
 import com.liferay.portal.kernel.portlet.BaseConfigurationAction;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;

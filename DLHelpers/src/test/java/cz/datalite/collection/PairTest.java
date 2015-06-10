@@ -1,6 +1,5 @@
 package cz.datalite.collection;
 
-import cz.datalite.collection.Pair;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

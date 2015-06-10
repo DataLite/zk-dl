@@ -3,7 +3,6 @@ package cz.datalite.collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import cz.datalite.collection.ArrayUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

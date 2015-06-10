@@ -197,7 +197,7 @@ public class DLLiferaySearch<T> extends DisplayTerms {
 
     public DLSearch<T> getZKDLSearch()
     {
-        DLSearch<T> search = new DLSearch<T>();
+        DLSearch<T> search = new DLSearch<>();
 
         search.setFirstRow(getStart());
         search.setRowCount(getEnd() - getStart());

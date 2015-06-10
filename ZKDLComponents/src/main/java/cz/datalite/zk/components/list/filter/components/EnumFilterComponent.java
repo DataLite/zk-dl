@@ -1,7 +1,7 @@
 package cz.datalite.zk.components.list.filter.components;
 
 import java.util.Collections;
-import org.zkoss.lang.Objects;
+
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;

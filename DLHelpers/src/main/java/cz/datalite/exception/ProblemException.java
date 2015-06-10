@@ -106,7 +106,7 @@ public class ProblemException
 	public void add(Problem problem, List<Object> parameters) {
 
 		if (problems == null) {
-			problems = new HashMap<Problem, List<Object>>();
+			problems = new HashMap<>();
 		}
 		problems.put(problem, parameters);
 	}
@@ -127,8 +127,8 @@ public class ProblemException
 	 *        the problem to set
 	 */
 	private void setProblem(Problem problem) {
-		this.problems = new HashMap<Problem, List<Object>>();
-		this.problems.put(problem, new ArrayList<Object>());
+		this.problems = new HashMap<>();
+		this.problems.put(problem, new ArrayList<>());
 	}
 
 	/**

@@ -6,7 +6,6 @@ import cz.datalite.dao.plsql.StoredProcedureInvoker;
 import cz.datalite.dao.plsql.StoredProcedureInvokerCreator;
 import cz.datalite.stereotype.Autowired;
 import cz.datalite.stereotype.DAO;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 import javax.sql.DataSource;

@@ -2,10 +2,6 @@ package cz.datalite.config;
 
 import java.util.Date;
 
-import cz.datalite.config.Configuration;
-import cz.datalite.config.ConfigurationKey;
-import cz.datalite.config.ConfigurationSource;
-import cz.datalite.config.VirtualConfigurationKey;
 import cz.datalite.exception.ProblemException;
 import org.junit.AfterClass;
 import org.junit.Assert;

@@ -38,11 +38,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
 
 public class PortalMockFactory
 {
@@ -111,13 +107,13 @@ public class PortalMockFactory
 
         new EmailAddressLocalServiceUtil().setService(mock(EmailAddressLocalService.class, RETURNS_MOCKS));
         when(EmailAddressLocalServiceUtil.getService().createEmailAddress(anyLong())).thenReturn(new EmailAddressImpl());
-        when(EmailAddressLocalServiceUtil.getService().getEmailAddresses(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<EmailAddress>());
+        when(EmailAddressLocalServiceUtil.getService().getEmailAddresses(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<>());
 
         new PhoneLocalServiceUtil().setService(mock(PhoneLocalService.class, RETURNS_MOCKS));
-        when(PhoneLocalServiceUtil.getService().getPhones(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<Phone>());
+        when(PhoneLocalServiceUtil.getService().getPhones(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<>());
 
         new WebsiteLocalServiceUtil().setService(mock(WebsiteLocalService.class, RETURNS_MOCKS));
-        when(WebsiteLocalServiceUtil.getService().getWebsites(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<Website>());
+        when(WebsiteLocalServiceUtil.getService().getWebsites(anyLong(), anyString(), anyLong())).thenReturn(new LinkedList<>());
 
         new GroupLocalServiceUtil().setService(mock(GroupLocalService.class, RETURNS_MOCKS));
         when(GroupLocalServiceUtil.getService().createGroup(anyLong())).thenReturn(new GroupImpl());

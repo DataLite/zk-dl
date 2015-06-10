@@ -10,7 +10,6 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**

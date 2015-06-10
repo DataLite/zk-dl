@@ -20,12 +20,6 @@ package cz.datalite.zk.annotation.invoke;
 
 import cz.datalite.zk.annotation.ZkEvent;
 import cz.datalite.zk.annotation.ZkEvents;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
@@ -34,6 +28,13 @@ import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.ForwardEvent;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>Method invoker handles requests for invocation given method on given
@@ -67,7 +68,7 @@ public class MethodInvoker implements Invoke {
     }
 
     public static List<Invoke> process(Method method, ZkEvents annotations) {
-        List<Invoke> invokes = new ArrayList<Invoke>();
+        List<Invoke> invokes = new ArrayList<>();
         for (ZkEvent annotation : annotations.events()) {
             invokes.addAll(process(method, annotation));
         }

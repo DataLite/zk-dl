@@ -4,7 +4,6 @@ import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
 import cz.datalite.zk.components.list.filter.components.CloneFilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.FilterComponentFactory;
 import cz.datalite.zk.components.list.filter.components.InstanceFilterComponentFactory;
-import cz.datalite.zk.components.list.window.controller.ListboxFilterManagerController;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Space;
@@ -15,7 +14,7 @@ import org.zkoss.zul.Space;
  */
 public class RowModel {
 
-    protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger( ListboxFilterManagerController.class );
+    protected final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RowModel.class);
     protected NormalFilterUnitModel model;
     protected Component position1;
     protected Component position2;

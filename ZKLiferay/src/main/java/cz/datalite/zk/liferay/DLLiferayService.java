@@ -26,7 +26,6 @@ import javax.portlet.PortletRequest;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.prefs.Preferences;
 import javax.portlet.PortletPreferences;
 
 /**

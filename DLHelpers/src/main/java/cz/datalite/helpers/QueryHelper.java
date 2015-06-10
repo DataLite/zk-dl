@@ -23,7 +23,7 @@ public abstract class QueryHelper
             return null;
         }
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (queryResult.isEmpty())
         {

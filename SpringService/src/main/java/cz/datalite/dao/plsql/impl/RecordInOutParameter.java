@@ -1,7 +1,6 @@
 package cz.datalite.dao.plsql.impl;
 
 import org.springframework.jdbc.core.SqlInOutParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
 
 import java.sql.Types;
 

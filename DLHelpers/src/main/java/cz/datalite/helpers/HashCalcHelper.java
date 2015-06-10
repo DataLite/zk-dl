@@ -78,14 +78,13 @@ public class HashCalcHelper {
 		StringBuffer	sb = new StringBuffer ();
 		byte		n1, n2;
 
-		for (int c = 0; c < v.length; c++)
-		{
-			n1 = (byte)((v[c] & 0xF0) >>> 4); // This line was changed
-			n2 = (byte)((v[c] & 0x0F)); // So was this line
+        for (byte aV : v) {
+            n1 = (byte) ((aV & 0xF0) >>> 4); // This line was changed
+            n2 = (byte) ((aV & 0x0F)); // So was this line
 
-			sb.append (n1 >= 0xA ? (char)(n1 - 0xA + 'a') : (char)(n1 + '0'));
-			sb.append (n2 >= 0xA ? (char)(n2 - 0xA + 'a') : (char)(n2 + '0'));
-		}
+            sb.append(n1 >= 0xA ? (char) (n1 - 0xA + 'a') : (char) (n1 + '0'));
+            sb.append(n2 >= 0xA ? (char) (n2 - 0xA + 'a') : (char) (n2 + '0'));
+        }
 		
 		return sb.toString();
 	}

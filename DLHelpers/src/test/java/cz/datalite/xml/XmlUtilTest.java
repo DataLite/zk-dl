@@ -1,7 +1,6 @@
 package cz.datalite.xml;
 
 import cz.datalite.exception.ProblemException;
-import cz.datalite.xml.XmlUtil;
 import org.apache.xerces.dom.DocumentImpl;
 import org.junit.Test;
 import org.w3c.dom.Document;

@@ -25,7 +25,7 @@ public class DLSearch<T> {
     private String ALIAS_SUFFIX = "Alias";
 
     /** Criterions in filter */
-    private final List<Criterion> criterions = new LinkedList<Criterion>();
+    private final List<Criterion> criterions = new LinkedList<>();
     /** Sorts - order by definition */
     private List<DLSort> sorts;
     /** Requested rowCount - if it is 0 then request all rows*/
@@ -35,9 +35,9 @@ public class DLSearch<T> {
     /** Return distinct values. */
     private boolean distinct;
     /** Aliases are used for hierarchy structure */
-    private final Set<Alias> aliases = new HashSet<Alias>();
+    private final Set<Alias> aliases = new HashSet<>();
     /** Projection type like distinct or row count */
-    private final List<Projection> projections = new LinkedList<Projection>();
+    private final List<Projection> projections = new LinkedList<>();
 
     /** Class of the main entity. If persistence class is set, all properties are validated against this class.
      *  It is mandatory to set persistentClass if @Embedded annotation is used - we need to check if embeddable
@@ -55,14 +55,14 @@ public class DLSearch<T> {
      * @param firstRow index of 1st row (starts at 0)
      */
     public DLSearch( final int rowCount, final int firstRow ) {
-        this( new LinkedList<DLSort>(), rowCount, firstRow );
+        this(new LinkedList<>(), rowCount, firstRow );
     }
 
     /**
      * Create DLSearch
      */
     public DLSearch() {
-        this( new LinkedList<DLSort>() );
+        this(new LinkedList<>() );
     }
 
     /**

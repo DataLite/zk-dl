@@ -2,7 +2,6 @@ package cz.datalite.collection;
 
 import java.util.ArrayList;
 
-import cz.datalite.collection.CollectionUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
