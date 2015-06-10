@@ -8,8 +8,11 @@ import java.util.regex.Pattern;
 
 /**
  * Converter pro prepocet souradnic do formatu dle parametru style
- * style = "DM" =>  48° 7.72242'
- * style = "DMS" => 48° 59' 7.722" // default value
+ * <ul>
+ *
+ * <li>style = "DM" =&gt;  48° 7.72242'</li>
+ * <li>style = "DMS" =&gt; 48° 59' 7.722" // default value</li>
+ * </ul>
  */
 public class CoordinateConverter implements Converter<String, Double, Component> {
 

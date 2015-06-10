@@ -25,9 +25,9 @@ public interface DLListboxController<T> {
     /**
      * <p><b>Usage:</b> EasyFilter</p>
      * <p>With this name easy filter model will be published in ZUL files.</p>
-     * <p><b>Usage example:</b><br/><br/>
+     * <p><b>Usage example:</b><br/
      * <i>java:</i> controller.registerEasyFilterVariable(comp, "filter");<br/>
-     * <i>zul:</i><br/>
+     * <i>zul:</i>
      * <ul>
      * <li>&lt;textbox value="@{filter.LIKE.name}"/&gt;</li>
      * <li>&lt;intbox value="@{filter.GT.priority}"/&gt;</li>
@@ -38,13 +38,13 @@ public interface DLListboxController<T> {
      * <dt>LIKE</dt>
      *    <dd>%needle%, *needle*</dd>
      * <dt>GE</dt>
-     *    <dd>greater equal: >=</dd>
+     *    <dd>greater equal: &gt;=</dd>
      * <dt>GT</dt>
-     *    <dd>greater than: ></dd>
+     *    <dd>greater than: &gt;</dd>
      * <dt>LE</dt>
-     *    <dd>lesser equal: <=</dd>
+     *    <dd>lesser equal: &lt;=</dd>
      * <dt>LT</dt>
-     *    <dd>lesser than: <</dd>
+     *    <dd>lesser than: &lt;</dd>
      * <dt>EQ</dt>
      *    <dd>equal: =</dd>
      * </dl>

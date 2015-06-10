@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  * <li>chr(13)</li>
  * <li>others</li>
  * </ul>
- * <p/>
  * </p>
  *
  * @see org.apache.commons.lang.StringUtils#deleteWhitespace(java.lang.String)
