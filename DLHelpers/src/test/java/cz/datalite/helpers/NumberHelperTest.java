@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link NumberHelper}
@@ -43,6 +44,7 @@ public class NumberHelperTest {
 	public void testRound() throws Exception {
 		try {
 			NumberHelper.round(null, 2);
+			fail();
 		} catch (NullPointerException ignore) {/*expected*/}
 		assertEquals(1.0, NumberHelper.round((double) 1, 2), DELTA);
 		assertEquals(1.330, NumberHelper.round(1.333, 2), DELTA);
