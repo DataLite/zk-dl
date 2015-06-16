@@ -5,6 +5,7 @@ import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
 import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import oracle.sql.STRUCT;
 import org.hibernate.proxy.HibernateProxyHelper;
 
@@ -442,6 +443,10 @@ public final class ObjectHelper
         {
             return ((BigDecimal) value).longValue();
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( (String)value ) : null ;
+        }
 
         return (value != null) ? Long.parseLong(String.valueOf(value)) : null;
     }
@@ -463,6 +468,10 @@ public final class ObjectHelper
         else if (value instanceof BigDecimal)
         {
             return ((BigDecimal) value).doubleValue();
+        }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  Double.parseDouble((String) value) : null ;
         }
 
         return (value != null) ? Double.parseDouble(String.valueOf(value)) : null;
@@ -486,6 +495,10 @@ public final class ObjectHelper
         {
             return ((Integer) value);
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt((String) value) : null ;
+        }
 
         return (value != null) ? Integer.parseInt(String.valueOf(value)) : null;
     }
@@ -508,6 +521,10 @@ public final class ObjectHelper
         {
             return new BigDecimal((Integer) value);
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  new BigDecimal((String) value) : null ;
+        }
 
         return (value != null) ? new BigDecimal(String.valueOf(value)) : null;
     }
@@ -529,6 +546,10 @@ public final class ObjectHelper
         else if (value instanceof Integer)
         {
             return BigInteger.valueOf(((Integer) value)) ;
+        }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  new BigInteger((String) value) : null ;
         }
 
         return (value != null) ? new BigInteger(String.valueOf(value)) : null;
