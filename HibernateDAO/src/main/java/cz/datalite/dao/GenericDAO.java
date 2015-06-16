@@ -1,10 +1,11 @@
 package cz.datalite.dao;
 
-import org.hibernate.Session;
-
-import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.hibernate.Session;
 
 /**
  * Generic DAO design pattern.

@@ -1,8 +1,11 @@
 package cz.datalite.service;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
+
 import cz.datalite.dao.GenericDAO;
 import cz.datalite.dao.impl.GenericDAOFactory;
-import cz.datalite.dao.impl.GenericDAOImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -13,10 +16,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.SimpleAutowireCandidateResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * Resolve @Autowired GenericDAO&lt;Entity, Id&gt;
