@@ -1,5 +1,15 @@
 package cz.datalite.dao.plsql.helpers;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.util.Date;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import cz.datalite.dao.plsql.FieldInfo;
 import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
@@ -8,15 +18,6 @@ import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import oracle.sql.STRUCT;
 import org.hibernate.proxy.HibernateProxyHelper;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * Date: 6/13/13
