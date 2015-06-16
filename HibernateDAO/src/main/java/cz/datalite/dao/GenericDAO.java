@@ -1,10 +1,11 @@
 package cz.datalite.dao;
 
-import org.hibernate.Session;
-
-import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.hibernate.Session;
 
 /**
  * Generic DAO design pattern.
@@ -223,4 +224,6 @@ public interface GenericDAO<T, ID extends Serializable>
      * @return The number of entities updated or deleted.
      */
     int updateHQL(String update, Object ... values);
+
+    Class<T> getPersistentClass();
 }
