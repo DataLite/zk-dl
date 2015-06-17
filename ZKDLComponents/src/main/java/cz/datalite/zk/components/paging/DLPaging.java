@@ -9,6 +9,7 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.event.PagingEvent;
 import org.zkoss.zul.event.ZulEvents;
 import org.zkoss.zul.ext.Pageable;
+import org.zkoss.zul.ext.Paginal;
 import org.zkoss.zul.impl.XulElement;
 
 /**
@@ -17,7 +18,7 @@ import org.zkoss.zul.impl.XulElement;
  *
  * @author Karel Cemus
  */
-public class DLPaging extends XulElement implements Pageable {
+public class DLPaging extends XulElement implements Pageable, Paginal {
 
     static {
         addClientEvent(DLPaging.class, ZulEvents.ON_PAGING, CE_IMPORTANT|CE_NON_DEFERRABLE);
@@ -33,6 +34,7 @@ public class DLPaging extends XulElement implements Pageable {
     protected boolean autohide = false;
     protected boolean detailed = true;
     protected boolean countPages = true;
+    protected int pageIncrement = 10;
 
 
     public void setController( final DLPagingController controller ) {
@@ -65,6 +67,21 @@ public class DLPaging extends XulElement implements Pageable {
 
     public int getTotalSize() {
         return getPagingModel().getTotalSize();
+    }
+
+    @Override
+    public void setTotalSize(int size) throws WrongValueException {
+        getPagingModel().setTotalSize(size, getPagingModel().getRowsOnPage());
+    }
+
+    @Override
+    public int getPageIncrement() {
+        return pageIncrement;
+    }
+
+    @Override
+    public void setPageIncrement(int pginc) throws WrongValueException {
+        this.pageIncrement = pginc;
     }
 
     public boolean isDetailed() {
