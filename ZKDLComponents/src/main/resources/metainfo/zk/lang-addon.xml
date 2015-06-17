@@ -8,6 +8,7 @@
 	History:
             2008-10-02 DTL J. Bubnik - Created
             2010-04-28 DTL J. Bubnik - Moved to ZK 5
+            2015-06-17 DTL M. Peterka- Added DLLabeledTag
 -->
 
 <language-addon>
@@ -250,5 +251,28 @@
         <component-name>dlprofilemanager</component-name>
         <component-class>cz.datalite.zk.components.profile.DLProfileManager</component-class>
         <extends>hbox</extends>
+    </component>
+
+
+    <component>
+        <component-name>labeled-tag</component-name>
+        <component-class>cz.datalite.zk.components.DLLabeledTag</component-class>
+        <widget-class>dlzklib.DLLabeledTag</widget-class>
+
+        <mold>
+            <mold-name>default</mold-name>
+            <mold-uri>mold/dllabeledtag.js</mold-uri>
+            <css-uri>css/DLLabeledTag.css.dsp</css-uri>
+        </mold>
+    </component>
+
+    <component>
+        <component-name>pagingPageSize</component-name>
+        <component-class>cz.datalite.zk.components.paging.PagingPageSize</component-class>
+        <extends>div</extends>
+        <property>
+            <property-name>sclass</property-name>
+            <property-value>fl margin-right20</property-value>
+        </property>
     </component>
 </language-addon>
