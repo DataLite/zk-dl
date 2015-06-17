@@ -7,4 +7,5 @@
 	<widget name="DLPaging"/>
 	<widget name="Listboxmanager"/>
 	<widget name="Lovbox"/>
+	<widget name="DLLabeledTag"/>
 </package>
