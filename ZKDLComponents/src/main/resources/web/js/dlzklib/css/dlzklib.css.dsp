@@ -71,19 +71,26 @@
 .z-lovbox .z-bandbox-rounded-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; padding: 7px 7px; top: 4px; }
 
 /* -- Login -- */
-.z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }
+.z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #737373; font: 12px Verdana, Geneva, sans-serif; margin: 0 auto; }
 .z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }
 .z-login .z-login-lbl { display: block; margin-bottom: 3px; }
 .z-login input[type=text],
-.z-login input[type=password] { border: 1px solid #717171; font-size: 15px; outline: none; padding: 5px 30px 5px 5px; }
+.z-login input[type=password] { border: 1px solid #717171; font-size: 15px; outline: none; padding: 5px 30px 5px 35px; width: 100%; }
 .z-login .z-image { position: relative; top: -22px; left: 176px; }
 .z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }
 .z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }
 .z-login .z-login-rememberme { display: block; margin-top: -10px; }
 .z-login .z-login-rememberme input[type=checkbox] { margin-right: 5px; position: relative; top: 1px; }
-.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 15px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 198px; }
-.z-login .z-login-submit:hover { border-color: #8FB9D0; }
+.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 10px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 100%; }
+.z-login .z-login-submit:hover { border-color: #ABABAB; background-color: #EDEDED; -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
 .z-login .z-login-error { color: red; margin-bottom: 15px; position: relative; left: -18px; width: 300px; }
+
+/* zk8 */
+.z-login .z-login-content { padding: 20px 30px 25px 30px; }
+.z-login .user, .z-login .pass { margin-bottom: 7px; position: relative; }
+.z-login :after { content: ""; display: block; height: 16px; width: 16px; position: absolute; top: 27px; left: 8px; }
+.z-login .user:after { background: url(${c:encodeURL('~./js/dlzklib/img/user_16x16.png')}) no-repeat; }
+.z-login .pass:after { background: url(${c:encodeURL('~./js/dlzklib/img/pass_16x16.png')}) no-repeat; }
 
 /* -- Error 404 -- */
 .z-404 { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 20px auto 0 auto; }
@@ -120,8 +127,7 @@
 .z-login input[type=text]:focus,
 .z-login input[type=password]:focus,
 .z-login .z-login-cm,
-.z-login .z-login-submit,
-.z-login .z-login-submit:hover,
+.z-login-content,
 .z-404,
 .z-404 .z-404-header,
 .z-404 .btn,
@@ -143,7 +149,6 @@ border-radius: 2px 2px 2px 2px;
 -webkit-border-radius: 3px 3px 3px 3px;
 border-radius: 3px 3px 3px 3px;
 }
-.z-login .z-login-submit,
 .z-404,
 .z-404 .btn,
 .z-criticalError,
@@ -170,7 +175,7 @@ background: -ms-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.7
 background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
 -pie-background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
 }
-.z-login .z-login-cm {
+.z-login .z-login-cm, .z-login-content/*zk8*/ {
 background: #e2e2e2;
 background: -moz-linear-gradient(top, #e2e2e2 0%, #fafafa 100%);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(100%,#fafafa));
@@ -180,26 +185,26 @@ background: -ms-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 -pie-background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 }
-.z-login .z-login-submit {
-background: #ffffff;
-background: -moz-linear-gradient(top, #ffffff 0%, #d7d7d7 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d7d7d7));
-background: -webkit-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: -o-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: -ms-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
--pie-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-}
-.z-login .z-login-submit:hover {
-background: #f6fcfe;
-background: -moz-linear-gradient(top, #f6fcfe 0%, #badbec 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fcfe), color-stop(100%,#badbec));
-background: -webkit-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: -o-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: -ms-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);
--pie-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-}
+/*.z-login .z-login-submit {*/
+/*background: #ffffff;*/
+/*background: -moz-linear-gradient(top, #ffffff 0%, #d7d7d7 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d7d7d7));*/
+/*background: -webkit-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: -o-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: -ms-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*-pie-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*}*/
+/*.z-login .z-login-submit:hover {*/
+/*background: #f6fcfe;*/
+/*background: -moz-linear-gradient(top, #f6fcfe 0%, #badbec 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fcfe), color-stop(100%,#badbec));*/
+/*background: -webkit-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: -o-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: -ms-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*-pie-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*}*/
 .z-404 .z-404-header {
 background: #f6f8f9;
 background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%)!important;
@@ -263,9 +268,9 @@ background: linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 1
 
 /* box-shadow */
 .z-login .z-login-submit:active {
--moz-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
--webkit-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
+-moz-box-shadow: inset 0 0 10px 0 #fff, 0 1px 0 0 white;
+-webkit-box-shadow: inset 0 0 10px 0 #fff, 0 1px 0 0 white;
+box-shadow: inset 0 0 10px 0 #fff, 0 1px 0 0 white;
 }
 .z-login input[type=text]:focus,
 .z-login input[type=password]:focus {
