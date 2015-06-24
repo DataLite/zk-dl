@@ -92,3 +92,7 @@ method ```doExecute()``` was changed from ```private``` to ```protected```.
 
 ### Added:
 ```public void setValue(Object value)```
+
+
+## pom.xml
+Folder structure modified to maven structure.

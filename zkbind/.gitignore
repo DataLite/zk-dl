@@ -119,3 +119,5 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+/	debug
