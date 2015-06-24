@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.zkoss.zk</groupId>
 	<artifactId>zkbind</artifactId>
@@ -117,16 +117,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<directory>${project.basedir}/debug</directory>
-		<outputDirectory>${project.basedir}/debug/classes</outputDirectory>
 		<finalName>${project.artifactId}-${project.version}</finalName>
-		<testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
-		<sourceDirectory>${project.basedir}/src/</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>${project.basedir}/src/archive</directory>
-			</resource>
-		</resources>
 		<plugins>
 			<!--<plugin>
 				<groupId>org.zkoss.maven</groupId>
