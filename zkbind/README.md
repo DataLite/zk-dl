@@ -2,7 +2,6 @@
 
 ## BinderImpl.java
 ### Added:
-```Java
         /** Method allowing to load a specific binding */
         protected void loadBinding( Component component, BindingKey binding ) {
             try {
@@ -78,7 +77,6 @@
     {
         return _bindings;
     }
-```
 
 ### Modified:
 method ```doExecute()``` was changed from ```private``` to ```protected```.
