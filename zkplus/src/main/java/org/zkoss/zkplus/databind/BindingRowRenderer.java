@@ -22,12 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.zkoss.lang.Generics.cast;
-
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Row;
 
+import static org.zkoss.lang.Generics.cast;
+
+/**
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
+ */
 /*package*/ class BindingRowRenderer 
 implements org.zkoss.zul.RowRenderer, org.zkoss.zul.RowRendererExt, Serializable {
 	private static final long serialVersionUID = 200808191425L;
@@ -53,7 +56,7 @@ implements org.zkoss.zul.RowRenderer, org.zkoss.zul.RowRendererExt, Serializable
 		}
 					
 		//link cloned component with template
-		//each Row and its decendants share the same templatemap
+		//each Row and its descendants share the same templatemap
 		Map<Object, Object> templatemap = new HashMap<Object, Object>(8);
 		BindingRendererUtil.linkTemplates(clone, _template, templatemap, _binder);
 		
@@ -83,13 +86,13 @@ implements org.zkoss.zul.RowRenderer, org.zkoss.zul.RowRendererExt, Serializable
 		row.getChildren().addAll(kids);
 //			row.removeAttribute(KIDS);
 			
-		//remove template mark of cloned component and its decendant
+		//remove template mark of cloned component and its descendant
 		_binder.setupTemplateComponent(row, null); 
 			
 		//setup clone id
 		BindingRendererUtil.setupCloneIds(row);
 
-		//bind bean to the associated row and its decendant
+		//bind bean to the associated row and its descendant
 		final String varname = (String) _template.getAttribute(DataBinder.VARNAME);
 		final Map<Object, Object> templatemap = cast((Map) row.getAttribute(DataBinder.TEMPLATEMAP));
 		templatemap.put(varname, bean);

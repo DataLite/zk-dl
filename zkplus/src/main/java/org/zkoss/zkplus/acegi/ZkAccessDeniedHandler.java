@@ -16,15 +16,6 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.acegi;
 
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.EventListener;
-
-import org.acegisecurity.ui.AccessDeniedHandler;
-import org.acegisecurity.ui.AccessDeniedHandlerImpl;
-import org.acegisecurity.AccessDeniedException;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -32,12 +23,21 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.acegisecurity.AccessDeniedException;
+import org.acegisecurity.ui.AccessDeniedHandler;
+import org.acegisecurity.ui.AccessDeniedHandlerImpl;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+
 /**
  * Used by ExceptionTranslationFilter to handle an
  * <code>AccessDeniedException</code>. This handler will popup the specified error page so it
  * must be a Window that can be doModel.
  * <p>Applicable to Acegi Security version 1.0.3</p>
  * @author Henri
+ * @deprecated As of release 7.0.0
  */
 public class ZkAccessDeniedHandler implements AccessDeniedHandler {
 	private static final String ON_ACCESSDENIED = "onAccessDenied";

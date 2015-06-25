@@ -16,12 +16,6 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.acegi;
 
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.EventListener;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -29,16 +23,24 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+
 /**
  * <p>This implementation would forward to onAcegiLogin event and popup a login page.</p>
  * <p>Applicable to Acegi Security version 1.0.3</p>
  * @see ZkAuthenticationProcessingFilter
  * @see ShowWindowEventListener
  * @author Henri
+ * @deprecated As of release 7.0.0
  */
 public class ZkAuthenticationEntryPoint extends AuthenticationProcessingFilterEntryPoint {
 	/*package*/ static final String ON_ACEGILOGIN = "onAcegiLogin";
-    /** <p>This implmentation forward request to onAcegiLogin command.</p>
+    /** <p>This implementation forward request to onAcegiLogin command.</p>
      */
 	public void commence(ServletRequest request, ServletResponse response, AuthenticationException authException)
     throws IOException, ServletException {

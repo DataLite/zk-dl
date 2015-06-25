@@ -19,14 +19,13 @@ import java.io.Writer;
 import javax.portlet.PortletSession;
 
 import org.zkoss.zk.ui.Page;
-import org.zkoss.zk.ui.sys.PageRenderPatch;
 import org.zkoss.zk.ui.sys.RequestInfo;
 /**
  * Used to patch the rendering result of a ZK portlet for Liferay.
  * When using ZK portlets with Liferay under non root context, we have
  * to add a JSESSIONID under root(/) path.
  *
- * <p>To use it, you have to specify a library proeprty called
+ * <p>To use it, you have to specify a library property called
  * ""org.zkoss.zk.portlet.PageRenderPatch.class" with this class's name
  * ("org.zkoss.zkplus.liferay.NonRootContextJQueryRenderPatch").
  *

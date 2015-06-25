@@ -22,13 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.zkoss.lang.Generics.cast;
-
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 
+import static org.zkoss.lang.Generics.cast;
+
+/**
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
+ */
 /*package*/ class BindingListitemRenderer 
 implements org.zkoss.zul.ListitemRenderer, org.zkoss.zul.ListitemRendererExt, Serializable {
 	private static final long serialVersionUID = 200808191417L;
