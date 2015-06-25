@@ -119,3 +119,15 @@ added
                 } catch (NoSuchMethodException ex) {
                     throw UiException.Aide.wrap(ex);
                 }
+                
+## Mavem pom.xml
+Added dependency to
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<type>jar</type>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
