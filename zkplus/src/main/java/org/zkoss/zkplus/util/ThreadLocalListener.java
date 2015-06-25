@@ -16,26 +16,28 @@ Copyright (C) 2007 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.util;
 
-import org.zkoss.zk.ui.WebApp;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventThreadInit;
-import org.zkoss.zk.ui.event.EventThreadResume;
-import org.zkoss.zk.ui.event.EventThreadCleanup;
-import org.zkoss.lang.Library;
-import org.zkoss.lang.Classes;
-import org.zkoss.lang.SystemException;
-import org.zkoss.util.CollectionsX;
-import org.zkoss.util.logging.Log;
-import static org.zkoss.lang.Generics.cast;
-
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Collection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Classes;
+import org.zkoss.lang.Library;
+import org.zkoss.lang.SystemException;
+import org.zkoss.util.CollectionsX;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.WebApp;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventThreadCleanup;
+import org.zkoss.zk.ui.event.EventThreadInit;
+import org.zkoss.zk.ui.event.EventThreadResume;
+
+import static org.zkoss.lang.Generics.cast;
 
 /**
  * <p>Listener to make sure servlet thread and ZK event thread got the same ThreadLocal values. You 
@@ -47,7 +49,7 @@ import java.util.Collection;
  *	&lt;/listener>
  * </code></pre>
  * <p>Besides that, you have to specify what ThreadLocal variables you want to sync. They are also 
- * spcified in WEB-INF/zk.xml file in the form as below.</p>
+ * specified in WEB-INF/zk.xml file in the form as below.</p>
  * <pre><code>
  *  &lt;preference>
  *    &lt;name>ThreadLocal&lt;/name>
@@ -71,7 +73,7 @@ import java.util.Collection;
  *		&lt;/value>
  *	&lt;/preference>
  * <p>In additions to using the application preference, you can specify it
- * in the library proeperty called <code>zkplus.util.ThreadLocalListener.fieldsMap</code>.
+ * in the library property called <code>zkplus.util.ThreadLocalListener.fieldsMap</code>.
  * The preference has the higher priority.
  * <p>Another example, when you specify the Spring's bean as scope="session", you have to specify the following
  * ThreadLocal variables since Spring 2.0 use RequestContextHolder to handle the bean's scope.</p>
@@ -87,7 +89,7 @@ import java.util.Collection;
  * @since 2.4.1
  */
 public class ThreadLocalListener implements EventThreadInit, EventThreadCleanup, EventThreadResume {
-	private static final Log log = Log.lookup(ThreadLocalListener.class);
+	private static final Logger log = LoggerFactory.getLogger(ThreadLocalListener.class);
 	private Map<String, String[]> _fieldsMap; //(class name, String[] of fields)
 	private Map<String, Object[]> _threadLocalsMap; //(class name, ThreadLocal_Contents[] for fields)
 	private final boolean _enabled; //whether event thread enabled

@@ -15,7 +15,8 @@ package org.zkoss.zkplus.liferay;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.zkoss.util.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Used to patch the rendering result of a ZK portlet for Liferay.
@@ -24,7 +25,7 @@ import org.zkoss.util.logging.Log;
  * "/zkau/web/js/zk.wpd" has loaded by Liferay, please refer to 
  * www.liferay.com document for configuration 
  *
- * <p>To use it, you have to specify a library proeprty called
+ * <p>To use it, you have to specify a library property called
  * ""org.zkoss.zk.portlet.PageRenderPatch.class" with this class's name
  * ("org.zkoss.zkplus.liferay.JQueryRenderCachedPatch").
  *
@@ -32,9 +33,9 @@ import org.zkoss.util.logging.Log;
  * @since 5.0.1
  */
 public class JQueryRenderCachedPatch extends JQueryRenderPatch {
-	private static final Log log = Log.lookup(JQueryRenderCachedPatch.class);
+	private static final Logger log = LoggerFactory.getLogger(JQueryRenderCachedPatch.class);
 	
-	//@Override
+	
 	protected String getBrowserDelay() {
 		return "zk.ie6_ || zk.ie7_ ? 1300 : 100"; 
 	}

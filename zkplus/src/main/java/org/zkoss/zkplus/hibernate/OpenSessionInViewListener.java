@@ -16,14 +16,14 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.hibernate;
 
-import org.zkoss.zk.ui.Execution;
-import org.zkoss.zk.ui.util.ExecutionInit;
-import org.zkoss.zk.ui.util.ExecutionCleanup;
-import org.zkoss.util.logging.Log;
+import java.util.List;
 
 import org.hibernate.StaleObjectStateException;
-
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.zk.ui.Execution;
+import org.zkoss.zk.ui.util.ExecutionCleanup;
+import org.zkoss.zk.ui.util.ExecutionInit;
 
 /**
  * Listener to init and cleanup the hibernate session automatically, implement
@@ -43,7 +43,7 @@ import java.util.List;
  * @deprecated As of release 6.0.2, please use the official Hibernate's method instead.
  */
 public class OpenSessionInViewListener implements ExecutionInit, ExecutionCleanup {
-	private static final Log log = Log.lookup(OpenSessionInViewListener.class);
+	private static final Logger log = LoggerFactory.getLogger(OpenSessionInViewListener.class);
 
 	//-- ExecutionInit --//
 	public void init(Execution exec, Execution parent) {
@@ -91,7 +91,7 @@ public class OpenSessionInViewListener implements ExecutionInit, ExecutionCleanu
 	 * work with fresh data... what can be done here depends on the applications 
 	 * design.</p>
 	 *
-	 * @param exec the exection to clean up.
+	 * @param exec the execution to clean up.
 	 * @param ex the StaleObjectStateException being thrown (and not handled) during the execution
 	 */			
 	protected void handleStaleObjectStateException(Execution exec, StaleObjectStateException ex) {
@@ -108,7 +108,7 @@ public class OpenSessionInViewListener implements ExecutionInit, ExecutionCleanu
 	 * during the conversation, and finally restart business conversation... 
 	 * what can be done here depends on the applications design.</p>
 	 *
-	 * @param exec the exection to clean up.
+	 * @param exec the execution to clean up.
 	 * @param ex the Throwable other than StaleObjectStateException being thrown (and not handled) during the execution
 	 */			
 	protected void handleOtherException(Execution exec, Throwable ex) {
@@ -120,7 +120,7 @@ public class OpenSessionInViewListener implements ExecutionInit, ExecutionCleanu
 	/**
 	 * rollback the current session.
 	 *
-	 * @param exec the exection to clean up.
+	 * @param exec the execution to clean up.
 	 * @param ex the StaleObjectStateException being thrown (and not handled) during the execution
 	 */	
 	private void rollback(Execution exec, Throwable ex) {

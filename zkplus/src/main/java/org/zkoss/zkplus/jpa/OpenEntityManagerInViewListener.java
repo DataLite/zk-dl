@@ -18,7 +18,9 @@
 package org.zkoss.zkplus.jpa;
 
 import java.util.List;
-import org.zkoss.util.logging.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.util.ExecutionCleanup;
 import org.zkoss.zk.ui.util.ExecutionInit;
@@ -40,7 +42,7 @@ import org.zkoss.zk.ui.util.ExecutionInit;
  */
 public class OpenEntityManagerInViewListener implements ExecutionCleanup,
 		ExecutionInit {
-	private static final Log log = Log.lookup(OpenEntityManagerInViewListener.class);
+	private static final Logger log = LoggerFactory.getLogger(OpenEntityManagerInViewListener.class);
 	
 	//-- ExecutionCleanup --//
 	public void cleanup(Execution exec, Execution parent, List errs)throws Exception{ 
@@ -83,7 +85,7 @@ public class OpenEntityManagerInViewListener implements ExecutionCleanup,
 	 * during the conversation, and finally restart business conversation... 
 	 * what can be done here depends on the applications design.</p>
 	 * 
-	 * @param exec the exection to clean up.
+	 * @param exec the execution to clean up.
 	 * @param ex the Throwable which is not handled during the execution
 	 */
 	protected void handleException(Execution exec, Throwable ex) {
@@ -95,7 +97,7 @@ public class OpenEntityManagerInViewListener implements ExecutionCleanup,
 	/**
 	 * rollback the current entityManager.
 	 *
-	 * @param exec the exection to clean up.
+	 * @param exec the execution to clean up.
 	 * @param ex the Exception being thrown (and not handled) during the execution
 	 */	
 	private void rollback(Execution exec, Throwable ex) {

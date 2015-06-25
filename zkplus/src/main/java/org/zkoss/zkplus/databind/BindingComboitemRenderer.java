@@ -22,14 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.zkoss.lang.Generics.cast;
-
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 
+import static org.zkoss.lang.Generics.cast;
+
 /**
  * @author jumperchen
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
  * @since 3.0.2
  */
 /*package*/ class BindingComboitemRenderer implements org.zkoss.zul.ComboitemRenderer, org.zkoss.zul.ComboitemRendererExt, Serializable {
@@ -49,13 +50,13 @@ import org.zkoss.zul.Comboitem;
 		item.getChildren().addAll(kids);
 		//item.removeAttribute(KIDS);
 			
-		//remove template mark of cloned component and its decendant
+		//remove template mark of cloned component and its descendants
 		_binder.setupTemplateComponent(item, null); 
 			
 		//setup clone id
 		BindingRendererUtil.setupCloneIds(item);
 
-		//bind bean to the associated listitem and its decendant
+		//bind bean to the associated listitem and its descendants
 		final String varname = (String) _template.getAttribute(DataBinder.VARNAME);
 		final Map<Object, Object> templatemap = cast((Map) item.getAttribute(DataBinder.TEMPLATEMAP));
 		templatemap.put(varname, bean);
@@ -78,7 +79,7 @@ import org.zkoss.zul.Comboitem;
 		}
 		
 		//link cloned component with template
-		//each Comboitem and and it decendants share the same templatemap
+		//each Comboitem and and it descendants share the same templatemap
 		Map<Object, Object> templatemap = new HashMap<Object, Object>(8);
 		BindingRendererUtil.linkTemplates(clone, _template, templatemap, _binder);
 		

@@ -23,9 +23,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Objects;
 import org.zkoss.util.Maps;
-import org.zkoss.util.logging.Log;
 import org.zkoss.xel.VariableResolver;
 import org.zkoss.xel.XelException;
 
@@ -36,14 +37,14 @@ import org.zkoss.xel.XelException;
  */
 public class JndiVariableResolver implements VariableResolver {
 	
-	private static final Log log = Log.lookup(JndiVariableResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(JndiVariableResolver.class);
 	
 	private String _jndiPrepend=null;
 	
 	private Map<String, Object> _jndiMapping = new HashMap<String, Object>();
 	
 	/**
-	 * This constructor take agruments to initialize JNDI names. 
+	 * This constructor take arguments to initialize JNDI names. 
 	 * <ul>
 	 * <li>prepend - The prepended part of JNDI name</li>
 	 * <li>mapping - The key-value pairs for JNDI name and its corresponding variable name</li>
@@ -68,7 +69,7 @@ public class JndiVariableResolver implements VariableResolver {
 	 * </p>
 	 * </br>
 	 * <p>
-	 * If you define your own jdni binding, the string should be in key-value pairs format as</br>
+	 * If you define your own jndi binding, the string should be in key-value pairs format as</br>
 	 * "a=custom/MySession,b=custom/MySession2,emf=java:/EntityManagerFactory"
 	 * </p>
 	 *
@@ -136,7 +137,7 @@ public class JndiVariableResolver implements VariableResolver {
 		}catch (NamingException ex)
 		{
 			//Not found, logging
-			if(log.debugable()){
+			if(log.isDebugEnabled()){
 				log.debug("JNDI binding not found: "+ex);
 			}
 		}

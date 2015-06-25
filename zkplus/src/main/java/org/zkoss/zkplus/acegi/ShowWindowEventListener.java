@@ -16,23 +16,22 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.acegi;
 
-import org.zkoss.zk.ui.Page;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.zkoss.util.CollectionsX;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Execution;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.SerializableEventListener;
-import org.zkoss.zk.ui.Execution;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Window;
-
-import org.zkoss.util.CollectionsX;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
 
 /**
  * <p>The default listener to show a modal window for login and other things.</p>
@@ -44,6 +43,7 @@ import java.util.ArrayList;
  * <p>This implementation would automatically remove the added eventlistener from the target component.</p>
  * <p>Applicable to Acegi Security version 1.0.3</p>
  * @author Henri
+ * @deprecated As of release 7.0.0
  */
 public class ShowWindowEventListener<T extends Event> implements SerializableEventListener<T> {
 	@SuppressWarnings("unchecked")

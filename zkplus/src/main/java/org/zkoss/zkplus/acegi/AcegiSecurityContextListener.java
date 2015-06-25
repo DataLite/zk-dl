@@ -27,9 +27,11 @@ import javax.servlet.ServletResponse;
 import org.acegisecurity.AcegiSecurityException;
 import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.io.NullWriter;
 import org.zkoss.lang.Exceptions;
-import org.zkoss.util.logging.Log;
+
 import org.zkoss.web.servlet.BufferedResponse;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
@@ -44,7 +46,7 @@ import org.zkoss.zkplus.spring.SpringUtil;
 
 /**
  * <p>Listener to copy servlet thread ThreadLocal, securityContext, over to 
- * event thread ThreadLocal and handle Acegi Authentication Exception occured in
+ * event thread ThreadLocal and handle Acegi Authentication Exception occurred in
  * Event handling (e.g. Acegi's MethodInterceptor).
  * </p>
  * <p>
@@ -60,9 +62,10 @@ import org.zkoss.zkplus.spring.SpringUtil;
  * <p>Applicable to Acegi Security version 1.0.3</p>
  *
  * @author henrichen
+ * @deprecated As of release 7.0.0
  */
 public class AcegiSecurityContextListener implements EventThreadInit, EventThreadCleanup, EventThreadResume {
-	private static final Log log = Log.lookup(AcegiSecurityContextListener.class);
+	private static final Logger log = LoggerFactory.getLogger(AcegiSecurityContextListener.class);
 	private SecurityContext _context;
 	private final boolean _enabled; //whether event thread enabled
 
@@ -93,7 +96,7 @@ public class AcegiSecurityContextListener implements EventThreadInit, EventThrea
 			
 		_context = SecurityContextHolder.getContext(); //get threadLocal from event thread
 
-		//handle Acegi Exception occured within Event handling
+		//handle Acegi Exception occurred within Event handling
 		final Execution exec = Executions.getCurrent();
 		if (errs != null && !errs.isEmpty() && errs.size() == 1) {
 			Throwable ex = (Throwable) errs.get(0);
@@ -105,7 +108,7 @@ public class AcegiSecurityContextListener implements EventThreadInit, EventThrea
 					//to rethrow the exception so Acegi's ExcepitonTranslationFilter can
 					//catch that and show login window.
 
-					//to avoid show the massaged visula message
+					//to avoid show the massaged visual message
 					errs.clear();
 
 					exec.setAttribute(ZkEventExceptionFilter.EXCEPTION, ex);

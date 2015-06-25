@@ -16,19 +16,21 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.hibernate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.WebApp;
 import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.util.logging.Log;
+
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
 /**
- * <p>Utitlity to access Hibernate Session. This implemenation works with the Hibernate's 
+ * <p>Utility to access Hibernate Session. This implementation works with the Hibernate's 
  * thread session context (version 3.1+). That is, you have to specified 
  * hibernate's configuration file "hibernate.cfg.xml" to as follows:</p>
  *
@@ -60,7 +62,7 @@ public class HibernateUtil {
 	 * {@link Library#getProperty}. Ignored if none of them is specified.
 	 */
 	public static final String CONFIG = "HibernateUtil.config";
-	private static final Log log = Log.lookup(HibernateUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(HibernateUtil.class);
 	
 	private static SessionFactory _factory;
 
@@ -88,7 +90,7 @@ public class HibernateUtil {
 	 /**
 	 * Used in {@link HibernateSessionFactoryListener} to init
 	 * Hibernate SessionFactory.
-	 * @param app web applicaton, given null will try to get it from current Execution.
+	 * @param app web application, given null will try to get it from current Execution.
 	 * @since 3.0.1
 	 */
 	/* package */ static SessionFactory initSessionFactory(WebApp app) {
