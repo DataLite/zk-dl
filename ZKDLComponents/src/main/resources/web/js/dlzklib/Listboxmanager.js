@@ -65,7 +65,7 @@ dlzklib.Listboxmanager = zk.$extends(zul.inp.InputWidget, {
         if (iconCount)
             html.push('<td>|</td>');
 
-        html.push('<td><span class="z-listboxmanager-', icon, '" id="', this.uuid, '-', menu, '"',
+        html.push('<td><span class="z-icon-', icon, '" id="', this.uuid, '-', menu, '"',
             'title="', tooltip, '"></span></td>');
         return html.join('');
     }
