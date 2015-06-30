@@ -16,9 +16,9 @@ Copyright (C) 2007 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.databind;
 
-import org.zkoss.zul.ListModelSet;
-
 import java.util.Set;
+
+import org.zkoss.zul.ListModelSet;
 
 /**
  * <p>This is the {@link BindingListModel} as a {@link java.util.Set} to be used with 
@@ -32,6 +32,7 @@ import java.util.Set;
  * @see BindingListModel
  * @see org.zkoss.zul.ListModel
  * @see org.zkoss.zul.ListModelSet
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
  */
 public class BindingListModelSet<E> extends ListModelSet<E>
 implements BindingListModelExt<E>, java.io.Serializable {

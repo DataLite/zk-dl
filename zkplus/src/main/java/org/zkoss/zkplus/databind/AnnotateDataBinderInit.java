@@ -16,15 +16,15 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.databind;
 
+import java.util.Map;
+
 import org.zkoss.lang.Library;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.Path;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.util.Initiator;
 import org.zkoss.zk.ui.util.InitiatorExt;
-
-import java.util.Map;
 
 /**
  * <p>This initiator class do following things:</p>
@@ -33,7 +33,7 @@ import java.util.Map;
  * <li>Set the AnnotateDataBinder instance as a custom attribute with the name as specified in 
  * arg2 (default to "binder") and store it in the component as specified in arg0 "component-path".(if arg0 is not 
  * specified, use Page instead.)</li>
- * <li>call {@link AnnotateDataBinder#loadAll()} in to {@link #doAfterCompose(Page)} and
+ * <li>call {@link AnnotateDataBinder#loadAll()} in to {@link #doAfterCompose(Page, Component[])} and
  * initiate all UI components from the associated data bean.</li>
  * </ol>
  * <p>Put the init PI as follows:</p>
@@ -74,6 +74,7 @@ import java.util.Map;
  *
  * @author Henri Chen
  * @see AnnotateDataBinder
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
  */
  public class AnnotateDataBinderInit implements Initiator, InitiatorExt {
 	private static final String COMPATIBLE = "org.zkoss.zkplus.databind.AnnotateDataBinderInit.compatible";
@@ -84,15 +85,9 @@ import java.util.Map;
 	private boolean _loadOnSave;
 	
 	/** The AnnotateDataBinder created in doAfterCompose() */
-	protected AnnotateDataBinder _binder;
-
-    /** DTL JB - Bean validation. */
-    private ValidatorAdapter _validator;
+	protected AnnotateDataBinder _binder; 
 	
-	//-- Initator --//
-	public void doAfterCompose(Page page) {
-		//will not be called since we implements InitiatorExt
-	}
+	//-- Initiator --//
  	public boolean doCatch(java.lang.Throwable ex) {
  		return false; // do nothing
  	}
@@ -133,19 +128,12 @@ import java.util.Map;
 		
 		Object loadOnSave = args.get("loadOnSave");
 		if (loadOnSave == null) {
-			_loadOnSave = false; // DTL JB - loadOnSave set default to false
+			_loadOnSave = true;
 		} else if (loadOnSave instanceof String) {
 			_loadOnSave = !"false".equals(loadOnSave);
 		} else if (loadOnSave instanceof Boolean) {
 			_loadOnSave = ((Boolean)loadOnSave).booleanValue();
 		}
-
-        // DTL JB - bean validation
-        Object validator = args.get("validator");
-        if (validator != null)
-        {
-            _validator = new ValidatorAdapter(validator);
-        }
 	}
 	
 	//-- InitiatorExt --//
@@ -170,7 +158,7 @@ import java.util.Map;
 			} else {
 				page.setAttribute(_name, _binder);
 			}
-        } else if (_compPath.length() > 0 && _compPath.charAt(0) == '/') { //absolute path
+		} else if (_compPath.length() > 0 && _compPath.charAt(0) == '/') { //absolute path
 			final Component comp = Path.getComponent(_compPath);
 			if (comp == null) {
 				throw new UiException("Cannot find the specified component. Absolute Path:"+_compPath);
@@ -196,10 +184,6 @@ import java.util.Map;
 			saveBinder(comp);//comp.setAttribute(_name, _binder);
 		}
 		_binder.setLoadOnSave(_loadOnSave);
-
-        // DTL JB - bean validation
-        _binder.setValidator(_validator);
-
 		_binder.loadAll(); //load data bean properties into UI components
 	}
 }

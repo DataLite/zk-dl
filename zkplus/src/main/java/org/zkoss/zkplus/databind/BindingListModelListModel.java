@@ -35,6 +35,7 @@ import org.zkoss.zul.ext.Selectable;
  *
  * @author peterkuo
  * @since 5.0.8
+ * @deprecated As of release 7.0.0, replace with new ZK binding.
  */
 public class BindingListModelListModel<E> implements BindingListModel<E>, Selectable<E>, java.io.Serializable ,BindingListModelExt<E>{
 	
@@ -88,43 +89,43 @@ public class BindingListModelListModel<E> implements BindingListModel<E>, Select
 	private static class EmptySelectable<E> implements Selectable<E>, java.io.Serializable {
 		private static final long serialVersionUID = 7942486785062723611L;
 
-		@Override
+		
 		public Set<E> getSelection() {
 			return null;
 		}
-		@Override
+		
 		public void setSelection(Collection<? extends E> selection) {
 		}
 
-		@Override
+		
 		public boolean isSelected(Object obj) {
 			return false;
 		}
 
-		@Override
+		
 		public boolean isSelectionEmpty() {
 			return false;
 		}
 
-		@Override
+		
 		public boolean addToSelection(E obj) {
 			return false;
 		}
 
-		@Override
+		
 		public boolean removeFromSelection(Object obj) {
 			return false;
 		}
 
-		@Override
+		
 		public void clearSelection() {
 		}
 
-		@Override
+		
 		public void setMultiple(boolean multiple) {
 		}
 
-		@Override
+		
 		public boolean isMultiple() {
 			return false;
 		}
@@ -140,53 +141,52 @@ public class BindingListModelListModel<E> implements BindingListModel<E>, Select
 		
 		return _selectable;
 	}
-	@Override
+	
 	public Set<E> getSelection() {
 		return getSelectModel().getSelection();
 	}
 
-	@Override
+	
 	public void setSelection(Collection<? extends E> selection) {
 		getSelectModel().setSelection(selection);
 	}
 
-	@Override
+	
 	public boolean isSelected(Object obj) {
 		return getSelectModel().isSelected(obj);
 	}
 
-	@Override
+	
 	public boolean isSelectionEmpty() {
 		return getSelectModel().isSelectionEmpty();
 	}
 
-	@Override
+	
 	public boolean addToSelection(E obj) {
 		return getSelectModel().addToSelection(obj);
 	}
 
-	@Override
+	
 	public boolean removeFromSelection(Object obj) {
 		return getSelectModel().removeFromSelection(obj);
 	}
 
-	@Override
+	
 	public void clearSelection() {
 		getSelectModel().clearSelection();
 	}
 
-	@Override
+	
 	public void setMultiple(boolean multiple) {
 		getSelectModel().setMultiple(multiple);
 	}
 
-	@Override
+	
 	public boolean isMultiple() {
 		return getSelectModel().isMultiple();
 	}
 	
 	//--BindingListModelExt--//
-	@Override
 	public int[] indexesOf(Object elm) {
 		if (isDistinct()) {
 			final int idx = indexOf(elm);
@@ -212,7 +212,7 @@ public class BindingListModelListModel<E> implements BindingListModel<E>, Select
 		}
 	}
 
-	@Override
+	
 	public boolean isDistinct() {
 		return distinct;
 	}

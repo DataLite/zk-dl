@@ -12,25 +12,26 @@ Copyright (C) 2010 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.zkplus.liferay;
 
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.lang.Strings;
-import org.zkoss.util.logging.Log;
-
 import org.zkoss.zk.ui.Page;
-import org.zkoss.zk.ui.sys.RequestInfo;
 import org.zkoss.zk.ui.sys.PageRenderPatch;
+import org.zkoss.zk.ui.sys.RequestInfo;
 
 /**
  * Used to patch the rendering result of a ZK portlet for Liferay.
  * When using ZK portlets with Liferay under Internet Explorer, we have
  * to delay the processing at the client a bit.
  *
- * <p>To use it, you have to specify a library proeprty called
+ * <p>To use it, you have to specify a library property called
  * ""org.zkoss.zk.portlet.PageRenderPatch.class" with this class's name
  * ("org.zkoss.zkplus.liferay.JQueryRenderPatch").
  *
@@ -42,7 +43,7 @@ import org.zkoss.zk.ui.sys.PageRenderPatch;
  * @since 5.0.0
  */
 public class JQueryRenderPatch implements PageRenderPatch {
-	private static final Log log = Log.lookup(JQueryRenderPatch.class);
+	private static final Logger log = LoggerFactory.getLogger(JQueryRenderPatch.class);
 
 	/** A library property to indicate how to apply the so-called jQuery patch.
 	 * <p>Default: "500" (it means 500 milliseconds)
@@ -60,7 +61,7 @@ public class JQueryRenderPatch implements PageRenderPatch {
 		try {
 			_delay = Integer.parseInt(val);
 		} catch (Throwable ex) {
-			log.warning("Ignored delay time specified in "+JQUERY_PATCH+": "+val);
+			log.warn("Ignored delay time specified in "+JQUERY_PATCH+": "+val);
 		}
 	}
 	/** Returns the number of milliseconds to wait before replacing with
@@ -79,7 +80,7 @@ public class JQueryRenderPatch implements PageRenderPatch {
 		_delay = delay;
 	}
 
-	//@Override
+	
 	/** It returns an instance of StringWriter if {@link #getDelay} is non-negative,
 	 * or null if negative (means no patch).
 	 */
@@ -88,7 +89,7 @@ public class JQueryRenderPatch implements PageRenderPatch {
 			//we cannot retrieve HTTP request's header so no need to
 			//apply the patch for particular browsers, such as ie
 	}
-	//@Override
+	
 	public void patchRender(RequestInfo reqInfo, Page page, Writer result, Writer out)
 	throws IOException {
 		final String extid = page.getUuid() + "-ext";
