@@ -56,9 +56,9 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
     },
     _hideShowDelButton: function() {
         if (this.getInputNode().value)
-            jq(this.$n("del")).show();
+            jq(this.$n("del")).css("display", "inline-block");
         else
-            jq(this.$n("del")).hide();
+            jq(this.$n("del")).css("display", "none");
     }
 
 });

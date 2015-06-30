@@ -10,17 +10,12 @@
 
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
-.z-quickfilter span { display: block; }
 .z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
-.z-quickfilter-list:hover { border: 1px solid #808080; margin: 7px 3px 0 -1px; padding: 1px 0; }
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; position: relative; top: 2px; }
-.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
+.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; height: 16px; width: 16px; margin-left: -16px; position: relative; top: 7px; left: -10px; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
 .z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
-.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px -1px 0 2px; }
-.z-quickfilter-magnifier:active,
-.z-quickfilter-list:active { background-color: #C2C2C2; }
 
 .z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
@@ -29,19 +24,11 @@
 .z-dlpaging { height: auto; }
 .z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
 .z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
-.z-paging-info, .z-paging div.z-paging-info { top: 8px; }
 
 /* -- Listboxmanager component -- */
 .z-listboxmanager { float: right; margin: 2px 2px 0 0; }
 .z-listboxmanager td { padding: 0 3px; }
-.z-listboxmanager span { cursor: pointer; display: block; height: 20px; width: 20px; }
-.z-listboxmanager-menu_items_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/menu_items_small.png')}) no-repeat; }
-.z-listboxmanager-sort_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/sort_small.png')}) no-repeat; }
-.z-listboxmanager-filter_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/filter_small.png')}) no-repeat; }
-.z-listboxmanager-filter_small_active { background: url(${c:encodeThemeURL('~./js/dlzklib/img/filter_small_active.png')}) no-repeat; }
-.z-listboxmanager-cancel_filter { background: url(${c:encodeThemeURL('~./js/dlzklib/img/cancel_filter.png')}) no-repeat; }
-.z-listboxmanager-excel_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/excel_small.png')}) no-repeat; }
-.z-listboxmanager-trash_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/trash.png')}) no-repeat; }
+.z-listboxmanager span { cursor: pointer; display: block; font-size: 16px; height: 20px; width: 20px; }
 
 /* -- Listcontrol component -- */
 .z-listcontrol { font: 12px Verdana, Geneva, sans-serif; padding: 1px 0px 3px 1px; }
@@ -133,21 +120,13 @@
 .z-404 .btn,
 .z-criticalError,
 .z-criticalError .z-criticalError-header,
-.z-criticalError .btn,
-.z-quickfilter-magnifier,
-.z-quickfilter-list { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
+.z-criticalError .btn { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
 
 /* border-radius */
 .z-quickfilter-real {
 -moz-border-radius: 2px 2px 2px 2px;
 -webkit-border-radius: 2px 2px 2px 2px; 
 border-radius: 2px 2px 2px 2px;
-}
-.z-quickfilter-magnifier,
-.z-quickfilter-list {
--moz-border-radius: 3px 3px 3px 3px;
--webkit-border-radius: 3px 3px 3px 3px;
-border-radius: 3px 3px 3px 3px;
 }
 .z-404,
 .z-404 .btn,
@@ -293,10 +272,4 @@ box-shadow: 0px 0px 5px #007eff;
 -moz-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 -webkit-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
-}
-.z-quickfilter-magnifier:hover,
-.z-quickfilter-list:hover {
--moz-box-shadow: 0px 0px 2px #808080; 
--webkit-box-shadow: 0px 0px 2px #808080; 
-box-shadow: 0px 0px 2px #808080;
 }

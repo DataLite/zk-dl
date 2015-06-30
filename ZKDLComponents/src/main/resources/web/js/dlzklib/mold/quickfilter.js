@@ -37,7 +37,7 @@
         out.push('<button type="button" id="', uuid, '-magnifier" class="', $class, '">' + $text + '</button>');
     }
     else {
-        out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
+        out.push('<span id="', uuid, '-magnifier" class="', 'z-icon-search', '"></span>');
     }
     
     out.push('<br class="z-dlzklib-clear"/>');
