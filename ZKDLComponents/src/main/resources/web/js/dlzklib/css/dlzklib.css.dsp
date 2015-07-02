@@ -9,16 +9,19 @@
 .z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
 
 /* -- Quickfilter component -- */
-.z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
+.z-quickfilter { margin-right: 20px; }
 .z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; position: relative; top: 2px; }
-.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; height: 16px; width: 16px; margin-left: -16px; position: relative; top: 7px; left: -10px; }
+.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; margin-left: -14px; padding: 7px; position: relative; top: 5px; left: -12px; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
 .z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
 
 .z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
+
+/* 1.5.x */
+.z-quickfilter .z-icon-search { font-size: 16px!important; position: relative; top: 5px; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
@@ -26,12 +29,12 @@
 .z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
 
 /* -- Listboxmanager component -- */
-.z-listboxmanager { float: right; margin: 2px 2px 0 0; }
-.z-listboxmanager td { padding: 0 3px; }
-.z-listboxmanager span { cursor: pointer; display: block; font-size: 16px; height: 20px; width: 20px; }
+.z-listboxmanager { float: right; margin-top: 3px; }
+/*.z-listboxmanager td { padding: 0 3px; }*/
+.z-listboxmanager span { cursor: pointer; display: block; font-size: 16px; height: 16px; width: 19px; text-align: center; }
 
 /* -- Listcontrol component -- */
-.z-listcontrol { font: 12px Verdana, Geneva, sans-serif; padding: 1px 0px 3px 1px; }
+.z-listcontrol { font: 12px Verdana, Geneva, sans-serif; padding: 0 0 3px 1px; }
 .z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
 .z-listcontrol-aux-content-sep { width: 3px; }
 .z-listcontrol .z-quickfilter { float: left; }
