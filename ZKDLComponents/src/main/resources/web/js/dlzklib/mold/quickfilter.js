@@ -16,7 +16,7 @@
         }
     }
     out.push('<input placeholder="', this._placeholder, '" id="', uuid, '-real" class="z-textbox" type="text" value="',this.getValue(),'"/>');
-    out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
+    out.push('<i id="', uuid, '-del" class="', 'z-icon-eraser', '"></i>');
     
 //    if (this.getQuickFilterButton()) {
 //        
@@ -37,7 +37,7 @@
         out.push('<button type="button" id="', uuid, '-magnifier" class="', $class, '">' + $text + '</button>');
     }
     else {
-        out.push('<span id="', uuid, '-magnifier" class="', 'z-icon-search', '"></span>');
+        out.push('<i id="', uuid, '-magnifier" class="', 'z-icon-search', '"></i>');
     }
     
     out.push('<br class="z-dlzklib-clear"/>');
