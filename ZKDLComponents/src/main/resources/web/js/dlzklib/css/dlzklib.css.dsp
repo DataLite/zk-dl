@@ -8,20 +8,18 @@
 /* Listbox */
 .z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
 
-/* -- Quickfilter component -- */
-.z-quickfilter { margin-right: 20px; }
-.z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
-.z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
-.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; position: relative; top: 2px; }
-.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; margin-left: -14px; padding: 7px; position: relative; top: 5px; left: -12px; }
+/* -- Quickfilter component [1.5.x] -- */
+.z-quickfilter { margin-right: 20px; position: relative; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
+.z-quickfilter .z-quickfilter-text { float: left; margin: 4px 4px 0 0; }
+
+.z-quickfilter [class^="z-icon-"], .z-quickfilter [class*=" z-icon-"] { cursor: pointer; position: relative; top: 5px }
+.z-quickfilter .z-icon-menu { font-size: 11px; right: 3px; }
+.z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; right: 27px; }
+.z-quickfilter .z-icon-search-1 { }
 
 .z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
-
-/* 1.5.x */
-.z-quickfilter .z-icon-search { font-size: 16px!important; position: relative; top: 5px; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
