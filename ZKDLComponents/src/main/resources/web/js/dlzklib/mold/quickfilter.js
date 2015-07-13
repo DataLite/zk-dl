@@ -12,11 +12,11 @@
     if ( this.labelVisible ) {
         out.push('<span id="', uuid, '-text" class="', zcls, '-text', '">', this.getLabel(), '</span>');
         if (this.getQuickFilterPopupSize() > 1) {
-            out.push('<span id="', uuid, '-list" class="', zcls, '-list', '"></span>');
+            out.push('<i id="', uuid, '-list" class="', 'z-icon-menu', '"></i>');
         }
     }
     out.push('<input placeholder="', this._placeholder, '" id="', uuid, '-real" class="z-textbox" type="text" value="',this.getValue(),'"/>');
-    out.push('<i id="', uuid, '-del" class="', 'z-icon-eraser', '"></i>');
+    out.push('<i id="', uuid, '-del" class="', 'z-icon-erase', '"></i>');
     
 //    if (this.getQuickFilterButton()) {
 //        
@@ -37,9 +37,9 @@
         out.push('<button type="button" id="', uuid, '-magnifier" class="', $class, '">' + $text + '</button>');
     }
     else {
-        out.push('<i id="', uuid, '-magnifier" class="', 'z-icon-search', '"></i>');
+        out.push('<i id="', uuid, '-magnifier" class="', 'z-icon-search-1', '"></i>');
     }
     
-    out.push('<br class="z-dlzklib-clear"/>');
+    //out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
 })

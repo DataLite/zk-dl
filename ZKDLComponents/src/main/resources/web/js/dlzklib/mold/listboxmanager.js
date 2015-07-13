@@ -9,7 +9,7 @@
     if (this.getColumnManager()) out.push(this.getIconHtml("columnManager", "columns-three", iconCount++));
     if (this.getSortManager()) out.push(this.getIconHtml("sortManager", "arrow-transfer-4", iconCount++));
     if (this.getFilterManager()) out.push(this.getIconHtml("filterManager", "filter-1", iconCount++));
-    if (this.getExportManager()) out.push(this.getIconHtml("exportManager", "arrow-download", iconCount++));
+    if (this.getExportManager()) out.push(this.getIconHtml("exportManager", "arrow-upload-1", iconCount++));
     if (this.getResetFilters()) out.push(this.getIconHtml("resetFilters", "recycle", iconCount++));
     if (this.getResetAll()) out.push(this.getIconHtml("resetAll", "delete-trash-1", iconCount++));
 
