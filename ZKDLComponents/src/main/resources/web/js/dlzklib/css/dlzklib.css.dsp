@@ -18,8 +18,13 @@
 .z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; right: 27px; }
 .z-quickfilter .z-icon-search-1 { }
 
-.z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
+/* -- Quickfilter in lovbox -- */
+.z-lovbox-popup .z-quickfilter { float: left; margin-bottom: 4px!important; }
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
+.z-lovbox-popup .z-quickfilter [class^="z-icon-"],
+.z-lovbox-popup .z-quickfilter [class*=" z-icon-"] { font-size: 16px; }
+.z-lovbox-popup .z-quickfilter .z-icon-search-1 { margin-left: 5px; }
+.z-lovbox-popup .z-listbox { clear: both; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }

@@ -1,21 +1,20 @@
 <%@ taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" %>
 div.z-dllabeledtag {
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    display: block;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
     float: left;
-    margin: 0px 2px 4px 0;
+    margin: 0 2px 4px 0;
     position: relative;
-    border: 1px solid #7eaac6;
+    border: 1px solid #CFCFCF;
     display: inline-block;
     text-decoration: none;
-    padding: 2px 7px;
+    padding: 3px 6px;
     font-size: 12px;
     line-height: 12px;
     vertical-align: middle;
-    border-radius: 4px;
     /*box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.4);*/
-    background: #f0faff;
+    background: #EDEDED;
 }
 
 div.z-dllabeledtag span.dl-labeled-tag-value {
@@ -23,12 +22,13 @@ div.z-dllabeledtag span.dl-labeled-tag-value {
     margin-left: 0.7em;
 }
 
-div.z-dllabeledtag span.dl-labeled-tag-close {
-    padding-left: 0.5em;
+div.z-dllabeledtag .z-icon-times {
+    color: #6C6C6C;
+    position: relative;
+    top: 1px;
 }
 
-div.z-dllabeledtag span.dl-labeled-tag-close:hover {
+div.z-dllabeledtag .z-icon-timese:hover {
     color: #000;
-    text-shadow: 1px 1px 4px #4b99ed;
     cursor: pointer;
 }
