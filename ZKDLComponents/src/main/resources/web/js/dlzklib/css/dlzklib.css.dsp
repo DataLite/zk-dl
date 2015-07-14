@@ -94,8 +94,8 @@
 .z-404 .sad-smile { width: 100%; height: 128px; background: url(${c:encodeThemeURL('~./js/dlzklib/img/sad-smile_128x128.png')}) no-repeat; background-position:center; }
 
 /* -- Critical error 500 (error.zul) -- */
-.z-criticalError { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 0 auto; overflow: hidden; z-index: 1900!important; }
-.z-criticalError .z-criticalError-header { border-bottom: 1px solid #BEBEBE; font-size: 12px; padding: 7px 5px;  }
+.z-criticalError { color: #666; font-size: 14px; margin: 0 auto; overflow: hidden; z-index: 1900!important; }
+.z-criticalError .z-criticalError-header { font-size: 12px; padding: 7px 5px;  }
 .z-criticalError a { color: #545e6b; }
 .z-criticalError a:hover { text-decoration: underline; }
 .z-criticalError hr { border-color: #fff!important; margin-top: 30px;}
