@@ -28,7 +28,7 @@ div.z-dllabeledtag .z-icon-times {
     top: 1px;
 }
 
-div.z-dllabeledtag .z-icon-timese:hover {
+div.z-dllabeledtag .z-icon-times:hover {
     color: #000;
     cursor: pointer;
 }
