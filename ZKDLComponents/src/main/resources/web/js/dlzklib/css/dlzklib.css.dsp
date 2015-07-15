@@ -43,7 +43,7 @@
 .z-listcontrol .z-quickfilter { float: left; }
 
 /* -- Lovbox component -- */
-.z-lovbox { position: relative; }
+/*.z-lovbox { position: relative; }*/
 
 /* -- Lovbox image -- */
 .z-bandbox-label-btn { font-style: normal!important; height: 16px!important; padding: 2px 3px 1px 6px!important; }
