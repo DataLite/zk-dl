@@ -1,13 +1,36 @@
 package cz.datalite.zk.composer;
 
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.helpers.ZKHelper;
-import cz.datalite.zk.annotation.*;
+import cz.datalite.zk.annotation.ZkBinding;
+import cz.datalite.zk.annotation.ZkBindings;
+import cz.datalite.zk.annotation.ZkComponent;
+import cz.datalite.zk.annotation.ZkConfirm;
+import cz.datalite.zk.annotation.ZkController;
+import cz.datalite.zk.annotation.ZkEvent;
+import cz.datalite.zk.annotation.ZkEvents;
+import cz.datalite.zk.annotation.ZkModel;
+import cz.datalite.zk.annotation.ZkParameter;
 import cz.datalite.zk.annotation.processor.AnnotationProcessor;
 import cz.datalite.zk.composer.listener.DLDetailController;
 import cz.datalite.zk.composer.listener.DLMainModel;
 import cz.datalite.zk.composer.listener.DLMasterController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.SystemException.Aide;
 import org.zkoss.zk.ui.Component;
@@ -18,15 +41,6 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.GenericAutowireComposer;
-
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * <p>Composer for MVC development.</p>
@@ -334,7 +348,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
 
     private Object getDefault( final String key ) {
         try {
-            return org.zkoss.lang.reflect.Fields.get( this, key );
+            return DLFields.get( this, key );
         } catch ( NoSuchMethodException ex ) {
             LOGGER.error( "Something went wrong.", ex );
             return null;
@@ -344,7 +358,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
     private Object get( final String key, final Map<String, Field> fieldMap ) {
         try {
             try {
-                return org.zkoss.lang.reflect.Fields.get( this, key );
+                return DLFields.get( this, key );
             } catch ( NoSuchMethodException ex ) {
                 final Field field = fieldMap.get( key );
                 if ( field != null ) {
@@ -383,7 +397,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
 
     private void putDefault( final String key, final Object value ) {
         try {
-            org.zkoss.lang.reflect.Fields.set( this, key, value, true );
+            DLFields.set( this, key, value, true );
         } catch ( NoSuchMethodException ex ) {
             throw Aide.wrap( ex );
         }
@@ -392,7 +406,7 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
     private void put( final String key, final Object value, final Map<String, Field> fieldMap ) {
         try {
             try {
-                org.zkoss.lang.reflect.Fields.set( this, key, value, true );
+                DLFields.set( this, key, value, true );
             } catch ( NoSuchMethodException ex ) {
                 final Field field = fieldMap.get( key );
                 if ( field != null ) {
