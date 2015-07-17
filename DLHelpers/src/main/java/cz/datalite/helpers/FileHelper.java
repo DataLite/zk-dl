@@ -1,5 +1,7 @@
 package cz.datalite.helpers;
 
+import java.text.Normalizer;
+
 /**
  * Funkce pro práci se soubory
  *
@@ -98,6 +100,19 @@ public abstract class FileHelper {
         {
             return koncovka.toUpperCase();
         }
+    }
+
+    /**
+     * Odstrani z nazvu souboru znaky nevhodne pro ulozeni stahovaneho souboru. (Vcetne lomitek cesty
+     * @param filename
+     * @return vycisteny nazev
+     */
+    public static String cleanFilename(String filename) {
+        if (filename == null) {
+            return null;
+        }
+        filename =  Normalizer.normalize(filename, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
 
