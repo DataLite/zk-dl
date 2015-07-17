@@ -26,5 +26,6 @@ public class FileHelperTest {
 		assertEquals("file.ext", FileHelper.cleanFilename("filé.ext"));
 		assertEquals("file.ext", FileHelper.cleanFilename("filé.ext"));
 		assertEquals("_________________", FileHelper.cleanFilename("\\ / : * ? \" < > |"));
+		assertEquals("_file.exe_", FileHelper.cleanFilename("\tfile.exe\n"));
 	}
 }
