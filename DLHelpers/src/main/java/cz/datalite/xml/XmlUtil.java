@@ -1,15 +1,11 @@
 package cz.datalite.xml;
 
-import cz.datalite.check.Checker;
-import cz.datalite.exception.ProblemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -31,12 +27,17 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+
+import cz.datalite.check.Checker;
+import cz.datalite.exception.ProblemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Utility pro praci s XML.
@@ -84,7 +85,7 @@ public final class XmlUtil {
 
 		} catch (IOException | SAXException e) {
 			logger.error(e.toString(), e);
-			throw new ProblemException(e, XmlProblem.PARSING, e.toString());
+			throw new ProblemException(e, XmlProblem.PARSING, e.toString(), e.getMessage());
 		}
 	}
 
