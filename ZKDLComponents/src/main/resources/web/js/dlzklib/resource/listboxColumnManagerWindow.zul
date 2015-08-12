@@ -28,7 +28,7 @@
                         <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}"/>
                     </listitem>
                 </listbox>
-                <hbox width="250px" hflex="1" align="center">
+                <hbox width="250px" align="center">
                 	<label value="${c:l('listbox.columnManager.quickFilter')}:" sclass="bold" />	
                 	<textbox id="quickFilter" hflex="1" sclass="margin-bottom0" />
                 	<image src="${zkdl:i('remove16x16.png')}" sclass="margin-left3" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.selector.onClearQuickFilter()" />
