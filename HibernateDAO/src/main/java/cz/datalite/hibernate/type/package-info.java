@@ -1,6 +1,3 @@
-/**
- * Hibernate user types.
- */
 @TypeDefs(
         {
                 @TypeDef(
@@ -16,6 +13,10 @@
                         name="ano_ne_A",
                         typeClass = CharBooleanUserType.class,
                         parameters = {@Parameter(name = "defaultValue", value = "A")}
+                ),
+                @TypeDef(
+                        name="enum_char",
+                        typeClass = EnumCharType.class
                 )
         }
 )
