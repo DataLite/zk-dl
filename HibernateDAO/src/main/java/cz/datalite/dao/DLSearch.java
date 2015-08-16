@@ -1,11 +1,8 @@
 package cz.datalite.dao;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
-
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
@@ -13,6 +10,9 @@ import org.hibernate.sql.JoinType;
 
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -43,6 +43,11 @@ public class DLSearch<T> {
      *  It is mandatory to set persistentClass if @Embedded annotation is used - we need to check if embeddable
      *  */
     private Class<T> persistentClass = null;
+
+    /**
+     * Cache mode - if not-null, {@link Criteria criteria} will be cacheable
+     */
+    private CacheMode cacheMode = null;
 
     /**
      * Create DLSearch
@@ -203,6 +208,14 @@ public class DLSearch<T> {
      */
     public Collection<Criterion> getCriterions() {
         return criterions;
+    }
+
+    public CacheMode getCacheMode() {
+        return cacheMode;
+    }
+
+    public void setCacheMode(CacheMode cacheMode) {
+        this.cacheMode = cacheMode;
     }
 
     /**

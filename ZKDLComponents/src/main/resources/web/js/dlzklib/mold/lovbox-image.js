@@ -1,4 +1,4 @@
-function (out) {
+(function (out) {
     var uuid = this.uuid,
         zcls = this.getZclass();
 
@@ -22,4 +22,4 @@ function (out) {
     this.redrawpp_(out);
 
     out.push('</i>');
-}
+})

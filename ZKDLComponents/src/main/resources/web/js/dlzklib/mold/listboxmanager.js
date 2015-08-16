@@ -1,5 +1,4 @@
-
-function (out) {
+(function (out) {
     var uuid = this.uuid,
         zcls = this.getZclass(),
         iconCount = 0;
@@ -15,4 +14,4 @@ function (out) {
     if (this.getResetAll()) out.push(this.getIconHtml("resetAll", "trash_small", iconCount++));
 
     out.push('</tr></table></div>');
-}
+})

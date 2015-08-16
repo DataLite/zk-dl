@@ -1,4 +1,4 @@
-function (out) {
+(function (out) {
     var zcls = this.getZclass(), uuid = this.uuid;
 
 //    <div class="z-quickfilter">
@@ -42,4 +42,4 @@ function (out) {
     
     out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
-}
+})

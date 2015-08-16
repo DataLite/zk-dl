@@ -14,7 +14,7 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
 {
     @SuppressWarnings("unchecked")
     @Override
-    @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class )
+    @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class, timeout = 6000 )
     public void doExecute( @NotNull SavepointOperation operation )
     {
         checkException( operation ) ;

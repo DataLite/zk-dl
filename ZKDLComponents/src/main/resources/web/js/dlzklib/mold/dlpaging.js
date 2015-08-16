@@ -1,5 +1,4 @@
-
-function (out) {
+(function (out) {
     var uuid = this.uuid,
         zcls = this.getZclass(),
         pageCount = (this.getKnownPageCount() ? this.getPageCount() : '?'); // unknown page count
@@ -75,4 +74,4 @@ function (out) {
 
     if (this.isDetailed()) out.push(this._infoTags());
     out.push('<br class="z-dlzklib-clear"/></div></div>');
-}
+})

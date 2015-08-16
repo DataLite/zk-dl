@@ -259,6 +259,8 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
             executable.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
         }
 
+        addCacheMode(executable, search);
+
         //execute
         return executable.list();
     }
@@ -269,6 +271,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // prepare executable criteria
         final Criteria executable = DetachedCriteria.forClass( persistentClass ).getExecutableCriteria( getSession() );
         addSearchCriteria( executable, search, false );
+
+
+        addCacheMode(executable, search);
 
         // execute and get row count number
         return count( executable );
@@ -400,7 +405,20 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
      * @return result list and count in DLResponse object
      */
     protected DLResponse<T> searchAndCount( final Criteria criteria, final DLSearch<T> search ) {
+        addCacheMode(criteria, search);
         return new DLResponse<T>( search( criteria, search ), count( criteria ) );
+    }
+
+    /**
+     * Enables cacheable to criteria and set cacheMode to criteria
+     * @param criteria
+     * @param search
+     */
+    private void addCacheMode(Criteria criteria, DLSearch<T> search) {
+        if (search.getCacheMode() != null) {
+            criteria.setCacheable(true);
+            criteria.setCacheMode(search.getCacheMode());
+        }
     }
 
     public boolean isNew( T entity ) {

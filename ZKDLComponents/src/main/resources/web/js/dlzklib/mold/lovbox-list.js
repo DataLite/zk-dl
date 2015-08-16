@@ -1,4 +1,4 @@
-function (out) {
+(function (out) {
     var uuid = this.uuid,
         zcls = this.getZclass();
 
@@ -17,4 +17,4 @@ function (out) {
     // empty popup
 
     out.push('</i>');
-}
+})

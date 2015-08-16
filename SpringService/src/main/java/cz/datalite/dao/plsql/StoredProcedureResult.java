@@ -2,7 +2,6 @@ package cz.datalite.dao.plsql;
 
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import oracle.sql.ARRAY;
-import sun.security.util.BigInt;
 
 import java.math.BigInteger;
 import java.sql.SQLException;
