@@ -11,16 +11,20 @@
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
 .z-quickfilter span { display: block; }
-.z-quickfilter-text { float: left; margin: 3px 4px 0 0; }
-.z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; cursor: pointer; float: left; height: 10px; width: 16px; margin: 9px 4px 0 0; }
-.z-quickfilter-list:hover { border: 1px solid #808080; margin: 7px 3px 0 -1px; padding: 1px 0; /*ie8*/ background-color/*\**/:#D6D6D6\9; }
-.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; position: relative; top: 2px; }
-.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; cursor: pointer; float: left; height: 16px; width: 16px; margin: 7px 0 0 -20px; position: relative; }
+.z-quickfilter-text { float: left; }
+.z-quickfilter-list { cursor: pointer; float: left; height: 10px; width: 16px; margin: 7px 4px 0 4px; }
+.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
+.z-quickfilter-del { cursor: pointer; float: left; height: 16px; width: 16px; margin: 4px 0 0 -16px; position: relative; right: 3px; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
+.z-quickfilter-magnifier { cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
 .z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px -1px 0 2px; /*ie8*/ background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; }
 .z-quickfilter-magnifier:active,
 .z-quickfilter-list:active { background-color: #C2C2C2; }
+
+/* icons/images */
+.z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; }
+.z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; }
+.z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; }
 
 .z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
@@ -114,22 +118,22 @@
 .z-criticalError .btn { border: 1px solid #ccc; border-bottom: 1px solid #b4b4b4; color: #666; margin-top: 15px; margin-bottom: 5px; padding: 6px 14px 20px 14px; text-shadow: 0 1px 1px #fff; width: auto; }
 
 /* -- CSS3 -- */
-.z-quickfilter-real,
-.z-login input[type=text],
-.z-login input[type=password],
-.z-login input[type=text]:focus,
-.z-login input[type=password]:focus,
-.z-login .z-login-cm,
-.z-login .z-login-submit,
-.z-login .z-login-submit:hover,
-.z-404,
-.z-404 .z-404-header,
-.z-404 .btn,
-.z-criticalError,
-.z-criticalError .z-criticalError-header,
-.z-criticalError .btn,
-.z-quickfilter-magnifier,
-.z-quickfilter-list { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }
+/*.z-quickfilter-real,*/
+/*.z-login input[type=text],*/
+/*.z-login input[type=password],*/
+/*.z-login input[type=text]:focus,*/
+/*.z-login input[type=password]:focus,*/
+/*.z-login .z-login-cm,*/
+/*.z-login .z-login-submit,*/
+/*.z-login .z-login-submit:hover,*/
+/*.z-404,*/
+/*.z-404 .z-404-header,*/
+/*.z-404 .btn,*/
+/*.z-criticalError,*/
+/*.z-criticalError .z-criticalError-header,*/
+/*.z-criticalError .btn,*/
+/*.z-quickfilter-magnifier,*/
+/*.z-quickfilter-list { -ms-behavior: url('css/PIE/PIE.htc'); position: relative; }*/
 
 /* border-radius */
 .z-quickfilter-real {
@@ -137,8 +141,7 @@
 -webkit-border-radius: 2px 2px 2px 2px; 
 border-radius: 2px 2px 2px 2px;
 }
-.z-quickfilter-magnifier,
-.z-quickfilter-list {
+.z-quickfilter-magnifier {
 -moz-border-radius: 3px 3px 3px 3px;
 -webkit-border-radius: 3px 3px 3px 3px;
 border-radius: 3px 3px 3px 3px;

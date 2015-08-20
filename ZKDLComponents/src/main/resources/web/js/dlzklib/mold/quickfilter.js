@@ -34,7 +34,7 @@
             $class += this.getQuickFilterButtonClass();
         }
         $text = this.getQuickFilterButton();
-        out.push('<button type="button" id="', uuid, '-magnifier" class="', zcls, $class, '">' + $text + '</button>');
+        out.push('<input type="button" id="', uuid, '-magnifier" class="', zcls, $class, '" value="', $text, '" />');
     }
     else {
         out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
