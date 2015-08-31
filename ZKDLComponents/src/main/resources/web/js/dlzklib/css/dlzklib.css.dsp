@@ -75,18 +75,18 @@
 .z-lovbox .z-bandbox-rounded-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; padding: 7px 7px; top: 4px; }
 
 /* -- Login -- */
-.z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }
-.z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }
-.z-login .z-login-lbl { display: block; margin-bottom: 3px; }
+/*.z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }*/
+/*.z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }*/
+.z-login .z-login-lbl { display: inline-block; margin: 5px 0 3px 0; }
 .z-login input[type=text],
-.z-login input[type=password] { border: 1px solid #717171; font-size: 15px; outline: none; padding: 5px 30px 5px 5px; }
+.z-login input[type=password] { font-size: 15px; outline: none; width: 100%; /*padding: 5px 30px 5px 5px;*/ }
 .z-login .z-image { position: relative; top: -22px; left: 176px; }
-.z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }
-.z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }
+/*.z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }*/
+/*.z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }*/
 .z-login .z-login-rememberme { display: block; margin-top: -10px; }
 .z-login .z-login-rememberme input[type=checkbox] { margin-right: 5px; position: relative; top: 1px; }
-.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 15px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 198px; }
-.z-login .z-login-submit:hover { border-color: #8FB9D0; }
+/*.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 15px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 198px; }*/
+/*.z-login .z-login-submit:hover { border-color: #8FB9D0; }*/
 .z-login .z-login-error { color: red; margin-bottom: 15px; position: relative; left: -18px; width: 300px; }
 
 /* -- Error 404 -- */
@@ -146,7 +146,6 @@ border-radius: 2px 2px 2px 2px;
 -webkit-border-radius: 3px 3px 3px 3px;
 border-radius: 3px 3px 3px 3px;
 }
-.z-login .z-login-submit,
 .z-404,
 .z-404 .btn,
 .z-criticalError,
@@ -163,46 +162,46 @@ border-radius: 5px 5px 0 0;
 }
 
 /* gradient */
-.z-login input[type=text],
-.z-login input[type=password] {
-background: -moz-linear-gradient(top, rgba(201,201,202,1) 0%, rgba(255,255,255,0.79) 70%, rgba(255,255,255,1) 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(201,201,202,1)), color-stop(70%,rgba(255,255,255,0.79)), color-stop(100%,rgba(255,255,255,1)));
-background: -webkit-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
-background: -o-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
-background: -ms-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
-background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
--pie-background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);
-}
-.z-login .z-login-cm {
-background: #e2e2e2;
-background: -moz-linear-gradient(top, #e2e2e2 0%, #fafafa 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(100%,#fafafa));
-background: -webkit-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
-background: -o-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
-background: -ms-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
-background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
--pie-background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
-}
-.z-login .z-login-submit {
-background: #ffffff;
-background: -moz-linear-gradient(top, #ffffff 0%, #d7d7d7 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d7d7d7));
-background: -webkit-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: -o-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: -ms-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
--pie-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);
-}
-.z-login .z-login-submit:hover {
-background: #f6fcfe;
-background: -moz-linear-gradient(top, #f6fcfe 0%, #badbec 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fcfe), color-stop(100%,#badbec));
-background: -webkit-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: -o-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: -ms-linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);
--pie-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);
-}
+/*.z-login input[type=text],*/
+/*.z-login input[type=password] {*/
+/*background: -moz-linear-gradient(top, rgba(201,201,202,1) 0%, rgba(255,255,255,0.79) 70%, rgba(255,255,255,1) 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(201,201,202,1)), color-stop(70%,rgba(255,255,255,0.79)), color-stop(100%,rgba(255,255,255,1)));*/
+/*background: -webkit-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);*/
+/*background: -o-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);*/
+/*background: -ms-linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);*/
+/*background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);*/
+/*-pie-background: linear-gradient(top, rgba(201,201,202,1) 0%,rgba(255,255,255,0.79) 70%,rgba(255,255,255,1) 100%);*/
+/*}*/
+/*.z-login .z-login-cm {*/
+/*background: #e2e2e2;*/
+/*background: -moz-linear-gradient(top, #e2e2e2 0%, #fafafa 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(100%,#fafafa));*/
+/*background: -webkit-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);*/
+/*background: -o-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);*/
+/*background: -ms-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);*/
+/*background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);*/
+/*-pie-background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);*/
+/*}*/
+/*.z-login .z-login-submit {*/
+/*background: #ffffff;*/
+/*background: -moz-linear-gradient(top, #ffffff 0%, #d7d7d7 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d7d7d7));*/
+/*background: -webkit-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: -o-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: -ms-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*-pie-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
+/*}*/
+/*.z-login .z-login-submit:hover {*/
+/*background: #f6fcfe;*/
+/*background: -moz-linear-gradient(top, #f6fcfe 0%, #badbec 100%);*/
+/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fcfe), color-stop(100%,#badbec));*/
+/*background: -webkit-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: -o-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: -ms-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*-pie-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
+/*}*/
 .z-404 .z-404-header {
 background: #f6f8f9;
 background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%)!important;
@@ -265,27 +264,27 @@ background: linear-gradient(top, #e5e5e5 0%, #d1d1d1 50%, #c4c4c4 50%, #b8b8b8 1
 }
 
 /* box-shadow */
-.z-login .z-login-submit:active {
--moz-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
--webkit-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;
-}
-.z-login input[type=text]:focus,
-.z-login input[type=password]:focus {
--moz-box-shadow: 0px 0px 5px #007eff;
--webkit-box-shadow: 0px 0px 5px #007eff;
-box-shadow: 0px 0px 5px #007eff;
-}
-.z-login input.error {
--moz-box-shadow: 0px 0px 5px red;
--webkit-box-shadow: 0px 0px 5px red;
-box-shadow: 0px 0px 5px red;
-}
-.z-login input.error:focus {
--moz-box-shadow: 0px 0px 5px #007eff;
--webkit-box-shadow: 0px 0px 5px #007eff;
-box-shadow: 0px 0px 5px #007eff;
-}
+/*.z-login .z-login-submit:active {*/
+/*-moz-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;*/
+/*-webkit-box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;*/
+/*box-shadow: inset 0 0 10px 0 #6ba8e5, 0 1px 0 0 white;*/
+/*}*/
+/*.z-login input[type=text]:focus,*/
+/*.z-login input[type=password]:focus {*/
+/*-moz-box-shadow: 0px 0px 5px #007eff;*/
+/*-webkit-box-shadow: 0px 0px 5px #007eff;*/
+/*box-shadow: 0px 0px 5px #007eff;*/
+/*}*/
+/*.z-login input.error {*/
+/*-moz-box-shadow: 0px 0px 5px red;*/
+/*-webkit-box-shadow: 0px 0px 5px red;*/
+/*box-shadow: 0px 0px 5px red;*/
+/*}*/
+/*.z-login input.error:focus {*/
+/*-moz-box-shadow: 0px 0px 5px #007eff;*/
+/*-webkit-box-shadow: 0px 0px 5px #007eff;*/
+/*box-shadow: 0px 0px 5px #007eff;*/
+/*}*/
 .z-404 .btn:active,
 .z-criticalError .btn:active {
 -moz-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
