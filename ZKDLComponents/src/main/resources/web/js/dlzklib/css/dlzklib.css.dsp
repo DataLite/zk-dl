@@ -75,19 +75,22 @@
 .z-lovbox .z-bandbox-rounded-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; padding: 7px 7px; top: 4px; }
 
 /* -- Login -- */
-/*.z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }*/
-/*.z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }*/
+.z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }
+.z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }
+.z-login [class$="-header"], .z-login [class*="-header"] { font-size: 15px; }
 .z-login .z-login-lbl { display: inline-block; margin: 5px 0 3px 0; }
 .z-login input[type=text],
 .z-login input[type=password] { font-size: 15px; outline: none; width: 100%; /*padding: 5px 30px 5px 5px;*/ }
-.z-login .z-image { position: relative; top: -22px; left: 176px; }
-/*.z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }*/
-/*.z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }*/
-.z-login .z-login-rememberme { display: block; margin-top: -10px; }
+.z-login .z-image { margin-top: -16px; position: relative; top: -15px; left: 176px; }
+.z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }
+.z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }
+.z-login .z-login-rememberme { display: block; margin-top: -2px; }
 .z-login .z-login-rememberme input[type=checkbox] { margin-right: 5px; position: relative; top: 1px; }
-/*.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 15px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 198px; }*/
-/*.z-login .z-login-submit:hover { border-color: #8FB9D0; }*/
-.z-login .z-login-error { color: red; margin-bottom: 15px; position: relative; left: -18px; width: 300px; }
+.z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 15px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 100%; }
+.z-login .z-login-submit:hover { border-color: #8FB9D0; }
+.z-login .z-login-error { margin: 0 auto; text-align: left; }
+.z-login .z-login-error .z-label { color: red; float: none; text-align: inherit; width: auto; }
+.z-login .required:after { color: red; content: "*"; display: inline-block; }
 
 /* -- Error 404 -- */
 .z-404 { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 20px auto 0 auto; }
