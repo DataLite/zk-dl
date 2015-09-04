@@ -40,6 +40,5 @@
         out.push('<span id="', uuid, '-magnifier" class="', zcls, '-magnifier', '"></span>');
     }
     
-    out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
 })

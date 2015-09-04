@@ -53,10 +53,6 @@ public class DLListControl extends Div {
         managerComponent = new DLListboxManager();
         managerComponent.setParent(this);
 
-        Div cleaner = new Div();
-        cleaner.setZclass("z-dlzklib-clear");
-        cleaner.setParent(this);
-
         inConstruct = false;
     }
 

@@ -5,38 +5,38 @@
 .selectable { cursor : pointer!important; }
 .nonselectable { cursor : default!important; }
 
-/* Listbox */
-.z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
+/* -- Listcontrol component -- */
+.z-listcontrol { height: 25px; }
+.z-listcontrol:after { clear: both; content: ""; display: block; height: 0; line-height: 0; }
+.z-listcontrol .z-quickfilter { float: left; }
+
+.z-listcontrol-aux-content-cover { float: left; height: 22px; width: auto; margin: 0 auto; }
+.z-listcontrol-aux-content { text-align: center; }
+.z-listcontrol-aux-content-sep { width: 3px; }
 
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
+.z-quickfilter:after { clear: both; content: ""; display: block; height: 0; line-height: 0; }
 .z-quickfilter span { display: block; }
-.z-quickfilter-text { float: left; }
-.z-quickfilter-list { cursor: pointer; float: left; height: 10px; width: 16px; margin: 7px 4px 0 4px; }
-.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 2px 20px 2px 5px; }
-.z-quickfilter-del { cursor: pointer; float: left; height: 16px; width: 16px; margin: 4px 0 0 -16px; position: relative; right: 3px; }
+.z-quickfilter-text { float: left; margin-right: 4px; position: relative; top: 4px; }
+.z-quickfilter-list { cursor: pointer; float: left; height: 10px; width: 16px; margin: 7px 4px 0 0; }
+.z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 3px 20px 3px 5px; }
+.z-quickfilter-del { cursor: pointer; float: left; height: 16px; width: 16px; margin: 5px 0 0 -16px; position: relative; right: 3px; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter-magnifier { cursor: pointer; float: left; height: 18px; width: 18px; margin: 4px 0 0 3px; }
-.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 3px -1px 0 2px; /*ie8*/ background-color/*\**/:#D6D6D6\9; margin-top/*\**/: 2px\9; }
+.z-quickfilter-magnifier { cursor: pointer; float: left; height: 18px; width: 18px; margin: 3px 0 0 3px; }
+.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 2px -1px 0 2px; }
 .z-quickfilter-magnifier:active,
 .z-quickfilter-list:active { background-color: #C2C2C2; }
-
 /* icons/images */
 .z-quickfilter-list { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-open-list.png')}) center no-repeat; }
 .z-quickfilter-del { background: url(${c:encodeURL('~./js/dlzklib/img/btn-del-text.png')}) no-repeat; }
 .z-quickfilter-magnifier { background: url(${c:encodeThemeURL('~./js/dlzklib/img/btn-magnifier.png')}) no-repeat; }
 
 .z-lovbox-popup .z-quickfilter { margin-bottom: 6px!important; }
-.z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
-
-/* -- DLPaging component -- */
-.z-dlpaging { height: auto; }
-.z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
-.z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
-.z-paging-info, .z-paging div.z-paging-info { top: 8px; }
+/*.z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }*/
 
 /* -- Listboxmanager component -- */
-.z-listboxmanager { float: right; margin: 2px 2px 0 0; }
+.z-listboxmanager { float: right; margin: 2px 2px 0 0; width: auto; }
 .z-listboxmanager td { padding: 0 3px; }
 .z-listboxmanager span { cursor: pointer; display: block; height: 20px; width: 20px; }
 .z-listboxmanager-menu_items_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/menu_items_small.png')}) no-repeat; }
@@ -47,11 +47,14 @@
 .z-listboxmanager-excel_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/excel_small.png')}) no-repeat; }
 .z-listboxmanager-trash_small { background: url(${c:encodeThemeURL('~./js/dlzklib/img/trash.png')}) no-repeat; }
 
-/* -- Listcontrol component -- */
-.z-listcontrol { height: 20px; padding: 2px 0px 7px 5px; }
-.z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
-.z-listcontrol-aux-content-sep { width: 3px; }
-.z-listcontrol .z-quickfilter { float: left; }
+/* Listbox */
+.z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
+
+/* -- DLPaging component -- */
+.z-dlpaging { height: auto; }
+.z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
+.z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
+.z-paging-info, .z-paging div.z-paging-info { top: 8px; }
 
 /* -- Lovbox component -- */
 .z-lovbox { position: relative; }
@@ -70,9 +73,9 @@
 .z-lovbox .z-bandbox-image-btn { background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px; cursor: pointer; display: block; height: 16px; width: 14px; }
 .z-lovbox .z-bandbox-image-btn.z-bandbox-btn-over { border: 0 none; margin-left: 0; }
 .z-lovbox .z-bandbox-del, 
-.z-lovbox .z-bandbox-rounded-del { background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat; cursor: pointer; display: none; padding: 5px 7px; position: absolute; right: 18px; top: 5px; }
+.z-lovbox .z-bandbox-rounded-del { cursor: pointer; display: none; padding: 5px 7px; position: absolute; right: 18px; top: 5px; background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat; }
 .z-lovbox .z-bandbox-del:hover, 
-.z-lovbox .z-bandbox-rounded-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; padding: 7px 7px; top: 4px; }
+.z-lovbox .z-bandbox-rounded-del:hover { padding: 7px 7px; top: 4px; background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; }
 
 /* -- Login -- */
 .z-login { background-image:none; background-color:#545E6B; font-size: 12px; margin: 0 auto; }
