@@ -16,8 +16,7 @@
         }
     }
     out.push('<input placeholder="', this._placeholder, '" id="', uuid, '-real" class="z-textbox" type="text" value="',this.getValue(),'"/>');
-    out.push('<i id="', uuid, '-del" class="', 'z-icon-erase', '"></i>');
-    
+
 //    if (this.getQuickFilterButton()) {
 //        
 //        $class = "-button z-button-os";
@@ -39,6 +38,8 @@
     else {
         out.push('<i id="', uuid, '-magnifier" class="', 'z-icon-search-1', '"></i>');
     }
+
+    out.push('<i id="', uuid, '-del" class="', 'z-icon-erase', '"></i>');
     
     //out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');

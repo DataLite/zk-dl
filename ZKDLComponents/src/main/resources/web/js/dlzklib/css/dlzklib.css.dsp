@@ -9,13 +9,14 @@
 .z-listbox .highlighted { background: none repeat scroll 0 0 #ec5210; color: #fff;}
 
 /* -- Quickfilter component [1.5.x] -- */
-.z-quickfilter { margin-right: 20px; position: relative; }
+.z-quickfilter { display: inline-block; margin-right: 20px; position: relative; width: auto; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter .z-quickfilter-text { float: left; margin: 4px 4px 0 0; }
+.z-quickfilter .z-quickfilter-text { margin: 4px 4px 0 0; }
+.z-quickfilter .z-textbox { margin-right: 5px; }
 
 .z-quickfilter [class^="z-icon-"], .z-quickfilter [class*=" z-icon-"] { cursor: pointer; position: relative; top: 5px }
 .z-quickfilter .z-icon-menu { font-size: 11px; right: 3px; }
-.z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; right: 27px; }
+.z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; right: 26px;; }
 .z-quickfilter .z-icon-search-1 { }
 
 /* -- Quickfilter in lovbox -- */
