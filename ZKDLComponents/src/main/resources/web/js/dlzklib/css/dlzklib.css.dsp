@@ -12,20 +12,20 @@
 .z-quickfilter { display: inline-block; margin-right: 20px; position: relative; width: auto; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
 .z-quickfilter .z-quickfilter-text { margin: 4px 4px 0 0; }
-.z-quickfilter .z-textbox { margin-right: 5px; }
+.z-quickfilter .z-textbox { margin: 0 5px 0 0; }
 
 .z-quickfilter [class^="z-icon-"], .z-quickfilter [class*=" z-icon-"] { cursor: pointer; position: relative; top: 5px }
 .z-quickfilter .z-icon-menu { font-size: 11px; right: 3px; }
-.z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; right: 26px;; }
+.z-quickfilter .z-icon-erase { color: #ff0000; position: absolute; top: 4px; margin-left: -27px; margin-right: 10px; }
 .z-quickfilter .z-icon-search-1 { }
 
 /* -- Quickfilter in lovbox -- */
-.z-lovbox-popup .z-quickfilter { float: left; margin-bottom: 4px!important; }
+/*.z-lovbox-popup .z-quickfilter { float: left; margin-bottom: 4px!important; }*/
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
 .z-lovbox-popup .z-quickfilter [class^="z-icon-"],
 .z-lovbox-popup .z-quickfilter [class*=" z-icon-"] { font-size: 16px; }
-.z-lovbox-popup .z-quickfilter .z-icon-search-1 { margin-left: 5px; }
-.z-lovbox-popup .z-listbox { clear: both; }
+/*.z-lovbox-popup .z-quickfilter .z-icon-search-1 { margin-left: 5px; }*/
+.z-lovbox-popup .z-listbox { clear: both; width: 270px; }
 
 /* -- DLPaging component -- */
 .z-dlpaging { height: auto; }
@@ -40,7 +40,8 @@
 /* -- Listcontrol component -- */
 .z-listcontrol { font: 12px Verdana, Geneva, sans-serif; padding: 0 0 3px 1px; }
 .z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
-.z-listcontrol-aux-content-sep { width: 3px; }
+/*.z-listcontrol-aux-content td { padding-left: 1px; }*/
+.z-listcontrol-aux-content-separator { width: 3px; }
 .z-listcontrol .z-quickfilter { float: left; }
 
 /* -- Lovbox component -- */
@@ -57,12 +58,14 @@
 .z-lovbox-pp .z-listbox { margin: 0 auto; overflow-y: auto; }
 .z-lovbox-pp .z-dlpaging { padding: 0!important; }
 
-.z-lovbox .z-bandbox-image-btn { background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px; cursor: pointer; display: block; height: 16px; width: 14px; }
+.z-lovbox .z-bandbox-image-btn { cursor: pointer; display: block; height: 16px; width: 14px; }
 .z-lovbox .z-bandbox-image-btn.z-bandbox-btn-over { border: 0 none; margin-left: 0; }
-.z-lovbox .z-bandbox-del, 
-.z-lovbox .z-bandbox-rounded-del { background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat; cursor: pointer; display: none; padding: 5px 7px; position: absolute; right: 18px; top: 5px; }
-.z-lovbox .z-bandbox-del:hover, 
-.z-lovbox .z-bandbox-rounded-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; padding: 7px 7px; top: 4px; }
+.z-lovbox .z-lovbox-del { cursor: pointer; display: none; margin-top: 8px; margin-left: -31px; padding: 5px 7px; position: absolute; }
+.z-lovbox .z-lovbox-del:hover { padding: 7px 7px; margin-top: 7px; }
+
+.z-lovbox .z-bandbox-image-btn { background: url(${c:encodeThemeURL('~./zul/img/input/bandbtn.gif')}) left -1px; }
+.z-lovbox .z-lovbox-del { background: url(${c:encodeURL('~./js/dlzklib/img/clear.png')}) no-repeat; }
+.z-lovbox .z-lovbox-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; }
 
 /* -- Login -- */
 .z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #737373; font: 12px Verdana, Geneva, sans-serif; margin: 0 auto; }
