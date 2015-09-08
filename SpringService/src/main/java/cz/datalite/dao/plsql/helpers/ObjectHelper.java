@@ -23,7 +23,7 @@ import org.hibernate.proxy.HibernateProxyHelper;
  * Date: 6/13/13
  * Time: 8:40 AM
  */
-@SuppressWarnings("TryWithIdenticalCatches")
+@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused"})
 public final class ObjectHelper
 {
     private ObjectHelper()
@@ -261,7 +261,7 @@ public final class ObjectHelper
                  return m.invoke( obj ) ;
             }
 
-            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
+            Field field = getDeclaredField( clazz, fieldName);
             boolean f = field.isAccessible() ;
 
             try
@@ -294,12 +294,46 @@ public final class ObjectHelper
         return extractFromObject(getValue(fieldName, obj), returnType);
     }
 
+    /**
+     * @param clazz     prohledávaná třída
+     * @param name      hledaná položka
+     * @return nalezená položka
+     */
+    private static Field getDeclaredField( Class clazz, String name  ) throws NoSuchFieldException
+    {
+        for( Field field : ReflectionHelper.getAllFields( clazz ) )
+        {
+            if ( field.getName().equals( name ) )
+            {
+                return field ;
+            }
+        }
+
+        throw new NoSuchFieldException( name ) ;
+    }
+
     public static void setValue(String fieldName, Object obj, Object value)
     {
+        if ( obj == null )
+        {
+            return ;
+        }
+
         try
         {
             Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
-            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
+
+
+
+            int dot = fieldName.indexOf( "." ) ;
+
+            if ( dot > 0 )
+            {
+                setValue( fieldName.substring( dot + 1 ), getValue( fieldName.substring( 0, dot ), obj ), value ) ;
+                return  ;
+            }
+
+            Field field = getDeclaredField( clazz, fieldName ) ;
             Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
             if ( m != null )
@@ -404,7 +438,7 @@ public final class ObjectHelper
         }
         else if ( returnType.isEnum() )
         {
-            return (T)EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
+            return EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
         }
 
         //noinspection unchecked

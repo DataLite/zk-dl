@@ -278,5 +278,4 @@ box-shadow: 0px 0px 5px #007eff;
 .z-criticalError .btn:active {
 -moz-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 -webkit-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
-box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
-}
+box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white}

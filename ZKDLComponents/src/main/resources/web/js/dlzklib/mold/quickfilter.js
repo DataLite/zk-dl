@@ -27,7 +27,7 @@
 //        $text = "";
 //    }
     if (this.getQuickFilterButton()) {
-        
+
         $class = "z-button ";
         if (this.getQuickFilterButtonClass()) {
             $class += this.getQuickFilterButtonClass();
@@ -40,7 +40,7 @@
     }
 
     out.push('<i id="', uuid, '-del" class="', 'z-icon-erase', '"></i>');
-    
+
     //out.push('<br class="z-dlzklib-clear"/>');
     out.push('</div>');
 })
