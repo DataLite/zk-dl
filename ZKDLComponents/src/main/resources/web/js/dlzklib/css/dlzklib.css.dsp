@@ -23,8 +23,8 @@
 .z-quickfilter-real { background: #fff; border: 1px solid #E6E6E6; border-top-color: #B2B2B2; float: left; padding: 3px 20px 3px 5px; }
 .z-quickfilter-del { cursor: pointer; float: left; height: 16px; width: 16px; margin: 5px 0 0 -16px; position: relative; right: 3px; }
 .z-quickfilter-button { cursor: pointer; height: 21px; margin-left: 5px!important; }
-.z-quickfilter-magnifier { cursor: pointer; float: left; height: 18px; width: 18px; margin: 3px 0 0 3px; }
-.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 2px -1px 0 2px; }
+.z-quickfilter-magnifier { cursor: pointer; float: left; height: 18px; width: 18px; margin: 2px 0 0 3px; }
+.z-quickfilter-magnifier:hover { border: 1px solid #808080; margin: 1px -1px 0 2px; }
 .z-quickfilter-magnifier:active,
 .z-quickfilter-list:active { background-color: #C2C2C2; }
 /* icons/images */
