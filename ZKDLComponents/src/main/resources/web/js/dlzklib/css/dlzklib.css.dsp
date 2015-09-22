@@ -6,7 +6,7 @@
 .nonselectable { cursor : default!important; }
 
 /* -- Listcontrol component -- */
-.z-listcontrol { height: 25px; }
+.z-listcontrol { min-height: 26px; }
 .z-listcontrol:after { clear: both; content: ""; display: block; height: 0; line-height: 0; }
 .z-listcontrol .z-quickfilter { float: left; }
 
