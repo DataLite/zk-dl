@@ -78,7 +78,6 @@
                 <button label="${c:l('listbox.profileManager.save')}" onClick="@command('save', saveColumnModel=saveColumnModelCheckbox.checked, saveFilterModel=saveColumnFilterCheckbox.checked)" src="${zkdl:i('ok.png')}" />
                 <button label="${c:l('listbox.storno')}" onClick="@command('close')" src="${zkdl:i('cancel.png')}" />
             </div>
-            <n:br class="clear" />
 
         </div>
     </window>
