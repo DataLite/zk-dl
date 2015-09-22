@@ -42,9 +42,7 @@
             <button label="${c:l('listbox.ok')}" forward="onOk" src="${zkdl:i('ok.png')}" />
             <button label="${c:l('listbox.storno')}" forward="onStorno" src="${zkdl:i('cancel.png')}" />
         </div>
-        
-        <n:br class="clear" />
-        
+
       </div>
     </window>
 </zk>

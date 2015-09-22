@@ -6,7 +6,7 @@
 <?page title="Listbox manager"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
-    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="660px" id="winListboxManager" closable="true" 
+    <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="680px" id="winListboxManager" closable="true"
              border="normal"  self="@{define(content)}"
              apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController" 
              sclass="window">
@@ -19,28 +19,28 @@
 
         <hbox sclass="margin-bottom15">
             <vbox>
-                <label value="${c:l('listbox.exportManager.hidden')}" sclass="bold margin-bottom10" />
+                <label value="${c:l('listbox.exportManager.hidden')}" sclass="bold" />
                 <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}" />
                     </listitem>
                 </listbox>
-                <hbox width="250px" align="center">
-                  <label value="${c:l('listbox.columnManager.quickFilter')}:" sclass="bold" />  
+                <hbox align="center">
+                  <label value="${c:l('listbox.columnManager.quickFilter')}:" sclass="bold" style="min-width: auto" />
                   <textbox id="quickFilter" hflex="1" />
                   <image src="${zkdl:i('remove16x16.png')}" sclass="margin-left4" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.selector.onClearQuickFilter()" />
                 </hbox>
             </vbox>
 
             <vbox sclass="margin-top50 margin-right5 margin-left5">
-                <button onClick="ctl.selector.onUnusedToUsedAllMove()" src="${zkdl:i('right2Arrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onUnusedToUsedMove()" src="${zkdl:i('rightArrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onUsedToUnusedMove()" src="${zkdl:i('leftArrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onUsedToUnusedAllMove()" src="${zkdl:i('left2Arrow32x32.png')}" height="34px"/>
+                <button onClick="ctl.selector.onUnusedToUsedAllMove()" src="${zkdl:i('right2Arrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onUnusedToUsedMove()" src="${zkdl:i('rightArrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onUsedToUnusedMove()" src="${zkdl:i('leftArrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onUsedToUnusedAllMove()" src="${zkdl:i('left2Arrow32x32.png')}" height="auto"/>
             </vbox>
 
             <vbox>
-                <label value="${c:l('listbox.exportManager.displayed')}" sclass="bold margin-bottom15" />
+                <label value="${c:l('listbox.exportManager.displayed')}" sclass="bold" />
                 <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
                     <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
                         <listcell label="@{row.label}" />
@@ -49,10 +49,10 @@
             </vbox>
 
             <vbox sclass="margin-top50 margin-left5">
-                <button onClick="ctl.selector.onTopMove()" src="${zkdl:i('up2Arrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onUpMove()" src="${zkdl:i('upArrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onDownMove()" src="${zkdl:i('downArrow32x32.png')}" height="34px"/>
-                <button onClick="ctl.selector.onBottomMove()" src="${zkdl:i('down2Arrow32x32.png')}" height="34px"/>
+                <button onClick="ctl.selector.onTopMove()" src="${zkdl:i('up2Arrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onUpMove()" src="${zkdl:i('upArrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onDownMove()" src="${zkdl:i('downArrow32x32.png')}" height="auto"/>
+                <button onClick="ctl.selector.onBottomMove()" src="${zkdl:i('down2Arrow32x32.png')}" height="auto"/>
             </vbox>
         </hbox>
 
@@ -81,8 +81,6 @@
             <button label="${c:l('listbox.ok')}" forward="onOk" src="${zkdl:i('ok.png')}" />
             <button label="${c:l('listbox.storno')}" forward="onStorno" src="${zkdl:i('cancel.png')}" />
         </div>
-        
-        <n:br class="clear" />
         
       </div>
     </window>
