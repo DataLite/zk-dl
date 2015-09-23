@@ -21,4 +21,13 @@ public class LocalizationUtilTest {
 		}
 		Assert.assertEquals("foo.bar", LocalizationUtil.getEnumLocalizationKey(TestEnum.FOO));
 	}
+
+	@Test
+	public void testGetEnumLocalizationKeyInner() throws Exception {
+		Assert.assertEquals("cz.datalite.localization.LocalizationUtilTest$EnumInner.FOO", LocalizationUtil.getEnumLocalizationKey(EnumInner.FOO));
+	}
+
+	enum EnumInner {
+		FOO
+	}
 }
