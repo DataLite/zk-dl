@@ -223,4 +223,6 @@ public interface GenericDAO<T, ID extends Serializable>
      * @return The number of entities updated or deleted.
      */
     int updateHQL(String update, Object ... values);
+
+    Class<T> getPersistentClass();
 }

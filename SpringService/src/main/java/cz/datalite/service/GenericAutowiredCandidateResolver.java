@@ -84,7 +84,7 @@ public class GenericAutowiredCandidateResolver extends SimpleAutowireCandidateRe
     }
 
     protected boolean isGenericDAOOfType(GenericDAO dao, Type type) {
-        return ((GenericDAOImpl)dao).getPersistentClass().equals(type);
+        return dao.getPersistentClass().equals(type);
     }
 
     /**

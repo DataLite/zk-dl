@@ -5,6 +5,7 @@ import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
 import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ReflectionHelper;
+import cz.datalite.helpers.StringHelper;
 import oracle.sql.STRUCT;
 import org.hibernate.proxy.HibernateProxyHelper;
 
@@ -21,7 +22,7 @@ import java.util.Date;
  * Date: 6/13/13
  * Time: 8:40 AM
  */
-@SuppressWarnings("TryWithIdenticalCatches")
+@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused"})
 public final class ObjectHelper
 {
     private ObjectHelper()
@@ -259,7 +260,7 @@ public final class ObjectHelper
                  return m.invoke( obj ) ;
             }
 
-            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
+            Field field = getDeclaredField( clazz, fieldName);
             boolean f = field.isAccessible() ;
 
             try
@@ -292,12 +293,46 @@ public final class ObjectHelper
         return extractFromObject(getValue(fieldName, obj), returnType);
     }
 
+    /**
+     * @param clazz     prohledávaná třída
+     * @param name      hledaná položka
+     * @return nalezená položka
+     */
+    private static Field getDeclaredField( Class clazz, String name  ) throws NoSuchFieldException
+    {
+        for( Field field : ReflectionHelper.getAllFields( clazz ) )
+        {
+            if ( field.getName().equals( name ) )
+            {
+                return field ;
+            }
+        }
+
+        throw new NoSuchFieldException( name ) ;
+    }
+
     public static void setValue(String fieldName, Object obj, Object value)
     {
+        if ( obj == null )
+        {
+            return ;
+        }
+
         try
         {
             Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(obj) ;
-            Field field = ReflectionHelper.getDeclaredField( clazz, fieldName);
+
+
+
+            int dot = fieldName.indexOf( "." ) ;
+
+            if ( dot > 0 )
+            {
+                setValue( fieldName.substring( dot + 1 ), getValue( fieldName.substring( 0, dot ), obj ), value ) ;
+                return  ;
+            }
+
+            Field field = getDeclaredField( clazz, fieldName ) ;
             Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
             if ( m != null )
@@ -402,7 +437,7 @@ public final class ObjectHelper
         }
         else if ( returnType.isEnum() )
         {
-            return (T)EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
+            return EnumHelper.getEnumValue( returnType, extractString( value ) ) ;
         }
 
         //noinspection unchecked
@@ -442,6 +477,10 @@ public final class ObjectHelper
         {
             return ((BigDecimal) value).longValue();
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( (String)value ) : null ;
+        }
 
         return (value != null) ? Long.parseLong(String.valueOf(value)) : null;
     }
@@ -463,6 +502,10 @@ public final class ObjectHelper
         else if (value instanceof BigDecimal)
         {
             return ((BigDecimal) value).doubleValue();
+        }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  Double.parseDouble((String) value) : null ;
         }
 
         return (value != null) ? Double.parseDouble(String.valueOf(value)) : null;
@@ -486,6 +529,10 @@ public final class ObjectHelper
         {
             return ((Integer) value);
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt((String) value) : null ;
+        }
 
         return (value != null) ? Integer.parseInt(String.valueOf(value)) : null;
     }
@@ -508,6 +555,10 @@ public final class ObjectHelper
         {
             return new BigDecimal((Integer) value);
         }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  new BigDecimal((String) value) : null ;
+        }
 
         return (value != null) ? new BigDecimal(String.valueOf(value)) : null;
     }
@@ -529,6 +580,10 @@ public final class ObjectHelper
         else if (value instanceof Integer)
         {
             return BigInteger.valueOf(((Integer) value)) ;
+        }
+        else if ( value instanceof String )
+        {
+            return ( ! StringHelper.isNull((String)value)) ?  new BigInteger((String) value) : null ;
         }
 
         return (value != null) ? new BigInteger(String.valueOf(value)) : null;
