@@ -1,19 +1,7 @@
 package cz.datalite.zk.components.profile;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.zkoss.util.resource.Labels;
-import org.zkoss.xel.VariableResolver;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.HtmlBasedComponent;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.util.Composer;
-import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.*;
 
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
@@ -24,9 +12,24 @@ import cz.datalite.zk.components.list.view.DLListheader;
 import cz.datalite.zk.components.lovbox.DLLovbox;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.lovbox.DLLovboxPopupComponentPosition;
-
-import javax.activation.CommandObject;
-import javax.activation.DataHandler;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.xel.VariableResolver;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.Template;
+import org.zkoss.zul.Bandpopup;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Hlayout;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.ListitemRenderer;
 
 /**
  * Bar with advanced tools for managing the listbox profiles.
@@ -117,7 +120,7 @@ public class DLProfileManager<T> extends Hlayout {
 		this.profilesLovbox.setLabelProperty("name");
 		this.profilesLovbox.setSearchProperty("name");
 		this.profilesLovbox.setMultiple(false);
-        this.profilesLovbox.setWatermark("Vyberte profil");
+        this.profilesLovbox.setWatermark(Labels.getLabel("listbox.profileManager.profile.watermark"));
 
 		
 		// init bandpop and listbox inside lovbox
