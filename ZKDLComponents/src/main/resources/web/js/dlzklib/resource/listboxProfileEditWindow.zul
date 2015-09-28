@@ -7,7 +7,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
     <window apply="org.zkoss.bind.BindComposer"
             viewModel="@id('vm') @init('cz.datalite.zk.components.list.window.controller.ListboxProfileEditController')"
-            closable="true" id="listboxProfileEditWindow" title="Editace profilu" width="460px">
+            closable="true" id="listboxProfileEditWindow" title="${c:l('listbox.profileManager.profile.edit')}" width="460px">
 
         <div sclass="editable">
 

@@ -120,7 +120,7 @@ public class DLProfileManager<T> extends Hlayout {
 		this.profilesLovbox.setLabelProperty("name");
 		this.profilesLovbox.setSearchProperty("name");
 		this.profilesLovbox.setMultiple(false);
-        this.profilesLovbox.setWatermark("Vyberte profil");
+        this.profilesLovbox.setWatermark(Labels.getLabel("listbox.profileManager.profile.watermark"));
 
 		
 		// init bandpop and listbox inside lovbox
