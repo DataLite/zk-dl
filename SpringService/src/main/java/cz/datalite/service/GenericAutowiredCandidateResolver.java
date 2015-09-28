@@ -9,6 +9,7 @@ import cz.datalite.dao.impl.GenericDAOFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.DependencyDescriptor;
@@ -24,7 +25,7 @@ import org.springframework.context.ApplicationContextAware;
  * and persistenceClass property is compared to required entity class. If matched, this bean is returned.
  * If no eligible entity is found, new bean instance is created using GenericDAOFactory.
  */
-public class GenericAutowiredCandidateResolver extends SimpleAutowireCandidateResolver
+public class GenericAutowiredCandidateResolver extends QualifierAnnotationAutowireCandidateResolver
         implements ApplicationContextAware, BeanFactoryPostProcessor {
 
     // application context (used to create new DAO instance)
