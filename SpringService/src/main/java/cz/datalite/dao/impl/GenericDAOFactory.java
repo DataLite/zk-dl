@@ -9,6 +9,8 @@ import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * Factory methods to instantiate generic DAO instances.
@@ -33,14 +35,29 @@ public class GenericDAOFactory {
     public static <T, ID extends Serializable, DAO extends GenericDAO<T, ID>>
             DAO createDAO(ApplicationContext applicationContext, Class<T> entityClass, Class<ID> idClass, Class<DAO> daoClass) {
 
-        final EntityManagerFactory entityManagerFactory = getEntityManagerFactory(applicationContext, daoClass);
+        // entity manager factory is obtaind either from JpaTransactionManager or by bean name / definition
+        final JpaTransactionManager jpaTransactionManager = getJpaTransactionManager(applicationContext);
+        final EntityManagerFactory entityManagerFactory;
+
+        if (jpaTransactionManager == null) {
+            entityManagerFactory = getEntityManagerFactory(applicationContext, daoClass);
+        } else {
+            entityManagerFactory = null;
+        }
 
         GenericDAOImpl impl = new GenericDAOImpl<T, ID>(entityClass) {
 
             // we need to return transaction managed entity manager
             @Override
             public EntityManager getEntityManager() {
-                return EntityManagerFactoryUtils.doGetTransactionalEntityManager(entityManagerFactory, null);
+                EntityManagerFactory emf = entityManagerFactory;
+
+                // prefere jpaTransactionManager
+                if (jpaTransactionManager != null) {
+                    emf = jpaTransactionManager.getEntityManagerFactory();
+                }
+
+                return EntityManagerFactoryUtils.doGetTransactionalEntityManager(emf, null);
             }
         };
         
@@ -50,6 +67,14 @@ public class GenericDAOFactory {
         result.setTarget(impl);
         result.setInterfaces(new Class[]{daoClass});
         return (DAO) result.getProxy();
+    }
+
+    private static JpaTransactionManager getJpaTransactionManager(ApplicationContext applicationContext) {
+        try {
+            return applicationContext.getBean(JpaTransactionManager.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            return null;
+        }
     }
 
     /**
