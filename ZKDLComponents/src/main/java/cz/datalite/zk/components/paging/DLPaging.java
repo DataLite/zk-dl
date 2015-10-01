@@ -33,6 +33,7 @@ public class DLPaging extends XulElement implements Pageable {
     protected boolean autohide = false;
     protected boolean detailed = true;
     protected boolean countPages = true;
+    protected boolean showInfoText = true;
 
 
     public void setController( final DLPagingController controller ) {
@@ -143,6 +144,9 @@ public class DLPaging extends XulElement implements Pageable {
 
     protected String getInfoText() {
 
+        if(!isShowInfoText()) {
+            return "";
+        }
         if (getPagingModel().getTotalSize() == 0)
             return "[ " + Labels.getLabel("listbox.paging.noData") + " ]";
 
@@ -194,6 +198,7 @@ public class DLPaging extends XulElement implements Pageable {
         smartUpdate("activePage", getPagingModel().getPageCount() == 0 ? 0 : getActivePage());
         smartUpdate("pageCount", getPageCount());
         smartUpdate("knownPageCount", isKnownPageCount());
+        smartUpdate("showInfoText", isShowInfoText());
     }
 
     // super
@@ -211,6 +216,7 @@ public class DLPaging extends XulElement implements Pageable {
 
         render(renderer, "detailed", isDetailed());
         render(renderer, "autohide", isAutohide());
+        render(renderer, "showInfoText", isShowInfoText());
     }
 
     // set active page on paging event directly
@@ -224,5 +230,13 @@ public class DLPaging extends XulElement implements Pageable {
             Events.postEvent(evt);
         } else
             super.service(request, everError);
+    }
+
+    public void setShowInfoText(boolean showInfoText) {
+        this.showInfoText = showInfoText;
+    }
+
+    public boolean isShowInfoText() {
+        return showInfoText;
     }
 }
