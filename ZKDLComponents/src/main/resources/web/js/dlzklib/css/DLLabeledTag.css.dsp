@@ -1,34 +1,36 @@
 <%@ taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" %>
-div.z-dllabeledtag {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    float: left;
-    margin: 0 2px 4px 0;
+.z-dllabeledtag {
+    background: #5CA0D1;
+    border: 1px solid #5390BC;
+    color: #FFFFFF;
+    font: 12px normal Arial, Helvetica, sans-serif;
+    margin: 2px 2px 2px 0;
+    padding: 4px 7px;
     position: relative;
-    border: 1px solid #CFCFCF;
-    display: inline-block;
-    text-decoration: none;
-    padding: 3px 6px;
-    font-size: 12px;
-    line-height: 12px;
-    vertical-align: middle;
-    /*box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.4);*/
-    background: #EDEDED;
+
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+
+    -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 
-div.z-dllabeledtag span.dl-labeled-tag-value {
+.z-dllabeledtag span.dl-labeled-tag-value {
     font-style: italic;
     margin-left: 0.7em;
 }
 
-div.z-dllabeledtag .z-icon-times {
+.z-dllabeledtag .z-icon-times {
     color: #6C6C6C;
     position: relative;
     top: 1px;
 }
 
-div.z-dllabeledtag .z-icon-times:hover {
+.z-dllabeledtag .z-icon-times:hover {
     color: #000;
     cursor: pointer;
 }
