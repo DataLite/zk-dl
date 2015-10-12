@@ -20,6 +20,7 @@ import org.zkoss.zk.ui.metainfo.TemplateInfo;
 import org.zkoss.zk.ui.metainfo.impl.MacroDefinition;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
+import org.zkoss.zk.xel.Evaluator;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
@@ -457,6 +458,15 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         for (NodeInfo nodeInfo : nodeInfoList) {
             if (nodeInfo instanceof ComponentInfo) {
                 ComponentInfo componentInfo = (ComponentInfo) nodeInfo;
+
+                if ( componentInfo.withCondition() ) //Pokud komponenta obsahuje podmínku vyskytu tak ji vyhodnotím a podle výsledku pokračovat
+                {
+                    if ( ! componentInfo.getCondition().isEffective( componentInfo.getPageDefinition().getEvaluator(), listbox ) )
+                    {
+                        continue ;
+                    }
+                }
+
                 if (componentInfo.getComponentDefinition() instanceof MacroDefinition) {
                     MacroDefinition macro = (MacroDefinition) componentInfo.getComponentDefinition();
                     PageDefinition pageDefinition = Executions.getPageDefinition(null, macro.getMacroURI());
