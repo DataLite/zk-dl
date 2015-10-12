@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Migration to {@link org.springframework.beans.factory.annotation.Autowired} is planned.
  * @author Jiri Bubnik
  */
 @Retention(RetentionPolicy.RUNTIME)
