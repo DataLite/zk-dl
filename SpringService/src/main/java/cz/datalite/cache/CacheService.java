@@ -10,6 +10,17 @@ import cz.datalite.cache.model.ServiceResult;
 public interface CacheService
 {
     /**
+     * @return true pokud je cache zapnutá
+     */
+    boolean isEnabled() ;
+
+    /**
+     * @param value nová hodnota příznaku zapnutí/vypnutí cache
+     * @return true pokud byla cache zapnutá
+     */
+    boolean setEnabled( boolean value ) ;
+
+    /**
      * Přidání záznamu do cache
      *
      * @param cacheType     typ pole
