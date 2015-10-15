@@ -25,10 +25,40 @@ public class CacheServiceImpl implements CacheService
             return new LinkedHashMap<>() ;
         }
     } ;
+    ThreadLocal<Boolean> enabledForThread = new ThreadLocal<Boolean>()
+    {
+        @Override
+        protected Boolean initialValue()
+        {
+            return false ;
+        }
+    } ;
+
+
+    @Override
+    public boolean isEnabled()
+    {
+        return enabledForThread.get() ;
+    }
+
+    @Override
+    public boolean setEnabled(boolean value)
+    {
+        boolean ret = isEnabled() ;
+
+        enabledForThread.set( value ) ;
+
+        return ret ;
+    }
 
     @Override
     public <CacheType, XmlType, DatabaseType> void addToCache( Class<CacheType> cacheType, XmlType key, DatabaseType value )
     {
+        if ( ! isEnabled() )
+        {
+            return ;
+        }
+
         Map<XmlType, DatabaseType> arrays = new LinkedHashMap<>() ;
 
         if ( values.get().containsKey(cacheType) )
@@ -47,6 +77,11 @@ public class CacheServiceImpl implements CacheService
     @Override
     public <CacheType, XmlType, DatabaseType> DatabaseType removeFromCache(Class<CacheType> cacheType, XmlType key, DatabaseType value)
     {
+        if ( ! isEnabled() )
+        {
+            return null ;
+        }
+
         Map<XmlType, DatabaseType> arrays = new LinkedHashMap<>() ;
 
         if ( values.get().containsKey(cacheType) )
@@ -96,13 +131,13 @@ public class CacheServiceImpl implements CacheService
     @Override
     public <CacheType, XmlType> boolean isExistsInCache( Class<CacheType> cacheType, XmlType key )
     {
-        return ( values.get().containsKey(cacheType) ) && ( values.get().get(cacheType).containsKey( key ) ) ;
+        return ( isEnabled() ) && ( values.get().containsKey(cacheType) ) && ( values.get().get(cacheType).containsKey( key ) ) ;
     }
 
     @Override
     public <CacheType, XmlType, DatabaseType> boolean isExistsInCache( Class<CacheType> cacheType, XmlType key, DatabaseType value )
     {
-        if ( ( values.get().containsKey( cacheType ) ) && ( values.get().get(cacheType).containsKey( key ) ) )
+        if ( isExistsInCache( cacheType, key ) )
         {
             Object obj = getValueFromCache( cacheType, key ) ;
 
@@ -121,7 +156,7 @@ public class CacheServiceImpl implements CacheService
     @Override
     public <CacheType, XmlType, DatabaseType> DatabaseType getValueFromCache( Class<CacheType> cacheType, XmlType key )
     {
-        if ( values.get().containsKey(cacheType) )
+        if ( ( isEnabled() ) && ( values.get().containsKey(cacheType) ) )
         {
             //noinspection unchecked
             return (DatabaseType) values.get().get(cacheType).get( key );
@@ -139,9 +174,12 @@ public class CacheServiceImpl implements CacheService
     @Override
     public <XmlType> void addServiceResultToCache(@NotNull XmlType key, @NotNull ServiceResult value)
     {
-        for( Map.Entry<Class<?>, Object> entry : value.getObjects().entrySet() )
+        if ( isEnabled() )
         {
-            addToCache( entry.getKey(), key, entry.getValue() ) ;
+            for (Map.Entry<Class<?>, Object> entry : value.getObjects().entrySet())
+            {
+                addToCache(entry.getKey(), key, entry.getValue());
+            }
         }
     }
 }
