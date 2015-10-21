@@ -58,7 +58,7 @@ dlzklib.Listboxmanager = zk.$extends(zul.inp.InputWidget, {
             tooltip = msgdlzklib[menu + "_tooltip"];
 
         if (menu === "filterManager" && this.getFilterTooltip()) {
-            icon = "filter_small_active";
+            icon = "filter-1 active";
             tooltip = this.getFilterTooltip();
         }
 
