@@ -68,7 +68,7 @@
 .z-lovbox .z-lovbox-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; }
 
 /* -- Login -- */
-.z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #737373; font: 12px Verdana, Geneva, sans-serif; margin: 0 auto; }
+.z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #737373; font: 12px Verdana, Geneva, sans-serif; margin: 20px auto 0 auto; padding: 12px 15px 10px!important; }
 .z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }
 .z-login .z-login-lbl { display: block; margin-bottom: 3px; }
 .z-login input[type=text],
@@ -80,7 +80,7 @@
 .z-login .z-login-rememberme input[type=checkbox] { margin-right: 5px; position: relative; top: 1px; }
 .z-login .z-login-submit { border: 1px solid #C7C7C7; color: #000; cursor: pointer; margin-top: 10px; padding: 4px 0; text-shadow: 0 1px 1px #fff; width: 100%; }
 .z-login .z-login-submit:hover { border-color: #ABABAB; background-color: #EDEDED; -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-.z-login .z-login-error { color: red; margin-bottom: 15px; position: relative; left: -18px; width: 300px; }
+.z-login .z-login-error { color: red; margin-bottom: 15px; position: relative; width: 300px; }
 
 /* zk8 */
 .z-login .z-login-content { padding: 20px 30px 25px 30px; }
