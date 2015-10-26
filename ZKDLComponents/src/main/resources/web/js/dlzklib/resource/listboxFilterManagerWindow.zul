@@ -7,7 +7,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
     <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="740px" id="winListboxManager" closable="true" 
-            border="normal" self="@{define(content)}"
+            border="none" self="@{define(content)}"
             apply="cz.datalite.zk.components.list.window.controller.ListboxFilterManagerController" 
             sclass="window">
       <div sclass="editable padding10">
@@ -35,7 +35,7 @@
                     </combobox>
                     <space />
                     <space />
-                    <image src="${zkdl:i('remove16x16.png')}" sclass="margin-left4" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.onRemove(self.parent)"/>
+                    <image src="${zkdl:i('remove16x16.png')}" sclass="margin-left3" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.onRemove(self.parent)"/>
                 </row>
             </rows>
         </grid>
