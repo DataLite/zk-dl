@@ -1,7 +1,8 @@
 package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.helpers.StringHelper;
-import cz.datalite.zk.bind.ZKBinderHelper;
+import cz.datalite.helpers.ZKBinderHelper;
+//import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.view.DLListbox;
 
 import java.util.HashSet;

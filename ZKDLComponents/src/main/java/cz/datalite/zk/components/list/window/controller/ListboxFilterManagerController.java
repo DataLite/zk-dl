@@ -1,7 +1,8 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import cz.datalite.helpers.ZKBinderHelper;
 import cz.datalite.zk.bind.Binder;
-import cz.datalite.zk.bind.ZKBinderHelper;
+//import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.enums.DLNormalFilterKeys;
@@ -11,6 +12,7 @@ import cz.datalite.zk.components.list.filter.components.FilterComponent;
 import cz.datalite.zk.components.list.filter.components.RequireColumnModel;
 import cz.datalite.zk.components.list.filter.components.RequireController;
 import cz.datalite.zk.components.list.model.RowModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Component;
