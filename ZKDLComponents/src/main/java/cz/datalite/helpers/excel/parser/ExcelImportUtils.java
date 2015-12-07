@@ -1,7 +1,5 @@
 package cz.datalite.helpers.excel.parser;
 
-import java.io.InputStream;
-import java.util.Date;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.DateCell;
@@ -12,6 +10,9 @@ import jxl.NumberFormulaCell;
 import jxl.StringFormulaCell;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
+
+import java.io.InputStream;
+import java.util.Date;
 
 /**
  * <p>Třída pomáhá importovat soubory z MS Excel. Využívá k tomu
@@ -199,7 +200,7 @@ public final class ExcelImportUtils {
      * typ ExcelImportException.</p>
      * @param io proud, ze kterého načítáme sešit
      * @return sešit
-     * @throws ExcelImportException vyjímka, pokud se nepodařilo stream načíst
+     * @throws ExcelImportException výjimka, pokud se nepodařilo stream načíst
      */
     public static Workbook loadWorkbook( final InputStream io ) throws ExcelImportException {
         return loadWorkbook(io, new WorkbookSettings());
@@ -210,7 +211,7 @@ public final class ExcelImportUtils {
      * typ ExcelImportException.</p>
      * @param io proud, ze kterého načítáme sešit
      * @return sešit
-     * @throws ExcelImportException vyjímka, pokud se nepodařilo stream načíst
+     * @throws ExcelImportException výjimka, pokud se nepodařilo stream načíst
      */
     public static Workbook loadWorkbook( final InputStream io, WorkbookSettings settings ) throws ExcelImportException {
         try {
