@@ -7,7 +7,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
     <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()"  width="660px" id="winListboxManager" closable="true" 
-             border="normal" self="@{define(content)}"
+             border="none" self="@{define(content)}"
              apply="cz.datalite.zk.components.list.window.controller.ListboxColumnManagerController" 
              sclass="window">
       <div sclass="editable padding10">
@@ -27,12 +27,12 @@
                 </listbox>
                 <hbox width="250px" hflex="1" align="center">
                 	<label value="${c:l('listbox.columnManager.quickFilter')}:" sclass="bold" />	
-                	<textbox id="quickFilter" hflex="1" />
-                	<image src="${zkdl:i('remove16x16.png')}" sclass="margin-left4" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.selector.onClearQuickFilter()" />
+                	<textbox id="quickFilter" hflex="1" sclass="margin-bottom0" />
+                	<image src="${zkdl:i('remove16x16.png')}" sclass="margin-left3" style="cursor: pointer" tooltiptext="${c:l('listbox.filterManager.removeOne')}"  onClick="ctl.selector.onClearQuickFilter()" />
                 </hbox>
             </vbox>
 
-            <vbox sclass="margin-top50 margin-right5 margin-left5">
+            <vbox sclass="arrow-butons margin-top50 margin-right5 margin-left5">
                 <button onClick="ctl.selector.onUnusedToUsedAllMove()" src="${zkdl:i('right2Arrow32x32.png')}" height="34px"/>
                 <button onClick="ctl.selector.onUnusedToUsedMove()" src="${zkdl:i('rightArrow32x32.png')}" height="34px"/>
                 <button onClick="ctl.selector.onUsedToUnusedMove()" src="${zkdl:i('leftArrow32x32.png')}" height="34px"/>
@@ -48,7 +48,7 @@
                 </listbox>
             </vbox>
 
-            <vbox sclass="margin-top50 margin-left5">
+            <vbox sclass="arrow-butons margin-top50 margin-left5">
                 <button onClick="ctl.selector.onTopMove()" src="${zkdl:i('up2Arrow32x32.png')}" height="34px"/>
                 <button onClick="ctl.selector.onUpMove()" src="${zkdl:i('upArrow32x32.png')}" height="34px"/>
                 <button onClick="ctl.selector.onDownMove()" src="${zkdl:i('downArrow32x32.png')}" height="34px"/>
