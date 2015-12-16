@@ -356,7 +356,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         // points to the first unused field
         int max = 0;
         for ( int i = 0; i < unorderedModel.size(); ++i ) {
-            if ( unorderedModel.get( i ).isVisible() ) {
+            if ( ( unorderedModel.get( i ).isVisible() ) && ( unorderedModel.get( i ).getOrder() != 0 ) )  {
                 // the order is indexed from 1            	
                 listcellIndicies.set( unorderedModel.get( i ).getOrder() - 1, i );
                 // update index of max
