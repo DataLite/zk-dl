@@ -7,6 +7,8 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -15,7 +17,9 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
 import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
+import org.springframework.orm.jpa.EntityManagerHolder;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -50,28 +54,32 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     boolean wrapNeed = false ;
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
+    EntityManager entityManager ;
+
+    public DefaultStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
 	{
 		super( dataSource, "" ) ;
 
         getJdbcTemplate().setNativeJdbcExtractor(nativeJdbcExtractor);
 
+        this.entityManager = entityManager ;
         this.sqlLobValueFactory = sqlLobValueFactory ;
         this.databaseSchema = databaseSchema;
 	}
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, sqlLobValueFactory, databaseSchema ) ;
+        this( dataSource, sqlLobValueFactory, databaseSchema, entityManager ) ;
 
         setName( name ) ;
     }
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, name, sqlLobValueFactory, databaseSchema ) ;
+        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager ) ;
         declareReturnParameter( resultType ) ;
     }
+
 
     /**
      * @param name		Jmeno parametru
@@ -1191,6 +1199,12 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
         if ( ( wrapNeed ) || ( named ) )
         {
             generateWrappedQuery( named ) ;
+        }
+
+
+        if ( ( entityManager != null ) && ( entityManager.getDelegate() != null ) )
+        {
+            ((Session)entityManager.getDelegate()).flush() ;
         }
 
         try

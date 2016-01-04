@@ -482,6 +482,10 @@ public final class ObjectHelper
         {
             return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( (String)value ) : null ;
         }
+        else if ( value instanceof Double )
+        {
+            return ((Double)(Double.parseDouble(String.valueOf(value)))).longValue() ;
+        }
 
         return (value != null) ? Long.parseLong(String.valueOf(value)) : null;
     }
@@ -534,6 +538,10 @@ public final class ObjectHelper
         {
             return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt((String) value) : null ;
         }
+        else if ( value instanceof Double )
+        {
+            return ((Double)(Double.parseDouble(String.valueOf(value)))).intValue() ;
+        }
 
         return (value != null) ? Integer.parseInt(String.valueOf(value)) : null;
     }
@@ -560,6 +568,10 @@ public final class ObjectHelper
         {
             return ( ! StringHelper.isNull((String)value)) ?  new BigDecimal((String) value) : null ;
         }
+        else if ( value instanceof Double )
+        {
+            return new BigDecimal((Double) value) ;
+        }
 
         return (value != null) ? new BigDecimal(String.valueOf(value)) : null;
     }
@@ -585,6 +597,10 @@ public final class ObjectHelper
         else if ( value instanceof String )
         {
             return ( ! StringHelper.isNull((String)value)) ?  new BigInteger((String) value) : null ;
+        }
+        else if ( value instanceof Double )
+        {
+            return new BigInteger( extractString( value ) ) ;
         }
 
         return (value != null) ? new BigInteger(String.valueOf(value)) : null;

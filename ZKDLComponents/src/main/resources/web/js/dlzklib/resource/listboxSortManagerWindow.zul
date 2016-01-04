@@ -7,7 +7,7 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:n="native">
     <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="540px" id="winListboxManager" closable="true" 
-            border="normal" self="@{define(content)}"
+            border="none" self="@{define(content)}"
             apply="cz.datalite.zk.components.list.window.controller.ListboxSortManagerController" 
             sclass="window">
       <div sclass="editable padding10">

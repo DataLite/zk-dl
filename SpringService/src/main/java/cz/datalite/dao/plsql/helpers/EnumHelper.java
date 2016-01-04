@@ -71,7 +71,7 @@ public final class EnumHelper
         {
             for( Method m : enumType.getDeclaredMethods() )
             {
-                if ( StringHelper.isEquals( m.getName(), "fromValue" ) )
+                if ( ( StringHelper.isEquals( m.getName(), "fromValue" ) ) || ( StringHelper.isEquals( m.getName(), "getByStringValue" ) ) )
                 {
                     //noinspection unchecked
                     return (T)m.invoke( null, value ) ;
