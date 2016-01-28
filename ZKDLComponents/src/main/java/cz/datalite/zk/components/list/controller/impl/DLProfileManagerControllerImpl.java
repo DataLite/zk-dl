@@ -38,7 +38,8 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	private final DLProfileManager<T> dlProfileManagerComponent;
 
 	// lovbox controller
-	private final DLLovboxGeneralController<DLListboxProfile> profilesCtl;
+	@SuppressWarnings("WeakerAccess")
+	protected final DLLovboxGeneralController<DLListboxProfile> profilesCtl;
 
 	/** profile service used to load/store profiles from/to persistent storage */
 	private final ProfileService profileService;
@@ -54,6 +55,7 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 		} else {        
 			String profileServiceFactoryClass = Library.getProperty("zk-dl.listbox.profile.provider");
 			if (!StringHelper.isNull(profileServiceFactoryClass)) {
+				//noinspection TryWithIdenticalCatches
 				try {
 					Object profileServiceFactory = Class.forName(profileServiceFactoryClass).newInstance();
 
