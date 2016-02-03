@@ -39,11 +39,12 @@
 
 /* -- Listcontrol component -- */
 .z-listcontrol { font: 12px Verdana, Geneva, sans-serif; padding: 0 0 3px 1px; }
-.z-listcontrol-aux-content { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
-.z-listcontrol-aux-content .z-lovbox-inp,
-.z-listcontrol-aux-content .z-textbox { margin: 1px 0 1px 0; }
-.z-listcontrol-aux-content-separator { width: 3px; }
 .z-listcontrol .z-quickfilter { float: left; }
+
+.z-listcontrol-aux-content-cover { float: left; height: 25px; width: auto; margin: 0 auto; text-align: center; vertical-align: middle; }
+.z-listcontrol-aux-content-cover .z-listcontrol-aux-content .z-lovbox-inp,
+.z-listcontrol-aux-content-cover .z-listcontrol-aux-content .z-textbox { margin: 1px 0 1px 0; }
+.z-listcontrol-aux-content-cover .z-listcontrol-aux-content-separator { width: 3px; }
 
 /* -- Lovbox component -- */
 /*.z-lovbox { position: relative; }*/
