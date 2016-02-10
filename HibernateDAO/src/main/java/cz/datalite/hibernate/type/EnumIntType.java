@@ -7,11 +7,11 @@ import java.sql.Types;
  * Typ pro konverze textové DB reprezentace na enum
  */
 @SuppressWarnings("WeakerAccess")
-public class EnumCharType extends AbstractEnumType
+public class EnumIntType extends AbstractEnumType
 {
     @Override
     protected int getSqlType()
     {
-        return Types.VARCHAR ;
+        return Types.NUMERIC ;
     }
 }

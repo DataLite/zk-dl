@@ -9,6 +9,7 @@ import org.hibernate.usertype.UserType;
  *
  * @author Jiri Bubnik
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractUserType implements UserType {
 
     public boolean equals(Object x, Object y) throws HibernateException {
