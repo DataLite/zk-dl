@@ -54,7 +54,7 @@
 .z-dlpaging { height: auto; }
 .z-dlpaging-button-table { float: left; margin-right: 30px; margin-left: 8px; width: auto; }
 .z-dlpaging-aux-content { float: left; margin: 0 auto; padding-top: 2px; text-align: center; vertical-align: middle; width: auto; }
-.z-paging-info, .z-paging div.z-paging-info { top: 8px; }
+.z-paging-info, .z-paging div.z-paging-info { top: 10px; }
 
 /* -- Lovbox component -- */
 .z-lovbox { position: relative; }
