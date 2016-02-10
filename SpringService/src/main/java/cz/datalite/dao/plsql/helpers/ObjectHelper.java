@@ -335,6 +335,12 @@ public final class ObjectHelper
             Field field = getDeclaredField( clazz, fieldName ) ;
             Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
+
+            if ( ( value != null ) && ( ! field.getType().isAssignableFrom( value.getClass() ) ) )
+            {
+                value = ObjectHelper.extractFromObject( value, field.getType() ) ;
+            }
+
             if ( m != null )
             {
                 m.invoke( obj, value ) ;
@@ -349,6 +355,7 @@ public final class ObjectHelper
             }
             finally
             {
+                //noinspection ThrowFromFinallyBlock
                 field.setAccessible( f ) ;
             }
         }

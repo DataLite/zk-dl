@@ -61,6 +61,13 @@ public interface CacheService
     <CacheType, XmlType, DatabaseType> DatabaseType getValueFromCache(Class<CacheType> cacheType, XmlType key) ;
 
     /**
+     * @param regExpClassName     regularni vyraz pro určení plného názvu třídy
+     * @param key                 hledaný klíč
+     * @return hodnota z cache
+     */
+    <XmlType, DatabaseType> DatabaseType getValueFromCache( String regExpClassName, XmlType key) ;
+
+    /**
      * Vymazání mezipaměti
      */
     void clear();

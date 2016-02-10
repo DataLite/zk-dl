@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class CacheServiceImpl implements CacheService
 {
-    ThreadLocal<Map<Class<?>, Map>> values = new ThreadLocal<Map<Class<?>, Map>>()
+    private ThreadLocal<Map<Class<?>, Map>> values = new ThreadLocal<Map<Class<?>, Map>>()
     {
         @Override
         protected Map<Class<?>, Map> initialValue()
@@ -25,7 +25,7 @@ public class CacheServiceImpl implements CacheService
             return new LinkedHashMap<>() ;
         }
     } ;
-    ThreadLocal<Boolean> enabledForThread = new ThreadLocal<Boolean>()
+    private ThreadLocal<Boolean> enabledForThread = new ThreadLocal<Boolean>()
     {
         @Override
         protected Boolean initialValue()
@@ -160,6 +160,26 @@ public class CacheServiceImpl implements CacheService
         {
             //noinspection unchecked
             return (DatabaseType) values.get().get(cacheType).get( key );
+        }
+
+        return null ;
+    }
+
+    @Override
+    public <XmlType, DatabaseType> DatabaseType getValueFromCache(String regExpClassName, XmlType key)
+    {
+        if ( ! isEnabled() )
+        {
+            return null ;
+        }
+
+        for( Map.Entry<Class<?>, Map> entry : values.get().entrySet() )
+        {
+            if ( entry.getKey().getCanonicalName().matches( regExpClassName ) )
+            {
+                //noinspection unchecked
+                return (DatabaseType) entry.getValue().get( key );
+            }
         }
 
         return null ;
