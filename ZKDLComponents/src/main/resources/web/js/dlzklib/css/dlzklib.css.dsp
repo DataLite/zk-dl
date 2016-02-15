@@ -87,9 +87,10 @@
 /* zk8 */
 .z-login .z-login-content { padding: 20px 30px 25px 30px; }
 .z-login .user, .z-login .pass { margin-bottom: 7px; position: relative; }
-.z-login :after { content: ""; display: block; height: 16px; width: 16px; position: absolute; top: 27px; left: 8px; }
-.z-login .user:after { background: url(${c:encodeURL('~./js/dlzklib/img/user_16x16.png')}) no-repeat; }
-.z-login .pass:after { background: url(${c:encodeURL('~./js/dlzklib/img/pass_16x16.png')}) no-repeat; }
+.z-login [class^="z-icon-"], .z-login [class*=" z-icon-"] { display: block; }
+.z-login [class^="z-icon-"]:before, .z-login [class*=" z-icon-"]:before { font-size: 14px; height: 16px; width: 16px; position: absolute; top: 9px; left: 11px; z-index: 1; }
+/*.z-login .user:after { background: url(${c:encodeURL('~./js/dlzklib/img/user_16x16.png')}) no-repeat; }*/
+/*.z-login .pass:after { background: url(${c:encodeURL('~./js/dlzklib/img/pass_16x16.png')}) no-repeat; }*/
 
 /* -- Error 404 -- */
 .z-404 { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 20px auto 0 auto; }
