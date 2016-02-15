@@ -22,7 +22,7 @@ import java.util.Date;
  * Date: 6/13/13
  * Time: 8:40 AM
  */
-@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused"})
+@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused", "WeakerAccess"})
 public final class ObjectHelper
 {
     private ObjectHelper()
@@ -271,6 +271,7 @@ public final class ObjectHelper
             }
             finally
             {
+                //noinspection ThrowFromFinallyBlock
                 field.setAccessible( f ) ;
             }
         }
@@ -462,6 +463,10 @@ public final class ObjectHelper
         {
             return ((Boolean) value) ? "A" : "N";
         }
+        else if ( value instanceof Date )
+        {
+            return DateHelper.dateToString((Date) value, "MM/dd/yyyy HH:mm:ss" ) ;
+        }
 
         return (value != null) ? String.valueOf(value) : null;
     }
@@ -526,6 +531,7 @@ public final class ObjectHelper
      * @param value převáděná hodnota
      * @return převedená hodnota
      */
+    @SuppressWarnings("WeakerAccess")
     public static Integer extractInteger(Object value)
     {
         if (value instanceof Long)
@@ -606,6 +612,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof Double )
         {
+            //noinspection ConstantConditions
             return new BigInteger( extractString( value ) ) ;
         }
 
