@@ -1,15 +1,6 @@
 package cz.datalite.dao.plsql.helpers;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.SQLException;
-import java.util.Date;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import cz.datalite.dao.plsql.Converter;
 import cz.datalite.dao.plsql.FieldInfo;
 import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.helpers.BooleanHelper;
@@ -18,6 +9,15 @@ import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import oracle.sql.STRUCT;
 import org.hibernate.proxy.HibernateProxyHelper;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * Date: 6/13/13
@@ -376,6 +376,9 @@ public final class ObjectHelper
     }
 
 
+    public static <T> T extractFromObject(Object value, Class<T> returnType) {
+        return extractFromObject(value, returnType, null);
+    }
 
     /**
      * Extrahovaní hodnoty
@@ -384,10 +387,11 @@ public final class ObjectHelper
      * @param returnType Navratový typ pozadovane hodnoty
      * @return převedená hodnota
      */
-    public static <T> T extractFromObject(Object value, Class<T> returnType)
+    public static <T> T extractFromObject(Object value, Class<T> returnType, Converter<Object, T> converter)
     {
-        if ( value instanceof STRUCT)
-        {
+        if (converter != null) {
+            return converter.fromDb(value);
+        } else if ( value instanceof STRUCT) {
             try
             {
                 StructConvertable sc = (StructConvertable) returnType.newInstance() ;

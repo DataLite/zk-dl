@@ -1,5 +1,8 @@
 package cz.datalite.dao.plsql.annotations;
 
+import cz.datalite.dao.plsql.Converter;
+import cz.datalite.dao.plsql.NoopConverter;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,4 +20,10 @@ public @interface SqlField
      * @return jméno položky v SQL struktuře
      */
     String value() ;
+
+    /**
+     * Converter
+     * @return
+     */
+    Class<? extends Converter> converter() default NoopConverter.class;
 }
