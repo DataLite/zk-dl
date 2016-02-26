@@ -102,8 +102,19 @@ public class FieldMaps
         if ( field.isAnnotationPresent( SqlField.class ) )
         {
             SqlField sqlField = field.getAnnotation( SqlField.class ) ;
+            Class<? extends Converter> converterClass = sqlField.converter();
+            if (converterClass != null && !converterClass.isAssignableFrom(NoopConverter.class)) {
+                try {
+                    Converter converter = converterClass.newInstance();
+                    result.put(sqlField.value(), new FieldInfo( field.getName(), field.getType(), converter) ) ;
+                } catch (Exception e) {
+                    throw new RuntimeException(String.format("Unable to create converter for field %s: %s", field, e.getMessage()), e);
+                }
+            } else {
+                result.put(sqlField.value(), new FieldInfo( field.getName(), field.getType() ) ) ;
+            }
 
-            result.put(sqlField.value(), new FieldInfo( field.getName(), field.getType() ) ) ;
+
         }
         else if ( ( allowedHibernateAnnotations ) && ( field.isAnnotationPresent( Column.class ) ) )
         {

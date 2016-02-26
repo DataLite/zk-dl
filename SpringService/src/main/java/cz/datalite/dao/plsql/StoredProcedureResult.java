@@ -209,7 +209,8 @@ public class StoredProcedureResult extends HashMap<String, Object>
                 found = true ;
             }
 
-            ObjectHelper.setValue( field.getValue().getFieldName(), returnValue, ObjectHelper.extractFromObject(value, field.getValue().getType()) ) ;
+            FieldInfo fieldInfo = field.getValue();
+            ObjectHelper.setValue(fieldInfo.getFieldName(), returnValue, ObjectHelper.extractFromObject(value, fieldInfo.getType(), fieldInfo.getConverter())) ;
         }
 
         return found ;     }
@@ -230,7 +231,7 @@ public class StoredProcedureResult extends HashMap<String, Object>
         {
             List<?> fieldData = source.get( fieldName ) ;
 
-            ObjectHelper.setValue( fieldName.getFieldName(), target, ( fieldData == null ) ? null : ObjectHelper.extractFromObject(fieldData.get(index), fieldName.getType()) ) ;
+            ObjectHelper.setValue( fieldName.getFieldName(), target, ( fieldData == null ) ? null : ObjectHelper.extractFromObject(fieldData.get(index), fieldName.getType(), fieldName.getConverter()) ) ;
         }
     }
 
@@ -280,7 +281,7 @@ public class StoredProcedureResult extends HashMap<String, Object>
                 for ( Object value : dataFromDB.get( fi ) )
                 {
                     //noinspection unchecked
-                    result.add((T) ObjectHelper.extractFromObject(value, fi.getType()) ) ;
+                    result.add((T) ObjectHelper.extractFromObject(value, fi.getType(), fi.getConverter()) ) ;
                 }
 
                 return result ;

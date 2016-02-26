@@ -6,11 +6,18 @@ public class FieldInfo
 {
     private String fieldName ;
     private Class<?> type ;
+    private Converter converter;
 
     public FieldInfo(String fieldName, Class<?> type)
     {
         this.fieldName = fieldName;
         this.type = type;
+    }
+
+    public FieldInfo(String fieldName, Class<?> type, Converter converter) {
+        this.fieldName = fieldName;
+        this.type = type;
+        this.converter = converter;
     }
 
     public boolean isPrimitive()
@@ -29,5 +36,9 @@ public class FieldInfo
     public Class<?> getType()
     {
         return type;
+    }
+
+    public Converter getConverter() {
+        return converter;
     }
 }
