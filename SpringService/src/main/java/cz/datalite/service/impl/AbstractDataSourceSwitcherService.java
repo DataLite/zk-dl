@@ -24,7 +24,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings({"UnusedDeclaration", "WeakerAccess"})
 public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingDataSource implements DataSourceSwitcherService, ApplicationContextAware
 {
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractDataSourceSwitcherService.class);
@@ -32,12 +32,12 @@ public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingD
     /**
      * Příznak zda povolit vnucení uživatele při vyvtáření spojení do DB
      */
-    UserDetailsService userDetailService;
+    private UserDetailsService userDetailService;
 
     /**
      * Název třídy pro získání uživatele
      */
-    String userDetailsServiceName;
+    private String userDetailsServiceName;
 
     /**
      * Aplikační kontext
@@ -47,20 +47,19 @@ public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingD
     /**
      * Datové zdroje
      */
-    Map<String, Object> dataSources ;
+    private Map<String, Object> dataSources ;
 
     /**
      * Popis datových zdrojů
      */
-    List<DataSourceDescriptor> dataSourceDescriptors = new LinkedList<>() ;
+    private List<DataSourceDescriptor> dataSourceDescriptors = new LinkedList<>() ;
 
     /**
      * Uložiště aktuálního datového zdroje
      */
-    final ThreadLocal<String> dataSourceName = new ThreadLocal<>() ;
+    private final ThreadLocal<String> dataSourceName = new ThreadLocal<>() ;
 
-
-    EntityManagerFactory entityManagerFactory ;
+    private EntityManagerFactory entityManagerFactory ;
 
     /**
      * @param userDetailsServiceName Název třídy pro získání uživatele
@@ -239,13 +238,31 @@ public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingD
     @Override
     public Connection getConnection() throws SQLException
     {
-        return getConnection( dataSourceName.get() ) ;
+        Connection connection = getConnection( dataSourceName.get() ) ;
+
+        afterGetConnection( connection ) ;
+
+        return connection ;
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException
     {
-        return getConnection( dataSourceName.get(), username, password);
+        Connection connection = getConnection( dataSourceName.get(), username, password);
+
+        afterGetConnection( connection ) ;
+
+        return connection ;
+    }
+
+    /**
+     * Operace, které se provedou po vyzvednutí spojení
+     *
+     * @param connection        aktuální spojení
+     */
+    protected void afterGetConnection( Connection connection )
+    {
+        //empty
     }
 
     /**

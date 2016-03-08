@@ -41,5 +41,4 @@ public interface DataSourceSwitcherService
      * @return seznam dostupných datový zdrojů
      */
     List<DataSourceDescriptor> getDataSources(boolean removeCurrent) ;
-
 }
