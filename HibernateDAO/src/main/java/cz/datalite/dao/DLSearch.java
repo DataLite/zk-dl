@@ -98,6 +98,17 @@ public class DLSearch<T> {
     }
 
     /**
+     * Create DLSearch with given criterions
+     * @param inputCriterions input criterions to be added by {@link #addFilterCriterion(Criterion)}
+     */
+    public DLSearch(Criterion ... inputCriterions) {
+        this();
+        for (Criterion criterion : inputCriterions) {
+            addFilterCriterion(criterion);
+        }
+    }
+
+    /**
      * Remove all filter criterions
      */
     public void clearFilterCriterions() {

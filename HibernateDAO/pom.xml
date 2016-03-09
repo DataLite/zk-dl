@@ -10,7 +10,7 @@
 
     <artifactId>HibernateDAO</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.0</version>
+    <version>1.5.0.1</version>
     <name>Hibernate DAO</name>
     <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
 

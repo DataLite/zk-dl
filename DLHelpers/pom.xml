@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>DLHelpers</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.0.1</version>
 	<name>DLHelpers</name>
 	<description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and
 		use anything you want.

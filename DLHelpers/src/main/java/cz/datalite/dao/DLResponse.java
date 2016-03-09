@@ -77,6 +77,35 @@ public class DLResponse<T> {
         return rows;
     }
 
+    public boolean hasSingleResult() {
+        return !isEmpty() && getData().size() == 1;
+    }
+
+
+    /**
+     * Returns first result if at least one exists.
+     *
+     * @return first result if at least one exists, <code>null</code> otherwise
+     */
+    public T getFirstResult() {
+        if (!isEmpty()) {
+            return getData().get(0);
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @return <code>true</code> if data is null or empty.
+     */
+    public boolean isEmpty() {
+        return getData() == null || getData().isEmpty();
+    }
+
+    public boolean hasMoreResults() {
+        return getRows() > getData().size();
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("DLResponse{");
