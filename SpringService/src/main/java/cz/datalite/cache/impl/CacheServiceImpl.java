@@ -6,9 +6,7 @@ import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Cache pro uložení vytvořených objektů
@@ -201,5 +199,27 @@ public class CacheServiceImpl implements CacheService
                 addToCache(entry.getKey(), key, entry.getValue());
             }
         }
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public List<?> getAllValues(Collection<Class<?>> cacheTypes) {
+        List<?> ret = new ArrayList<>();
+        Map<Class<?>, Map> cacheMap = values.get();
+        for (Class<?> cacheType : cacheTypes) {
+            Map map = cacheMap.get(cacheType);
+            ret.addAll(map.values());
+        }
+        return ret;
+    }
+
+    @Override
+    public <CacheType> Map getAllValues(Class<CacheType> cacheType) {
+        return Collections.unmodifiableMap(values.get().get(cacheType));
+    }
+
+    @Override
+    public Set<Class<?>> getAllClasses() {
+        return Collections.unmodifiableSet(values.get().keySet());
     }
 }
