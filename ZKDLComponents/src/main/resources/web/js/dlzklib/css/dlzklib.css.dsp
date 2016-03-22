@@ -55,7 +55,7 @@
 
 /* -- Lovbox popup -- */
 .z-lovbox-pp { height: auto!important; width: auto!important; }
-.z-lovbox-pp .z-bandpopup { background: #e2e2e2; padding: 3px 3px 3px 3px; height: auto!important; width: auto!important; }
+.z-lovbox-pp .z-bandpopup { background: #CDD7E0/*#e2e2e2*/; /*border: 1px solid #9BABB9;*/ border-top: 1px solid #DCE8F2; padding: 3px 3px 3px 3px; height: auto!important; width: auto!important; }
 .z-lovbox-pp .z-bandbox-popup-cl { border: 1px solid #7eaac6; }
 .z-lovbox-pp .z-listbox { margin: 0 auto; overflow-y: auto; }
 .z-lovbox-pp .z-dlpaging { padding: 0!important; }
