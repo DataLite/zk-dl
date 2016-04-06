@@ -1,8 +1,11 @@
 package cz.datalite.dao.plsql;
 
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
+import cz.datalite.helpers.ReflectionHelper;
 import oracle.sql.ARRAY;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.*;
@@ -10,6 +13,7 @@ import java.util.*;
 /**
  * Definice výsledku uložené procedur
  */
+@SuppressWarnings("Duplicates")
 public class StoredProcedureResult extends HashMap<String, Object>
 {
     private Map<String, String> long2shortName ;
@@ -265,7 +269,12 @@ public class StoredProcedureResult extends HashMap<String, Object>
     {
         List<T> result = new ArrayList<T>() ;
 
-        long count = ObjectHelper.extractLong(get(name + "_COUNT")) ;
+        Long count = ObjectHelper.extractLong(get(name + "_COUNT")) ;
+
+        if ( count == null )
+        {
+            count = 0L ;
+        }
 
         Map<FieldInfo, List<?>> dataFromDB = new HashMap<FieldInfo, List<?>>() ;
 
@@ -330,6 +339,18 @@ public class StoredProcedureResult extends HashMap<String, Object>
                     if ( ! target.contains( item ) )
                     {
                         target.add( item ) ;
+                    }
+                    else if ( mergeType == MergeType.MERGE )
+                    {
+                        T old = target.get( target.indexOf( item ) ) ;
+
+                        for( Field field : ReflectionHelper.getAllFields( returnType ) )
+                        {
+                            if ( ! Modifier.isStatic( field.getModifiers() ) )
+                            {
+                                ObjectHelper.setValue( field.getName(), old, ObjectHelper.getValue( field.getName(), item ) ) ;
+                            }
+                        }
                     }
                 }
             }

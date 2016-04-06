@@ -31,30 +31,31 @@ import java.util.*;
  * Date: 1/9/12
  * Time: 3:58 PM
  */
+@SuppressWarnings("WeakerAccess")
 class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredProcedureInvoker
 {
-	Map<String, Object> inputs = new HashMap<String, Object>();
+    private Map<String, Object> inputs = new HashMap<String, Object>();
 
     // Oracle neumi az do verze 11g vybalit z DBCP pool native connection. Je potreba pomoci prostredku springu.
-    NativeJdbcExtractor nativeJdbcExtractor = new CommonsDbcpNativeJdbcExtractor();
+    private NativeJdbcExtractor nativeJdbcExtractor = new CommonsDbcpNativeJdbcExtractor();
 
     /**
      * Faktory pro vytvoreni LOB hodnoty parametru
      */
-    SqlLobValueFactory sqlLobValueFactory ;
+    private SqlLobValueFactory sqlLobValueFactory ;
 
     /**
      * Database schema.
      * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
      */
-    String databaseSchema;
+    private String databaseSchema;
 
     /**
      * Příznak zda je nutné provést změnu dotazu
      */
-    boolean wrapNeed = false ;
+    private boolean wrapNeed = false ;
 
-    EntityManager entityManager ;
+    private EntityManager entityManager ;
 
     public DefaultStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
 	{
@@ -543,6 +544,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný objekt není funkce" ) ;
         }
 
+        //noinspection deprecation
         return execute().extractRecord( RETURN_VALUE_NAME, returnType) ;
     }
 
@@ -560,6 +562,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             throw new IllegalStateException( "Volaný objekt není funkce" ) ;
         }
 
+        //noinspection deprecation
         return execute().extractTable( RETURN_VALUE_NAME, returnType) ;
     }
 
