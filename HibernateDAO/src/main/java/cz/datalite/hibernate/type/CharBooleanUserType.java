@@ -1,14 +1,14 @@
 package cz.datalite.hibernate.type;
 
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.usertype.ParameterizedType;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
-
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.usertype.ParameterizedType;
 
 
 /**
@@ -52,9 +52,9 @@ public class CharBooleanUserType extends AbstractUserType implements Parameteriz
 
     private Boolean booleanValue(String column, char charValue) throws SQLException {
         if (charValue == 'Y' || charValue == 'y' || charValue == 'A' || charValue == 'a')
-            return new Boolean(true);
+            return Boolean.TRUE;
         else if (charValue == 'N' || charValue == 'n')
-            return new Boolean(false);
+            return Boolean.FALSE;
         else
             throw new SQLException("Column [" + column + "] contains character [" + charValue + "]. Allowed values are A, a, Y, y, N, n");
     }
