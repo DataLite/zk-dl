@@ -332,8 +332,15 @@ public class DateHelper
      * Převede minuty na milisekundy
      * @param minutes time in minutes
      * @return the result
+     * @deprecated bad method name (should start with lower case), use {@link #minutesToMs(Double)} instead
      */
+    @Deprecated
     public static long MinutesToMs(Double minutes) {
+        return minutesToMs(minutes);
+    }
+
+    public static long minutesToMs(Double minutes) {
         return Double.valueOf(minutes * 60000).longValue();
     }
+
 }
