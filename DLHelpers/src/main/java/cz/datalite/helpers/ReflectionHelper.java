@@ -257,7 +257,7 @@ public abstract class ReflectionHelper
                 // try direct access to field
 
                 if ( field == null )
-                    throw new NoSuchElementException( String.format( "Field '%1$s' is not present in '%1$s' class.", name, source.getClass() ) );
+                    throw new NoSuchElementException( String.format( "Field '%s' is not present in '%s' class.", name, source.getClass() ) );
 
                 boolean accessible = field.isAccessible();
                 field.setAccessible( true );
