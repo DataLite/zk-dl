@@ -38,7 +38,7 @@ public abstract class JpaEqualHelper {
      */
     public static int getNativeQueryCount( Query q ) {
         Object result = (( Vector ) q.getSingleResult()).get( 0 );
-        return Integer.parseInt( result.toString() );
+        return Integer.parseInt(result.toString());
     }
 
     /**
@@ -110,9 +110,7 @@ public abstract class JpaEqualHelper {
                 f.setAccessible( true );
                 try {
                     value = f.get( o );
-                } catch ( IllegalArgumentException ex ) {
-                    throw new AssertionError( ex );
-                } catch ( IllegalAccessException ex ) {
+                } catch ( IllegalArgumentException | IllegalAccessException ex ) {
                     throw new AssertionError( ex );
                 }
                 f.setAccessible( false );
