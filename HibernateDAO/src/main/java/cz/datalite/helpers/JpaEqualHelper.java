@@ -1,11 +1,12 @@
 package cz.datalite.helpers;
 
-import java.lang.reflect.Field;
-import java.util.Vector;
-import javax.persistence.Query;
-import javax.persistence.Table;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
+
+import javax.persistence.Query;
+import javax.persistence.Table;
+import java.lang.reflect.Field;
+import java.util.Vector;
 
 /**
  * Pomocne metody pro JPA
@@ -37,7 +38,7 @@ public abstract class JpaEqualHelper {
      */
     public static int getNativeQueryCount( Query q ) {
         Object result = (( Vector ) q.getSingleResult()).get( 0 );
-        return Integer.valueOf( result.toString() );
+        return Integer.parseInt( result.toString() );
     }
 
     /**
