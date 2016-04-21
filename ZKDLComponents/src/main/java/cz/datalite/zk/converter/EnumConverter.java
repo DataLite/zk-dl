@@ -6,7 +6,7 @@ import org.zkoss.bind.Converter;
 import org.zkoss.zk.ui.Component;
 
 /**
- * Enum converter.
+ * Enum converter - converts Enum to localized form.
  * @see cz.datalite.utils.LabelsUtil
  */
 public class EnumConverter implements Converter<String, Object, Component> {
