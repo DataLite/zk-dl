@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,15 +46,26 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
     public GenericDAOImpl() {
         ParameterizedType parametrizedType;
 
-        if (getClass().getGenericSuperclass() instanceof ParameterizedType) // class
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            // class
             parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        else if (getClass().getGenericSuperclass() instanceof Class) // in case of CGLIB proxy
-            parametrizedType = (ParameterizedType) ((Class)getClass().getGenericSuperclass()).getGenericSuperclass();
-        else
-            throw new IllegalStateException("GenericDAOImpl - class " + getClass() + " is not subtype of ParametrizedType.");
+        }  else if (getClass().getGenericSuperclass() instanceof Class) {
+            // in case of CGLIB proxy
+            parametrizedType = (ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass();
+        } else {
+            throw new IllegalStateException(String.format("GenericDAOImpl - class %s is not subtype of ParametrizedType.", getClass()));
+        }
 
+        Type type = parametrizedType.getActualTypeArguments()[0];
+        if (type instanceof Class) {
+            this.persistentClass = (Class<T>) type;
+        } else if (type instanceof ParameterizedType) {
+            // multiple generics, eg GenericDAO<Entity<SomeType>>
+            this.persistentClass = (Class<T>) ((ParameterizedType)type).getRawType();
+        } else {
+            throw new IllegalStateException(String.format("GenericDAOImpl - type %s (%s) has unknown type.", type, type.getClass()));
+        }
 
-        this.persistentClass = ( Class<T> ) parametrizedType.getActualTypeArguments()[0];
     }
 
     public GenericDAOImpl( final Class<T> persistentClass ) {
