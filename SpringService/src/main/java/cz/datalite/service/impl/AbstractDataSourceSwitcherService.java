@@ -135,7 +135,7 @@ public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingD
     /**
      * @return služba pro získání přihlašovacího jména
      */
-    private UserDetailsService getUserDetailService()
+    protected UserDetailsService getUserDetailService()
     {
         if ( (userDetailService == null) && ( applicationContext != null ) && (!StringHelper.isNull(userDetailsServiceName)) )
         {
