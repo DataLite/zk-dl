@@ -7,7 +7,7 @@
 
 /* -- Listcontrol component -- */
 .z-listcontrol { min-height: 26px; }
-.z-listcontrol:after { clear: both; content: ""; display: block; height: 0; line-height: 0; }
+.z-listcontrol:after { content: ""; display: table; clear: both; }
 .z-listcontrol .z-quickfilter { float: left; }
 
 .z-listcontrol-aux-content-cover { float: left; height: 22px; width: auto; margin: 0 auto; }
@@ -16,7 +16,7 @@
 
 /* -- Quickfilter component -- */
 .z-quickfilter { font-size: 12px; margin-left: 7px; margin-right: 20px; }
-.z-quickfilter:after { clear: both; content: ""; display: block; height: 0; line-height: 0; }
+.z-quickfilter:after { content: ""; display: table; clear: both; }
 .z-quickfilter span { display: block; }
 .z-quickfilter-text { float: left; margin-right: 4px; position: relative; top: 4px; }
 .z-quickfilter-list { cursor: pointer; float: left; height: 10px; width: 16px; margin: 7px 4px 0 0; }
