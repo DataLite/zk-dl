@@ -1,13 +1,18 @@
 package cz.datalite.dao.plsql.impl;
 
-import cz.datalite.dao.plsql.*;
+import cz.datalite.dao.plsql.FieldInfo;
+import cz.datalite.dao.plsql.FieldMaps;
+import cz.datalite.dao.plsql.MergeType;
+import cz.datalite.dao.plsql.SqlLobValueFactory;
+import cz.datalite.dao.plsql.StoredProcedureInvoker;
+import cz.datalite.dao.plsql.StoredProcedureResult;
+import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlInOutParameter;
@@ -17,21 +22,25 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
 import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
-import org.springframework.orm.jpa.EntityManagerHolder;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: karny
  * Date: 1/9/12
  * Time: 3:58 PM
  */
-class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredProcedureInvoker
+public class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredProcedureInvoker
 {
 	Map<String, Object> inputs = new HashMap<>();
 
