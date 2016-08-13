@@ -7,8 +7,11 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -34,6 +37,8 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredProcedureInvoker
 {
+    private final static Logger PLSQL_LOGGER = LoggerFactory.getLogger(DefaultStoredProcedureInvoker.class + ".plsql");
+
     private Map<String, Object> inputs = new HashMap<String, Object>();
 
     // Oracle neumi az do verze 11g vybalit z DBCP pool native connection. Je potreba pomoci prostredku springu.
@@ -1199,9 +1204,11 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
      */
     private StoredProcedureResult execute( boolean named )
     {
+        String originalSql = getSql();
+
         if ( ( wrapNeed ) || ( named ) )
         {
-            generateWrappedQuery( named ) ;
+            generateWrappedQuery(named) ;
         }
 
 
@@ -1210,6 +1217,7 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             ((Session)entityManager.getDelegate()).flush() ;
         }
 
+        long startTime = System.currentTimeMillis();;
         try
         {
             return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
@@ -1227,6 +1235,30 @@ class DefaultStoredProcedureInvoker extends StoredProcedure   implements StoredP
             }
 
             throw e ;
+        }
+        finally {
+            // analýza trvání volání PLSQL, určeno pro logování do samostatného souboru a export do excelu.
+            if (PLSQL_LOGGER.isTraceEnabled()) {
+                long duration = System.currentTimeMillis() - startTime;
+                String procedure = originalSql;
+                String sql = getSql();
+
+                StringBuilder params = new StringBuilder();
+                for (SqlParameter sqlParameter : getDeclaredParameters()) {
+                    if (sqlParameter.isInputValueProvided()) {
+                        params.append(sqlParameter.getName());
+                        params.append('=');
+                        if (inputs.containsKey(sqlParameter.getName())) {
+                            params.append(inputs.get(sqlParameter.getName()));
+                        }
+                        params.append(';');
+                    }
+                }
+
+                String callstack = ExceptionUtils.getFullStackTrace(new Throwable());
+
+                PLSQL_LOGGER.trace("EXEC PLSQL;" + duration + ";\"" + procedure + "\";\"" + sql + "\";\"" + params + "\";\"" + callstack + "\"");
+            }
         }
     }
 }
