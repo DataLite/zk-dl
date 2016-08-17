@@ -66,7 +66,7 @@ public class SimpleSource
 	@Override
 	public String getString(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null)
 			return item.toString();
@@ -76,7 +76,7 @@ public class SimpleSource
 	@Override
 	public String[] getStringArray(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null) {
 			if (item instanceof String[])
@@ -91,7 +91,7 @@ public class SimpleSource
 	@Override
 	public BigDecimal getBigDecimal(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null)
 			return PropertyConverter.toBigDecimal(item);
@@ -101,7 +101,7 @@ public class SimpleSource
 	@Override
 	public Integer getInteger(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null)
 			return PropertyConverter.toInteger(item);
@@ -111,7 +111,7 @@ public class SimpleSource
 	@Override
 	public Long getLong(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null)
 			return PropertyConverter.toLong(item);
@@ -121,7 +121,7 @@ public class SimpleSource
 	@Override
 	public Boolean getBoolean(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null)
 			return PropertyConverter.toBoolean(item);
@@ -131,7 +131,7 @@ public class SimpleSource
 	@Override
 	public Date getDate(ConfigurationKey key) {
 
-		Object item = values.get(key.getValue());
+		Object item = getObject(key);
 
 		if (item != null) {
 			if (item instanceof Date)
@@ -140,6 +140,10 @@ public class SimpleSource
 				return DateTimeUtil.parseISODateTime((String) item).getTime();
 		}
 		return null;
+	}
+
+	protected Object getObject(ConfigurationKey key) {
+		return values.get(key.getValue());
 	}
 
 }
