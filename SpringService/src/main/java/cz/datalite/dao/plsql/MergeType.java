@@ -9,5 +9,6 @@ public enum MergeType
     NEW,
     ALL,
     REPLACE,
-    MERGE
+    MERGE,
+    SYNCHRONIZE
 }

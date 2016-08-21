@@ -334,15 +334,23 @@ public class StoredProcedureResult extends HashMap<String, Object>
             }
             else
             {
+                List<T> newTarget = new ArrayList<>( target ) ;
+
+                target.clear() ;
+
                 for( T item : novySeznam )
                 {
-                    if ( ! target.contains( item ) )
+                    if ( ! newTarget.contains( item ) )
                     {
                         target.add( item ) ;
                     }
-                    else if ( mergeType == MergeType.MERGE )
+                    else if ( ( mergeType == MergeType.MERGE ) || ( mergeType == MergeType.SYNCHRONIZE ) )
                     {
-                        T old = target.get( target.indexOf( item ) ) ;
+                        int index = newTarget.indexOf( item ) ;
+                        T old = newTarget.get( index ) ;
+
+                        newTarget.remove( index ) ;
+                        target.add( old ) ;
 
                         for( Field field : ReflectionHelper.getAllFields( returnType ) )
                         {
@@ -353,7 +361,16 @@ public class StoredProcedureResult extends HashMap<String, Object>
                         }
                     }
                 }
+
+                if ( ( mergeType == MergeType.MERGE ) && ( !newTarget.isEmpty() ) )
+                {
+                     target.addAll( newTarget ) ;
+                }
             }
+        }
+        else if ( mergeType == MergeType.SYNCHRONIZE  )
+        {
+            target.clear() ;
         }
     }
 
