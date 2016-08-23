@@ -37,7 +37,7 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 	private final DLProfileManager<T> dlProfileManagerComponent;
 
 	// lovbox controller
-	private final DLLovboxGeneralController<DLListboxProfile> profilesCtl;
+	protected final DLLovboxGeneralController<DLListboxProfile> profilesCtl;
 
 	/** profile service used to load/store profiles from/to persistent storage */
 	private final ProfileService profileService;
