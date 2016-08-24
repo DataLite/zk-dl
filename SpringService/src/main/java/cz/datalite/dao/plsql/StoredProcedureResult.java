@@ -332,6 +332,16 @@ public class StoredProcedureResult extends HashMap<String, Object>
             {
                 target.addAll( novySeznam ) ;
             }
+            else if ( mergeType == MergeType.NEW )
+            {
+                for( T item : novySeznam )
+                {
+                    if (!target.contains(item))
+                    {
+                        target.add(item);
+                    }
+                }
+            }
             else
             {
                 List<T> newTarget = new ArrayList<>( target ) ;
