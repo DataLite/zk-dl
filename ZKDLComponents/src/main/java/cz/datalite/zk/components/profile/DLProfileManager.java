@@ -160,14 +160,15 @@ public class DLProfileManager<T> extends Hlayout {
     }    
 
 	public void setProfilesLovboxController(DLLovboxGeneralController<DLListboxProfile> controller) {
-		// FIXME: SPM-11 ZK8 this method cause JS error in rendering component (wgt variable is undefined)
 		this.profilesListbox.setHeight(this.popupHeight);
 		
 		final Listhead head = new DLListhead();
 		
 		DLListheader header = new DLListheader();
 		header.setLabel("ID");
-		header.setVisible(false);
+		// FIXME: SPM-11 ZK8 this method cause JS error in rendering component (wgt.desktop variable is undefined)
+//		header.setVisible(false);
+		header.setWidth("24px");
 		head.appendChild(header);
 		
 		header = new DLListheader();
@@ -177,13 +178,13 @@ public class DLProfileManager<T> extends Hlayout {
 		header.setVisible(this.showType);
 		header.setAlign("center");
 		head.appendChild(header);
-		
+
 		header = new DLListheader();
 		header.setLabel(Labels.getLabel("listbox.profileManager.profile.name"));
-		header.setSort("auto(name)");		
+		header.setSort("auto(name)");
 		header.setSortDirection("ascending");
 		head.appendChild(header);
-		
+
 		header = new DLListheader();
 		header.setLabel("");
         header.setTooltiptext(Labels.getLabel("listbox.profileManager.profile.default"));
@@ -208,7 +209,7 @@ public class DLProfileManager<T> extends Hlayout {
 			this.profilesListbox.setTemplate("model", new ListboxTemplate());
 		} 
 		
-		this.profilesLovbox.setController(controller);	
+		this.profilesLovbox.setController(controller);
 		this.profilesLovbox.afterCompose();
 	}
 
@@ -360,7 +361,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 			// create template components & add binding expressions
 			final Listcell idCell = new Listcell();
-			idCell.setVisible(false);
+//			idCell.setVisible(false);
 			listitem.appendChild(idCell);
 			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.id");
 			
@@ -369,7 +370,7 @@ public class DLProfileManager<T> extends Hlayout {
 			typeCell.setVisible(showType);
 			typeCell.setSclass("nonselectable");
 			listitem.appendChild(typeCell);			
-			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '" 
+			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '"
 				+ Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "'");
 			ZKBinderHelper.registerAnnotation(typeCell, "tooltiptext", "load", "item.publicProfile ? '"
 				+ Labels.getLabel("listbox.profileManager.profile.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.private") + "'");
