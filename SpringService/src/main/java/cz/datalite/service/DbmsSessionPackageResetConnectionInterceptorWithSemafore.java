@@ -1,71 +1,110 @@
 package cz.datalite.service;
 
-import cz.datalite.helpers.BooleanHelper;
+import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
+import oracle.jdbc.driver.OracleConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements ConnectionInterceptorWithSemafore
 {
     private boolean suppressException = true ;
-    private final String ZIS_CONNECTION_GUID = "ZIS_CONNECTION_GUID" ;
-    private final String ZIS_RESET_PACKAGE = "ZIS_RESET_PACKAGE" ;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DbmsSessionPackageResetConnectionInterceptorWithSemafore.class);
 
 
-    private boolean global = false ;
-    private Map<String, String> connectionsResets = new LinkedHashMap<>() ;
+    private static boolean global = false ;
+    private static List<String> connectionsResets = new ArrayList<>() ;
+
 
     @Override
     public void setGlobal(boolean value)
     {
-        this.global = value ;
-
-        if ( this.global )
+        synchronized ( this )
         {
-            connectionsResets.clear() ;
+            global = value;
+
+            if (global)
+            {
+                connectionsResets.clear();
+            }
         }
     }
 
     /**
-     * @param connection aktuální konexe
-     * @param value      hodnota příznaku
+     * @param connection        konexe
+     * @param add               pridat
+     * @return konexe je ve fronte
      */
-    private void storeResetFlag( Connection connection, String value )
+    private boolean isQueue( Connection connection, boolean add )
     {
-        if ( global )
+        synchronized ( this )
         {
-            value = "N" ;
+            String uuid = getConnectionId( connection ) ;
+
+            if ( connectionsResets.contains( uuid ) )
+            {
+                return true ;
+            }
+
+            if (add)
+            {
+                connectionsResets.add( uuid ) ;
+            }
         }
+
+        return false ;
+    }
+
+    /**
+     * @param connection        spojení do DB
+     * @return id session
+     */
+    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
+    private String getConnectionId(Connection connection )
+    {
+        String uuid = null ;
 
         try
         {
-            String connectionGuid = connection.getClientInfo( ZIS_CONNECTION_GUID ) ;
-
-            if ( StringHelper.isNull( connectionGuid ) )
+            if ( connection instanceof OracleConnection )
             {
-                connectionGuid = UUID.randomUUID().toString() ;
-                connection.setClientInfo( ZIS_CONNECTION_GUID, connectionGuid ) ;
-            }
+                OracleConnection oracleConnection = (OracleConnection) connection;
 
-            connectionsResets.put(connectionGuid, value) ;
+                uuid = ObjectHelper.extractString(oracleConnection.getClientData("ZIS_UUID"));
+
+                if (uuid == null)
+                {
+                    uuid = UUID.randomUUID().toString();
+
+                    oracleConnection.setClientData("ZIS_UUID", uuid);
+                }
+            }
         }
-        catch (SQLException e)
+        catch ( Exception  e )
         {
-            if (!suppressException)
-            {
-                throw new IllegalStateException(e);
-            }
+            uuid = null ;
+        }
+
+        return StringHelper.nvl( uuid, UUID.randomUUID().toString() ) ;
+    }
+
+    /**
+     * @param connection aktuální konexe
+     */
+    private void storeResetFlag( Connection connection )
+    {
+        if ( ! global )
+        {
+            isQueue( connection, true ) ;
         }
     }
+
 
     /**
      * @param connection aktuální konexe
@@ -73,56 +112,16 @@ public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements
      */
     private boolean isResetEnabled( Connection connection )
     {
-        if ( global )
-        {
-            storeResetFlag( connection, "N" ) ;
-            return true ;
-        }
-        else
-        {
-            try
-            {
-                String connectionGuid = connection.getClientInfo( ZIS_CONNECTION_GUID ) ;
-                String value  ;
-
-                if ( StringHelper.isNull( connectionGuid ) )
-                {
-                    connectionGuid = UUID.randomUUID().toString() ;
-                    connection.setClientInfo( ZIS_CONNECTION_GUID, connectionGuid ) ;
-                }
-
-                if ( connectionsResets.containsKey( connectionGuid ) )
-                {
-                    value = connectionsResets.get( connectionGuid ) ;
-                }
-                else
-                {
-                    value = "N" ;
-                }
-
-                connectionsResets.put(connectionGuid, value ) ;
-
-                return ( ! BooleanHelper.isTrue( value ) ) ;
-            }
-            catch (SQLException e)
-            {
-                if (!suppressException)
-                {
-                    throw new IllegalStateException(e);
-                }
-            }
-        }
-
-        return false ;
+        return ( ( global ) || ( ! isQueue( connection, false ) ) ) ;
     }
 
     @Override
     public void onConnection(Connection connection)
     {
-        LOGGER.trace( "Reset DB package" ) ;
-
         if ( isResetEnabled( connection ) )
         {
+            LOGGER.trace( "Reset DB package" ) ;
+
             try
             {
                 connection.prepareCall("begin DBMS_SESSION.RESET_PACKAGE ; end ;").execute();
@@ -135,7 +134,7 @@ public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements
                 }
             }
 
-            storeResetFlag( connection, "A" ) ;
+            storeResetFlag( connection ) ;
         }
     }
 
