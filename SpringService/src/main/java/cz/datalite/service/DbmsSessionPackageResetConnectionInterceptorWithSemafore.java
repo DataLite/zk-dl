@@ -1,14 +1,10 @@
 package cz.datalite.service;
 
-import cz.datalite.dao.plsql.helpers.ObjectHelper;
-import cz.datalite.helpers.StringHelper;
-import oracle.jdbc.driver.OracleConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements ConnectionInterceptorWithSemafore
@@ -18,107 +14,35 @@ public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements
     private final static Logger LOGGER = LoggerFactory.getLogger(DbmsSessionPackageResetConnectionInterceptorWithSemafore.class);
 
 
-    private static boolean global = false ;
-    private static List<String> connectionsResets = new ArrayList<>() ;
+    private boolean enableReset = false ;
 
+    /**
+     * Nazvy zdrojů, ktere se maji resetovat
+     */
+    private String[] dataSourceNames ;
 
     @Override
-    public void setGlobal(boolean value)
+    public void setEnableReset(boolean value)
     {
-        synchronized ( this )
+        if ( value != isEnableReset() )
         {
-            global = value;
-
-            if (global)
+            synchronized (this)
             {
-                connectionsResets.clear();
+                enableReset = value;
             }
         }
     }
 
-    /**
-     * @param connection        konexe
-     * @param add               pridat
-     * @return konexe je ve fronte
-     */
-    private boolean isQueue( Connection connection, boolean add )
+    @Override
+    public boolean isEnableReset()
     {
-        synchronized ( this )
-        {
-            String uuid = getConnectionId( connection ) ;
-
-            if ( connectionsResets.contains( uuid ) )
-            {
-                return true ;
-            }
-
-            if (add)
-            {
-                connectionsResets.add( uuid ) ;
-            }
-        }
-
-        return false ;
-    }
-
-    /**
-     * @param connection        spojení do DB
-     * @return id session
-     */
-    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
-    private String getConnectionId(Connection connection )
-    {
-        String uuid = null ;
-
-        try
-        {
-            if ( connection instanceof OracleConnection )
-            {
-                OracleConnection oracleConnection = (OracleConnection) connection;
-
-                uuid = ObjectHelper.extractString(oracleConnection.getClientData("ZIS_UUID"));
-
-                if (uuid == null)
-                {
-                    uuid = UUID.randomUUID().toString();
-
-                    oracleConnection.setClientData("ZIS_UUID", uuid);
-                }
-            }
-        }
-        catch ( Exception  e )
-        {
-            uuid = null ;
-        }
-
-        return StringHelper.nvl( uuid, UUID.randomUUID().toString() ) ;
-    }
-
-    /**
-     * @param connection aktuální konexe
-     */
-    private void storeResetFlag( Connection connection )
-    {
-        if ( ! global )
-        {
-            isQueue( connection, true ) ;
-        }
-    }
-
-
-    /**
-     * @param connection aktuální konexe
-     * @return true pokud se má volat reset package
-     */
-    private boolean isResetEnabled( Connection connection )
-    {
-        return ( ( global ) || ( ! isQueue( connection, false ) ) ) ;
+        return enableReset;
     }
 
     @Override
     public void onConnection(Connection connection)
     {
-        if ( isResetEnabled( connection ) )
+        if ( isEnableReset() )
         {
             LOGGER.trace( "Reset DB package" ) ;
 
@@ -133,8 +57,6 @@ public class DbmsSessionPackageResetConnectionInterceptorWithSemafore implements
                     throw new IllegalStateException(e);
                 }
             }
-
-            storeResetFlag( connection ) ;
         }
     }
 
