@@ -19,7 +19,6 @@ public class SessionInformationManager implements SessionInformation
     public SessionInformationManager()
     {
         instance = this ;
-        sessionInformation = new LocalSessionServiceImpl() ;
     }
 
     /**
@@ -35,39 +34,49 @@ public class SessionInformationManager implements SessionInformation
         return instance ;
     }
 
+    protected SessionInformation getSessionInformationProvider()
+    {
+        if ( sessionInformation == null )
+        {
+            sessionInformation = new LocalSessionServiceImpl();
+        }
+
+        return sessionInformation ;
+    }
+
     @Override
     public String getSessionInformation(String id)
     {
-        return sessionInformation.getSessionInformation(id);
+        return getSessionInformationProvider().getSessionInformation(id);
     }
 
     @Override
     public String getCurrentSessionId()
     {
-        return sessionInformation.getCurrentSessionId();
+        return getSessionInformationProvider().getCurrentSessionId();
     }
 
     @Override
     public void setSessionInformation(String clientInfo)
     {
-        sessionInformation.setSessionInformation(clientInfo);
+        getSessionInformationProvider().setSessionInformation(clientInfo);
     }
 
     @Override
     public void clearSessionInformation()
     {
-        sessionInformation.clearSessionInformation();
+        getSessionInformationProvider().clearSessionInformation();
     }
 
     @Override
     public void setSessionInformation(String sessionId, String clientInfo)
     {
-        sessionInformation.setSessionInformation(sessionId, clientInfo);
+        getSessionInformationProvider().setSessionInformation(sessionId, clientInfo);
     }
 
     @Override
     public void setCurrentSessionId(String id)
     {
-        sessionInformation.setCurrentSessionId(id);
+        getSessionInformationProvider().setCurrentSessionId(id);
     }
 }

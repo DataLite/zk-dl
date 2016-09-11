@@ -1,5 +1,6 @@
 package cz.datalite.service.impl;
 
+import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.service.LocalSessionService;
 import cz.datalite.stereotype.Service;
@@ -13,9 +14,8 @@ import java.util.Map;
 @Service
 public class LocalSessionServiceImpl implements LocalSessionService
 {
-    Map<String, String> information = new HashMap<>() ;
-
-    String id ;
+    private Map<String, String> information = new HashMap<>() ;
+    private String id ;
 
     @Override
     public String getSessionInformation( String id )
@@ -26,7 +26,7 @@ public class LocalSessionServiceImpl implements LocalSessionService
     @Override
     public String getCurrentSessionId()
     {
-        return StringHelper.nvl(id, Thread.currentThread().getName());
+        return StringHelper.nvl(id, ObjectHelper.extractString( Thread.currentThread().getId())) ;
     }
 
     @Override
