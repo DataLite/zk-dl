@@ -79,7 +79,7 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         else
         {
             defaultDAO = (DAO) applicationContext.getBeansOfType(daoClass).values().iterator().next();
-            LOGGER.trace("Uniqueue default DAO got by bean class type '{}'.", daoClass.getCanonicalName());
+            LOGGER.trace("Unique default DAO got by bean class type '{}'.", daoClass.getCanonicalName());
         }
     }
 
