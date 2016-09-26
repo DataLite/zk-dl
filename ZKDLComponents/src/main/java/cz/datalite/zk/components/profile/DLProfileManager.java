@@ -1,6 +1,7 @@
 package cz.datalite.zk.components.profile;
 
 import cz.datalite.helpers.StringHelper;
+import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLProfileManagerController;
 import cz.datalite.zk.components.list.view.DLListbox;
 import cz.datalite.zk.components.list.view.DLListhead;
@@ -9,19 +10,18 @@ import cz.datalite.zk.components.lovbox.DLLovbox;
 import cz.datalite.zk.components.lovbox.DLLovboxGeneralController;
 import cz.datalite.zk.components.lovbox.DLLovboxPopupComponentPosition;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.xel.VariableResolver;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Bandpopup;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.Hlayout;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Listhead;
+import org.zkoss.zk.ui.util.Composer;
+import org.zkoss.zk.ui.util.Template;
+import org.zkoss.zul.*;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Bar with advanced tools for managing the listbox profiles.
@@ -195,16 +195,17 @@ public class DLProfileManager<T> extends Hlayout {
 
 		this.profilesListbox.appendChild(head);
 
+		this.profilesListbox.setTemplate("model", new ListboxTemplate());
 
-		Component cpm = Executions.createComponentsDirectly("<template name=\"model\" var=\"each\">\n" +
-				"\t\t\t\t<listitem onClick=\"ctl.onEditProfile(null)\">\n" +
-				"\t\t\t\t\t<listcell label=\"@load(each.id)\"/>\n" +
-				"\t\t\t\t\t<listcell label=\"@load(each.publicProfile)\"/>\n" +
-				"\t\t\t\t\t<listcell label=\"@load(each.name)\"/>\n" +
-				"\t\t\t\t\t<listcell label=\"@load(each.defaultProfile)\"/>\n" +
-				"\t\t\t\t\t<listcell label=\"tlac\"/>\n" +
-				"\t\t\t\t</listitem>\n" +
-				"\t\t\t</template>", "zul", this.profilesListbox, Collections.emptyMap());
+//		Component cpm = Executions.createComponentsDirectly("<template name=\"model\" var=\"each\">\n" +
+//				"\t\t\t\t<listitem >\n" +
+//				"\t\t\t\t\t<listcell label=\"@load(each.id)\"/>\n" +
+//				"\t\t\t\t\t<listcell label=\"@load(each.publicProfile)\"/>\n" +
+//				"\t\t\t\t\t<listcell label=\"@load(each.name)\"/>\n" +
+//				"\t\t\t\t\t<listcell label=\"@load(each.defaultProfile)\"/>\n" +
+//				"\t\t\t\t\t<listcell label=\"tlac\"/>\n" +
+//				"\t\t\t\t</listitem>\n" +
+//				"\t\t\t</template>", "zul", this.profilesListbox, Collections.emptyMap());
 
 		this.profilesLovbox.setController(controller);
 		this.profilesLovbox.afterCompose();
@@ -339,6 +340,93 @@ public class DLProfileManager<T> extends Hlayout {
 		parent.appendChild(button);
 
 		return button;
+	}
+
+	private class ListboxTemplate implements Template {
+
+		@SuppressWarnings("rawtypes")
+		@Override
+		public Component[] create(Component parent, Component insertBefore,	VariableResolver resolver, Composer composer) {
+			final Listitem listitem = new Listitem();
+
+			// append to the parent
+			if (insertBefore == null) {
+				parent.appendChild(listitem);
+			} else {
+				parent.insertBefore(listitem, insertBefore);
+			}
+
+			// create template components & add binding expressions
+			final Listcell idCell = new Listcell();
+//			idCell.setVisible(false);
+			idCell.enableBindingAnnotation();
+			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.id");
+			listitem.appendChild(idCell);
+
+			// profile type cell
+			final Listcell typeCell = new Listcell();
+			typeCell.setVisible(showType);
+			typeCell.setSclass("nonselectable");
+			typeCell.enableBindingAnnotation();
+			listitem.appendChild(typeCell);
+			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '"
+					+ Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "'");
+			ZKBinderHelper.registerAnnotation(typeCell, "tooltiptext", "load", "item.publicProfile ? '"
+					+ Labels.getLabel("listbox.profileManager.profile.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.private") + "'");
+			// profile name cell and click handler
+			final Listcell nameCell = new Listcell();
+			nameCell.enableBindingAnnotation();
+
+			nameCell.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
+				@Override
+				public void onEvent(Event event) throws Exception {
+					Listitem selectedListitem = (Listitem) nameCell.getParent();
+					profilesLovbox.getController().setSelectedItem((DLListboxProfile) selectedListitem.getValue());
+					profilesLovbox.close();
+				}
+			});
+
+			listitem.appendChild(nameCell);
+			ZKBinderHelper.registerAnnotation(nameCell, "label", "load", "item.name");
+
+			// default profile cell
+			final Listcell defaultCell = new Listcell();
+			defaultCell.setVisible(showDefault);
+			defaultCell.setSclass("nonselectable");
+			listitem.appendChild(defaultCell);
+
+			Checkbox defaultCellCheckbox = new Checkbox();
+			defaultCellCheckbox.setDisabled(true);
+			defaultCell.appendChild(defaultCellCheckbox);
+			defaultCell.setTooltiptext(Labels.getLabel("listbox.profileManager.profile.default"));
+			ZKBinderHelper.registerAnnotation(defaultCellCheckbox, "checked", "load", "item.defaultProfile");
+
+			// button edit cell and nested button
+			final Listcell buttonCell = new Listcell();
+			buttonCell.setSclass("nonselectable");
+			listitem.appendChild(buttonCell);
+
+			final HtmlBasedComponent editBtn = DLProfileManager.this.createEditButtonWithTooltip(buttonCell, true, new EventListener<Event>() {
+				public void onEvent(final Event event) {
+					controller.onEditProfile((Long.valueOf(idCell.getLabel())));
+				}
+			});
+			ZKBinderHelper.registerAnnotation(editBtn, "visible", "load", "item.editable");
+
+			Component[] components = new Component[1];
+			components[0] = listitem;
+
+			return components;
+		}
+
+		@Override
+		public Map<String, Object> getParameters() {
+			Map<String, Object> parameters = new HashMap<>();
+			// set binding variable
+			parameters.put("var", "item");
+
+			return parameters;
+		}
 	}
 
 }
