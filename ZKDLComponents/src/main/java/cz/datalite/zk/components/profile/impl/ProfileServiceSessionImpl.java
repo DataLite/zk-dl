@@ -37,6 +37,11 @@ public class ProfileServiceSessionImpl implements ProfileService {
 	}
 
 	@Override
+	public DLListboxProfile findByName(String profileName) {
+		throw new IllegalAccessError("Method not valid for session implementation.");
+	}
+
+	@Override
 	public DLListboxProfile save(DLListboxProfile dlListboxProfile) {
 		Sessions.getCurrent().setAttribute(PROFILE_SESS_ATTR + dlListboxProfile.getDlListboxId(), dlListboxProfile);
 		return dlListboxProfile;
