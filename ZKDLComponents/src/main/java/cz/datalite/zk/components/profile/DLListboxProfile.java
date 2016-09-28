@@ -11,6 +11,11 @@ public interface DLListboxProfile {
 
 	void setId(Long id);
 
+	/**
+	 * @return getId() because ZK8
+	 */
+	Long getIdentifier();
+
 	String getDlListboxId();
 
 	void setDlListboxId(String dlListboxId);

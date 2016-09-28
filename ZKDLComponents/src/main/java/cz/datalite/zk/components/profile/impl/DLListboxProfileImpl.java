@@ -74,6 +74,11 @@ public class DLListboxProfileImpl implements DLListboxProfile {
 	}
 
 	@Override
+	public Long getIdentifier() {
+		return getId();
+	}
+
+	@Override
 	public String getDlListboxId() {
 		return dlListboxId;
 	}
