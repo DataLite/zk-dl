@@ -360,8 +360,8 @@ public class DLProfileManager<T> extends Hlayout {
 			final Listcell idCell = new Listcell();
 //			idCell.setVisible(false);
 			idCell.enableBindingAnnotation();
-			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.id");
 			listitem.appendChild(idCell);
+			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.identifier");
 
 			// profile type cell
 			final Listcell typeCell = new Listcell();

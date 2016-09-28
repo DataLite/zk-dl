@@ -34,6 +34,14 @@ public interface ProfileService {
 	public DLListboxProfile findById(Long id);
 
 	/**
+	 * Method try search profile by name
+	 *
+	 * @param profileName name of profile
+	 * @return searched profile
+	 */
+	public DLListboxProfile findByName(String profileName);
+
+	/**
 	 * Method returns default profile for specified DLListbox id.
 	 * 
 	 * The implementor MUST ensure that exactly one profile is marked as
