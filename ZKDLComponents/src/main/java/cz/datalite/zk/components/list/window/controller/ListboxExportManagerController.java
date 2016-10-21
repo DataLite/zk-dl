@@ -2,9 +2,11 @@ package cz.datalite.zk.components.list.window.controller;
 
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.view.DLListbox;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.Composer;
@@ -25,6 +27,12 @@ import java.util.Map;
 @SuppressWarnings( "unchecked" )
 public class ListboxExportManagerController extends GenericAutowireComposer {
 
+    /**
+     * Global event when exporting data
+     * @see org.zkoss.bind.annotation.GlobalCommand
+     * @see #onExport()
+     */
+    public static final String ON_EXPORT_GLOBAL = "zk-dl.listbox.onExportGlobal";
     // model
     protected List<Map<String, Object>> usedModel = new ArrayList<>();
     protected List<Map<String, Object>> unusedModel = new ArrayList<>();
@@ -91,12 +99,14 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
     public void onExport() {
         try {
             Map<String, Object> args = new HashMap<>();
-            args.put( "filename", fileName );
-            args.put( "sheetname", sheetName );
-            args.put( "model", usedModel );
-            args.put( "rows", rows );
+            args.put("filename", fileName);
+            args.put("sheetname", sheetName);
+            args.put("model", usedModel);
+            args.put("rows", rows);
+            args.put("entityClass", masterController != null ? masterController.getEntityClass() : null);// not used in export - for global-command only
 
             Events.postEvent( new org.zkoss.zk.ui.event.Event( "onSave", self, args ) );
+            BindUtils.postGlobalCommand(null, EventQueues.DESKTOP, ON_EXPORT_GLOBAL, args);
             self.detach();
         } finally {
             Clients.clearBusy();
