@@ -46,6 +46,7 @@ dlzklib.Quickfilter = zk.$extends(zul.inp.InputWidget, {
         this.updateChange_();
         this._hideShowDelButton();
         this.getInputNode().focus();
+        this.fire("onChanging", this.getValue(), {});
     },
     _doSearch: function (evt) {
         this.updateChange_(); // ensure actual value is set
