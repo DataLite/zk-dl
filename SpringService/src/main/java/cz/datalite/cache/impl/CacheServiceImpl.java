@@ -150,6 +150,11 @@ public class CacheServiceImpl implements CacheService
         return false ;
     }
 
+    @Override
+    public <CacheType> boolean isExistsInCache(Class<CacheType> cacheType) {
+        return isEnabled() && values.get().containsKey(cacheType);
+    }
+
 
     @Override
     public <CacheType, XmlType, DatabaseType> DatabaseType getValueFromCache( Class<CacheType> cacheType, XmlType key )
@@ -215,7 +220,12 @@ public class CacheServiceImpl implements CacheService
 
     @Override
     public <CacheType> Map getAllValues(Class<CacheType> cacheType) {
-        return Collections.unmodifiableMap(values.get().get(cacheType));
+        Map map = values.get().get(cacheType);
+        if (map == null) {
+            return Collections.emptyMap();
+        } else {
+            return Collections.unmodifiableMap(map);
+        }
     }
 
     @Override

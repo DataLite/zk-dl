@@ -59,6 +59,12 @@ public interface CacheService
 
     /**
      * @param cacheType     typ pole
+     * @return položka existuje
+     */
+    <CacheType> boolean isExistsInCache(Class<CacheType> cacheType);
+
+    /**
+     * @param cacheType     typ pole
      * @param key           hledaný klíč
      * @return hodnota z cache
      */
