@@ -82,7 +82,7 @@
 .z-login [class$="-header"], .z-login [class*="-header"] { font-size: 15px; }
 .z-login .z-login-lbl { display: inline-block; margin: 5px 0 3px 0; }
 .z-login input[type=text],
-.z-login input[type=password] { font-size: 15px; outline: none; width: 100%; /*padding: 5px 30px 5px 5px;*/ }
+.z-login input[type=password] { font-size: 15px; outline: none; width: 100%; }
 .z-login .z-image { margin-top: -16px; position: relative; top: -15px; left: 176px; }
 .z-login .z-login-cm { border: 1px solid #545E6B; padding: 20px 0 30px 0;  }
 .z-login .z-login-cnt { margin: 0 auto; position: relative; width: 200px; }
@@ -217,7 +217,7 @@ box-shadow: inset 0 0 30px 0 #999999, 0 1px 0 0 white;
 }
 .z-quickfilter-magnifier:hover,
 .z-quickfilter-list:hover {
--moz-box-shadow: 0px 0px 2px #808080; 
--webkit-box-shadow: 0px 0px 2px #808080; 
-box-shadow: 0px 0px 2px #808080;
+-moz-box-shadow: 0 0 2px #808080;
+-webkit-box-shadow: 0 0 2px #808080;
+box-shadow: 0 0 2px #808080;
 }
