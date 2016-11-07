@@ -20,11 +20,9 @@
 .z-quickfilter .z-icon-search-1 { }
 
 /* -- Quickfilter in lovbox -- */
-/*.z-lovbox-popup .z-quickfilter { float: left; margin-bottom: 4px!important; }*/
 .z-lovbox-popup .z-quickfilter-magnifier:hover { margin-top: 3px!important; }
 .z-lovbox-popup .z-quickfilter [class^="z-icon-"],
 .z-lovbox-popup .z-quickfilter [class*=" z-icon-"] { font-size: 16px; }
-/*.z-lovbox-popup .z-quickfilter .z-icon-search-1 { margin-left: 5px; }*/
 .z-lovbox-popup .z-listbox { clear: both; width: 270px; }
 
 /* -- DLPaging component -- */
@@ -34,7 +32,6 @@
 
 /* -- Listboxmanager component -- */
 .z-listboxmanager { float: right; margin-top: 3px; }
-/*.z-listboxmanager td { padding: 0 3px; }*/
 .z-listboxmanager span { cursor: pointer; display: block; font-size: 16px; height: 16px; width: 19px; text-align: center; }
 
 /* -- Listcontrol component -- */
@@ -45,9 +42,6 @@
 .z-listcontrol-aux-content-cover .z-listcontrol-aux-content .z-lovbox-inp,
 .z-listcontrol-aux-content-cover .z-listcontrol-aux-content .z-textbox { margin: 1px 0 1px 0; }
 .z-listcontrol-aux-content-cover .z-listcontrol-aux-content-separator { width: 3px; }
-
-/* -- Lovbox component -- */
-/*.z-lovbox { position: relative; }*/
 
 /* -- Lovbox image -- */
 .z-bandbox-label-btn { font-style: normal!important; height: 16px!important; padding: 2px 3px 1px 6px!important; }
@@ -89,8 +83,6 @@
 .z-login .user, .z-login .pass { margin-bottom: 7px; position: relative; }
 .z-login [class^="z-icon-"], .z-login [class*=" z-icon-"] { display: block; }
 .z-login [class^="z-icon-"]:before, .z-login [class*=" z-icon-"]:before { font-size: 14px; height: 16px; width: 16px; position: absolute; top: 9px; left: 11px; z-index: 1; }
-/*.z-login .user:after { background: url(${c:encodeURL('~./js/dlzklib/img/user_16x16.png')}) no-repeat; }*/
-/*.z-login .pass:after { background: url(${c:encodeURL('~./js/dlzklib/img/pass_16x16.png')}) no-repeat; }*/
 
 /* -- Error 404 -- */
 .z-404 { background:#fff; border: 1px solid #7eaac6; color: #666; font-size: 14px; margin: 20px auto 0 auto; }
@@ -177,26 +169,6 @@ background: -ms-linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 -pie-background: linear-gradient(top, #e2e2e2 0%,#fafafa 100%);
 }
-/*.z-login .z-login-submit {*/
-/*background: #ffffff;*/
-/*background: -moz-linear-gradient(top, #ffffff 0%, #d7d7d7 100%);*/
-/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d7d7d7));*/
-/*background: -webkit-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
-/*background: -o-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
-/*background: -ms-linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
-/*background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
-/*-pie-background: linear-gradient(top, #ffffff 0%,#d7d7d7 100%);*/
-/*}*/
-/*.z-login .z-login-submit:hover {*/
-/*background: #f6fcfe;*/
-/*background: -moz-linear-gradient(top, #f6fcfe 0%, #badbec 100%);*/
-/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fcfe), color-stop(100%,#badbec));*/
-/*background: -webkit-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
-/*background: -o-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
-/*background: -ms-linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
-/*background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
-/*-pie-background: linear-gradient(top, #f6fcfe 0%,#badbec 100%);*/
-/*}*/
 .z-404 .z-404-header {
 background: #f6f8f9;
 background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%)!important;
@@ -266,19 +238,19 @@ box-shadow: inset 0 0 10px 0 #fff, 0 1px 0 0 white;
 }
 .z-login input[type=text]:focus,
 .z-login input[type=password]:focus {
--moz-box-shadow: 0px 0px 5px #007eff;
--webkit-box-shadow: 0px 0px 5px #007eff;
-box-shadow: 0px 0px 5px #007eff;
+-moz-box-shadow: 0 0 5px #007eff;
+-webkit-box-shadow: 0 0 5px #007eff;
+box-shadow: 0 0 5px #007eff;
 }
 .z-login input.error {
--moz-box-shadow: 0px 0px 5px red;
--webkit-box-shadow: 0px 0px 5px red;
-box-shadow: 0px 0px 5px red;
+-moz-box-shadow: 0 0 5px red;
+-webkit-box-shadow: 0 0 5px red;
+box-shadow: 0 0 5px red;
 }
 .z-login input.error:focus {
--moz-box-shadow: 0px 0px 5px #007eff;
--webkit-box-shadow: 0px 0px 5px #007eff;
-box-shadow: 0px 0px 5px #007eff;
+-moz-box-shadow: 0 0 5px #007eff;
+-webkit-box-shadow: 0 0 5px #007eff;
+box-shadow: 0 0 5px #007eff;
 }
 .z-404 .btn:active,
 .z-criticalError .btn:active {
