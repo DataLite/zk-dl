@@ -115,19 +115,38 @@ public abstract class AbstractEnumType implements UserType, Serializable, Dynami
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException
     {
+        Serializable result = null;
+
         if ( getSqlType() == Types.NUMERIC )
         {
-            //noinspection unchecked
-            return typeToEnum( rs.getLong(names[0]));
+            Long value = rs.getLong(names[0]);
+
+            if(!rs.wasNull())
+            {
+                result = typeToEnum(value);
+            }
+
         }
         else if ( getSqlType() == Types.VARCHAR )
         {
-            //noinspection unchecked
-            return typeToEnum( rs.getString(names[0]));
+            String value = rs.getString(names[0]);
+
+            if(!rs.wasNull())
+            {
+                result = typeToEnum(value);
+            }
+        }
+        else
+        {
+            Serializable value = (Serializable) rs.getObject(names[0]);
+
+            if(!rs.wasNull())
+            {
+                result = typeToEnum(value);
+            }
         }
 
-        //noinspection unchecked
-        return typeToEnum((Serializable) rs.getObject(names[0]));
+        return result;
     }
 
     @Override
