@@ -211,6 +211,10 @@ public class DLProfileManager<T> extends Hlayout {
 		this.profilesLovbox.afterCompose();
 	}
 
+	public DLLovbox<DLListboxProfile> getProfilesLovbox() {
+		return profilesLovbox;
+	}
+
 	public void setController(final DLProfileManagerController<T> controller) {
 		this.controller = controller;
 	}
