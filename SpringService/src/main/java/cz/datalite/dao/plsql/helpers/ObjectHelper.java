@@ -491,7 +491,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( (String)value ) : null ;
+            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( removeDot( (String)value ) ) : null ;
         }
         else if ( value instanceof Double )
         {
@@ -548,7 +548,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt((String) value) : null ;
+            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt( removeDot( (String)value ) ): null ;
         }
         else if ( value instanceof Double )
         {
@@ -774,5 +774,11 @@ public final class ObjectHelper
     public static <T> T[] asArray( T ... values )
     {
         return values ;
+    }
+
+
+    private static String removeDot( String original )
+    {
+        return ( ( original != null ) && ( original.endsWith( ".0" ) ) ) ? original.substring( 0, original.indexOf( "." )  ) : original ;
     }
 }
