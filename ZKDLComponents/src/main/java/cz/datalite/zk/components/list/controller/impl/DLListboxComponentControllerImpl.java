@@ -12,7 +12,10 @@ import cz.datalite.zk.components.list.view.DLListheader;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Library;
 import org.zkoss.zk.ui.*;
-import org.zkoss.zk.ui.event.*;
+import org.zkoss.zk.ui.event.DropEvent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.metainfo.NodeInfo;
 import org.zkoss.zk.ui.metainfo.PageDefinition;
@@ -20,7 +23,6 @@ import org.zkoss.zk.ui.metainfo.TemplateInfo;
 import org.zkoss.zk.ui.metainfo.impl.MacroDefinition;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zk.xel.Evaluator;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listhead;
@@ -437,7 +439,12 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             if (!ReflectionHelper.hasField( template.getClass(), "_tempInfo" ) ) {
                 // listbox doesn't have a template but it can has some configuration on listheaders
                 // try to determine data types based on listheader configuration
+                // still inicializing listheaderTemplates for proper handling of onCreate event
+                listheaderTemplates.clear();
+                int i = 0;
                 for( DLColumnUnitModel unit : columnModel.getColumnModels() ) {
+                    final DLListheader header = defaultHeaders.get( i++ );
+                    listheaderTemplates.put( columnMap.get( header ), header );
                     if ( unit.isColumn() && unit.getColumnType() == null ) {
                         unit.setColumnType( getFieldType( masterController.getEntityClass(), unit.getColumn() ) );
                     }
