@@ -13,6 +13,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.xel.VariableResolver;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.CreateEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -158,8 +159,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 		DLListheader header = new DLListheader();
 		header.setLabel("ID");
-		// FIXME: SPM-11 ZK8 this method cause JS error in rendering component (wgt.desktop variable is undefined)
-//		header.setVisible(false);
+		header.setVisible(false);
 		header.setWidth("24px");
 		head.appendChild(header);
 
@@ -190,6 +190,8 @@ public class DLProfileManager<T> extends Hlayout {
 		header.setLabel("");
 		if (!StringHelper.isNull(this.editButtonWidth)) {
 			header.setWidth(this.editButtonWidth);
+		} else {
+			header.setWidth("32px");
 		}
 		head.appendChild(header);
 
@@ -209,6 +211,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 		this.profilesLovbox.setController(controller);
 		this.profilesLovbox.afterCompose();
+		Events.postEvent(new CreateEvent(Events.ON_CREATE, profilesListbox, null));
 	}
 
 	public DLLovbox<DLListboxProfile> getProfilesLovbox() {
@@ -362,7 +365,6 @@ public class DLProfileManager<T> extends Hlayout {
 
 			// create template components & add binding expressions
 			final Listcell idCell = new Listcell();
-//			idCell.setVisible(false);
 			idCell.enableBindingAnnotation();
 			listitem.appendChild(idCell);
 			ZKBinderHelper.registerAnnotation(idCell, "label", "load", "item.identifier");
@@ -412,7 +414,7 @@ public class DLProfileManager<T> extends Hlayout {
 
 			final HtmlBasedComponent editBtn = DLProfileManager.this.createEditButtonWithTooltip(buttonCell, true, new EventListener<Event>() {
 				public void onEvent(final Event event) {
-					controller.onEditProfile((Long.valueOf(idCell.getLabel())));
+					controller.onEditProfile(((DLListboxProfile) listitem.getValue()).getId());
 				}
 			});
 			ZKBinderHelper.registerAnnotation(editBtn, "visible", "load", "item.editable");
