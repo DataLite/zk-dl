@@ -8,6 +8,8 @@ import cz.datalite.dao.plsql.StoredProcedureInvokerCreatorBefore11;
 import cz.datalite.stereotype.Autowired;
 import cz.datalite.stereotype.DAO;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
+import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,8 @@ class StoreProcedureInvokerCreatorBefore11Impl implements StoredProcedureInvoker
     TransactionAwareDataSourceProxy dataSource ;
 
     EntityManager entityManager ;
+
+    NativeJdbcExtractor extractor = new CommonsDbcpNativeJdbcExtractor() ;
 
     /**
      * Setup database schema.
@@ -54,22 +58,22 @@ class StoreProcedureInvokerCreatorBefore11Impl implements StoredProcedureInvoker
     @Override
     public StoredProcedureInvoker create(String name, int resultType)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, extractor ) ;
     }
 
     public StoredProcedureInvoker create( DataSource dataSource )
     {
-        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager, extractor ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager, extractor ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name, int resultType)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, extractor ) ;
     }
 
     /**
