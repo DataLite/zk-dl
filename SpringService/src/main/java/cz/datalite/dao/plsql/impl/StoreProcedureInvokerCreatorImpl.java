@@ -7,6 +7,8 @@ import cz.datalite.dao.plsql.StoredProcedureInvokerCreator;
 import cz.datalite.stereotype.Autowired;
 import cz.datalite.stereotype.DAO;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
+import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,15 +19,32 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 @DAO
-class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
+class StoreProcedureInvokerCreatorImpl
+    implements StoredProcedureInvokerCreator
 {
     @Autowired
-    SqlLobValueFactory sqlLobValueFactory;
+    protected SqlLobValueFactory sqlLobValueFactory;
 
     @Autowired
-    TransactionAwareDataSourceProxy dataSource ;
+    protected TransactionAwareDataSourceProxy dataSource ;
 
-    EntityManager entityManager ;
+    @Autowired
+    protected NativeJdbcExtractor nativeJdbcExtractor ;
+
+    protected EntityManager entityManager ;
+
+    /**
+     * @return extraktor spojení
+     */
+    protected NativeJdbcExtractor getNativeJdbcExtractor()
+    {
+        if ( nativeJdbcExtractor == null )
+        {
+            nativeJdbcExtractor = new CommonsDbcpNativeJdbcExtractor() ;
+        }
+
+        return nativeJdbcExtractor;
+    }
 
     /**
      * Setup database schema.
@@ -50,27 +69,6 @@ class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
         return create( dataSource, name ) ;
     }
 
-    @Override
-    public StoredProcedureInvoker create(String name, int resultType)
-    {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
-    }
-
-    public StoredProcedureInvoker create( DataSource dataSource )
-    {
-        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
-    }
-
-    public StoredProcedureInvoker create(DataSource dataSource, String name)
-    {
-        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
-    }
-
-    public StoredProcedureInvoker create(DataSource dataSource, String name, int resultType)
-    {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager ) ;
-    }
-
     /**
      * Get default database schema.
      * SQL object types like NUMBER_TABLE or VARCHAR_TABLE are resolved with this schema.
@@ -87,5 +85,24 @@ class StoreProcedureInvokerCreatorImpl implements StoredProcedureInvokerCreator
         this.databaseSchema = databaseSchema;
     }
 
+    @Override
+    public StoredProcedureInvoker create(String name, int resultType)
+    {
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+    }
 
+    public StoredProcedureInvoker create( DataSource dataSource )
+    {
+        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+    }
+
+    public StoredProcedureInvoker create(DataSource dataSource, String name)
+    {
+        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+    }
+
+    public StoredProcedureInvoker create(DataSource dataSource, String name, int resultType)
+    {
+        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+    }
 }
