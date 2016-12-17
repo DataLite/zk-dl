@@ -9,8 +9,11 @@ import cz.datalite.stereotype.DAO;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor;
 import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OneToMany;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
@@ -32,6 +35,36 @@ class StoreProcedureInvokerCreatorImpl
     protected NativeJdbcExtractor nativeJdbcExtractor ;
 
     protected EntityManager entityManager ;
+
+    @Autowired
+    protected PlatformTransactionManager transactionManager ;
+
+
+    private Integer timeout ;
+
+    @Override
+    public Integer getTimeout()
+    {
+        if ( timeout == null )
+        {
+            if ( transactionManager instanceof AbstractPlatformTransactionManager )
+            {
+                timeout = ((AbstractPlatformTransactionManager) transactionManager).getDefaultTimeout() ;
+            }
+            else
+            {
+                timeout = 60 ;
+            }
+        }
+
+        return timeout ;
+    }
+
+    @Override
+    public void setTimeout(Integer timeout)
+    {
+        this.timeout = timeout;
+    }
 
     /**
      * @return extraktor spojení
@@ -91,18 +124,24 @@ class StoreProcedureInvokerCreatorImpl
         return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
     }
 
+    private StoredProcedureInvoker setupQueryTimeout( DefaultStoredProcedureInvoker invoker )
+    {
+        invoker.setQueryTimeout( getTimeout() ) ;
+        return invoker ;
+    }
+
     public StoredProcedureInvoker create( DataSource dataSource )
     {
-        return new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+        return setupQueryTimeout(  new DefaultStoredProcedureInvoker( dataSource, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+        return setupQueryTimeout( new DefaultStoredProcedureInvoker( dataSource, name, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ) ;
     }
 
     public StoredProcedureInvoker create(DataSource dataSource, String name, int resultType)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+        return setupQueryTimeout( new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ) ;
     }
 }
