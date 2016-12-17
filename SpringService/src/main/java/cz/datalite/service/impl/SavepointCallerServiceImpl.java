@@ -20,6 +20,14 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
         checkException( operation ) ;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class )
+    public void doExecuteWithDefaultTimeout(@NotNull SavepointOperation operation)
+    {
+        checkException( operation ) ;
+    }
+
     /**
      * Spuštění příkazu s odchicením vyjímky
      *
