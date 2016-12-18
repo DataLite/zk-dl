@@ -118,10 +118,12 @@ class StoreProcedureInvokerCreatorImpl
         this.databaseSchema = databaseSchema;
     }
 
+
+
     @Override
     public StoredProcedureInvoker create(String name, int resultType)
     {
-        return new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ;
+        return setupQueryTimeout( new DefaultStoredProcedureInvoker( dataSource, name, resultType, sqlLobValueFactory, getDatabaseSchema(), entityManager, getNativeJdbcExtractor() ) ) ;
     }
 
     private StoredProcedureInvoker setupQueryTimeout( DefaultStoredProcedureInvoker invoker )

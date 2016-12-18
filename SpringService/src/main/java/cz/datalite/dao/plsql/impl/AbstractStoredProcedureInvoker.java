@@ -1230,7 +1230,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
             ((Session)entityManager.getDelegate()).flush() ;
         }
 
-        long startTime = System.currentTimeMillis();;
+        long startTime = System.currentTimeMillis();
         try
         {
             return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
