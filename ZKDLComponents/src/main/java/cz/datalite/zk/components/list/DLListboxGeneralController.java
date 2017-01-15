@@ -7,7 +7,9 @@ import cz.datalite.dao.DLSortType;
 import cz.datalite.helpers.JsonHelper;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
+import cz.datalite.utils.DynamicControllerCreator;
 import cz.datalite.utils.HashMapAutoCreate;
+import cz.datalite.zk.components.list.DLListboxEvents;
 import cz.datalite.zk.components.list.controller.*;
 import cz.datalite.zk.components.list.controller.impl.*;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
@@ -181,12 +183,17 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         this.autosave = comp.isAutosave();
     }
 
+    public static DynamicControllerCreator<DLManagerController> MANAGER_CONTROLLER_CREATOR =
+            new DynamicControllerCreator<DLManagerController>( DLListboxGeneralController.class.getCanonicalName() + ".managerControllerClassImpl",
+                    DLManagerControllerImpl.class,
+                    DLListboxExtController.class, DLListboxManager.class ) ;
+
     /**
      * Initialize manager component
      * @param comp manager component
      */
     protected void initManager( final DLListboxManager comp ) {
-        managerController = new DLManagerControllerImpl<T>( this, comp );
+        managerController = MANAGER_CONTROLLER_CREATOR.create( this, comp ) ;
     }
 
     /**
