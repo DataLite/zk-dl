@@ -2,6 +2,7 @@ package cz.datalite.helpers.excel.export;
 
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import cz.datalite.zk.converter.ZkConverter;
 import jxl.CellType;
 import jxl.Workbook;
@@ -451,9 +452,11 @@ public final class ExcelExportUtils {
                     hideOnFinish.add(columnUnitModel);
                 }
             }
+            // and load data
+            int exportMaxRows = ListboxExportManagerController.exportMaxRows;
 
             // and load data
-            data = masterController.loadData((rows == 0) ? 36000 : Math.min(rows, 36000)).getData();
+            data = masterController.loadData( Math.min(  ( (rows == 0) ?  exportMaxRows : Math.min(rows, exportMaxRows) ), 65535 ) ).getData();
         } finally {
             // after processing restore previous state
             for (DLColumnUnitModel hide : hideOnFinish) {

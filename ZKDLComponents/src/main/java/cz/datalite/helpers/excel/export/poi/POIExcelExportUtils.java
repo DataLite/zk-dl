@@ -188,7 +188,7 @@ public final class POIExcelExportUtils {
 
 		headerStyle(cells.get(0), workbook);
 
-		return new ExportResult( POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook), exportedRows[1] ) ;
+		return new ExportResult( POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook), exportedRows[0] ) ;
 	}
 
 	private static void headerStyle(List<POICell> row, Workbook workbook)
@@ -244,7 +244,7 @@ public final class POIExcelExportUtils {
 			// and load data
 			int exportMaxRows = ListboxExportManagerController.exportMaxRows;
 
-			data = masterController.loadData((rows == 0) ? exportMaxRows : Math.min(rows, exportMaxRows)).getData();
+			data = masterController.loadData( Math.min(  ( (rows == 0) ?  exportMaxRows : Math.min(rows, exportMaxRows) ), 1048575 ) ).getData() ;
 		}
 		finally
 		{
