@@ -5,8 +5,8 @@ import cz.datalite.helpers.StringHelper;
 import cz.datalite.service.LocalSessionService;
 import cz.datalite.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Služba pro získání informace o aktuálních lokalních operací
@@ -14,7 +14,8 @@ import java.util.Map;
 @Service
 public class LocalSessionServiceImpl implements LocalSessionService
 {
-    private Map<String, String> information = new HashMap<>() ;
+    private final static String NULL_VALUE = "__NULL__" ;
+    private Map<String, String> information = new ConcurrentHashMap<>() ;
     private String id ;
 
     @Override
@@ -32,13 +33,20 @@ public class LocalSessionServiceImpl implements LocalSessionService
     @Override
     public synchronized void setSessionInformation(String clientInfo)
     {
-        information.put(getCurrentSessionId(), clientInfo) ;
+        setSessionInformation( getCurrentSessionId(), clientInfo ) ;
     }
 
     @Override
     public void setSessionInformation(String sessionId, String clientInfo)
     {
-        information.put(sessionId, clientInfo) ;
+        if ( StringHelper.isNull( sessionId ) )
+        {
+            information.put( NULL_VALUE, StringHelper.nvl(clientInfo, ""));
+        }
+        else
+        {
+            information.put(sessionId, StringHelper.nvl(clientInfo, ""));
+        }
     }
 
     @Override
