@@ -6,9 +6,7 @@ import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Cache pro uložení vytvořených objektů
@@ -17,7 +15,7 @@ import java.util.Map;
 @Service
 public class CacheServiceImpl implements CacheService
 {
-    ThreadLocal<Map<Class<?>, Map>> values = new ThreadLocal<Map<Class<?>, Map>>()
+    private ThreadLocal<Map<Class<?>, Map>> values = new ThreadLocal<Map<Class<?>, Map>>()
     {
         @Override
         protected Map<Class<?>, Map> initialValue()
@@ -25,7 +23,7 @@ public class CacheServiceImpl implements CacheService
             return new LinkedHashMap<>() ;
         }
     } ;
-    ThreadLocal<Boolean> enabledForThread = new ThreadLocal<Boolean>()
+    private ThreadLocal<Boolean> enabledForThread = new ThreadLocal<Boolean>()
     {
         @Override
         protected Boolean initialValue()
@@ -152,6 +150,11 @@ public class CacheServiceImpl implements CacheService
         return false ;
     }
 
+    @Override
+    public <CacheType> boolean isExistsInCache(Class<CacheType> cacheType) {
+        return isEnabled() && values.get().containsKey(cacheType);
+    }
+
 
     @Override
     public <CacheType, XmlType, DatabaseType> DatabaseType getValueFromCache( Class<CacheType> cacheType, XmlType key )
@@ -160,6 +163,26 @@ public class CacheServiceImpl implements CacheService
         {
             //noinspection unchecked
             return (DatabaseType) values.get().get(cacheType).get( key );
+        }
+
+        return null ;
+    }
+
+    @Override
+    public <XmlType, DatabaseType> DatabaseType getValueFromCache(String regExpClassName, XmlType key)
+    {
+        if ( ! isEnabled() )
+        {
+            return null ;
+        }
+
+        for( Map.Entry<Class<?>, Map> entry : values.get().entrySet() )
+        {
+            if ( entry.getKey().getCanonicalName().matches( regExpClassName ) )
+            {
+                //noinspection unchecked
+                return (DatabaseType) entry.getValue().get( key );
+            }
         }
 
         return null ;
@@ -181,5 +204,32 @@ public class CacheServiceImpl implements CacheService
                 addToCache(entry.getKey(), key, entry.getValue());
             }
         }
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public List<?> getAllValues(Collection<Class<?>> cacheTypes) {
+        List<?> ret = new ArrayList<>();
+        Map<Class<?>, Map> cacheMap = values.get();
+        for (Class<?> cacheType : cacheTypes) {
+            Map map = cacheMap.get(cacheType);
+            ret.addAll(map.values());
+        }
+        return ret;
+    }
+
+    @Override
+    public <CacheType> Map getAllValues(Class<CacheType> cacheType) {
+        Map map = values.get().get(cacheType);
+        if (map == null) {
+            return Collections.emptyMap();
+        } else {
+            return Collections.unmodifiableMap(map);
+        }
+    }
+
+    @Override
+    public Set<Class<?>> getAllClasses() {
+        return Collections.unmodifiableSet(values.get().keySet());
     }
 }
