@@ -1,15 +1,28 @@
 package cz.datalite.xml;
 
 import cz.datalite.exception.ProblemException;
+import org.apache.commons.io.IOUtils;
 import org.apache.xerces.dom.DocumentImpl;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.util.Vector;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class XmlUtilTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(XmlUtilTest.class);
 
 	private static final String ENCODING = "UTF-8";
 	private static final String XML_UNFORMATED = "<?xml version=\"1.0\"?>"
@@ -184,5 +197,45 @@ public class XmlUtilTest {
 			assertFalse(XmlUtil.containsElements(dom.getDocumentElement().getChildNodes()));
 		}
 	}
+
+	@Test(timeout = 3*1000)
+	public void testMarshall() throws Exception {
+		XmlTestElement testElement = new XmlTestElement();
+		testElement.setAttr("atr-hodnota");
+		testElement.setSub("sub-hodnota");
+		LOGGER.debug("Nacteno trid pred marshall:        {}", loadedClassesCount());
+		String xml = XmlUtil.marshal(testElement);
+		LOGGER.debug("Nacteno trid po prvnim marshall:   {}", loadedClassesCount());
+		LOGGER.info(xml);
+		assertNotNull(xml);
+		assertTrue("Mel by obsahovat element", xml.contains("element"));
+		for (int i = 0; i < 500; i++) {
+			XmlUtil.marshal(testElement);
+		}
+		LOGGER.debug("Nacteno trid po 500 marshall:    {}", loadedClassesCount());
+	}
+
+	@Test(timeout = 10*1000)
+	public void testUnMarshall() throws Exception {
+		LOGGER.debug("Nacteno trid pred unmarshall:        {}", loadedClassesCount());
+		String xml = IOUtils.toString(getClass().getResourceAsStream("/xmlutil-test.xml"));
+		XmlTestElement testElement = XmlUtil.unmarshal(XmlTestElement.class, xml);
+		LOGGER.debug("Nacteno trid po prvnim unmarshall:   {}", loadedClassesCount());
+		LOGGER.info("result: {}", testElement);
+		assertNotNull(testElement);
+		for (int i = 0; i < 500; i++) {
+			XmlUtil.unmarshal(XmlTestElement.class, xml);
+		}
+		LOGGER.debug("Nacteno trid po 500 unmarshall:    {}", loadedClassesCount());
+	}
+
+	private int loadedClassesCount() throws Exception {
+		Field f = ClassLoader.class.getDeclaredField("classes");
+		f.setAccessible(true);
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		Vector<Class> classes =  (Vector<Class>) f.get(classLoader);
+		return classes.size();
+	}
+
 
 }
