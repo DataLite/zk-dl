@@ -182,6 +182,7 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
 
     public void onSelectColumn( final Combobox columnbox ) {
         final Combobox operatorBox = ( Combobox ) columnbox.getNextSibling();
+        operatorBox.setSelectedItem(null);
         ZKBinderHelper.loadComponent(operatorBox);
         refreshComponents((Row) columnbox.getParent());
     }
