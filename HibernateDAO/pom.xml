@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cz.datalite</groupId>
+        <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>
         <version>1.4.5.1</version>
     </parent>
