@@ -149,6 +149,9 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <homedir>/var/lib/jenkins/.gnupg/</homedir>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
