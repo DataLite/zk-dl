@@ -152,6 +152,7 @@
                                 <configuration>
                                     <homedir>/var/lib/jenkins/.gnupg/</homedir>
                                     <useAgent>false</useAgent>
+
                                 </configuration>
                             </execution>
                         </executions>
@@ -161,8 +162,10 @@
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.7</version>
                         <extensions>true</extensions>
+
                         <configuration>
                             <serverId>ossrh</serverId>
+
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>false</autoReleaseAfterClose>
                         </configuration>
@@ -170,6 +173,8 @@
                 </plugins>
             </build>
         </profile>
+
+
 
         <profile>
             <!-- The "release" profile ensures that the source and javadoc JARs are included in deployments -->
