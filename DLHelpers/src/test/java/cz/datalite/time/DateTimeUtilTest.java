@@ -21,12 +21,6 @@ public class DateTimeUtilTest {
 
 	@Test
 	public void testFormatDuration() {
-		try {
-			DateTimeUtil.formatDuration(-1, true, true);
-			fail();
-		} catch (IllegalArgumentException expected) {
-			// ok
-		}
 		assertEquals("0 miliseconds", DateTimeUtil.formatDuration(0, true, true));
 		assertEquals("0 miliseconds", DateTimeUtil.formatDuration(0, true, false));
 		assertEquals("0ms", DateTimeUtil.formatDuration(0, false, true));
@@ -38,6 +32,11 @@ public class DateTimeUtilTest {
 	}
 
 	@Test
+	public void testNegative() {
+		assertEquals("-10h 47s 972ms", DateTimeUtil.formatDuration(-36047972, false, true));
+	}
+
+		@Test
 	public void testNow() {
 		assertNotNull(DateTimeUtil.now());
 		assertTrue(DateTimeUtil.now().getClass().equals(Date.class));
