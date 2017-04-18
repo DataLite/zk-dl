@@ -60,18 +60,18 @@ public final class DateTimeUtil {
 	 *        zda zobrazovat hodnoty ktere jsou nulove
 	 * 
 	 * @return naformatovany retezec
-	 * 
-	 * @throws IllegalArgumentException
-	 *         pokud je predany parametr zaporny
 	 */
 	public static String formatDuration(final long duration, final boolean longFormat, final boolean trimZeros) {
-		if (duration < 0)
-			throw new IllegalArgumentException("Duration must be greater than or equal to zero.");
+		StringBuilder ret = new StringBuilder();
+		long tm = duration;
+		if (duration < 0) {
+			ret.append("-");
+			tm = tm * -1;
+		}
 
-		if (duration == 0L)
+		if (tm == 0L)
 			return longFormat ? "0 miliseconds" : "0ms";
 
-		long tm = duration;
 		int days = (int) (tm / 86400000);
 		tm = tm - (days * 86400000L);
 		int hours = (int) (tm / 3600000);
@@ -82,7 +82,6 @@ public final class DateTimeUtil {
 		tm = tm - (secs * 1000L);
 		int msecs = (int) tm;
 
-		StringBuilder ret = new StringBuilder();
 		if (days > 0 || !trimZeros)
 			ret.append(days).append(longFormat ? " days " : "d ");
 		if (hours > 0 || !trimZeros)
