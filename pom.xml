@@ -60,8 +60,9 @@
 
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
@@ -250,8 +251,8 @@
 
     <developers>
         <developer>
-            <name>Pavel Chráska</name>
-            <email>pavel.chraska@datalite.cz</email>
+            <name>Jiří Bubník</name>
+            <email>bubnik@datalite.cz</email>
             <organization>Datalite</organization>
             <organizationUrl>http://www.datalite.cz/</organizationUrl>
         </developer>
