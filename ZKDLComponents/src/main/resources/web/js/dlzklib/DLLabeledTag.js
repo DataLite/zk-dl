@@ -29,6 +29,10 @@ dlzklib.DLLabeledTag = zk.$extends(zul.Widget, {
         this.fire("onRemove", this.getValue(), {});
         var $el = jq(this);
         $el.hide('fast', function(){ $el.remove(); });
-    }
+    }/*,
+
+    initDrag_: function () {
+        dlzklib.DLLabeledTag.initDrag_.apply(this, arguments); //if you want to call back the default implementation
+    }*/
 
 });
