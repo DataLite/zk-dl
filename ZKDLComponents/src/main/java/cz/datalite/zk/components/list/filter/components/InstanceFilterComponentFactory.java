@@ -16,7 +16,7 @@ public class InstanceFilterComponentFactory implements FilterComponentFactory {
         try {
             componentClass = ( Class<? extends FilterComponent> ) Class.forName( className );
         } catch ( ClassNotFoundException ex ) {
-            throw new RuntimeException( ex );
+            throw new IllegalArgumentException( ex );
         }
     }
 

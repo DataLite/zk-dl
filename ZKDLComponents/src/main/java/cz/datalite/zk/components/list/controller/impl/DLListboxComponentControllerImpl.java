@@ -150,7 +150,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         if (templates.isEmpty()) {
         	this.template = null;
         } else if (templates.size() > 1) {        	
-			throw new RuntimeException("Only one template element is allowed as direct child of DLListbox element. Check zul file.");
+			throw new IllegalStateException("Only one template element is allowed as direct child of DLListbox element. Check zul file.");
 		} else if (templates.size() == 1) {
 			// zul uses new databinding, list of cells is defined as template
 			this.template = listbox.getTemplate(templates.iterator().next());
@@ -455,7 +455,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             
         } catch ( Exception ex ) {
             LOGGER.error( "Template couldn't be loaded from the databinding.", ex );
-            throw new RuntimeException( "Template couldn't be loaded from the databinding.", ex );
+            throw new IllegalArgumentException("Template " + template + "couldn't be loaded from the databinding.", ex);
         }
 
     }
