@@ -132,10 +132,12 @@ public class ZkRoleHandler extends Handler {
     public Component bind(Component parent) {
         if (disableComponents.length > 0 || hideComponents.length > 0) {
             if (!canAccess()) {
-                for (Component comp : resolveComponents(parent, disableComponents))
+                for (Component comp : resolveComponents(parent, disableComponents)) {
                     doDisableComponent(comp);
-                for (Component comp : resolveComponents(parent, hideComponents))
+                }
+                for (Component comp : resolveComponents(parent, hideComponents)) {
                     doHideComponent(comp);
+                }
             }
         }
 
@@ -143,13 +145,15 @@ public class ZkRoleHandler extends Handler {
     }
 
     protected void doDisableComponent(Component comp) {
-        if (comp instanceof Button)
-            ((Button)comp).setDisabled(true);
+        if (comp instanceof Button) {
+            ((Button) comp).setDisabled(true);
+        }
     }
 
     protected void doHideComponent(Component comp) {
-        if (comp instanceof Button)
+        if (comp instanceof Button) {
             comp.setVisible(false);
+        }
 
     }
 
@@ -159,8 +163,9 @@ public class ZkRoleHandler extends Handler {
             if (!StringHelper.isNull(id)) {
                 // resolve by Id
                 Component comp = parent.getFellowIfAny(id);
-                if (comp == null)
+                if (comp == null) {
                     throw new IllegalArgumentException("@ZkRole annotation - component in disableComponents or hideComponents not found: id='" + id + "'.");
+                }
                 ret.add(comp);
             }
         }
@@ -173,16 +178,20 @@ public class ZkRoleHandler extends Handler {
      * Return true if all required roles are granted.
      */
     public boolean canAccess() {
-        if (roleResolver == null)
+        if (roleResolver == null) {
             throw new IllegalStateException("ZkRoleReslover class is not defined. Use 'zk-dl.annotation.roleResolver' parameter in zk.xml to define resolver class.");
+        }
 
         boolean canAccess = true;
-        if (anyGranted.length > 0 && !roleResolver.isAnyGranted(anyGranted))
+        if (anyGranted.length > 0 && !roleResolver.isAnyGranted(anyGranted)) {
             canAccess = false;
-        if (allGranted.length > 0 && !roleResolver.isAllGranted(allGranted))
+        }
+        if (allGranted.length > 0 && !roleResolver.isAllGranted(allGranted)) {
             canAccess = false;
-        if (noneGranted.length > 0 && !roleResolver.isNoneGranted(noneGranted))
+        }
+        if (noneGranted.length > 0 && !roleResolver.isNoneGranted(noneGranted)) {
             canAccess = false;
+        }
         return canAccess;
     }
 }

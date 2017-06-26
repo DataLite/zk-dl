@@ -65,10 +65,11 @@ public class SpringSelectMockFactoryBean implements FactoryBean, ApplicationCont
      * @return new object instance
      */
     protected Object doCreateInstance() throws Exception {
-        if (dlLiferayService.isLiferayRunning())
+        if (dlLiferayService.isLiferayRunning()) {
             return liferayClass.newInstance();
-        else
+        } else {
             return mockClass.newInstance();
+        }
     }
 
     /**
@@ -77,13 +78,15 @@ public class SpringSelectMockFactoryBean implements FactoryBean, ApplicationCont
     public Class<?> getObjectType() {
 
         // the type is not known before properties are set
-        if (dlLiferayService == null)
+        if (dlLiferayService == null) {
             return null;
+        }
 
-        if (dlLiferayService.isLiferayRunning())
+        if (dlLiferayService.isLiferayRunning()) {
             return liferayClass;
-        else
+        } else {
             return mockClass;
+        }
     }
 
     /**

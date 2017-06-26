@@ -111,9 +111,11 @@ public class MethodInvoker implements Invoke {
             throw new NoSuchMethodException("Invalid arguments for method \"" + method.getName() + "\". Error " + ex.getMessage());
         } catch (InvocationTargetException ex ) {
             // try to unwrap the exception. If it it an error then do not unwrap it
-            if ( ex.getTargetException() instanceof Exception )
-                throw ( Exception ) ex.getTargetException();
-            else throw ex;
+            if ( ex.getTargetException() instanceof Exception ) {
+                throw (Exception) ex.getTargetException();
+            } else {
+                throw ex;
+            }
         }
     }
 

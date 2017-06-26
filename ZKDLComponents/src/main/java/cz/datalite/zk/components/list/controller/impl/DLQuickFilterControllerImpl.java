@@ -73,7 +73,9 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         quickFilter.setModel( getQuickFilterModel() );
 
         // if the column is not visible anymore then reset the filter
-        if ( model.getModel() != null && !model.getModel().isVisible() ) model.clear();
+        if ( model.getModel() != null && !model.getModel().isVisible() ) {
+            model.clear();
+        }
         
         quickFilter.fireChanges();
     }
@@ -88,7 +90,9 @@ public class DLQuickFilterControllerImpl implements DLQuickFilterController {
         for ( final DLColumnUnitModel unit : masterController.getColumnModel().getColumnModels() ) {
             if ( unit.isColumn() && unit.isQuickFilter() && unit.isFilter() ) {
                 // set to use wysiwyg search
-                if ( wysiwyg ) unit.setQuickFilterOperator( DLFilterOperator.LIKE );
+                if ( wysiwyg ) {
+                    unit.setQuickFilterOperator(DLFilterOperator.LIKE);
+                }
                 quickFilterModel.add( new Entry<DLColumnUnitModel, String>() {
 
                     public DLColumnUnitModel getKey() {

@@ -39,8 +39,9 @@ public class DLPortletLiferaySessionFilter extends OncePerRequestFilter {
             // see http://liferay.datalite.cz/blog/-/blogs/create-session-v-zk-update-requestu
             HttpSession httpSession = request.getSession(false);
 
-            if (httpSession != null)
+            if (httpSession != null) {
                 themeDisplay = (ThemeDisplay) httpSession.getAttribute(WebKeys.THEME_DISPLAY);
+            }
         }
 
         if (themeDisplay != null)

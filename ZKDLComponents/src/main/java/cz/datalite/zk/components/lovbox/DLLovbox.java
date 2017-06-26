@@ -180,8 +180,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
             if ( ZKBinderHelper.version( this ) == 1 ) {
                 // version 1 does not support lovbox on a object
-                if ( this.labelProperties.length == 0 )
-                    throw new IllegalArgumentException( "Please define labelProperty in lovbox." );
+                if ( this.labelProperties.length == 0 ) {
+                    throw new IllegalArgumentException("Please define labelProperty in lovbox.");
+                }
 
                 // binding template for databinding version 1.0
                 final Listitem item = new Listitem();
@@ -196,7 +197,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 }
 
                 if ( descriptionProperty != null ) // if it is defined create description column
-                    createCell( descriptionProperty );
+                {
+                    createCell(descriptionProperty);
+                }
             } else if (ZKBinderHelper.version( this ) == 2 ) {
                 // binding template for databinding version 2.0
                 // labelProperties and descriptionProperty may be null - then only one cell is created
@@ -205,7 +208,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
                 this.initHeader(head);
                 
                 if ( searchProperty != null ) // if search property is defined create search column
-                    ( ( DLListheader ) head.getFirstChild() ).setColumn( searchProperty );
+                {
+                    ((DLListheader) head.getFirstChild()).setColumn(searchProperty);
+                }
                 if (descriptionProperty != null) {
                     final DLListheader header = new DLListheader();
                     header.setColumn( descriptionProperty );
@@ -238,8 +243,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             filter.setQuickFilterAll(quickFilterAll);
             filter.setStyle( "margin: 5px;");
             filter.setAutocomplete(isAutocomplete());
-            if (searchProperty != null)
+            if (searchProperty != null) {
                 filter.setQuickFilterDefault(searchProperty);
+            }
             popup.insertBefore( filter, listbox );            
         }                
 
@@ -276,8 +282,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         initialized = true;
 
-        if ("list".equals(getMold()))
+        if ("list".equals(getMold())) {
             onOpen(new OpenEvent(Events.ON_OPEN, this, true));
+        }
     }
 
     /**
@@ -293,8 +300,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             ownBinder.init(this, new Object(), null);
 
             return ownBinder;
-        } else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -381,8 +389,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @param controller controller for this component
      */
     public void setController( final DLLovboxExtController<T> controller ) {
-        if (initialized)
+        if (initialized) {
             throw new UiException("Composer can be set manually only before afterCompose is called.");
+        }
         this.controller = controller;
     }
 
@@ -400,8 +409,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      * @param listboxController listbox controller for this component
      */
     public void setListboxController( final DLListboxExtController<T> listboxController ) {
-        if (initialized)
+        if (initialized) {
             throw new UiException("Composer can be set manually only before afterCompose is called.");
+        }
 
         controller = new DLLovboxGeneralController<T>(listboxController);
     }
@@ -430,8 +440,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     }
 
     public void setClearButton( boolean clearButton ) {
-        if (this.clearButton != clearButton)
+        if (this.clearButton != clearButton) {
             smartUpdate("clearButton", clearButton);
+        }
         this.clearButton = clearButton;
     }
 
@@ -523,8 +534,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             StringBuilder value = new StringBuilder();
             for (T selectedItem : getSelectedItems())
             {
-                if (value.length() > 0)
+                if (value.length() > 0) {
                     value.append(",");
+                }
 
                 value.append(getDisplayValueForModel(selectedItem));
             }
@@ -542,14 +554,16 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     protected String getDisplayValueForModel(T model) {
         // empty model (if cleared multiple)
-        if (model == null)
+        if (model == null) {
             return "";
+        }
 
         final int size = this.labelProperties.length;
 
         // special case without labelProperties -> just return toString().
-        if (size == 0)
+        if (size == 0) {
             return model.toString();
+        }
 
         Object[] values = new Object[ size ]; // values of properties
         for ( int i = 0; i < size; i++ ) {
@@ -717,8 +731,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
         setButtonVisible(!readonly);
 
         // textbox readonly is set only for editable field
-        if (editable)
+        if (editable) {
             super.setReadonly(readonly);
+        }
     }
 
     /**
@@ -726,7 +741,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
      */
     public void onOpen(OpenEvent event) {
         // prevent reloading model on popup close
-        if (!event.isOpen()) return;
+        if (!event.isOpen()) {
+            return;
+        }
         
         final DLListboxExtController<T> listboxExtController = controller.getListboxExtController();
         if ( listboxExtController.isLocked() ) {
@@ -751,12 +768,14 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
 
         // paging width is not properly calculated on the first opening
         // to ensure the correct appearance of the component
-        if ( paging != null )
+        if ( paging != null ) {
             paging.invalidate();
+        }
         
          // default focus on textbox of quickFilter
-        if (filter != null)
+        if (filter != null) {
             filter.setFocus(true);
+        }
     }
 
     public void setParentCascadeColumn( final String parentCascadeColumn ) {
@@ -907,19 +926,23 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             throws java.io.IOException {
         super.renderProperties(renderer);
 
-        if (clearButton)
+        if (clearButton) {
             render(renderer, "clearButton", clearButton);
+        }
 
-        if (getWatermark() != null)
+        if (getWatermark() != null) {
             render(renderer, "watermark", watermark);
+        }
 
         // original readonly means not allow to write text
         // lovbox radonly is sent to client as new value lovboxReadonly
-        if (readonly)
+        if (readonly) {
             render(renderer, "lovboxReadonly", readonly);
+        }
 
-        if (!StringHelper.isNull(imageLabel))
+        if (!StringHelper.isNull(imageLabel)) {
             render(renderer, "imageLabel", imageLabel);
+        }
     }
 
 

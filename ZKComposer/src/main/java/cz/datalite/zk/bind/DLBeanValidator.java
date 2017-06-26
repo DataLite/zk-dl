@@ -19,8 +19,9 @@ public class DLBeanValidator extends BeanValidator {
         // osetreni "" misto null 
         // translate empty String to null - ZK sends always empty string instead of null for field and @NotNull doesn't work 
         Object validateValue = ctx.getProperty().getValue();
-        if ( validateValue != null && validateValue instanceof String && validateValue.toString().trim().length() == 0 )
-            (( PropertyImpl ) ctx.getProperty()).setValue( null );
+        if ( validateValue != null && validateValue instanceof String && validateValue.toString().trim().length() == 0 ) {
+            ((PropertyImpl) ctx.getProperty()).setValue(null);
+        }
 
         try {
             super.validate( ctx );
@@ -31,14 +32,16 @@ public class DLBeanValidator extends BeanValidator {
 
         final Component component = ctx.getBindContext().getComponent();
         // automaticke nastvani chyby na komponentu 
-        if ( ctx.isValid() )
-            Clients.clearWrongValue( component );
+        if ( ctx.isValid() ) {
+            Clients.clearWrongValue(component);
+        }
     }
 
     @Override
     protected void addInvalidMessages( ValidationContext ctx, String key, String[] messages ) {
         super.addInvalidMessages( ctx, key, messages );
-        if ( messages.length > 0 )
-            Clients.wrongValue( ctx.getBindContext().getComponent(), messages[0] );
+        if ( messages.length > 0 ) {
+            Clients.wrongValue(ctx.getBindContext().getComponent(), messages[0]);
+        }
     }
 }

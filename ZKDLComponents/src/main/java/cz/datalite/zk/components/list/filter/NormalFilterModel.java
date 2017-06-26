@@ -38,12 +38,15 @@ public class NormalFilterModel extends LinkedList<NormalFilterUnitModel> impleme
      * @return found object or null
      */
     public NormalFilterUnitModel findUnitModelByColumnName(String columnName) {
-        if (StringHelper.isNull(columnName))
+        if (StringHelper.isNull(columnName)) {
             throw new IllegalArgumentException("findUnitModelByColumnName without columnName secified");
+        }
 
-        for (NormalFilterUnitModel unitModel : this)
-            if (columnName.equals(unitModel.getColumn()))
+        for (NormalFilterUnitModel unitModel : this) {
+            if (columnName.equals(unitModel.getColumn())) {
                 return unitModel;
+            }
+        }
 
         return null;
     }

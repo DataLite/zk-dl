@@ -74,8 +74,9 @@ public abstract class DLListboxLiferayController<T> extends DLListboxGeneralCont
     {
         DynamicQuery dQuery = DynamicQueryFactoryUtil.forClass(getEntityClass(), PortalClassLoaderUtil.getClassLoader());
 
-        for (Criterion c : compile(filter, dQuery))
+        for (Criterion c : compile(filter, dQuery)) {
             dQuery.add(c);
+        }
 
 
         // if row count is defined write limits

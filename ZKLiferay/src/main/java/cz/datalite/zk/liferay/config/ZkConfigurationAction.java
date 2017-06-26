@@ -58,11 +58,12 @@ public class ZkConfigurationAction extends BaseConfigurationAction {
     protected String getZkConfigPortletPath(Portlet selPortlet) {
         // config portlet name
         String zkConfigPortletPath = selPortlet.getInitParams().get("zkConfigPortletPath");
-        if (zkConfigPortletPath == null)
+        if (zkConfigPortletPath == null) {
             throw new LiferayException("For portlet configuration action '<configuration-action-class>cz.datalite.liferay.ZkConfigurationAction</configuration-action-class>' you need to set" +
                     " also 'zkConfigPortletPath' portlet init parameter with path to a ZUL page! " +
                     " (it is than passed as 'zk_page' parameter to the configuration portlet - default ZkConfig " +
                     "or you can change the name of the portlet with zkConfigPortlet init param)");
+        }
         return zkConfigPortletPath;
     }
 
@@ -79,8 +80,9 @@ public class ZkConfigurationAction extends BaseConfigurationAction {
 
         // name of the config portlet from configuration
         String zkConfigPortletName = selPortlet.getInitParams().get("zkConfigPortlet");
-        if (zkConfigPortletName == null)
+        if (zkConfigPortletName == null) {
             zkConfigPortletName = "ZkConfig";
+        }
 
         return zkConfigPortletName + portletPackage;
     }

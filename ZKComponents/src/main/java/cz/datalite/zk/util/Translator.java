@@ -16,8 +16,9 @@ public final class Translator {
     }
 
     private static Translator getInstance() {
-        if ( instance == null )
+        if ( instance == null ) {
             instance = new Translator();
+        }
         return instance;
     }
 

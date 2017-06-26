@@ -56,16 +56,18 @@ public class EnumCriterionCompiler extends FilterCriterionCompiler {
             for (Enum en : enums)
             {
                 String searchColumn = en.toString();
-                if (searchPropertyName != null)
+                if (searchPropertyName != null) {
                     try {
-                        searchColumn = Fields.getByCompound( en, searchPropertyName ).toString();
+                        searchColumn = Fields.getByCompound(en, searchPropertyName).toString();
                     } catch (NoSuchMethodException e) {
                         throw new IllegalStateException("Misconfigured EnumCriterionCompiler: enum " + en +
                                 " does not contain property: " + searchPropertyName);
                     }
+                }
 
-                if (searchColumn != null && searchColumn.toLowerCase().contains(val.toLowerCase()))
+                if (searchColumn != null && searchColumn.toLowerCase().contains(val.toLowerCase())) {
                     disj.add(Restrictions.eq(key, en));
+                }
             }
 
             return disj.add(Restrictions.sqlRestriction("1=0"));
@@ -94,13 +96,14 @@ public class EnumCriterionCompiler extends FilterCriterionCompiler {
      * @return true for null, String, or one of init Enums
      */
     public boolean validateValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return true;
-        else if (value instanceof String)
+        } else if (value instanceof String) {
             return true;
-        else if ( Arrays.asList(enums).contains(value) )
+        } else if ( Arrays.asList(enums).contains(value) ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

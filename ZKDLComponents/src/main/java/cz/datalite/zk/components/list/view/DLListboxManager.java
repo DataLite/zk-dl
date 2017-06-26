@@ -123,12 +123,24 @@ public class DLListboxManager extends XulElement {
             throws java.io.IOException {
         super.renderProperties(renderer);
 
-        if (!columnManager) renderer.render("columnManager", columnManager);
-        if (!sortManager) renderer.render("sortManager", sortManager);
-        if (!filterManager) renderer.render("filterManager", filterManager);
-        if (!exportManager) renderer.render("exportManager", exportManager);
-        if (!resetFilters) renderer.render("resetFilters", resetFilters);
-        if (!resetAll) renderer.render("resetAll", resetAll);
+        if (!columnManager) {
+            renderer.render("columnManager", columnManager);
+        }
+        if (!sortManager) {
+            renderer.render("sortManager", sortManager);
+        }
+        if (!filterManager) {
+            renderer.render("filterManager", filterManager);
+        }
+        if (!exportManager) {
+            renderer.render("exportManager", exportManager);
+        }
+        if (!resetFilters) {
+            renderer.render("resetFilters", resetFilters);
+        }
+        if (!resetAll) {
+            renderer.render("resetAll", resetAll);
+        }
 
         render(renderer, "filterTooltip", getFilterTooltip());
     }

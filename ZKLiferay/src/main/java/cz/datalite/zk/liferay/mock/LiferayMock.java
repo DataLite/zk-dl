@@ -80,8 +80,9 @@ public class LiferayMock implements ServletContextAware
     public void initLiferay()
     {
         // check if Liferay is available and skip mocking
-        if (isLiferayRunning())
+        if (isLiferayRunning()) {
             return;
+        }
 
         PortalMockFactory portalMockFactory = new PortalMockFactory(companyMockFactory, userMockFactory);
         portalMockFactory.initLiferay();
@@ -92,8 +93,9 @@ public class LiferayMock implements ServletContextAware
             LOGGER.warn( "The file /WEB-INF/liferay-portlet.xml does not exists, role mapper will not be available" );
             liferayRoleMapper = new HashMap<String, String>();
         }
-        else
+        else {
             liferayRoleMapper = new LiferayRoleMapper(liferayPortletXml);
+        }
     }
 
     // remember the servlet context (injected via Spring)

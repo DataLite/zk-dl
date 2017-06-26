@@ -38,8 +38,11 @@ public class ListitemTemplate implements Template {
         //create template components & add binding expressions
         Listitem listitem = new Listitem();
         // append child
-        if ( insertBefore == null ) parent.appendChild( listitem );
-        else parent.insertBefore( listitem, insertBefore );
+        if ( insertBefore == null ) {
+            parent.appendChild(listitem);
+        } else {
+            parent.insertBefore(listitem, insertBefore);
+        }
 
 
         if (labels.length == 0)
@@ -54,7 +57,9 @@ public class ListitemTemplate implements Template {
             }
         }
 
-        if ( description != null ) createCell( listitem, description );
+        if ( description != null ) {
+            createCell(listitem, description);
+        }
 
         return new Component[]{ listitem };
     }

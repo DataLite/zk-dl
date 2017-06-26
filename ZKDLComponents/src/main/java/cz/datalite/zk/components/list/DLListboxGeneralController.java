@@ -587,12 +587,14 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         pagingController.fireChanges();
 
         // apply profile without data reload
-        if (profileManagerController != null)
+        if (profileManagerController != null) {
             profileManagerController.onLoadProfile(false);
+        }
 
         // reload data depending on loadDataOnCreate setup
-        if (listboxController.isLoadDataOnCreate())
+        if (listboxController.isLoadDataOnCreate()) {
             refreshDataModel();
+        }
     }
 
     public void clearFilterModel() {

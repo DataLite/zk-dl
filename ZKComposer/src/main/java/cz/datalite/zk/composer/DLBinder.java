@@ -237,10 +237,14 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
             // initialize the parent (as well as the @init in children)
             super.doBeforeComposeChildren( comp );
         } catch (Exception e) {
-            if (comp.getParent() != null) comp.setParent(null);
+            if (comp.getParent() != null) {
+                comp.setParent(null);
+            }
             throw e;
         } catch (Error e) {
-            if (comp.getParent() != null) comp.setParent(null);
+            if (comp.getParent() != null) {
+                comp.setParent(null);
+            }
             throw e;
         }
     }
@@ -263,8 +267,9 @@ public class DLBinder<T extends Component, S extends DLMainModel> extends BindCo
         // register modified DLBinderImpl to provide the support to Zk annotations
         //  do it only if another binder is not already defined
         final ComponentCtrl extendedComponent = (( ComponentCtrl ) comp);
-        if ( extendedComponent.getAnnotations( "binder" ).isEmpty() )
-            extendedComponent.addAnnotation( "binder", "init", Collections.singletonMap( "value", new String[]{ "'cz.datalite.zk.bind.AnnotationBinder'" } ) );
+        if ( extendedComponent.getAnnotations( "binder" ).isEmpty() ) {
+            extendedComponent.addAnnotation("binder", "init", Collections.singletonMap("value", new String[]{"'cz.datalite.zk.bind.AnnotationBinder'"}));
+        }
 
         // setup Master / detail relationship
         MasterDetailUtils.setupMasterController( this, comp );

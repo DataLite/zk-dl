@@ -12,8 +12,12 @@ import org.hibernate.usertype.UserType;
 public abstract class AbstractUserType implements UserType {
 
     public boolean equals(Object x, Object y) throws HibernateException {
-        if (x == y) return true;
-        if (x == null || y == null) return false;
+        if (x == y) {
+            return true;
+        }
+        if (x == null || y == null) {
+            return false;
+        }
         return x.equals(y);
     }
 

@@ -61,22 +61,26 @@ public class CascadeUtil<T> {
      * Finally method calls addParent(lovbox.getController(), lovbox.getParentCascadeColumn()).
      */
     public void addDefaultParent( final CascadableComponent component ) {
-        if ( component.getParentCascadeId() == null )
+        if ( component.getParentCascadeId() == null ) {
             return;
+        }
 
         Component parent = component.getFellowIfAny( component.getParentCascadeId() );
-        if ( parent == null && ZKBinderHelper.hasBinder( component ) )
-            parent = component.getFellow( component.getParentCascadeId() );
+        if ( parent == null && ZKBinderHelper.hasBinder( component ) ) {
+            parent = component.getFellow(component.getParentCascadeId());
+        }
 
-        if ( parent == null )
-            throw new UiException( "parentComboId component not found for component: " + component );
-        else if ( !( parent instanceof CascadableComponent ) )
-            throw new UiException( "parentComboId must refer to component of type CascadableComponent for component: " + component );
+        if ( parent == null ) {
+            throw new UiException("parentComboId component not found for component: " + component);
+        } else if ( !( parent instanceof CascadableComponent ) ) {
+            throw new UiException("parentComboId must refer to component of type CascadableComponent for component: " + component);
+        }
 
 
         // ensure controller is loaded
-        if ( ZKBinderHelper.hasBinder( parent ) )
-            ZKBinderHelper.loadComponentAttribute( parent, "controller" );
+        if ( ZKBinderHelper.hasBinder( parent ) ) {
+            ZKBinderHelper.loadComponentAttribute(parent, "controller");
+        }
 
         addParent( ( (CascadableComponent) parent ).getCascadableController(), component.getParentCascadeColumn() );
     }

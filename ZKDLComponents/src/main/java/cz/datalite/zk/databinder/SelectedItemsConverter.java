@@ -25,8 +25,9 @@ public class SelectedItemsConverter implements TypeConverter, java.io.Serializab
         Set selectedModels = (Set) val;
         Set<Listitem> selectedItems = new HashSet<Listitem>();
 
-        if (selectedModels == null)
+        if (selectedModels == null) {
             return selectedItems;
+        }
 
         for (Object selecteModel : selectedModels) {
             if (xmodel instanceof BindingListModel) {

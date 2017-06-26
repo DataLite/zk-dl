@@ -54,8 +54,10 @@ public class InvokeListener implements EventListener {
      * @throws Exception something went wrong
      */
     public static void invoke( Context context ) throws Exception {
-        if ( context.getInvoker().doBeforeInvoke( context ) )
-            if ( context.getInvoker().invoke( context ) )
-                context.getInvoker().doAfterInvoke( context );
+        if ( context.getInvoker().doBeforeInvoke( context ) ) {
+            if (context.getInvoker().invoke(context)) {
+                context.getInvoker().doAfterInvoke(context);
+            }
+        }
     }
 }

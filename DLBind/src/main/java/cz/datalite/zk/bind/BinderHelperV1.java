@@ -32,8 +32,9 @@ import org.zkoss.zkplus.databind.DataBinder;
 
     public void loadComponentAttribute( Component comp, String attribute ) {
         Binding bind = getBinder( comp ).getBinding( comp, attribute );
-        if ( bind != null )
-            bind.loadAttribute( comp );
+        if ( bind != null ) {
+            bind.loadAttribute(comp);
+        }
     }
 
     public boolean saveComponent( Component comp ) {

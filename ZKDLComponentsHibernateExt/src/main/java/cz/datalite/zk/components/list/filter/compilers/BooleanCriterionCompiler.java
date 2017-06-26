@@ -66,13 +66,14 @@ public class BooleanCriterionCompiler extends FilterCriterionCompiler  {
      * @return true if null, String or boolean
      */
     public boolean validateValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return true;
-        else if (value instanceof String)
+        } else if (value instanceof String) {
             return true;
-        else if ( (value instanceof Boolean) || (Boolean.TYPE.equals( value.getClass() )) )
+        } else if ( (value instanceof Boolean) || (Boolean.TYPE.equals( value.getClass() )) ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

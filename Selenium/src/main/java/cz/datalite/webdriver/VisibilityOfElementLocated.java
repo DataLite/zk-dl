@@ -51,10 +51,11 @@ public class VisibilityOfElementLocated implements ExpectedCondition<Boolean>
      * @throws NoSuchElementException If no matching elements are found
      */
     public Boolean apply(WebDriver driver) {
-            if (parent == null)
+            if (parent == null) {
                 driver.findElement(this.findCondition);
-            else
+            } else {
                 parent.findElement(this.findCondition);
+            }
             return true;
     }
 }

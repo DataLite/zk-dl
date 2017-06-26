@@ -98,7 +98,9 @@ public class HeadCell implements Cell {
     }
 
     public Integer getX() {
-        if ( x == null ) return 0;
+        if ( x == null ) {
+            return 0;
+        }
         return x;
     }
 
@@ -115,7 +117,9 @@ public class HeadCell implements Cell {
     }
 
     public Integer getY() {
-        if ( y == null ) return 0;
+        if ( y == null ) {
+            return 0;
+        }
         return y;
     }
 

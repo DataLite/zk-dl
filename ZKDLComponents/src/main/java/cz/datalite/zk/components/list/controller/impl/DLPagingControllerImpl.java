@@ -73,8 +73,9 @@ public class DLPagingControllerImpl implements DLPagingController {
 
     public int getRowCount()
     {
-        if (!supportsRowCount())
+        if (!supportsRowCount()) {
             throw new IllegalStateException("Listbox controller does not support rowcount.");
+        }
 
         return ((RowCount)masterController).rowCount(masterController.getNormalFilterModel());
 

@@ -44,8 +44,9 @@ public class HashMapAutoCreate<K, V> extends HashMap<K, V> implements MapAutoCre
 
     @Override
     public V put( final K key, final V value ) {
-        if ( !containsKey( key ) )
-            get( key );
+        if ( !containsKey( key ) ) {
+            get(key);
+        }
         return super.put( key, value );
     }
 }

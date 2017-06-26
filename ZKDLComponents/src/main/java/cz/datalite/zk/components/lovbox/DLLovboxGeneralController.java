@@ -72,8 +72,9 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
             // initialize component - set atributes and controllers
             lovbox.init();
             cascadeUtil.addDefaultParent(lovbox);
-        } else
-            throw new IllegalAccessException( "DLLovboxGeneralController is applicable only on DLLovbox component." );
+        } else {
+            throw new IllegalAccessException("DLLovboxGeneralController is applicable only on DLLovbox component.");
+        }
     }
 
     public DLListboxExtController<T> getListboxExtController() {
@@ -178,8 +179,9 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
     }
 
     public void invalidateListboxModel() {
-        if (!getListboxController().isLocked())
-           getListboxController().clearDataModel();
+        if (!getListboxController().isLocked()) {
+            getListboxController().clearDataModel();
+        }
         getListboxController().lockModel();
     }
 

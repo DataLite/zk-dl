@@ -409,10 +409,11 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
             return DLFilterOperator.EQUAL;
         } else {
             if ( FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) { // Is the default configuration known for this type?
-                if (value != null)
-                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator(value);
-                else
-                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator();
+                if (value != null) {
+                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get(columnType).getQuickOperator(value);
+                } else {
+                    return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get(columnType).getQuickOperator();
+                }
             } else {
                 LOGGER.debug( "Unknown datatype was used in listbox quick filter. For type '{}' have been used EQUAL operator.", columnType.getCanonicalName() );
                 return DLFilterOperator.EQUAL;
@@ -467,8 +468,9 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
      * @return -1 if first less then other, 0 if same, 1 otherwise.
      */
 	public int compareTo(DLColumnUnitModel o) {
-		if (o == null)
-			return 0;
+		if (o == null) {
+            return 0;
+        }
 		return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
 	}
 

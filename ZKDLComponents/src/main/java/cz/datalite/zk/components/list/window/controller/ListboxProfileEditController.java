@@ -60,10 +60,11 @@ public class ListboxProfileEditController {
         this.profile = profile;
 
         // init categories
-        if (profileCategories != null)
+        if (profileCategories != null) {
             this.profileCategories = new ArrayList<DLListboxProfileCategory>(profileCategories);
-        else
+        } else {
             this.profileCategories = new ArrayList<DLListboxProfileCategory>();
+        }
 
         categoriesDefined = !this.profileCategories.isEmpty();
 

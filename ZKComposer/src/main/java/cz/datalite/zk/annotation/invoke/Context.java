@@ -70,14 +70,16 @@ public class Context {
     }
     
     public void putParameter( final String key, final Object value ) {
-        if ( parameters.containsKey( key ) )
-            LOGGER.warn( "Attempt to overwrite context parameter '{}'"
+        if ( parameters.containsKey( key ) ) {
+            LOGGER.warn("Attempt to overwrite context parameter '{}'"
                     + " but it is not allowed to prevent accidental"
                     + " overwriting of the value by another handler."
                     + " The request was ignore, value remained unchanged."
                     + " If it was the intention look at the method"
-                    + " removeParameter().", key );
-        else parameters.put( key, value );
+                    + " removeParameter().", key);
+        } else {
+            parameters.put(key, value);
+        }
     }
     
     public Object getParameter( final String key ) {
@@ -85,8 +87,10 @@ public class Context {
     }
     
     public void removeParameter ( final String key ) {
-        if ( parameters.containsKey( key ) )
-            parameters.remove( key );
-        else LOGGER.warn( "Attempt to remove context parameter '{}' but it is not set.", key );
+        if ( parameters.containsKey( key ) ) {
+            parameters.remove(key);
+        } else {
+            LOGGER.warn("Attempt to remove context parameter '{}' but it is not set.", key);
+        }
     }
 }

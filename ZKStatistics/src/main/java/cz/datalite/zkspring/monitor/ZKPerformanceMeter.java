@@ -1,10 +1,11 @@
 package cz.datalite.zkspring.monitor;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.PerformanceMeter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Performance utility class
@@ -77,19 +78,27 @@ public class ZKPerformanceMeter implements PerformanceMeter
     }
 
     public void requestStartAtClient(String requestId, Execution exec, long time) {
-        if (isStatisticsEnabled(exec)) getCurrentRequestStatistics(requestId, exec).setTimeStartAtClient(time);
+        if (isStatisticsEnabled(exec)) {
+            getCurrentRequestStatistics(requestId, exec).setTimeStartAtClient(time);
+        }
     }
 
     public void requestCompleteAtClient(String requestId, Execution exec, long time) {
-        if (isStatisticsEnabled(exec)) getCurrentRequestStatistics(requestId, exec).setTimeCompleteAtClient(time);
+        if (isStatisticsEnabled(exec)) {
+            getCurrentRequestStatistics(requestId, exec).setTimeCompleteAtClient(time);
+        }
     }
 
     public void requestReceiveAtClient(String requestId, Execution exec, long time) {
-        if (isStatisticsEnabled(exec)) getCurrentRequestStatistics(requestId, exec).setTimeRecieveAtClient(time);
+        if (isStatisticsEnabled(exec)) {
+            getCurrentRequestStatistics(requestId, exec).setTimeRecieveAtClient(time);
+        }
     }
 
     public void requestStartAtServer(String requestId, Execution exec, long time) {
-        if (isStatisticsEnabled(exec)) getCurrentRequestStatistics(requestId, exec).setTimeStartAtServer(time);
+        if (isStatisticsEnabled(exec)) {
+            getCurrentRequestStatistics(requestId, exec).setTimeStartAtServer(time);
+        }
     }
 
     public void requestCompleteAtServer(String requestId, Execution exec, long time) {

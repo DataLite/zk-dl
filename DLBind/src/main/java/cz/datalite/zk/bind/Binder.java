@@ -75,8 +75,9 @@ public class Binder extends AnnotateBinder {
             if ( TypeConverter.class.isAssignableFrom( converter ) ) {
                 LOGGER.debug( "Converter '{}' is not directly support in ZK 6 and later. You should consider conversion to 'org.zkoss.bind.Converter'.", converter.getClass() );
                 return new TypeConverterAdapter( ( TypeConverter ) converter.newInstance() );
-            } else
-                throw new ClassNotFoundException( "Convertor has to implement 'Converter' or 'TypeConverter' interface." );
+            } else {
+                throw new ClassNotFoundException("Convertor has to implement 'Converter' or 'TypeConverter' interface.");
+            }
         } catch ( InstantiationException ex ) {
             LOGGER.error( "Converter adapter couldn't be created.", ex );
             throw new UiException( ex );

@@ -56,11 +56,13 @@ public class ZkBindingHandler extends Handler {
         List<String> saveBefore = new ArrayList<String>();
         for ( ZkBinding binding : annotation.bindings() ) {
             // load all components defined in binding annotation
-            if (binding.loadAfter())
-                loadAfter.add( binding.component() );
+            if (binding.loadAfter()) {
+                loadAfter.add(binding.component());
+            }
 
-            if (binding.saveBefore())
+            if (binding.saveBefore()) {
                 saveBefore.add(binding.component());
+            }
         }
         return new ZkBindingHandler( inner, saveBefore, loadAfter );
     }

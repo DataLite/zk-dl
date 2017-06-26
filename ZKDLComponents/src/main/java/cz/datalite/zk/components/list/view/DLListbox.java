@@ -127,20 +127,21 @@ public class DLListbox extends Listbox {
      * @return true if the first is selected, false if list is empty
      */
     public boolean selectFirstRow() {
-        if ( controller == null && isSelectFirstRow() && getModel() != null && getModel() instanceof Selectable )
-            if ( getModel().getSize() > 0 ) {
-                if ( getSelectedItems().isEmpty() ) {
-                    final Selectable model = ( Selectable ) getModel();
+        if ( controller == null && isSelectFirstRow() && getModel() != null && getModel() instanceof Selectable ) {
+            if (getModel().getSize() > 0) {
+                if (getSelectedItems().isEmpty()) {
+                    final Selectable model = (Selectable) getModel();
                     model.clearSelection();
-                    model.addToSelection( getModel().getElementAt( 0 ) );
-                    Set selected = Collections.singleton( getModel().getElementAt( 0 ) );
-                    Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, getSelectedItems(), selected, DLListbox.this, null, 0 ) );
+                    model.addToSelection(getModel().getElementAt(0));
+                    Set selected = Collections.singleton(getModel().getElementAt(0));
+                    Events.sendEvent(new SelectEvent(Events.ON_SELECT, DLListbox.this, getSelectedItems(), selected, DLListbox.this, null, 0));
                 }
                 return true;
             } else {
-                Events.sendEvent( new SelectEvent( Events.ON_SELECT, DLListbox.this, Collections.emptySet(), Collections.emptySet(), DLListbox.this, null, 0 ) );
+                Events.sendEvent(new SelectEvent(Events.ON_SELECT, DLListbox.this, Collections.emptySet(), Collections.emptySet(), DLListbox.this, null, 0));
                 return false;
             }
+        }
         return false;
     }
 
@@ -213,8 +214,9 @@ public class DLListbox extends Listbox {
         super.setItemRenderer( renderer );
         if ( controller != null ) {
             // it contains the one listheader and one listitem which is the template
-            if ( ZKBinderHelper.version( this ) == 1 && getItems().size() == 1 )
-                controller.setRendererTemplate( getItemAtIndex( 0 ) );
+            if ( ZKBinderHelper.version( this ) == 1 && getItems().size() == 1 ) {
+                controller.setRendererTemplate(getItemAtIndex(0));
+            }
         }
     }
     
@@ -227,27 +229,32 @@ public class DLListbox extends Listbox {
 
         // controller doesn't support multiple select item. Setup selected index only if controller has selected item
         if ( controller != null ) {
-            if ( getModel().getSize() > 0 )
-                if ( getModel() instanceof Selectable ) {
-                    final Selectable model = ( Selectable ) getModel();
+            if ( getModel().getSize() > 0 ) {
+                if (getModel() instanceof Selectable) {
+                    final Selectable model = (Selectable) getModel();
                     model.clearSelection();
-                    for ( Object selected : controller.getSelectedItems() ) {
-                        model.addToSelection( selected );
+                    for (Object selected : controller.getSelectedItems()) {
+                        model.addToSelection(selected);
                     }
                     onInitRender = true;
-                    Events.sendEvent( new SelectEvent( Events.ON_SELECT, this, getSelectedItems(), controller.getSelectedItems(), this, null, 0 ) );
+                    Events.sendEvent(new SelectEvent(Events.ON_SELECT, this, getSelectedItems(), controller.getSelectedItems(), this, null, 0));
                     onInitRender = false;
-                } else
-                    LOGGER.warn( "Model wasn't recognized, the first row was not selected." );
-            else
-                Events.postEvent( DLListboxEvents.ON_SELECTED_HIDE, this, null );
-        } else selectFirstRow();
+                } else {
+                    LOGGER.warn("Model wasn't recognized, the first row was not selected.");
+                }
+            } else {
+                Events.postEvent(DLListboxEvents.ON_SELECTED_HIDE, this, null);
+            }
+        } else {
+            selectFirstRow();
+        }
         
         // update disabled status on rerender
         // by default we suppose that the items are enabled
         // so it needs to be updated only when disabled
-        if ( !getItems().isEmpty() && isDisabled() )
-            setDisabled( true );
+        if ( !getItems().isEmpty() && isDisabled() ) {
+            setDisabled(true);
+        }
     }
 
     public boolean isOnInitRender() {
@@ -274,8 +281,9 @@ public class DLListbox extends Listbox {
     }
     
     /** package */ void updateListItem( Listitem item ) {
-        if ( controller != null)
-            controller.updateListItem( item );
+        if ( controller != null) {
+            controller.updateListItem(item);
+        }
     }
 
     class OnCreateListener implements EventListener<Event> {
@@ -291,8 +299,9 @@ public class DLListbox extends Listbox {
             if ( controller != null ) {
                 controller.onCreate();
                 // new data binding uses the special renderer
-                if ( ZKBinderHelper.version( DLListbox.this ) == 2 )
-                    setItemRenderer( new DLListitemRenderer() );
+                if ( ZKBinderHelper.version( DLListbox.this ) == 2 ) {
+                    setItemRenderer(new DLListitemRenderer());
+                }
             } else {
                 // no controller to change emptyMessage behaviour
                 setEmptyMessageVisible(true);
@@ -340,9 +349,10 @@ public class DLListbox extends Listbox {
      * @param visible show / hide the message
      */
     public void setEmptyMessageVisible(boolean visible) {
-        if (visible)
+        if (visible) {
             super.setEmptyMessage(emptyMessage);
-        else
+        } else {
             super.setEmptyMessage("");
+        }
     }
 }

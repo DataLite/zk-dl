@@ -80,8 +80,9 @@ public class Listbox extends ZkElement {
                 zkDriver.sleep(100);
             }
 
-            if (recoveryCount == 0)
+            if (recoveryCount == 0) {
                 throw new StaleElementReferenceException("Listheader " + index + " shows StaleElementReferenceException even after 10 retry.");
+            }
         }
     }
 
@@ -100,8 +101,9 @@ public class Listbox extends ZkElement {
             zkDriver.sleep(100);
         }
 
-        if (recoveryCount == 0)
+        if (recoveryCount == 0) {
             throw new ElementNotVisibleException("Listheader " + listheader + " not visible even after 10 retry.");
+        }
 
         zkDriver.waitForProcessing();
     }

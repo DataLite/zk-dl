@@ -1,9 +1,5 @@
 package cz.datalite.dao;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
-
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.helpers.StringHelper;
 import org.hibernate.Criteria;
@@ -12,6 +8,9 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.sql.JoinType;
 
 import javax.persistence.Embedded;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * <p>Class for transfer filter parameters like criterion, sort, paging and projection.</p>
@@ -238,10 +237,11 @@ public class DLSearch<T> {
             // resolve current path (parentAlias + embeddablePrefix + property)
             String currentPath;
             if (parentAlias == null) {
-                if (!StringHelper.isNull(embeddablePrefix))
+                if (!StringHelper.isNull(embeddablePrefix)) {
                     currentPath = embeddablePrefix.substring(1) + "." + property;
-                else
+                } else {
                     currentPath = property;
+                }
             } else {
                 currentPath = parentAlias.getAlias() + embeddablePrefix + "." + property                ;
             }
@@ -294,8 +294,9 @@ public class DLSearch<T> {
      * @return existing or new alias name
      */
     public void addFetch( final String ... paths) {
-        for (String path : paths)
+        for (String path : paths) {
             addAlias(path, JoinType.LEFT_OUTER_JOIN);
+        }
     }
 
     /**
@@ -309,8 +310,9 @@ public class DLSearch<T> {
      * @return existing or new alias name
      */
     public void addFetches( final String ... fullPaths) {
-        for (String fullPath : fullPaths)
+        for (String fullPath : fullPaths) {
             addAliases(fullPath, JoinType.LEFT_OUTER_JOIN);
+        }
     }
 
     /**
@@ -336,12 +338,14 @@ public class DLSearch<T> {
 
         // expand full Path
         for (String part : parsePath(path)) {
-            if (fullPath.length() > 0)
+            if (fullPath.length() > 0) {
                 fullPath.append(".");
-          if (getAlias(part) != null)
+            }
+          if (getAlias(part) != null) {
               fullPath.append(getAlias(part).getFullPath());
-          else
+          } else {
               fullPath.append(part);
+          }
         }
 
         // and call full path variant
@@ -526,16 +530,18 @@ public class DLSearch<T> {
 
 
     protected Class resolvePropertyClass(Class parent, String property) {
-        if (parent == null)
+        if (parent == null) {
             return null;
+        }
 
         try {
             Field field = ReflectionHelper.getDeclaredField(parent, property);
             return field.getType();
         } catch (NoSuchFieldException e) {
             Method method = ReflectionHelper.getFieldGetter(parent, property);
-            if (method == null)
+            if (method == null) {
                 throw new IllegalArgumentException("Class " + parent + " does not contain property " + property);
+            }
 
             return method.getReturnType();
         }
@@ -543,8 +549,9 @@ public class DLSearch<T> {
 
    public boolean isEmbeddableField(Class clazz, String property) {
        // if class is not known, there is no way how to check embeddable
-       if (clazz == null)
+       if (clazz == null) {
            return false;
+       }
 
         // check annotation on the field
         Field field = null;
@@ -552,17 +559,20 @@ public class DLSearch<T> {
             field = ReflectionHelper.getDeclaredField(clazz, property);
         } catch (NoSuchFieldException e) { }
 
-        if (field != null && ReflectionHelper.findAnnotation(field, Embedded.class) != null)
+        if (field != null && ReflectionHelper.findAnnotation(field, Embedded.class) != null) {
             return true;
+        }
 
         // if not found, check the method
         Method method = ReflectionHelper.getFieldGetter(clazz, property);
-        if (method != null && ReflectionHelper.findAnnotation(method, Embedded.class) != null)
+        if (method != null && ReflectionHelper.findAnnotation(method, Embedded.class) != null) {
             return true;
+        }
 
         // neither field nor property - this property is not found at all!
-        if (field == null && method == null)
+        if (field == null && method == null) {
             throw new IllegalArgumentException("Class " + clazz + " does not contain property " + property);
+        }
 
         return false;
     }

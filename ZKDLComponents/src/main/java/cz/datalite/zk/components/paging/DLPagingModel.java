@@ -53,8 +53,9 @@ public class DLPagingModel {
     }
 
     protected void setPagesCount() {
-        if ( totalSize != UNKNOWN_TOTAL_SIZE )
-            this.pageCount = (int) Math.ceil( totalSize * 1.0 / pageSize );
+        if ( totalSize != UNKNOWN_TOTAL_SIZE ) {
+            this.pageCount = (int) Math.ceil(totalSize * 1.0 / pageSize);
+        }
     }
 
     public Integer getTotalSize() {
@@ -67,13 +68,15 @@ public class DLPagingModel {
             {
                 // special case when rows  = 0 and actual page > 0 - we are out of page range -
                 // still do not know total size.
-                if (getActualPage() == 0 || rowsOnThisPage != 0)
+                if (getActualPage() == 0 || rowsOnThisPage != 0) {
                     totalSize = actualPage * pageSize + rowsOnThisPage;
+                }
             }
         }
         else {
-            if ( totalItems < 0 )
-                throw new WrongValueException( "Total size have to be possitive or zero." );
+            if ( totalItems < 0 ) {
+                throw new WrongValueException("Total size have to be possitive or zero.");
+            }
             this.totalSize = totalItems;
         }
         this.rowsOnPage = rowsOnThisPage;

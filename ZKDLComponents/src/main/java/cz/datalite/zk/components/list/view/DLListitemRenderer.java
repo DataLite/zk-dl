@@ -29,8 +29,9 @@ public class DLListitemRenderer extends BindListitemRenderer {
             
             // update column order based on the model
             listbox.updateListItem(newItem);
-        } else
-            throw new IllegalStateException( "The 'DLListitemRenderer' is intended to be used with 'DLListbox' only. Please use pure 'BindListitemRenderer' instead." );
+        } else {
+            throw new IllegalStateException("The 'DLListitemRenderer' is intended to be used with 'DLListbox' only. Please use pure 'BindListitemRenderer' instead.");
+        }
 
 
     }

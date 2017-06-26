@@ -673,9 +673,10 @@ public class DLComposer<T extends DLMainModel> extends GenericAutowireComposer i
                     Component target = component.getFellowIfAny( id );
 
                     if ( target == null ) {
-                        if (((ZkComponent)annot).mandatory())
-                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
-                                + "Component not found in idspace of composer self component '" + component.getId() + "'." );
+                        if (((ZkComponent)annot).mandatory()) {
+                            throw new IllegalArgumentException("@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
+                                    + "Component not found in idspace of composer self component '" + component.getId() + "'.");
+                        }
                     } else {
                         try {
                             field.setAccessible( true );

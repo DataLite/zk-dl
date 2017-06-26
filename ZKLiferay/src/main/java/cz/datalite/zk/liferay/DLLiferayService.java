@@ -167,17 +167,21 @@ public class DLLiferayService {
      * @return theme display
      */
     public ThemeDisplay getThemeDisplay() {
-        if (liferayMock != null && liferayMock.isLiferayRunning())
+        if (liferayMock != null && liferayMock.isLiferayRunning()) {
             if (Executions.getCurrent() != null) // ZK is running
+            {
                 return (ThemeDisplay) Executions.getCurrent().getSession().getAttribute(WebKeys.THEME_DISPLAY);
-            else if (RequestContextHolder.getRequestAttributes() != null) // Spring context listener
+            } else if (RequestContextHolder.getRequestAttributes() != null) // Spring context listener
+            {
                 return (ThemeDisplay) RequestContextHolder.getRequestAttributes().
                         getAttribute(WebKeys.THEME_DISPLAY, RequestAttributes.SCOPE_REQUEST);
-            else // do not know where to get ThemeDisplay
+            } else // do not know where to get ThemeDisplay
+            {
                 throw new LiferayException("Unable to get ThemeDisplay - DLLiferayService can be used only in ZK or Spring context.");
-
-        else
+            }
+        } else {
             return getMockedThemeDisplay();
+        }
     }
 
     /**
@@ -204,8 +208,9 @@ public class DLLiferayService {
      */
     public boolean isAnyGranted(String authorities) {
         for (String role : authorities.split(",")) {
-            if (isUserInRole(role))
+            if (isUserInRole(role)) {
                 return true;
+            }
 
         }
 
@@ -219,8 +224,9 @@ public class DLLiferayService {
      */
     public boolean isAllGranted(String authorities) {
         for (String role : authorities.split(",")) {
-            if (!isUserInRole(role))
+            if (!isUserInRole(role)) {
                 return false;
+            }
 
         }
 
@@ -234,8 +240,9 @@ public class DLLiferayService {
      */
     public boolean isNoneGranted(String authorities) {
         for (String role : authorities.split(",")) {
-            if (isUserInRole(role))
+            if (isUserInRole(role)) {
                 return false;
+            }
 
         }
 
@@ -251,10 +258,11 @@ public class DLLiferayService {
      */
     public boolean isUserInRole(String role) {
 
-        if (!isLiferayRunning())
+        if (!isLiferayRunning()) {
             return isUserInRoleMock(role);
-        else
+        } else {
             return isUserInRoleLiferay(role);
+        }
     }
 
 
@@ -275,13 +283,15 @@ public class DLLiferayService {
         long companyId = getCompanyId();
 
         // not active user,
-        if (user == null)
+        if (user == null) {
             return false;
+        }
 
         Map<String, String> roleMappers = (Map<String, String>) Executions.getCurrent().getSession().getAttribute(DLPortlet.ROLE_MAPPERS);
 
-        if (roleMappers == null)
+        if (roleMappers == null) {
             throw new LiferayException("Session attribute DLPortlet.ROLE_MAPPERS not found. Do you use DLPortlet in your portlet.xml configuration?");
+        }
 
 
         // translate the role
@@ -290,10 +300,12 @@ public class DLLiferayService {
         try
         {
             // if translated, check the role
-            if (!StringHelper.isNull(roleLink))
+            if (!StringHelper.isNull(roleLink)) {
                 return RoleLocalServiceUtil.hasUserRole(user.getUserId(), companyId, roleLink, true);
-            else // use Liferay original role directly
+            } else // use Liferay original role directly
+            {
                 return RoleLocalServiceUtil.hasUserRole(user.getUserId(), companyId, role, true);
+            }
         } catch (PortalException e) {
             throw new LiferayException(e);
         } catch (SystemException e) {
@@ -305,12 +317,13 @@ public class DLLiferayService {
     protected boolean isUserInRoleMock(String role) {
         Map<String, String> roleMappers = liferayMock.getLiferayRoleMapper();
         String roleLink = roleMappers.get(role);
-        if (StringHelper.isNull(roleLink))
+        if (StringHelper.isNull(roleLink)) {
             return false;
-        else if ("NOBODY".equals(roleLink))
+        } else if ("NOBODY".equals(roleLink)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
 

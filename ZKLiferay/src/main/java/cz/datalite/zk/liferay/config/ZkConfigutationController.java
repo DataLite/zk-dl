@@ -257,11 +257,13 @@ public class ZkConfigutationController<T extends DLMainModel> extends DLComposer
         try {
             Enumeration<String> keys = getPreferences().getNames();
             List<String> keysToReset = new ArrayList<String>();
-            while(keys.hasMoreElements())
+            while(keys.hasMoreElements()) {
                 keysToReset.add(keys.nextElement());
+            }
             
-            for (String key : keysToReset)
+            for (String key : keysToReset) {
                 getPreferences().reset(key);
+            }
 
 
             // load all bindings

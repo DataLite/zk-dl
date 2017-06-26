@@ -49,10 +49,12 @@ public abstract class GenericLiferayDAOImpl<T, ID extends Serializable> extends 
         {
             LiferayEntity liferayEntity = (LiferayEntity) entity;
 
-            if (liferayEntity.getCOMPANYID() == null)
+            if (liferayEntity.getCOMPANYID() == null) {
                 liferayEntity.setCOMPANYID(dlLiferayService.getCompanyId());
-            if (liferayEntity.getGROUPID() == null)
+            }
+            if (liferayEntity.getGROUPID() == null) {
                 liferayEntity.setGROUPID(dlLiferayService.getGroupId());
+            }
         }
 
         return super.makePersistent(entity);

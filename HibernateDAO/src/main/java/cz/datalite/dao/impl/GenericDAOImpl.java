@@ -46,11 +46,14 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         ParameterizedType parametrizedType;
 
         if (getClass().getGenericSuperclass() instanceof ParameterizedType) // class
+        {
             parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        else if (getClass().getGenericSuperclass() instanceof Class) // in case of CGLIB proxy
-            parametrizedType = (ParameterizedType) ((Class)getClass().getGenericSuperclass()).getGenericSuperclass();
-        else
+        } else if (getClass().getGenericSuperclass() instanceof Class) // in case of CGLIB proxy
+        {
+            parametrizedType = (ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass();
+        } else {
             throw new IllegalStateException("GenericDAOImpl - class " + getClass() + " is not subtype of ParametrizedType.");
+        }
 
 
         this.persistentClass = ( Class<T> ) parametrizedType.getActualTypeArguments()[0];
@@ -88,8 +91,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         Criteria criteria = getSession().createCriteria( getPersistentClass() );
         criteria.add(Restrictions.idEq(id));
 
-        for (String p : associationPath)
+        for (String p : associationPath) {
             criteria.setFetchMode(p, FetchMode.JOIN);
+        }
 
         return ( T ) criteria.uniqueResult();
     }
@@ -104,8 +108,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         Criteria criteria = getSession().createCriteria( getPersistentClass() );
         criteria.add(Restrictions.idEq( entityInformation.getId(entity) ));
 
-        for (String p : path)
+        for (String p : path) {
             criteria.setFetchMode(p, FetchMode.JOIN);
+        }
 
         return ( T ) criteria.uniqueResult();
     }
@@ -168,8 +173,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert entity != null : INVALID_ARGUMENT_ENTITY_MISSING;
 
         // JPA forbids deletion of detached object (although in Hibernate itself it is legal).
-        if (!getSession().contains( entity ))
+        if (!getSession().contains( entity )) {
             reattach(entity);
+        }
 
         getSession().delete( entity );
     }
@@ -290,10 +296,11 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // converts row count number from long to int
         Object result = cnt.get( 0 );
         // result type of count depends on Hibernate version
-        if (result instanceof Long)
-            return (( Long ) cnt.get( 0 )).intValue();
-        else
+        if (result instanceof Long) {
+            return ((Long) cnt.get(0)).intValue();
+        } else {
             return (Integer) cnt.get(0);
+        }
     }
 
     /**
@@ -311,8 +318,9 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         // add sort aliases
         for ( final Iterator<DLSort> it = search.getSorts(); it.hasNext(); ) {
             final DLSort sort = it.next();
-            if (sort.getColumn() != null)
+            if (sort.getColumn() != null) {
                 search.addAliasesForProperty(sort.getColumn(), JoinType.LEFT_OUTER_JOIN);
+            }
         }
 
         // write aliases
@@ -366,10 +374,11 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         int cnt;
 
         // if page actual results < size, we can use results, othewise go to the database
-        if (result.size() < search.getRowCount())
+        if (result.size() < search.getRowCount()) {
             cnt = search.getFirstRow() + result.size();
-        else
-            cnt = count( search );
+        } else {
+            cnt = count(search);
+        }
 
         return new DLResponse<T>( result, cnt );
     }

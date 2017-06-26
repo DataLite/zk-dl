@@ -51,9 +51,10 @@ public abstract class InputElement extends ZkElement {
      * @return value of component
      */
     public String getValue() {
-        if (webElement.getAttribute("value") != null)
+        if (webElement.getAttribute("value") != null) {
             return webElement.getAttribute("value");
-        else
+        } else {
             return webElement.getText();
+        }
     }
 }

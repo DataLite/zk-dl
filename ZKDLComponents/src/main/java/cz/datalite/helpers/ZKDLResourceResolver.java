@@ -32,10 +32,12 @@ public class ZKDLResourceResolver {
         themeDir = Library.getProperty(CONFIG);
         // normalize
         if (themeDir != null) {
-            if (!themeDir.endsWith("/"))
+            if (!themeDir.endsWith("/")) {
                 themeDir = themeDir + "/";
-            if (!themeDir.startsWith("~./"))
+            }
+            if (!themeDir.startsWith("~./")) {
                 themeDir = "~./js/" + themeDir;
+            }
         }
     }
 
@@ -48,10 +50,11 @@ public class ZKDLResourceResolver {
      * @return full path (e.g. /theme/dt_gray/dlzklib/js/img/menu_items_big.png)
      */
     public static String resolveImage(String image) {
-        if (themeDir == null)
+        if (themeDir == null) {
             return CONST_DEFAULT_ICON_PATH + image;
-        else
+        } else {
             return ServletFns.resolveThemeURL(themeDir + "img/" + image);
+        }
     }
 
     /**
@@ -74,11 +77,13 @@ public class ZKDLResourceResolver {
 
         // try theme resource, if not found use library resource
         InputStream result = null;
-        if (fullResourcePath != null)
+        if (fullResourcePath != null) {
             result = webApp.getResourceAsStream(fullResourcePath);
+        }
 
-        if (result == null)
+        if (result == null) {
             result = webApp.getResourceAsStream(CONST_DEFAULT_RESOURCE_PATH + resource);
+        }
 
         return result;
     }

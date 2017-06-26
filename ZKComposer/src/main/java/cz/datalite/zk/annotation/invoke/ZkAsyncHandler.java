@@ -143,20 +143,23 @@ public class ZkAsyncHandler extends Handler {
             // invokes status window informing user about operation
             final BusyBoxHandler busybox = new BusyBoxHandler( message, i18n, cancellable, component );
             if ( cancellable ) // listen for request to cancel
-                busybox.setEventListener( Events.ON_CLOSE, new EventListener() {
+            {
+                busybox.setEventListener(Events.ON_CLOSE, new EventListener() {
 
-                    public void onEvent( Event event ) throws Exception {
-                        LOGGER.trace( "Async operation was cancelled." );
+                    public void onEvent(Event event) throws Exception {
+                        LOGGER.trace("Async operation was cancelled.");
                         // race conditions - 2 threads works with interruptor, NPE prevention
-                        synchronized ( ZkAsyncHandler.this ) {
-                            final ZkCancellable interruptor = ( ZkCancellable ) context.getParameter( ASYNC_INTERCEPTOR );
-                            if ( interruptor != null )
+                        synchronized (ZkAsyncHandler.this) {
+                            final ZkCancellable interruptor = (ZkCancellable) context.getParameter(ASYNC_INTERCEPTOR);
+                            if (interruptor != null) {
                                 interruptor.cancel();
+                            }
                         }
                         // prevent window closing
                         event.stopPropagation();
                     }
-                } );
+                });
+            }
             busybox.show( context.getRoot() );
             context.putParameter( ASYNC_BUSYBOX, busybox );
 
@@ -201,8 +204,9 @@ public class ZkAsyncHandler extends Handler {
 
             // detach timer
             Timer timer = (Timer) context.getParameter( ASYNC_TIMER );
-            if (timer != null)
+            if (timer != null) {
                 timer.detach();
+            }
         }
     }
 
@@ -249,7 +253,9 @@ public class ZkAsyncHandler extends Handler {
 
             public void onEvent(Event event) throws Exception {
                 // listen for "afterAsyncEvent" only
-                if ( !"afterAsyncEvent".equals( event.getName() ) ) return;
+                if ( !"afterAsyncEvent".equals( event.getName() ) ) {
+                    return;
+                }
 
                 LOGGER.trace( "Async operation finished." );
                 // clean up queue
@@ -270,7 +276,9 @@ public class ZkAsyncHandler extends Handler {
 
             public void onEvent(Event event) throws Exception { //asynchronous
                 // listen for "doAsyncEvent" only
-                if ( ! "doAsyncEvent".equals( event.getName()) ) return;
+                if ( ! "doAsyncEvent".equals( event.getName()) ) {
+                    return;
+                }
 
                 try {
                     LOGGER.trace( "Starting async operation." );

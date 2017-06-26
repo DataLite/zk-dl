@@ -79,16 +79,18 @@ public class DLZkEvent
 
             // load the component
             final Component source;
-            if (event.id().length() == 0)
+            if (event.id().length() == 0) {
                 source = component;
-            else if (event.id().startsWith("/"))
+            } else if (event.id().startsWith("/"))
             {
                 source = Path.getComponent(event.id());
-                if (source == null)
+                if (source == null) {
                     throw new ComponentNotFoundException(event.id());
+                }
             }
-            else
-               source = component.getFellow(event.id());
+            else {
+                source = component.getFellow(event.id());
+            }
 
             if (source instanceof XulElement) {
                 if (((XulElement) source).getCtrlKeys() == null) {
@@ -124,23 +126,24 @@ public class DLZkEvent
         Vector args = new Vector();
         for (Class type : method.getParameterTypes())
         {
-            if (type.isAssignableFrom(originEvent.getClass()))
+            if (type.isAssignableFrom(originEvent.getClass())) {
                 args.add(originEvent); // unwrapped event
-            else if (type.isAssignableFrom(event.getClass()))
+            } else if (type.isAssignableFrom(event.getClass())) {
                 args.add(event);       // forward event
-            else if (type.getName().equals("int"))
+            } else if (type.getName().equals("int")) {
                 args.add(this.zkEvent.payload());      // payload has to be primitive int type
-            else if (event.getTarget() != null && type.isAssignableFrom(event.getTarget().getClass()))
+            } else if (event.getTarget() != null && type.isAssignableFrom(event.getTarget().getClass())) {
                 args.add(event.getTarget());   // target component
-            else if (originEvent.getData() != null && type.isAssignableFrom(originEvent.getData().getClass()))
+            } else if (originEvent.getData() != null && type.isAssignableFrom(originEvent.getData().getClass())) {
                 args.add(originEvent.getData());   // event data
-            else if (event.getTarget() == null && type.isAssignableFrom(Component.class))
+            } else if (event.getTarget() == null && type.isAssignableFrom(Component.class)) {
                 args.add(null); // null target component
-            else if (originEvent.getData() == null)
+            } else if (originEvent.getData() == null) {
                 args.add(null); // null data (can be of any type)
-            else
+            } else {
                 throw new NoSuchMethodException("No such method \"" + method.getName() + "\" with correct arguments for event " + event.toString() +
                         ". Unknown parameter type: " + type.getName());
+            }
         }
 
 //        final Object[][] args = new Object[][]{

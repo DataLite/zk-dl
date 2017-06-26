@@ -85,7 +85,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             public void onEvent( final org.zkoss.zk.ui.event.Event event ) throws Exception {
                 try {
                     // ignore events from method on init render
-                    if ( listbox.isOnInitRender() ) return;
+                    if ( listbox.isOnInitRender() ) {
+                        return;
+                    }
                     
                     // just selected, do not fire it again, prevent endless loop
                     notifyOnSelect = false;
@@ -279,8 +281,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         for (DLColumnUnitModel columnUnitModel : columnModel.getColumnModels() ) {
             if (!columnUnitModel.isConverter() && columnUnitModel.isExportable()) {
-                if (Boolean.class.equals(columnUnitModel.getColumnType()) && booleanConverter != null)
-                    columnUnitModel.setConverter(booleanConverter, listbox, Collections.<String,String>emptyMap());
+                if (Boolean.class.equals(columnUnitModel.getColumnType()) && booleanConverter != null) {
+                    columnUnitModel.setConverter(booleanConverter, listbox, Collections.<String, String>emptyMap());
+                }
             }
         }
     }
@@ -365,7 +368,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     
     private void updateListhead() {
         // model is not initialized
-        if ( listheaderTemplates.isEmpty() ) return;
+        if ( listheaderTemplates.isEmpty() ) {
+            return;
+        }
         
         final Listhead listhead = listbox.getListhead();
         // remove all children
@@ -376,21 +381,26 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         Collections.sort(orderedModel);
 
         for ( DLColumnUnitModel unit : orderedModel ) {
-            if ( unit.isVisible() ) listhead.appendChild( listheaderTemplates.get( unit ) );
+            if ( unit.isVisible() ) {
+                listhead.appendChild(listheaderTemplates.get(unit));
+            }
         }
     }
     
     /** updates the listitem (order of cells) when it uses the new databinding */
     public void updateListItem( Listitem item ) {
         // test wheather the listcell indicies is initialized
-        if (listcellIndicies.size() == 1 ) return;
+        if (listcellIndicies.size() == 1 ) {
+            return;
+        }
 
         List<Component> listcellBuffer = new ArrayList<Component>();
         listcellBuffer.addAll( item.getChildren() );
 
         // remove all current listcells from the listitem
-        for (Component c : listcellBuffer)
+        for (Component c : listcellBuffer) {
             c.setParent(null);
+        }
 
         // insert them back in correct order
         for ( int i = 0; listcellIndicies.get( i ) != null; ++i ) {
@@ -510,22 +520,33 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
                 for ( String key : attrs.keySet() ) {
                     if ( attrs.get( key ).length > 0 )
                         // strip quotes
-                        converterArgs.put( key, attrs.get( key )[0].replaceAll( "^'(.*)'$", "$1") );
+                    {
+                        converterArgs.put(key, attrs.get(key)[0].replaceAll("^'(.*)'$", "$1"));
+                    }
                 }
             }
 
             if ( columnMap.get( header ).getColumn() == null && bindingText != null ) // set column from binding
-            
-                if ( bindingText.indexOf( '.' ) == -1 ) // if there is whole entity without any property
-                    columnMap.get( header ).setColumn( null );
-                else // if there is define some property
-                    columnMap.get( header ).setColumn( bindingText.substring( bindingText.indexOf( '.' ) + 1 ) );
+
+            {
+                if (bindingText.indexOf('.') == -1) // if there is whole entity without any property
+                {
+                    columnMap.get(header).setColumn(null);
+                } else // if there is define some property
+                {
+                    columnMap.get(header).setColumn(bindingText.substring(bindingText.indexOf('.') + 1));
+                }
+            }
             if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
-            
-                columnMap.get( header ).setConverter( converter, listbox, converterArgs );
+
+            {
+                columnMap.get(header).setConverter(converter, listbox, converterArgs);
+            }
             if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
-            
-                columnMap.get( header ).setColumnType( getFieldType( masterController.getEntityClass(), columnMap.get( header ).getColumn() ) );
+
+            {
+                columnMap.get(header).setColumnType(getFieldType(masterController.getEntityClass(), columnMap.get(header).getColumn()));
+            }
         }
     }
 
@@ -625,16 +646,18 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             // synchronize listbox component
             for (T sel : selectedItems) {
                 int index = listboxModel.indexOf(sel);
-                if (index == -1)
+                if (index == -1) {
                     throw new IllegalArgumentException("Item " + sel + " for selection not found in the model.");
+                }
                 listbox.addItemToSelection(listbox.getItemAtIndex(index));
             }
             if (selectedItem == null) {
                 listbox.clearSelection();
             } else {
                 int index = listboxModel.indexOf(selectedItem);
-                if (index == -1)
+                if (index == -1) {
                     throw new IllegalArgumentException("selectedItem " + selectedItem + " not found in the model.");
+                }
                 listbox.setSelectedIndex( index );
             }
 
@@ -643,7 +666,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }    
 
     public void setSelectedItem( final T selectedItem ) {
-        if ( masterController.isLocked() || listboxModel == null ) return;
+        if ( masterController.isLocked() || listboxModel == null ) {
+            return;
+        }
 
         this.selectedItem = selectedItem;
     }
@@ -653,7 +678,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
     }
 
     public void setSelectedItems( Set<T> selectedItems ) {
-        if ( masterController.isLocked() ) return;
+        if ( masterController.isLocked() ) {
+            return;
+        }
 
         this.selectedItems = selectedItems;
     }
@@ -678,10 +705,11 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         // we need to set new value directly via ListModelList (or subclass), because it calls the internal
         // event on Listbox to rerender new value. If we use underlying getListboxModel() directly, there is no
         // public accessor to call the event.
-        if (!(getListbox().getModel() instanceof ListModelList))
+        if (!(getListbox().getModel() instanceof ListModelList)) {
             throw new IllegalStateException("updateItem can be used only if the listbox model is of type ListModelList " +
                     "(it is true for normal use with <listbox apply='listboxController'>). For special use, " +
                     "you have to manage the model manually.");
+        }
 
         ListModelList<T> listboxModel = (ListModelList<T>) getListbox().getModel();
 
@@ -690,8 +718,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
         if (index == -1) {
             // if the listbox model is not live (i.e. holds only copy of original list), we need to modify it as well
-            if (listboxModel.getInnerList() != getListboxModel())
+            if (listboxModel.getInnerList() != getListboxModel()) {
                 getListboxModel().add(0, item);
+            }
 
             // add a new row and select it
             listboxModel.add(0, item);
@@ -700,8 +729,9 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             return false;
 		} else {
             // if the listbox model is not live (i.e. holds only copy of original list), we need to update it as well
-            if (listboxModel.getInnerList() != getListboxModel())
+            if (listboxModel.getInnerList() != getListboxModel()) {
                 getListboxModel().set(index, item);
+            }
 
             // update the value
             listboxModel.set(index, item);
@@ -741,15 +771,17 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             String id = ((Component)idSpace).getId();
             Object composerCandidate = listbox.getAttribute(id + "$composer", true );
 
-            if (composerCandidate != null && composerCandidate instanceof Composer)
+            if (composerCandidate != null && composerCandidate instanceof Composer) {
                 composer = (Composer) composerCandidate;
+            }
         }
 
         if (composer == null)
         {
             Object composerCandidate = listbox.getAttribute("ctl", true);
-            if (composerCandidate != null && composerCandidate instanceof Composer)
+            if (composerCandidate != null && composerCandidate instanceof Composer) {
                 composer = (Composer) composerCandidate;
+            }
         }
 
         return composer;

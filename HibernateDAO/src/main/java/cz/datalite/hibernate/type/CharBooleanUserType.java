@@ -36,27 +36,30 @@ public class CharBooleanUserType extends AbstractUserType implements Parameteriz
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
         String stringValue = rs.getString(names[0]);
 
-        if (stringValue == null || stringValue.length() == 0 || rs.wasNull())
+        if (stringValue == null || stringValue.length() == 0 || rs.wasNull()) {
             return defaultValue;
+        }
 
         char charValue = stringValue.charAt(0);
         return booleanValue(names[0], charValue);
     }
 
     public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-        if (value == null)
+        if (value == null) {
             st.setNull(index, Types.CHAR);
-        else
-            st.setString(index, (Boolean)value ? "A" : "N");
+        } else {
+            st.setString(index, (Boolean) value ? "A" : "N");
+        }
     }
 
     private Boolean booleanValue(String column, char charValue) throws SQLException {
-        if (charValue == 'Y' || charValue == 'y' || charValue == 'A' || charValue == 'a')
+        if (charValue == 'Y' || charValue == 'y' || charValue == 'A' || charValue == 'a') {
             return new Boolean(true);
-        else if (charValue == 'N' || charValue == 'n')
+        } else if (charValue == 'N' || charValue == 'n') {
             return new Boolean(false);
-        else
+        } else {
             throw new SQLException("Column [" + column + "] contains character [" + charValue + "]. Allowed values are A, a, Y, y, N, n");
+        }
     }
 
     public void setParameterValues(Properties parameters) {

@@ -64,10 +64,11 @@ public class DLSort {
 
     @Override
     public String toString() {
-        if (column != null)
+        if (column != null) {
             return "Sort by " + column + " type " + sortType;
-        else
+        } else {
             return "sqlFormula sort " + sqlFormula;
+        }
     }
 
     public String getColumn() {

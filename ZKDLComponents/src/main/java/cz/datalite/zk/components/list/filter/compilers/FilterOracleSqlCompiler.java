@@ -20,17 +20,19 @@ public class FilterOracleSqlCompiler  implements  FilterCompiler {
 
     public Object compile( final DLFilterOperator operator, final String key, final Object... values )
     {
-        if (values.length < 2 || !(values[0] instanceof String) || !(values[1] instanceof Map))
+        if (values.length < 2 || !(values[0] instanceof String) || !(values[1] instanceof Map)) {
             throw new IllegalArgumentException("FilterSqlCompiler has to be called with first two values param as : columnName (String) and bindParams (Map<String, Object>)");
+        }
 
         final String column = (String) values[0];
         final Map<String, Object> bindParams = (Map<String, Object>) values[1];
 
         for (int i=1; i<=operator.getArity(); i++)
         {
-            if (values.length < i+2)
+            if (values.length < i+2) {
                 throw new IllegalArgumentException("FilterSqlCompiler - operator " + operator.getLabel() +
                         " arity is " + operator.getArity() + " but only " + (values.length - 2) + " actual parameters found.");
+            }
         }
 
         // indexes of arguments
@@ -93,12 +95,14 @@ public class FilterOracleSqlCompiler  implements  FilterCompiler {
      * @return true if value is null or String.
      */
     public boolean validateValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return true;
-        if (value instanceof String)
+        }
+        if (value instanceof String) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
 }

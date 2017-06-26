@@ -95,15 +95,17 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
 
     @Transactional(readOnly=true)
     public T get( T entity ) {
-        if (entity == null)
+        if (entity == null) {
             return null;
+        }
         return defaultDAO.get(entity);
     }
 
     @Transactional(readOnly=true)
     public T get( T entity, String ... associationPath) {
-        if (entity == null)
+        if (entity == null) {
             return null;
+        }
         return defaultDAO.get(entity, associationPath);
     }
     

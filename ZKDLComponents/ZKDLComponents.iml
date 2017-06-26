@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -11,6 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.zkoss.zk:zkplus:6.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zk:6.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.common:zweb:6.5.2" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss.common:zcommon:6.5.2" level="project" />
@@ -22,7 +24,6 @@
     <orderEntry type="module" module-name="DLBind" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zkbind:6.5.2.2-DATALITE" level="project" />
     <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.4.4" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="module" module-name="DLHelpers" />
     <orderEntry type="module" module-name="ZKComponents" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zkplus:6.5.2" level="project" />
@@ -31,6 +32,6 @@
     <orderEntry type="library" name="Maven: net.sourceforge.jexcelapi:jxl:2.6.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
   </component>
 </module>
-

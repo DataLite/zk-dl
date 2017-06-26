@@ -31,7 +31,9 @@ public abstract class DataSource {
         int maxCellIndex = -1; // nejvyšší index buňky
 
         for ( Cell cell : getCells() ) {
-            if ( cell.getX() > maxCellIndex ) maxCellIndex = cell.getX();
+            if ( cell.getX() > maxCellIndex ) {
+                maxCellIndex = cell.getX();
+            }
         }
 
         return maxCellIndex + 1;

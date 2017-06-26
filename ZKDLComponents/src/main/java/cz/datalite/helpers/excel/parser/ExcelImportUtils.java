@@ -70,12 +70,15 @@ public final class ExcelImportUtils {
      * není dle očekávání
      */
     public static Date getDate( final Cell cell ) throws ExcelImportCellTypeException {
-        if ( CellType.EMPTY.equals( cell.getType() ) )
+        if ( CellType.EMPTY.equals( cell.getType() ) ) {
             return null;
-        if ( CellType.DATE.equals( cell.getType() ) )
-            return ( (DateCell) cell ).getDate();
-        if ( CellType.DATE_FORMULA.equals( cell.getType() ) )
-            return ( (DateFormulaCell) cell ).getDate();
+        }
+        if ( CellType.DATE.equals( cell.getType() ) ) {
+            return ((DateCell) cell).getDate();
+        }
+        if ( CellType.DATE_FORMULA.equals( cell.getType() ) ) {
+            return ((DateFormulaCell) cell).getDate();
+        }
         throw new ExcelImportCellTypeException( "Illegal cell type. Required type is \"Date\" but it is \"" + cell.getType() + "\" at " + cell.getColumn() + ", " + cell.getRow() + ". (Index from 0)" );
     }
 
@@ -88,16 +91,21 @@ public final class ExcelImportUtils {
      * není dle očekávání
      */
     public static String getString( final Cell cell ) throws ExcelImportCellTypeException {
-        if ( CellType.EMPTY.equals( cell.getType() ) )
+        if ( CellType.EMPTY.equals( cell.getType() ) ) {
             return null;
-        if ( CellType.LABEL.equals( cell.getType() ) )
-            return ( (LabelCell) cell ).getString();
-        if ( CellType.NUMBER.equals( cell.getType() ) )
+        }
+        if ( CellType.LABEL.equals( cell.getType() ) ) {
+            return ((LabelCell) cell).getString();
+        }
+        if ( CellType.NUMBER.equals( cell.getType() ) ) {
             return cell.getContents();
-        if ( CellType.STRING_FORMULA.equals( cell.getType() ) )
-            return ( (StringFormulaCell) cell ).getString();
-        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )
-            return new Double( ((NumberFormulaCell) cell ).getValue() ).toString();
+        }
+        if ( CellType.STRING_FORMULA.equals( cell.getType() ) ) {
+            return ((StringFormulaCell) cell).getString();
+        }
+        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) ) {
+            return new Double(((NumberFormulaCell) cell).getValue()).toString();
+        }
 
         throw new ExcelImportCellTypeException( "Illegal cell type. Required type is \"Label\" but it is \"" + cell.getType() + "\" at " + cell.getColumn() + ", " + cell.getRow() + ". (Index from 0)" );
     }
@@ -112,8 +120,9 @@ public final class ExcelImportUtils {
      * @throws ExcelImportParseException
      */
     public static Double getDouble( final Cell cell ) throws ExcelImportCellTypeException, ExcelImportParseException {
-        if ( CellType.EMPTY.equals( cell.getType() ) )
+        if ( CellType.EMPTY.equals( cell.getType() ) ) {
             return null;
+        }
 
         if ( CellType.LABEL.equals( cell.getType() ) )
         {
@@ -125,10 +134,12 @@ public final class ExcelImportUtils {
             }
         }
 
-        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )
-            return ( (NumberFormulaCell) cell ).getValue();
-        if ( CellType.NUMBER.equals( cell.getType() ) )
-            return ( (NumberCell) cell ).getValue();
+        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) ) {
+            return ((NumberFormulaCell) cell).getValue();
+        }
+        if ( CellType.NUMBER.equals( cell.getType() ) ) {
+            return ((NumberCell) cell).getValue();
+        }
         throw new ExcelImportCellTypeException( "Illegal cell type. Required type is \"Number\" but it is \"" + cell.getType() + "\" at " + cell.getColumn() + ", " + cell.getRow() + ". (Index from 0)" );
     }
 
@@ -142,19 +153,22 @@ public final class ExcelImportUtils {
      * @throws ExcelImportParseException
      */
     public static Integer getInteger( final Cell cell ) throws ExcelImportCellTypeException, ExcelImportParseException {
-        if ( CellType.EMPTY.equals( cell.getType() ) )
+        if ( CellType.EMPTY.equals( cell.getType() ) ) {
             return null;
-        if ( CellType.LABEL.equals( cell.getType() ) )
+        }
+        if ( CellType.LABEL.equals( cell.getType() ) ) {
             try {
-                return Integer.parseInt( ( (LabelCell) cell ).getString() );
+                return Integer.parseInt(((LabelCell) cell).getString());
+            } catch (NumberFormatException ex) {
+                throw new ExcelImportParseException(ex);
             }
-            catch ( NumberFormatException ex ) {
-                throw new ExcelImportParseException( ex );
-            }
-        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )
-            return (int) ( (NumberFormulaCell) cell ).getValue();
-        if ( CellType.NUMBER.equals( cell.getType() ) )
-            return (int) ( (NumberCell) cell ).getValue();
+        }
+        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) ) {
+            return (int) ((NumberFormulaCell) cell).getValue();
+        }
+        if ( CellType.NUMBER.equals( cell.getType() ) ) {
+            return (int) ((NumberCell) cell).getValue();
+        }
         if (CellType.STRING_FORMULA.equals(  cell.getType() ))
         {
             try {
@@ -178,19 +192,22 @@ public final class ExcelImportUtils {
      * @throws ExcelImportParseException
      */
     public static Long getLong( final Cell cell ) throws ExcelImportCellTypeException, ExcelImportParseException {
-        if ( CellType.EMPTY.equals( cell.getType() ) )
+        if ( CellType.EMPTY.equals( cell.getType() ) ) {
             return null;
-        if ( CellType.LABEL.equals( cell.getType() ) )
+        }
+        if ( CellType.LABEL.equals( cell.getType() ) ) {
             try {
-                return Long.parseLong( ( (LabelCell) cell ).getString() );
+                return Long.parseLong(((LabelCell) cell).getString());
+            } catch (NumberFormatException ex) {
+                throw new ExcelImportParseException(ex);
             }
-            catch ( NumberFormatException ex ) {
-                throw new ExcelImportParseException( ex );
-            }
-        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )
-            return (long) ( (NumberFormulaCell) cell ).getValue();
-        if ( CellType.NUMBER.equals( cell.getType() ) )
-            return (long) ( (NumberCell) cell ).getValue();
+        }
+        if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) ) {
+            return (long) ((NumberFormulaCell) cell).getValue();
+        }
+        if ( CellType.NUMBER.equals( cell.getType() ) ) {
+            return (long) ((NumberCell) cell).getValue();
+        }
         throw new ExcelImportCellTypeException( "Illegal cell type. Required type is \"Number\" but it is \"" + cell.getType() + "\" at " + cell.getColumn() + ", " + cell.getRow() + ". (Index from 0)" );
     }
 

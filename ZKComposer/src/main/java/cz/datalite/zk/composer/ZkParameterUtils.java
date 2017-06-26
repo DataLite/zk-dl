@@ -28,8 +28,9 @@ public final class ZkParameterUtils {
     public static void setupZkParameters( Object instance ) {
         for ( Field field : ReflectionHelper.getAllFields( instance.getClass() ) ) {
             for ( Annotation annotation : field.getDeclaredAnnotations() ) {
-                if ( annotation instanceof ZkParameter )
-                    setupZkParameter( ( ZkParameter ) annotation, getName( ( ZkParameter ) annotation, field ), field.getType(), field, null, instance );
+                if ( annotation instanceof ZkParameter ) {
+                    setupZkParameter((ZkParameter) annotation, getName((ZkParameter) annotation, field), field.getType(), field, null, instance);
+                }
             }
         }
 
@@ -38,15 +39,17 @@ public final class ZkParameterUtils {
                 if ( annotation instanceof ZkParameter ) {
                     String paramName = ( ( ZkParameter ) annotation ).name();
                     if ( StringHelper.isNull( paramName ) ) {
-                        if ( !method.getName().startsWith( "set" ) )
-                            throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p)  (e.g. setParamName). "
-                                    + "Found: " + method.getName() );
+                        if ( !method.getName().startsWith( "set" ) ) {
+                            throw new InstantiationError("@ZkParameter must be on method in form of setXXX(ParamType p)  (e.g. setParamName). "
+                                    + "Found: " + method.getName());
+                        }
                         paramName = getMethodLowerCase( method.getName().substring( 3 ) );
                     }
 
-                    if ( method.getParameterTypes().length != 1 )
-                        throw new InstantiationError( "@ZkParameter must be on method in form of setXXX(ParamType p), wrong number of parameters. "
-                                + "Actual number of parameters: " + method.getParameterTypes().length );
+                    if ( method.getParameterTypes().length != 1 ) {
+                        throw new InstantiationError("@ZkParameter must be on method in form of setXXX(ParamType p), wrong number of parameters. "
+                                + "Actual number of parameters: " + method.getParameterTypes().length);
+                    }
 
                     setupZkParameter( ( ZkParameter ) annotation, paramName, method.getParameterTypes()[0], null, method, instance );
                 }
@@ -81,12 +84,13 @@ public final class ZkParameterUtils {
         }
 
         try {
-            if ( annot.required() )
-                result = ZKHelper.getRequiredParameter( paramMap, paramName, clazz );
-            else if ( !paramMap.containsKey( paramName ) )
+            if ( annot.required() ) {
+                result = ZKHelper.getRequiredParameter(paramMap, paramName, clazz);
+            } else if ( !paramMap.containsKey( paramName ) ) {
                 return; // optional parameter doesn't do anything
-            else
-                result = ZKHelper.getOptionalParameter( paramMap, paramName, clazz, null );
+            } else {
+                result = ZKHelper.getOptionalParameter(paramMap, paramName, clazz, null);
+            }
         } catch ( IllegalArgumentException ex ) {
             throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
                     + "required=" + ( annot.required() ? "true" : "false" ) + ", "
@@ -94,53 +98,56 @@ public final class ZkParameterUtils {
                     + "): " + ex.getLocalizedMessage() );
         }
 
-        if ( result == null && annot.createIfNull() )
+        if ( result == null && annot.createIfNull() ) {
             try {
-                result = ( T ) clazz.newInstance();
-            } catch ( InstantiationException ex ) {
-                throw new InstantiationError( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + ( annot.required() ? "true" : "false" ) + ", "
-                        + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Parameter is null, unable to create new object with error: " + ex.getLocalizedMessage() );
-            } catch ( IllegalAccessException ex ) {
-                throw new InstantiationError( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + ( annot.required() ? "true" : "false" ) + ", "
-                        + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Parameter is null, unable to create new object, no public default constructor: " + ex.getLocalizedMessage() );
+                result = (T) clazz.newInstance();
+            } catch (InstantiationException ex) {
+                throw new InstantiationError("@ZkParameter(name='" + paramName + "', "
+                        + "required=" + (annot.required() ? "true" : "false") + ", "
+                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
+                        + ") - Parameter is null, unable to create new object with error: " + ex.getLocalizedMessage());
+            } catch (IllegalAccessException ex) {
+                throw new InstantiationError("@ZkParameter(name='" + paramName + "', "
+                        + "required=" + (annot.required() ? "true" : "false") + ", "
+                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
+                        + ") - Parameter is null, unable to create new object, no public default constructor: " + ex.getLocalizedMessage());
             }
+        }
 
-        if ( field != null )
+        if ( field != null ) {
             try {
-                field.setAccessible( true );
-                field.set( instance, result );
-                field.setAccessible( false );
-            } catch ( IllegalArgumentException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + ( annot.required() ? "true" : "false" ) + ", "
-                        + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Unable to set new value of field to '" + result + "': " + ex.getLocalizedMessage(), ex );
-            } catch ( IllegalAccessException ex ) {
-                throw SystemException.Aide.wrap( ex );
+                field.setAccessible(true);
+                field.set(instance, result);
+                field.setAccessible(false);
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("@ZkParameter(name='" + paramName + "', "
+                        + "required=" + (annot.required() ? "true" : "false") + ", "
+                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
+                        + ") - Unable to set new value of field to '" + result + "': " + ex.getLocalizedMessage(), ex);
+            } catch (IllegalAccessException ex) {
+                throw SystemException.Aide.wrap(ex);
             }
-        if ( method != null )
+        }
+        if ( method != null ) {
             try {
-                method.setAccessible( true );
-                method.invoke( instance, new Object[]{ result } );
-                method.setAccessible( false );
-            } catch ( IllegalAccessException ex ) {
-                throw SystemException.Aide.wrap( ex );
-            } catch ( IllegalArgumentException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + ( annot.required() ? "true" : "false" ) + ", "
-                        + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
-                        + ") - Unable to set new value of method to '" + result + "': " + ex.getClass() + " - " + ex.getLocalizedMessage(), ex );
-            } catch ( InvocationTargetException ex ) {
-                throw new IllegalArgumentException( "@ZkParameter(name='" + paramName + "', "
-                        + "required=" + ( annot.required() ? "true" : "false" ) + ", "
-                        + "createIfNull=" + ( annot.createIfNull() ? "true" : "false" )
+                method.setAccessible(true);
+                method.invoke(instance, new Object[]{result});
+                method.setAccessible(false);
+            } catch (IllegalAccessException ex) {
+                throw SystemException.Aide.wrap(ex);
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("@ZkParameter(name='" + paramName + "', "
+                        + "required=" + (annot.required() ? "true" : "false") + ", "
+                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
+                        + ") - Unable to set new value of method to '" + result + "': " + ex.getClass() + " - " + ex.getLocalizedMessage(), ex);
+            } catch (InvocationTargetException ex) {
+                throw new IllegalArgumentException("@ZkParameter(name='" + paramName + "', "
+                        + "required=" + (annot.required() ? "true" : "false") + ", "
+                        + "createIfNull=" + (annot.createIfNull() ? "true" : "false")
                         + ") - Unable to set new value of method to '" + result + "', error in method invocation: "
-                        + ex.getClass() + " - " + ( ex.getTargetException() == null ? ex.getLocalizedMessage() : ex.getTargetException().getLocalizedMessage() ), ex );
+                        + ex.getClass() + " - " + (ex.getTargetException() == null ? ex.getLocalizedMessage() : ex.getTargetException().getLocalizedMessage()), ex);
             }
+        }
     }
 
     private static String getName( final ZkParameter annotation, final Field field ) {

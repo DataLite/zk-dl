@@ -16,13 +16,17 @@ public class ConverterResolver {
 
     public static ZkConverter createAdapter( final Object converter, final Component component, final Object controller, final Object binder, final Map<String, String> attributes ) {
 
-        if ( converter == null ) return null;
+        if ( converter == null ) {
+            return null;
+        }
 
-        if ( converter instanceof Converter && ZKBinderHelper.version( component ) == 2 )
-            return new ZkConverterAdapter( ( Converter ) converter, ( Binder ) binder, component, attributes );
+        if ( converter instanceof Converter && ZKBinderHelper.version( component ) == 2 ) {
+            return new ZkConverterAdapter((Converter) converter, (Binder) binder, component, attributes);
+        }
 
-        if ( converter instanceof TypeConverter && ZKBinderHelper.version( component ) == 1 )
-            return new ZkTypeConverterAdapter( ( TypeConverter ) converter, component );
+        if ( converter instanceof TypeConverter && ZKBinderHelper.version( component ) == 1 ) {
+            return new ZkTypeConverterAdapter((TypeConverter) converter, component);
+        }
 
         throw new IllegalArgumentException( String.format("Unsupported class type in converter. "
                     + "'org.zkoss.zkplus.databind.TypeConverter' of "
@@ -32,8 +36,9 @@ public class ConverterResolver {
 
     public static ZkConverter resolve( final String converter, final Component component, final Object controller, final Map<String, String> attributes ) {
 
-        if ( converter == null || converter.length() == 0 )
+        if ( converter == null || converter.length() == 0 ) {
             return null;
+        }
 
         // strip quotes
         String name = converter.replaceAll( "^'(.*)'$", "$1");

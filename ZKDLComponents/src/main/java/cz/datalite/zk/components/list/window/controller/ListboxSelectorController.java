@@ -239,8 +239,9 @@ public class ListboxSelectorController {
     }
 
     public void onTopMove() {
-        if ( !usedModel.isEmpty() && usedListbox.getSelectedItem() != null && usedListbox.getSelectedIndex() != 0 )
-            moveItem( usedListbox.getSelectedItem(), usedListbox.getItemAtIndex( 0 ) );
+        if ( !usedModel.isEmpty() && usedListbox.getSelectedItem() != null && usedListbox.getSelectedIndex() != 0 ) {
+            moveItem(usedListbox.getSelectedItem(), usedListbox.getItemAtIndex(0));
+        }
 
         usedListbox.setSelectedIndex( 0 );
     }
@@ -256,16 +257,19 @@ public class ListboxSelectorController {
     public void onDownMove() {
         final int itemIndex = usedListbox.getSelectedIndex() + 1;
         if ( !usedModel.isEmpty() && usedListbox.getSelectedItem() != null && itemIndex != usedListbox.getItemCount() ) {
-            if ( ( usedListbox.getSelectedIndex() + 2 ) < usedListbox.getItemCount() )
-                moveItem( usedListbox.getSelectedItem(), usedListbox.getItemAtIndex( itemIndex + 1 ) );
-            else moveItem( usedListbox.getSelectedItem(), usedListbox );
+            if ( ( usedListbox.getSelectedIndex() + 2 ) < usedListbox.getItemCount() ) {
+                moveItem(usedListbox.getSelectedItem(), usedListbox.getItemAtIndex(itemIndex + 1));
+            } else {
+                moveItem(usedListbox.getSelectedItem(), usedListbox);
+            }
             usedListbox.setSelectedIndex( itemIndex );
         }
     }
 
     public void onBottomMove() {
-        if ( !usedModel.isEmpty() && usedListbox.getSelectedItem() != null && ( usedListbox.getSelectedIndex() + 1 ) != usedListbox.getItemCount() )
-            moveItem( usedListbox.getSelectedItem(), usedListbox );
+        if ( !usedModel.isEmpty() && usedListbox.getSelectedItem() != null && ( usedListbox.getSelectedIndex() + 1 ) != usedListbox.getItemCount() ) {
+            moveItem(usedListbox.getSelectedItem(), usedListbox);
+        }
 
         usedListbox.setSelectedIndex( usedListbox.getItemCount() - 1 );
     }

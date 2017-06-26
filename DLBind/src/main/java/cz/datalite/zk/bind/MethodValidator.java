@@ -43,8 +43,9 @@ public class MethodValidator implements Validator {
         // split the pattern
         String[] parts = validator.split( "\\." );
 
-        if ( parts.length != 2 )
-            throw new UiException( "Validator '" + validator + "' is not the class neither the controller method." );
+        if ( parts.length != 2 ) {
+            throw new UiException("Validator '" + validator + "' is not the class neither the controller method.");
+        }
 
         controller = parts[0];
         method = parts[1];
@@ -60,8 +61,9 @@ public class MethodValidator implements Validator {
         if ( coerceMethod == null ) {
             // controller bean must be in variables
             controllerObj = comp.getAttribute( controller, true );
-            if ( controllerObj == null )
-                throw new UiException( errorDesc + " Unable to find bean '" + controller + "'." );
+            if ( controllerObj == null ) {
+                throw new UiException(errorDesc + " Unable to find bean '" + controller + "'.");
+            }
 
             // load method with only value param or component + value param
             try {
@@ -69,9 +71,10 @@ public class MethodValidator implements Validator {
             } catch ( NoSuchMethodException ex ) {
             }
 
-            if ( coerceMethod == null )
-                throw new UiException( errorDesc
-                        + " Method '" + method + "' not found in class '" + controllerObj.getClass() + "'. Params: ValidationContext.class" );
+            if ( coerceMethod == null ) {
+                throw new UiException(errorDesc
+                        + " Method '" + method + "' not found in class '" + controllerObj.getClass() + "'. Params: ValidationContext.class");
+            }
 
         }
         return coerceMethod;
@@ -80,8 +83,9 @@ public class MethodValidator implements Validator {
     public void validate( ValidationContext ctx ) {
         try {
             Method m = getValidationMethod( ctx.getBindContext().getComponent() );
-            if ( m.getGenericParameterTypes().length == 1 )
-                m.invoke( controllerObj, ctx );
+            if ( m.getGenericParameterTypes().length == 1 ) {
+                m.invoke(controllerObj, ctx);
+            }
         } catch ( IllegalAccessException ex ) {
             throw new UiException( errorDesc + " Illegal access: " + ex.getLocalizedMessage(), ex );
         } catch ( IllegalArgumentException ex ) {

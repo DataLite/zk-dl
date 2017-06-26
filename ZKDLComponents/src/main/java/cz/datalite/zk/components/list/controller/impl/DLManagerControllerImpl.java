@@ -323,19 +323,20 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        if (confirmReset)
+        if (confirmReset) {
             Messagebox.show(Labels.getLabel("listbox.manager.resetFilter.message.text"),
                     Labels.getLabel("listbox.manager.resetFilter.message.title"),
                     Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
-                public void onEvent( final Event event ) {
-                    if ( event.getData().equals( Messagebox.OK ) ) {
-                        masterController.clearFilterModel();
-                    }
-                }
-            } );
-        else
+                        public void onEvent(final Event event) {
+                            if (event.getData().equals(Messagebox.OK)) {
+                                masterController.clearFilterModel();
+                            }
+                        }
+                    });
+        } else {
             masterController.clearFilterModel();
+        }
 
     }
 
@@ -345,19 +346,20 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             return;
         }
 
-        if (confirmReset)
-            Messagebox.show( Labels.getLabel("listbox.manager.reset.message.text"),
+        if (confirmReset) {
+            Messagebox.show(Labels.getLabel("listbox.manager.reset.message.text"),
                     Labels.getLabel("listbox.manager.reset.message.title"),
                     Messagebox.OK | Messagebox.NO, Messagebox.QUESTION, new EventListener<Event>() {
 
-                public void onEvent( final Event event ) {
-                    if ( event.getData().equals( Messagebox.OK ) ) {
-                        masterController.clearAllModel();
-                    }
-                }
-            } );
-        else
+                        public void onEvent(final Event event) {
+                            if (event.getData().equals(Messagebox.OK)) {
+                                masterController.clearAllModel();
+                            }
+                        }
+                    });
+        } else {
             masterController.clearAllModel();
+        }
     }
 
     /**

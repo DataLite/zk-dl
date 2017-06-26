@@ -45,10 +45,11 @@ public class DLPaging extends XulElement implements Pageable {
     }
 
     protected DLPagingModel getPagingModel() {
-        if ( model == null )
-            throw new UnsupportedOperationException( "Paging model is missing. Please check \"apply\" attribute with paging controller " +
+        if ( model == null ) {
+            throw new UnsupportedOperationException("Paging model is missing. Please check \"apply\" attribute with paging controller " +
                     "[compId=" + getId() + "]" +
-                    "[spaceOwnerId=" + ((getSpaceOwner() instanceof Component) ? ((Component)getSpaceOwner()).getId() : "") + "]");
+                    "[spaceOwnerId=" + ((getSpaceOwner() instanceof Component) ? ((Component) getSpaceOwner()).getId() : "") + "]");
+        }
         return model;
     }
 
@@ -139,8 +140,9 @@ public class DLPaging extends XulElement implements Pageable {
 
     protected String getInfoText() {
 
-        if (getPagingModel().getTotalSize() == 0)
+        if (getPagingModel().getTotalSize() == 0) {
             return "[ " + Labels.getLabel("listbox.paging.noData") + " ]";
+        }
 
         final int lastItem = ( getPagingModel().getActualPage() + 1 ) * getPagingModel().getPageSize();
 
@@ -149,17 +151,19 @@ public class DLPaging extends XulElement implements Pageable {
 
         text.append(" - ");
 
-        if (!getPagingModel().isKnownPageCount() || getPagingModel().getTotalSize() > lastItem)
+        if (!getPagingModel().isKnownPageCount() || getPagingModel().getTotalSize() > lastItem) {
             text.append(lastItem);
-        else
+        } else {
             text.append(getPagingModel().getTotalSize());
+        }
 
         text.append(" / ");
 
-        if (getPagingModel().isKnownPageCount())
+        if (getPagingModel().isKnownPageCount()) {
             text.append(getTotalSize());
-        else
+        } else {
             text.append('?');
+        }
 
         text.append(" ]");
 
@@ -218,7 +222,8 @@ public class DLPaging extends XulElement implements Pageable {
             PagingEvent evt = new PagingEvent(ZulEvents.ON_PAGING, request.getComponent(), pgi);
             setActivePage(evt.getActivePage());
             Events.postEvent(evt);
-        } else
+        } else {
             super.service(request, everError);
+        }
     }
 }

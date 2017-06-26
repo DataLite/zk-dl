@@ -122,8 +122,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                         if (!bRichlet) {
                             path = prefs.getValue(ATTR_RICHLET, null);
                             bRichlet = path != null;
-                            if (!bRichlet)
+                            if (!bRichlet) {
                                 path = _defpage;
+                            }
                         }
                     }
                 }
@@ -138,8 +139,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
         }
         SessionsCtrl.setCurrent(sess);
         try {
-            if (!process(sess, request, response, path, bRichlet))
+            if (!process(sess, request, response, path, bRichlet)) {
                 handleError(sess, request, response, path, null, null);
+            }
         } catch (Throwable ex) {
             handleError(sess, request, response, path, ex, null);
         } finally {
@@ -188,14 +190,17 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                     fixContentType(response);
                     wappc.getUiEngine()
                             .recycleDesktop(exec, page, response.getWriter());
-                } else
+                } else {
                     desktop = null; //something wrong (not possible; just in case)
+                }
             }
 
             if (desktop == null) {
                 desktop = webman.getDesktop(sess, httpreq, httpres, path, true);
                 if (desktop == null) //forward or redirect
+                {
                     return true;
+                }
 
                 final RequestInfo ri = new RequestInfoImpl(
                         wapp, sess, desktop, httpreq,
@@ -208,8 +213,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                 final UiFactory uf = wappc.getUiFactory();
                 if (uf.isRichlet(ri, bRichlet)) {
                     final Richlet richlet = uf.getRichlet(ri, path);
-                    if (richlet == null)
+                    if (richlet == null) {
                         return false; //not found
+                    }
 
                     page = WebManager.newPage(uf, ri, richlet, httpres, path);
                     final Execution exec =
@@ -219,8 +225,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                             out != null ? out: response.getWriter());
                 } else if (path != null) {
                     final PageDefinition pagedef = uf.getPageDefinition(ri, path);
-                    if (pagedef == null)
+                    if (pagedef == null) {
                         return false; //not found
+                    }
 
                     page = WebManager.newPage(uf, ri, pagedef, httpres, path);
                     final Execution exec =
@@ -228,25 +235,30 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                     fixContentType(response);
                     wappc.getUiEngine().execNewPage(exec, pagedef, page,
                             out != null ? out: response.getWriter());
-                } else
+                } else {
                     return true; //nothing to do
+                }
 
-                if (out != null)
+                if (out != null) {
                     patch.patchRender(ri, page, out, response.getWriter());
+                }
             }
         } finally {
-            if (dtrc != null)
+            if (dtrc != null) {
                 DesktopRecycles.afterService(dtrc, desktop);
+            }
         }
         return true; //success
     }
     private static PageRenderPatch getRenderPatch() {
-        if (_prpatch != null)
+        if (_prpatch != null) {
             return _prpatch;
+        }
 
         synchronized (DHtmlLayoutPortletFix.class) {
-            if (_prpatch != null)
+            if (_prpatch != null) {
                 return _prpatch;
+            }
 
             final PageRenderPatch patch;
             final String clsnm = Library.getProperty(
@@ -276,8 +288,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
 
     private static void fixContentType(RenderResponse response) {
         //Bug 1548478: content-type is required for some implementation (JBoss Portal)
-        if (response.getContentType() == null)
+        if (response.getContentType() == null) {
             response.setContentType("text/html;charset=UTF-8");
+        }
     }
 
     /** Returns the layout servlet.
@@ -286,8 +299,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
             throws PortletException {
         final WebManager webman =
                 (WebManager)getPortletContext().getAttribute(WebManager.ATTR_WEB_MANAGER);
-        if (webman == null)
-            throw new PortletException("The Layout Servlet not found. Make sure <load-on-startup> is specified for "+DHtmlLayoutServlet.class.getName());
+        if (webman == null) {
+            throw new PortletException("The Layout Servlet not found. Make sure <load-on-startup> is specified for " + DHtmlLayoutServlet.class.getName());
+        }
         return webman;
     }
     /** Handles exception being thrown when rendering a page.
@@ -308,8 +322,9 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                     request.setAttribute("javax.servlet.error.exception", err);
                     request.setAttribute("javax.servlet.error.exception_type", err.getClass());
                     request.setAttribute("javax.servlet.error.status_code", new Integer(500));
-                    if (process(sess, request, response, errpg, false))
+                    if (process(sess, request, response, errpg, false)) {
                         return; //done
+                    }
                     log.warning("The error page not found: "+errpg);
                 } catch (IOException ex) { //eat it (connection off)
                 } catch (Throwable ex) {
@@ -317,15 +332,17 @@ public class DHtmlLayoutPortletFix extends GenericPortlet {
                 }
             }
 
-            if (msg == null)
+            if (msg == null) {
                 msg = Messages.get(MZk.PAGE_FAILED,
-                        new Object[] {path, Exceptions.getMessage(err),
+                        new Object[]{path, Exceptions.getMessage(err),
                                 Exceptions.formatStackTrace(null, err, null, 6)});
+            }
         } else {
-            if (msg == null)
+            if (msg == null) {
                 msg = path != null ?
-                        Messages.get(MZk.PAGE_NOT_FOUND, new Object[] {path}):
+                        Messages.get(MZk.PAGE_NOT_FOUND, new Object[]{path}) :
                         Messages.get(MZk.PORTLET_PAGE_REQUIRED);
+            }
         }
 
         final Map attrs = new HashMap();

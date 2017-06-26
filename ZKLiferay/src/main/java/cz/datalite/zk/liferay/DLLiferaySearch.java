@@ -182,17 +182,19 @@ public class DLLiferaySearch<T> extends DisplayTerms {
     }
 
     public String getOrderByType() {
-        if (DLSortType.DESCENDING.equals(getOrderByTypeEnum()))
+        if (DLSortType.DESCENDING.equals(getOrderByTypeEnum())) {
             return "desc";
-        else
+        } else {
             return "asc";
+        }
     }
 
     public void setOrderByType(String orderByType) {
-        if ("desc".equalsIgnoreCase(orderByType))
+        if ("desc".equalsIgnoreCase(orderByType)) {
             setOrderByType(DLSortType.DESCENDING);
-        else
+        } else {
             setOrderByType(DLSortType.ASCENDING);
+        }
     }
 
     public DLSearch<T> getZKDLSearch()
@@ -202,8 +204,9 @@ public class DLLiferaySearch<T> extends DisplayTerms {
         search.setFirstRow(getStart());
         search.setRowCount(getEnd() - getStart());
 
-        if (getOrderByCol() != null)
+        if (getOrderByCol() != null) {
             search.setSorts(Arrays.asList(new DLSort(getOrderByCol(), getOrderByTypeEnum())));
+        }
 
         return search;
     }

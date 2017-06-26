@@ -60,8 +60,9 @@ public class DLQuickFilter extends InputElement {
     // sync value from client
     EventListener valueListener = new EventListener<Event>() {
         public void onEvent(Event event) throws Exception {
-            if (controller != null)
+            if (controller != null) {
                 controller.getModel().setValue(getValue());
+            }
         }
     };
 
@@ -69,7 +70,9 @@ public class DLQuickFilter extends InputElement {
     EventListener searchListener = new EventListener<Event>() {
         public void onEvent(Event event) throws Exception {
             if (event instanceof InputEvent) // synchonize ON_CHANING event
+            {
                 controller.getModel().setValue(((InputEvent) event).getValue());
+            }
             onQuickFilter();
         }
     };
@@ -260,10 +263,11 @@ public class DLQuickFilter extends InputElement {
     public void setAutocomplete(boolean autocomplete) {
         // if changed, attach or detach listener
         if (this.autocomplete != autocomplete) {
-            if (autocomplete)
+            if (autocomplete) {
                 addEventListener(Events.ON_CHANGING, searchListener);
-            else
+            } else {
                 removeEventListener(Events.ON_CHANGING, searchListener);
+            }
         }
 
         this.autocomplete = autocomplete;

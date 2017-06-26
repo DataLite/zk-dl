@@ -39,12 +39,13 @@ public final class ZkAnnotationUtils {
      * @param value new value
      */
     public static Object put( final String key, final Object value, final Object controller, Map<String, Field> zkModels, Map<String, Field> zkControllers ) {
-        if ( zkModels.containsKey( key ) )
-            put( key, value, zkModels, controller );
-        else if ( zkModels.isEmpty() )
-            putDefault( key, value, controller );
-        else
-            LOGGER.error( "Unknown model for key '{}'", key );
+        if ( zkModels.containsKey( key ) ) {
+            put(key, value, zkModels, controller);
+        } else if ( zkModels.isEmpty() ) {
+            putDefault(key, value, controller);
+        } else {
+            LOGGER.error("Unknown model for key '{}'", key);
+        }
         return value;
     }
 
@@ -66,8 +67,9 @@ public final class ZkAnnotationUtils {
                     field.setAccessible( true );
                     field.set( controller, value );
                     field.setAccessible( false );
-                } else
-                    throw new NoSuchMethodException( "No such setter or field for key \"" + key + "\"." );
+                } else {
+                    throw new NoSuchMethodException("No such setter or field for key \"" + key + "\".");
+                }
             }
         } catch ( Exception ex ) {
             throw SystemException.Aide.wrap( ex );
@@ -85,15 +87,16 @@ public final class ZkAnnotationUtils {
      * @return value of the property
      */
     public static Object get( Object key, Object controller, Map<String, Field> zkModels, Map<String, Field> zkControllers ) {
-        if ( zkModels.containsKey( ( String ) key ) )
-            return get( ( String ) key, controller, zkModels );
-        else if ( zkControllers.containsKey( ( String ) key ) )
-            return get( ( String ) key, controller, zkControllers );
-        else if ( zkModels.isEmpty() && zkControllers.isEmpty() )
-            return getDefault( ( String ) key, controller );
-        else
-            throw new UiException( new NoSuchFieldException( "Composer \"" + controller.getClass().getName()
-                    + "\"doesn't contain @ZkModel or @ZkController property \"" + key + "\"." ) );
+        if ( zkModels.containsKey( ( String ) key ) ) {
+            return get((String) key, controller, zkModels);
+        } else if ( zkControllers.containsKey( ( String ) key ) ) {
+            return get((String) key, controller, zkControllers);
+        } else if ( zkModels.isEmpty() && zkControllers.isEmpty() ) {
+            return getDefault((String) key, controller);
+        } else {
+            throw new UiException(new NoSuchFieldException("Composer \"" + controller.getClass().getName()
+                    + "\"doesn't contain @ZkModel or @ZkController property \"" + key + "\"."));
+        }
     }
 
     private static Object getDefault( final String key, Object instance ) {
@@ -116,8 +119,9 @@ public final class ZkAnnotationUtils {
                     final Object value = field.get( instance );
                     field.setAccessible( false );
                     return value;
-                } else
-                    throw new NoSuchMethodException( "No such getter or field for key \"" + key + "\"." );
+                } else {
+                    throw new NoSuchMethodException("No such getter or field for key \"" + key + "\".");
+                }
             }
         } catch ( Exception ex ) {
             LOGGER.error( "Something went wrong", ex );
@@ -137,8 +141,9 @@ public final class ZkAnnotationUtils {
         // before ZK 6.0
         // the same for model. The default value is same as controller as well. It is more convenient to have only one variable to access controller
         // however, you can change the value with @ZkModel annotation on class level
-        if ( !loadControllerClass( controller.getClass() ).equals( loadModelClass( controller.getClass() ) ) )
-            self.setAttribute( loadModelClass( controller.getClass() ), controller, Component.COMPONENT_SCOPE );
+        if ( !loadControllerClass( controller.getClass() ).equals( loadModelClass( controller.getClass() ) ) ) {
+            self.setAttribute(loadModelClass(controller.getClass()), controller, Component.COMPONENT_SCOPE);
+        }
 
         // setup model and controller fields and methods.
         models.putAll( loadModelFields( controller.getClass() ) );
@@ -173,8 +178,9 @@ public final class ZkAnnotationUtils {
 
     public static String loadModelClass( final Class cls ) {
         for ( Annotation annotation : cls.getDeclaredAnnotations() ) {
-            if ( annotation instanceof ZkModel )
-                return ( ( ZkModel ) annotation ).name().length() == 0 ? "ctl" : ( ( ZkModel ) annotation ).name();
+            if ( annotation instanceof ZkModel ) {
+                return ((ZkModel) annotation).name().length() == 0 ? "ctl" : ((ZkModel) annotation).name();
+            }
         }
         return loadControllerClass( cls );
     }
@@ -207,8 +213,9 @@ public final class ZkAnnotationUtils {
 
     public static String loadControllerClass( final Class cls ) {
         for ( Annotation annotation : cls.getDeclaredAnnotations() ) {
-            if ( annotation instanceof ZkController )
-                return ( ( ZkController ) annotation ).name().length() == 0 ? "ctl" : ( ( ZkController ) annotation ).name();
+            if ( annotation instanceof ZkController ) {
+                return ((ZkController) annotation).name().length() == 0 ? "ctl" : ((ZkController) annotation).name();
+            }
         }
         return "ctl";
     }
@@ -247,14 +254,15 @@ public final class ZkAnnotationUtils {
     }
 
     private static String getMethodNameWithoutGetSet( final String name ) {
-        if ( name.startsWith( "get" ) )
-            return getMethodLowerCase( name.substring( 3 ) );
-        else if ( name.startsWith( "set" ) )
-            return getMethodLowerCase( name.substring( 3 ) );
-        else if ( name.startsWith( "is" ) )
-            return getMethodLowerCase( name.substring( 2 ) );
-        else
+        if ( name.startsWith( "get" ) ) {
+            return getMethodLowerCase(name.substring(3));
+        } else if ( name.startsWith( "set" ) ) {
+            return getMethodLowerCase(name.substring(3));
+        } else if ( name.startsWith( "is" ) ) {
+            return getMethodLowerCase(name.substring(2));
+        } else {
             return name;
+        }
     }
 
     protected static String getMethodLowerCase( final String name ) {
@@ -291,20 +299,22 @@ public final class ZkAnnotationUtils {
                     Component target = component.getFellowIfAny( id );
 
                     if ( target == null ) {
-                        if ( ( ( ZkComponent ) annot ).mandatory() )
-                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
-                                    + "Component not found in idspace of composer self component '" + component.getId() + "'." );
-                    } else
-                        try {
-                            field.setAccessible( true );
-                            field.set( controller, target );
-                            field.setAccessible( false );
-                        } catch ( IllegalArgumentException ex ) {
-                            throw new IllegalArgumentException( "@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
-                                    + "Component is of different class: '" + target.getClass().getName() + "'." );
-                        } catch ( IllegalAccessException ex ) {
-                            throw SystemException.Aide.wrap( ex );
+                        if ( ( ( ZkComponent ) annot ).mandatory() ) {
+                            throw new IllegalArgumentException("@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
+                                    + "Component not found in idspace of composer self component '" + component.getId() + "'.");
                         }
+                    } else {
+                        try {
+                            field.setAccessible(true);
+                            field.set(controller, target);
+                            field.setAccessible(false);
+                        } catch (IllegalArgumentException ex) {
+                            throw new IllegalArgumentException("@ZkComponent injection: Unable to inject Component with ID '" + id + "'. "
+                                    + "Component is of different class: '" + target.getClass().getName() + "'.");
+                        } catch (IllegalAccessException ex) {
+                            throw SystemException.Aide.wrap(ex);
+                        }
+                    }
                 }
             }
         }
@@ -345,11 +355,13 @@ public final class ZkAnnotationUtils {
                 }
             }
 
-            if ( !(zkEvent || command) && ( zkConfirm || zkBinding ) )
-                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" @ZkEvent or @Command is required." );
+            if ( !(zkEvent || command) && ( zkConfirm || zkBinding ) ) {
+                throw new IllegalArgumentException("Unsupported annotation combination on method \"" + method.getName() + "\" @ZkEvent or @Command is required.");
+            }
 
-            if ( !command && notifyChange )
-                throw new IllegalArgumentException( "Unsupported annotation combination on method \"" + method.getName() + "\" @Command is required for @NotifyChange." );
+            if ( !command && notifyChange ) {
+                throw new IllegalArgumentException("Unsupported annotation combination on method \"" + method.getName() + "\" @Command is required for @NotifyChange.");
+            }
         }
     }
 }

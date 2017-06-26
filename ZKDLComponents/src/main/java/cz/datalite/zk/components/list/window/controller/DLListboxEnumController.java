@@ -38,8 +38,9 @@ public class DLListboxEnumController<T extends Enum> extends DLListboxGeneralCon
         super(identifier, clazz);
 
         for (Object enumValue : clazz.getEnumConstants()) {
-            if (isEnumValueValid((T) enumValue))
+            if (isEnumValueValid((T) enumValue)) {
                 enums.add((T) enumValue);
+            }
         }
     }
 

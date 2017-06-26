@@ -298,10 +298,13 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * @throws NoSuchFieldException v případě nenalezení
      */
     protected static Field getFieldByName( final String fieldName, final Class clazz ) throws NoSuchFieldException {
-        if ( fieldName == null || fieldName.length() == 0 )
-            throw new NoSuchFieldException( "Field name is empty map for import." );
+        if ( fieldName == null || fieldName.length() == 0 ) {
+            throw new NoSuchFieldException("Field name is empty map for import.");
+        }
         for ( Field field : clazz.getDeclaredFields() ) {
-            if ( field.getName().equals( fieldName ) ) return field;
+            if ( field.getName().equals( fieldName ) ) {
+                return field;
+            }
         }
         throw new NoSuchFieldException( "Field \"" + fieldName + "\" wasn't found in dataStructure for import." );
     }
@@ -313,18 +316,19 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * @throws ExcelImportException nepodporovaný typ
      */
     protected ImportDataTypeStrategy getStrategy( final Class clazz ) throws ExcelImportException {
-        if ( String.class.isAssignableFrom( clazz ) )
+        if ( String.class.isAssignableFrom( clazz ) ) {
             return StringStrategy.INSTANCE;
-        else if ( Integer.class.isAssignableFrom( clazz ) )
+        } else if ( Integer.class.isAssignableFrom( clazz ) ) {
             return IntegerStrategy.INSTANCE;
-        else if ( Date.class.isAssignableFrom( clazz ) )
+        } else if ( Date.class.isAssignableFrom( clazz ) ) {
             return DateStrategy.INSTANCE;
-        else if ( Long.class.isAssignableFrom( clazz ) )
+        } else if ( Long.class.isAssignableFrom( clazz ) ) {
             return LongStrategy.INSTANCE;
-        else if ( Double.class.isAssignableFrom( clazz ) )
+        } else if ( Double.class.isAssignableFrom( clazz ) ) {
             return DoubleStrategy.INSTANCE;
-        else
-            throw new ExcelImportException( "Unsupported type \"" + clazz + "\"in structure for import" );
+        } else {
+            throw new ExcelImportException("Unsupported type \"" + clazz + "\"in structure for import");
+        }
     }
 
     /**
@@ -332,7 +336,9 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * mapa názvů.</p>
      */
     protected void prepareMap() {
-        if ( _mapIndex != null ) return;
+        if ( _mapIndex != null ) {
+            return;
+        }
 
         if ( _mapName == null ) {
             _mapIndex = new HashMap<String, Integer>();
@@ -343,7 +349,9 @@ public class ExcelImporter<T extends ExcelImportStructure> {
 
         for ( String key : _mapName.keySet() ) {
             final int index = getIndexOfColumnName( _mapName.get( key ) );
-            if ( index != -1 ) _mapIndex.put( key, index );
+            if ( index != -1 ) {
+                _mapIndex.put(key, index);
+            }
         }
     }
 
@@ -351,8 +359,12 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * <p>Nastaví hlavní sloupce v případě, že je nastaven jeho název</p>
      */
     protected void prepareMainColumn() {
-        if ( _mainColumn != -1 ) return;
-        if ( _mainColumnName == null || _mainColumnName.length() == 0 ) return;
+        if ( _mainColumn != -1 ) {
+            return;
+        }
+        if ( _mainColumnName == null || _mainColumnName.length() == 0 ) {
+            return;
+        }
         _mainColumn = getIndexOfColumnName( _mainColumnName );
     }
 
@@ -363,8 +375,9 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      */
     protected int getIndexOfColumnName( final String columnName ) {
         for ( int column = 0; column < _sheet.getColumns(); column++ ) {
-            if ( columnName.equals( _sheet.getCell( column, 0 ).getContents() ) )
+            if ( columnName.equals( _sheet.getCell( column, 0 ).getContents() ) ) {
                 return column;
+            }
         }
         return -1;
     }
@@ -378,15 +391,19 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * @throws ExcelImportException
      */
     protected int getColumnLastRow( final int firstRow, final int col ) throws ExcelImportException {
-        if ( col == -1 ) return _sheet.getRows() - 1;
+        if ( col == -1 ) {
+            return _sheet.getRows() - 1;
+        }
 
-        if ( col >= _sheet.getColumns() )
-            throw new ExcelImportException( "Main column is not found in excel file. Index is " +
-                    col + " but file has got only " + _sheet.getColumns() + " columns" );
+        if ( col >= _sheet.getColumns() ) {
+            throw new ExcelImportException("Main column is not found in excel file. Index is " +
+                    col + " but file has got only " + _sheet.getColumns() + " columns");
+        }
 
         for ( int row = firstRow; row < _sheet.getRows(); row++ ) {
-            if ( _sheet.getCell( col, row ).getContents() == null || _sheet.getCell( col, row ).getContents().length() == 0 )
+            if ( _sheet.getCell( col, row ).getContents() == null || _sheet.getCell( col, row ).getContents().length() == 0 ) {
                 return row - 1;
+            }
         }
         return _sheet.getRows() - 1;
     }
@@ -395,7 +412,9 @@ public class ExcelImporter<T extends ExcelImportStructure> {
      * Ukončí práci se sešitem
      */
     protected void close() {
-        if ( _workbook != null ) _workbook.close();
+        if ( _workbook != null ) {
+            _workbook.close();
+        }
     }
 
     /**

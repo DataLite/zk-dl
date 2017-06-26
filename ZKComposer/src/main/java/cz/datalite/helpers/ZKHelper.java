@@ -38,25 +38,29 @@ public class ZKHelper {
      * @return value of the parameter or null
      */
     public static <T> T getOptionalParameter(Map arg, String key, Class<T> targetClass, T defaultValue) {
-        if (!arg.containsKey(key))
+        if (!arg.containsKey(key)) {
             return defaultValue;
+        }
 
         Object val = arg.get(key);
 
-        if (val == null)
+        if (val == null) {
             return null;
+        }
 
         // http param are automaticaly assigned to String[] - unwrap
         if (val.getClass().isArray() && !targetClass.isArray()) {
-            if (((Object[]) val).length == 0)
+            if (((Object[]) val).length == 0) {
                 return null;
-            else
+            } else {
                 val = ((Object[]) val)[0];
+            }
         }
 
         // same class
-        if (targetClass.isInstance(val))
+        if (targetClass.isInstance(val)) {
             return (T) val;
+        }
 
         try {
             return TypeConverter.convertTo(val.toString(), targetClass);
@@ -77,8 +81,9 @@ public class ZKHelper {
      * @return value of the parameter or null
      */
     public static <T> T getRequiredParameter(Map arg, String key, Class<T> targetClass) {
-        if (!arg.containsKey(key))
-            throw new java.lang.IllegalArgumentException("Mandatory parameter '" + key + "' is not set.");
+        if (!arg.containsKey(key)) {
+            throw new IllegalArgumentException("Mandatory parameter '" + key + "' is not set.");
+        }
 
         return getOptionalParameter(arg, key, targetClass, null);
     }
@@ -225,8 +230,9 @@ public class ZKHelper {
 
         // nejprve rekurzivne vsechny deti
         for (Component child : comp.getChildren()) {
-            if (!stopPropagationClassNames.contains(child.getClass().getName()))
+            if (!stopPropagationClassNames.contains(child.getClass().getName())) {
                 setReadonly(child, readonly);
+            }
         }
 
         // pro zname typy komponent nastavim
@@ -433,8 +439,9 @@ public class ZKHelper {
     public static void closeDetailWindow(Component window, boolean refreshParent, Object data) {
         window.detach();
 
-        if (refreshParent)
+        if (refreshParent) {
             Events.postEvent(new Event(ZkEvents.ON_REFRESH_PARENT, window, data));
+        }
     }
 
 

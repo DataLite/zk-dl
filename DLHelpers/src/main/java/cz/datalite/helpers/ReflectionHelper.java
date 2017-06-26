@@ -184,16 +184,18 @@ public abstract class ReflectionHelper
      * @throws IllegalAccessException    Chyba pristupu
      */
     public static <T> T getFieldValue( Field destinationField, Object source ) throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        if ( source == null )
+        if ( source == null ) {
             return null;
+        }
 
-        if ( destinationField.isAccessible() )
-            return ( T ) destinationField.get( source );
-        else {
+        if ( destinationField.isAccessible() ) {
+            return (T) destinationField.get(source);
+        } else {
             Method getter = getFieldGetter( source.getClass(), destinationField );
 
-            if ( getter != null )
-                return ( T ) getter.invoke( source );
+            if ( getter != null ) {
+                return (T) getter.invoke(source);
+            }
         }
 
         return null;
@@ -232,8 +234,9 @@ public abstract class ReflectionHelper
             // continue looking up until field is found or there is no more parents
         } while ( field == null && !Object.class.equals(type) );
 
-        if ( field == null )
-            throw new NoSuchElementException( String.format( "Field '%1$s' is not present in '%1$s' class.", name, source.getClass() ) );
+        if ( field == null ) {
+            throw new NoSuchElementException(String.format("Field '%1$s' is not present in '%1$s' class.", name, source.getClass()));
+        }
 
         try {
             // try existence of getter

@@ -274,8 +274,9 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
      * @return the object
      */
     public static <T>  T deproxy(T obj) {
-        if (obj == null)
+        if (obj == null) {
             return obj;
+        }
         if (obj instanceof HibernateProxy) {
             // Unwrap Proxy;
             //      -- loading, if necessary.

@@ -96,7 +96,9 @@ public class AnnotationProcessor<T> {
         if ( ap == null ) {
             ap = new AnnotationProcessor<T>( type );
             if ( cache ) // if caching is enabled
-                processors.put( type, ap );
+            {
+                processors.put(type, ap);
+            }
         }
         return ap;
     }
@@ -173,7 +175,9 @@ public class AnnotationProcessor<T> {
             final Invoke wrapper = wrapped.get( i );
             
             if ( invoker instanceof MethodInvoker ) {
-                if ( zkEvents.get( method ) == null ) zkEvents.put( method, new HashSet<MethodCache>() );
+                if ( zkEvents.get( method ) == null ) {
+                    zkEvents.put(method, new HashSet<MethodCache>());
+                }
                 // store method invoker
                 zkEvents.get( method ).add( new MethodCache( method, (MethodInvoker) invoker, wrapper ) );
             } else {

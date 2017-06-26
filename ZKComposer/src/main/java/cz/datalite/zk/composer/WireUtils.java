@@ -47,8 +47,9 @@ public class WireUtils {
         for ( final Iterator it = IMPLICIT_NAMES.iterator(); it.hasNext(); ) {
             final String fdname = ( String ) it.next();
             //we cannot inject event proxy because it is not an Interface
-            if ( "event".equals( fdname ) )
+            if ( "event".equals( fdname ) ) {
                 continue;
+            }
             final Object argVal = Components.getImplicit( self, fdname );
             try {
                 final Field field = Classes.getAnyField( controller.getClass(), fdname );

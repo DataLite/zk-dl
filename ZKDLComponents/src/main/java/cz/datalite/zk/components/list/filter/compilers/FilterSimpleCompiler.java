@@ -47,7 +47,9 @@ public class FilterSimpleCompiler extends AbstractFilterCompiler {
             final Object val1 = values[1];
             
             // filter out one null value as false and both as true
-            if ( val0 == null ) return val0 == val1;
+            if ( val0 == null ) {
+                return val0 == val1;
+            }
             
              // try to convert 2nd object to target class
             Object compareTo = val1;

@@ -50,8 +50,9 @@ public class DLPortlet extends DHtmlLayoutPortletFix
 
 
         // overwrite portlet title with TITLE attribute from session (if set)
-        if (result && sess.hasAttribute(TITLE))
+        if (result && sess.hasAttribute(TITLE)) {
             response.setTitle(String.valueOf(sess.getAttribute(TITLE)));
+        }
 
         return result;
     }
@@ -72,10 +73,12 @@ public class DLPortlet extends DHtmlLayoutPortletFix
         sess.setAttribute(WebKeys.THEME_DISPLAY, themeDisplay);
 
         String portletId = null;
-        if (themeDisplay != null && themeDisplay.getPortletDisplay() != null)
+        if (themeDisplay != null && themeDisplay.getPortletDisplay() != null) {
             portletId = themeDisplay.getPortletDisplay().getId();
-        if (StringHelper.isNull(portletId))
+        }
+        if (StringHelper.isNull(portletId)) {
             portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
+        }
 
         Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
         sess.setAttribute(ROLE_MAPPERS, portlet.getRoleMappers());

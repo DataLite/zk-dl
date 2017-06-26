@@ -328,8 +328,9 @@ public final class DLFilter {
 						continue;
 					}
 
-                    if (sort.getColumn() == null)
+                    if (sort.getColumn() == null) {
                         throw new IllegalArgumentException("DLFilter cannot be used with sqlFormula sort: " + sort.toString());
+                    }
 
 					int compare = beanCompare(sort.getColumn(), o1, o2);
 					if (compare == 0) {

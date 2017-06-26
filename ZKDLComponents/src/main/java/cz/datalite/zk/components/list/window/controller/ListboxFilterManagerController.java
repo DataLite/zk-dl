@@ -69,8 +69,9 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
         for ( NormalFilterUnitModel unit : modelFilter ) {
 
             // if column was added manally, template might not be set - enforce template
-            if (unit.getTemplate() == null)
+            if (unit.getTemplate() == null) {
                 unit.setTemplate(modelTemplates.findUnitModelByColumnName(unit.getColumn()));
+            }
 
             rows.add( new RowModel( unit ) );
         }
@@ -270,8 +271,9 @@ public class ListboxFilterManagerController extends GenericAutowireComposer {
             public void onEvent( final Event event ) {
 
                 // premature Event - while in component setup
-                if (component.getParent() == null)
+                if (component.getParent() == null) {
                     return;
+                }
                 
                 filterComponent.validate();
                 final RowModel unitModel = getModelFromComponent( component );

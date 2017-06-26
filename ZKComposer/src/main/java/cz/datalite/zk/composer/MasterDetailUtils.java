@@ -37,14 +37,19 @@ public final class MasterDetailUtils {
         Object ctl = Executions.getCurrent().getAttribute( "masterController" );
         if ( ctl == null )
             // try to find masterController in arguments (e.g. <macroComponent masterController="${ctl}">)
-            ctl = Executions.getCurrent().getArg().get( "masterController" );
+        {
+            ctl = Executions.getCurrent().getArg().get("masterController");
+        }
         if ( ctl == null )
             // try to find masterController in params (e.g. Executions.createComponents(target,centerPlaceholder,Map("masterController" -> ctl)); )
-            ctl = Executions.getCurrent().getParameterMap().get( "masterController" );
+        {
+            ctl = Executions.getCurrent().getParameterMap().get("masterController");
+        }
 
         if ( ctl != null ) {
-            if ( !( ctl instanceof DLMasterController ) )
-                throw new UiException( "Attribute masterController has to be of type cz.datalite.composer.DLMasterController, got " + ctl );
+            if ( !( ctl instanceof DLMasterController ) ) {
+                throw new UiException("Attribute masterController has to be of type cz.datalite.composer.DLMasterController, got " + ctl);
+            }
 
             registerToMasterController( controller, self, ( DLMasterController ) ctl );
         }

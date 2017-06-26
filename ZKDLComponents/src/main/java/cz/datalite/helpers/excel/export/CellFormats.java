@@ -20,8 +20,9 @@ public class CellFormats {
     Map<DisplayFormat, Map<WritableFont, WritableCellFormat>> cache = new HashMap<DisplayFormat, Map<WritableFont, WritableCellFormat>>();
 
     private boolean containsCache(DisplayFormat type, WritableFont font) {
-        if (!cache.containsKey(type))
+        if (!cache.containsKey(type)) {
             cache.put(type, new HashMap<WritableFont, WritableCellFormat>());
+        }
 
         return cache.get(type).containsKey(font);
     }
