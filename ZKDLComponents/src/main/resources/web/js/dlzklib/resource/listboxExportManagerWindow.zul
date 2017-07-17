@@ -72,7 +72,7 @@
                 </row>
                 <row>
                     <label value="${c:l('listbox.exportManager.fileName')}" />
-                    <textbox value="@{ctl.fileName}" hflex="true" sclass="margin-bottom1" />
+                    <textbox value="@{ctl.fileName}" hflex="true" sclass="margin-bottom1" id="textboxFileName"/>
                 </row>
             </rows>
         </grid>

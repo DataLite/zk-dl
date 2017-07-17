@@ -112,6 +112,11 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
             throw new WrongValueException(intBox != null ? intBox : self, Labels.getLabel("listbox.exportManager.error.rows.message" , new Object[] {exportMaxRows}));
         }
 
+        if(StringHelper.isNull(fileName)){
+            Component textBox = self.getFellowIfAny("textboxFileName", true);
+            throw new WrongValueException(textBox != null ? textBox : self, Labels.getLabel("listbox.exportManager.error.fileName.message" ));
+        }
+
         Clients.showBusy( Labels.getLabel( "listbox.exportManager.wait") );
         Events.echoEvent( "onExport", self, null);
     }
