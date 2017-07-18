@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.4.5</version>
+        <artifactId>zk-dl</artifactId>
+        <version>1.4.5.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
@@ -11,6 +11,14 @@
     <version>1.4.5.6</version>
     <name>DLHelpers</name>
     <description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and use anything you want.</description>
+
+    <licenses>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>

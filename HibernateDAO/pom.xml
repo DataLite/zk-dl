@@ -3,17 +3,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
+        <artifactId>zk-dl</artifactId>
         <version>1.4.5.1</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>HibernateDAO</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.5.10</version>
+    <version>1.4.5.12</version>
     <name>Hibernate DAO</name>
     <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
+
+    <licenses>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <dependencies>
     

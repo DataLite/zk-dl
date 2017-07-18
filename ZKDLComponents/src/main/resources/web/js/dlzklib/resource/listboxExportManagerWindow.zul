@@ -64,7 +64,7 @@
             <rows>
                 <row>
                     <label value="@{ctl.recordCountLabel}" />
-                    <intbox value="@{ctl.rows}" hflex="true" sclass="margin-bottom1" />
+                    <intbox value="@{ctl.rows}" hflex="true" sclass="margin-bottom1" id="intboxRows"/>
                 </row>
                 <row>
                     <label value="${c:l('listbox.exportManager.sheetName')}" />
@@ -72,7 +72,7 @@
                 </row>
                 <row>
                     <label value="${c:l('listbox.exportManager.fileName')}" />
-                    <textbox value="@{ctl.fileName}" hflex="true" sclass="margin-bottom1" />
+                    <textbox value="@{ctl.fileName}" hflex="true" sclass="margin-bottom1" id="textboxFileName"/>
                 </row>
             </rows>
         </grid>
