@@ -68,7 +68,9 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
     // additional open to onClick
     _clickOpen: function (evt) {
-        this.open({sendOnOpen:true});
+        if (! this._readonly) {
+            this.open({sendOnOpen: true});
+        }
         evt.stop();
     },
 
