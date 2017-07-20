@@ -26,7 +26,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         imageLabel: function() {
             if (this.desktop)
                 this.rerender();
-        }
+        },
 
         //-disd
 
@@ -68,7 +68,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
     // additional open to onClick
     _clickOpen: function (evt) {
-        if (! this._readonly) {
+        if (! this.getLovboxReadonly()) {
             this.open({sendOnOpen: true});
         }
         evt.stop();
@@ -150,9 +150,9 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         if (this.inRoundedMold()) {
             if (!isButtonVisible)
                 out.push(' ', zcls, '-btn-right-edge');
-            if (this._readonly)
+            if (this.getLovboxReadonly())
                 out.push(' ', zcls, '-btn-readonly');
-            if (zk.ie6_ && !isButtonVisible && this._readonly)
+            if (zk.ie6_ && !isButtonVisible && this.getLovboxReadonly())
                 out.push(' ', zcls, '-btn-right-edge-readonly');
         } else if (!isButtonVisible)
             out.push('" style="display:none');
