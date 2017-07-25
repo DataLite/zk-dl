@@ -47,13 +47,16 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
         } );
 
         for ( Map<String, Object> map : columnModels ) {
-            if (StringHelper.isNull((String) map.get( "label" ) )) {
-                // System cell without label - is not part of sorting
-                hiddenModel.add( prepareMap( map ) );
-            } else if ( ( Boolean ) map.get( "visible" ) ) {
-                usedModel.add( prepareMap( map ) );
-            } else {
-                unusedModel.add( prepareMap( map ) );
+
+            if(( Boolean ) map.get( "columnManager" ) ){
+                if (StringHelper.isNull((String) map.get( "label" ) )) {
+                    // System cell without label - is not part of sorting
+                    hiddenModel.add( prepareMap( map ) );
+                } else if ( ( Boolean ) map.get( "visible" ) ) {
+                    usedModel.add( prepareMap( map ) );
+                } else {
+                    unusedModel.add( prepareMap( map ) );
+                }
             }
         }
 

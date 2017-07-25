@@ -92,6 +92,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             unitMap.put( "index", index );
             unitMap.put( "order", unit.getOrder() );
             unitMap.put( "visible", unit.isVisible() );
+            unitMap.put( "columnManager", unit.isColumnManager() );
 
             columnModels.add( unitMap );
         }

@@ -80,6 +80,9 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     
     /** column is enabled for export */
     protected boolean exportable;
+
+    /** column is enabled for listing in column manager */
+    protected boolean columnManager = true;
     
     /** redefines filter operators for this column */
     protected List<DLFilterOperator> filterOperators;
@@ -495,7 +498,15 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 		this.exportable = exportable;
 	}
 
-	public String getExportColumn() {
+    public boolean isColumnManager() {
+        return columnManager;
+    }
+
+    public void setColumnManager(boolean columnManager) {
+        this.columnManager = columnManager;
+    }
+
+    public String getExportColumn() {
 		return exportColumn;
 	}
 
@@ -525,7 +536,7 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 				+ ", controller=" + controller + ", label=" + label + ", order=" + order + ", visible=" + visible
 				+ ", sortOrder=" + sortOrder + ", sortType=" + sortType + ", nullPrecedence=" + nullPrecedence + ", sortColumn=" + sortColumn + ", sortZk="
 				+ sortZk + ", sortable=" + sortable + ", quickFilter=" + quickFilter + ", quickFilterOperator="
-				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", filterOperators="
+				+ quickFilterOperator + ", filter=" + filter + ", exportable=" + exportable + ", columnManager=" + columnManager + ", filterOperators="
 				+ filterOperators + ", filterComponentFactory=" + filterComponentFactory + ", exportColumn="
 				+ exportColumn + ", filterCompiler=" + filterCompiler + ", width=" + width + "]";
 	}
