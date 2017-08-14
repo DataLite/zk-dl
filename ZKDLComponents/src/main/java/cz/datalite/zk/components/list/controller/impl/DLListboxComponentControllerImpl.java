@@ -396,8 +396,22 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
             c.setParent(null);
 
         // insert them back in correct order
-        for ( int i = 0; listcellIndicies.get( i ) != null; ++i ) {
-            listcellBuffer.get( listcellIndicies.get( i ) ).setParent(item);
+        for ( Integer index : listcellIndicies )
+        {
+            if (index == null)
+            {
+                break;
+            }
+
+            if ((index >= 0) && (listcellBuffer.size() > index))
+            {
+                Component c = listcellBuffer.get(index);
+
+                if (c != null)
+                {
+                    c.setParent(item);
+                }
+            }
         }
     }
 
