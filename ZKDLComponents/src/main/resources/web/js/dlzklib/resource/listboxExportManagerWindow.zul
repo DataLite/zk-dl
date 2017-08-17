@@ -9,7 +9,7 @@
     <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="660px" id="winListboxManager" closable="true" 
              border="none"  self="@{define(content)}"
              apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController" 
-             sclass="window">
+             sclass="window manager-window">
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
@@ -18,11 +18,14 @@
         </hbox>
 
         <hbox sclass="margin-bottom15">
-            <vbox>
-                <label value="${c:l('listbox.exportManager.hidden')}" sclass="bold margin-bottom10" />
-                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
-                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
-                        <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}" />
+            <vbox spacing="0">
+                <label value="${c:l('listbox.exportManager.hidden')}" sclass="bold" />
+                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px"
+                         onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true"
+                         sclass="margin-top5 margin-bottom5">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true"
+                              onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}"/>
                     </listitem>
                 </listbox>
                 <hbox width="250px" hflex="1" align="center">
@@ -39,11 +42,14 @@
                 <button onClick="ctl.selector.onUsedToUnusedAllMove()" src="${zkdl:i('left2Arrow32x32.png')}" height="34px"/>
             </vbox>
 
-            <vbox>
-                <label value="${c:l('listbox.exportManager.displayed')}" sclass="bold margin-bottom15" />
-                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
-                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
-                        <listcell label="@{row.label}" />
+            <vbox spacing="0">
+                <label value="${c:l('listbox.exportManager.displayed')}" sclass="bold" />
+                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px"
+                         onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true"
+                         sclass="margin-top5 margin-bottom5">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true"
+                              onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}"/>
                     </listitem>
                 </listbox>
             </vbox>

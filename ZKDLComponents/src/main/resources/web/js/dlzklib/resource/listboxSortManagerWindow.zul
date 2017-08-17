@@ -9,7 +9,7 @@
     <window onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="540px" id="winListboxManager" closable="true" 
             border="none" self="@{define(content)}"
             apply="cz.datalite.zk.components.list.window.controller.ListboxSortManagerController" 
-            sclass="window">
+            sclass="window manager-window">
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
