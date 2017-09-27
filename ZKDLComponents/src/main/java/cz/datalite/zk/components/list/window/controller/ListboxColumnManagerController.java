@@ -42,7 +42,7 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
         java.util.Collections.sort( columnModels, new java.util.Comparator<Map<String, Object>>() {
 
             public int compare( final Map<String, Object> object1, final Map<String, Object> object2 ) {
-                return object1.get( "label" ) != null ? (( String ) object1.get( "label" ) ).compareTo((String ) object2.get( "label" )) : 0;
+                return object1.get( "label" ) != null ? ((( String ) object1.get( "label" ) ).toLowerCase()).compareTo(((String ) object2.get( "label" )).toLowerCase()) : 0;
             }
         } );
 
