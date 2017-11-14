@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -22,10 +22,10 @@
     <orderEntry type="library" name="Maven: org.zkoss.zk:zhtml:8.0.0.FL.20150504-Eval" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.zkoss:zsoup:1.8.2.3" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLBind:1.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.zkoss.zk:zkbind:8.0.0.FL.20150504-Eval-DATALITE" level="project" />
+    <orderEntry type="module" module-name="DLBind" />
+    <orderEntry type="module" module-name="zkbind" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.18.2-GA" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:zkplus:1.5.0" level="project" />
+    <orderEntry type="module" module-name="zkplus" />
     <orderEntry type="library" name="Maven: cz.datalite.zk-dl:DLHelpers:1.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="library" name="Maven: eu.medsea.mimeutil:mime-util:2.1.3" level="project" />
@@ -35,7 +35,7 @@
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
-    <orderEntry type="library" name="Maven: cz.datalite.zk-dl:ZKComponents:1.5.0" level="project" />
+    <orderEntry type="module" module-name="ZKComponents" />
     <orderEntry type="library" name="Maven: org.zkoss.zk:zkplus:8.0.0.FL.20150504-Eval" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
