@@ -1,6 +1,6 @@
 (function (out) {
     var uuid = this.uuid;
-    out.push('<div draggable="true" droppable="true" ', this.domAttrs_(), ' id="', uuid , '-root">');
+    out.push('<div ', this.domAttrs_(), ' id="', uuid , '-root">');
     out.push('<span class="dl-labeled-tag-label" id="', uuid, '-label">', this.getLabel(), '</span>');
     out.push('<span class="dl-labeled-tag-value" id="', uuid, '-value">', this.getValue(), '</span>');
     out.push('<span class="z-icon-times" id="', uuid, '-close"></span>');
