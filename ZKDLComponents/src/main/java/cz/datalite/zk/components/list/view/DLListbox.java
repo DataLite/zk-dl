@@ -135,7 +135,7 @@ public class DLListbox extends Listbox {
      * @return true if the first is selected, false if list is empty
      */
     public boolean selectFirstRow() {
-        if ( controller == null && isSelectFirstRow() && getModel() != null && getModel() instanceof Selectable )
+        if ( controller != null && isSelectFirstRow() && getModel() != null && getModel() instanceof Selectable )
             if ( getModel().getSize() > 0 ) {
                 if ( getSelectedItems().isEmpty() ) {
                     final Selectable model = ( Selectable ) getModel();
