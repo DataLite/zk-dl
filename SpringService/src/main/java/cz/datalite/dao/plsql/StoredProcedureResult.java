@@ -511,4 +511,10 @@ public class StoredProcedureResult extends HashMap<String, Object>
     {
         return extract( name, Integer.class ) ;
     }
+
+
+    public String getOutput()
+    {
+        return extract( "dbms_output", String.class ) ;
+    }
 }

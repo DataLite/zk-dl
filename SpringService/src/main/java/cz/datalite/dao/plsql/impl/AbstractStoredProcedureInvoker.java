@@ -57,6 +57,9 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
     private EntityManager entityManager ;
 
+    private boolean dbmsOutput = false ;
+    private int sizeOutput = Integer.MAX_VALUE ;
+
     public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
 	{
 		super( dataSource, "" ) ;
@@ -621,16 +624,23 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         StringBuilder sb = new StringBuilder() ;
 
         sb.append( "declare \n" ) ;
-
         sb.append( " ob char ;\n" ) ;  //Proměná pro uložení konvertované boolean hodnoty
+        sb.append( " l_line varchar2(255); " ) ;
+        sb.append( " l_done number; " ) ;
+        sb.append( " l_buffer long; " ) ;
 
         generateDeclarePlSqlVariables(sb) ;
 
-        List<SqlParameter> newInputParameter = new ArrayList<SqlParameter>() ;
-        List<SqlParameter> newOutputParameter = new ArrayList<SqlParameter>() ;
+        List<SqlParameter> newInputParameter = new ArrayList<>() ;
+        List<SqlParameter> newOutputParameter = new ArrayList<>() ;
 
 
         sb.append( "begin\n" ) ;
+
+        if ( dbmsOutput )
+        {
+            sb.append( "dbms_output.enable( " ).append( sizeOutput ).append( ") ;\n" ) ;
+        }
 
         generateUsingVariables(sb, newInputParameter, true) ;
 
@@ -638,12 +648,31 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
         generateUsingVariables( sb, newOutputParameter, false ) ;
 
+        if ( dbmsOutput )
+        {
+            sb.append( "\n" ) ;
+            sb.append( "loop\n" ) ;
+            sb.append(   "exit when length(l_buffer)+255 > " ).append( sizeOutput ).append(" OR l_done = 1 ;\n" ) ;
+            sb.append(   "dbms_output.get_line( l_line, l_done ); \n" ) ;
+            sb.append(   "l_buffer := l_buffer || l_line || chr(10); \n" ) ;
+            sb.append( "end loop; \n" ) ;
+            sb.append( "? := l_buffer;\n" ) ;
+            sb.append( "dbms_output.disable() ;\n" ) ;
+
+            newOutputParameter.add( new SqlOutParameter( "dbms_output", Types.LONGVARCHAR ) ) ;
+        }
+
         sb.append( "end ;\n" ) ;
 
-        generateNewParameterList( newInputParameter, newOutputParameter, new ArrayList<SqlParameter>( getDeclaredParameters() ) ) ;
+        generateNewParameterList( newInputParameter, newOutputParameter, new ArrayList<>( getDeclaredParameters() ) ) ;
 
         setName(sb.toString()) ;
         setSqlReadyForUse( true ) ;
+
+        if ( dbmsOutput )
+        {
+            System.out.println( getSql() ) ;
+        }
     }
 
     /**
@@ -1219,7 +1248,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     {
         String originalSql = getSql();
 
-        if ( ( wrapNeed ) || ( named ) )
+        if ( ( wrapNeed ) || ( named ) || ( dbmsOutput ) )
         {
             generateWrappedQuery(named) ;
         }
@@ -1253,7 +1282,6 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
             // analýza trvání volání PLSQL, určeno pro logování do samostatného souboru a export do excelu.
             if (PLSQL_LOGGER.isTraceEnabled()) {
                 long duration = System.currentTimeMillis() - startTime;
-                String procedure = originalSql;
                 String sql = getSql();
 
                 StringBuilder params = new StringBuilder();
@@ -1270,8 +1298,22 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
                 String callstack = ExceptionUtils.getFullStackTrace(new Throwable());
 
-                PLSQL_LOGGER.trace("EXEC PLSQL;" + duration + ";\"" + procedure + "\";\"" + sql + "\";\"" + params + "\";\"" + callstack + "\"");
+                PLSQL_LOGGER.trace("EXEC PLSQL;" + duration + ";\"" + originalSql + "\";\"" + sql + "\";\"" + params + "\";\"" + callstack + "\"");
             }
         }
+    }
+
+
+    @Override
+    public void enableOutput(int size)
+    {
+        this.dbmsOutput = true ;
+        this.sizeOutput = size ;
+    }
+
+    @Override
+    public void disableOutput()
+    {
+        this.dbmsOutput = false ;
     }
 }
