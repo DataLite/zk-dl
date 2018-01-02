@@ -1,5 +1,0 @@
-<zk>
-    <quickfilter value="ahoj" quickFilterDefault="Vše" quickFilterButton="xxx"
-              onOK='alert(self.getValue());'/>
-    <dlpaging detailed="true" totalSize="130" />
-</zk>

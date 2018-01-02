@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<zk xmlns="http://www.zkoss.org/2005/zul">
-    <window apply="cz.datalite.zkdl.testy.TestController">
-        <div id="updateArea" width="500" height="300" style="background-color: red;">
-            <button label="Test" onClick="@command('click')"/>
-        </div>
-    </window>
-</zk>
