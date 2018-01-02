@@ -1,8 +1,11 @@
 package cz.datalite.dao.plsql;
 
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
+import cz.datalite.helpers.ReflectionHelper;
 import oracle.sql.ARRAY;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.*;
@@ -10,6 +13,7 @@ import java.util.*;
 /**
  * Definice výsledku uložené procedur
  */
+@SuppressWarnings("Duplicates")
 public class StoredProcedureResult extends HashMap<String, Object>
 {
     private Map<String, String> long2shortName ;
@@ -266,7 +270,12 @@ public class StoredProcedureResult extends HashMap<String, Object>
     {
         List<T> result = new ArrayList<>() ;
 
-        long count = ObjectHelper.extractLong(get(name + "_COUNT")) ;
+        Long count = ObjectHelper.extractLong(get(name + "_COUNT")) ;
+
+        if ( count == null )
+        {
+            count = 0L ;
+        }
 
         Map<FieldInfo, List<?>> dataFromDB = new HashMap<>() ;
 
@@ -324,16 +333,55 @@ public class StoredProcedureResult extends HashMap<String, Object>
             {
                 target.addAll( novySeznam ) ;
             }
-            else
+            else if ( mergeType == MergeType.NEW )
             {
                 for( T item : novySeznam )
                 {
-                    if ( ! target.contains( item ) )
+                    if (!target.contains(item))
                     {
-                        target.add( item ) ;
+                        target.add(item);
                     }
                 }
             }
+            else
+            {
+                List<T> newTarget = new ArrayList<>( target ) ;
+
+                target.clear() ;
+
+                for( T item : novySeznam )
+                {
+                    if ( ! newTarget.contains( item ) )
+                    {
+                        target.add( item ) ;
+                    }
+                    else if ( ( mergeType == MergeType.MERGE ) || ( mergeType == MergeType.SYNCHRONIZE ) )
+                    {
+                        int index = newTarget.indexOf( item ) ;
+                        T old = newTarget.get( index ) ;
+
+                        newTarget.remove( index ) ;
+                        target.add( old ) ;
+
+                        for( Field field : ReflectionHelper.getAllFields( returnType ) )
+                        {
+                            if ( ! Modifier.isStatic( field.getModifiers() ) )
+                            {
+                                ObjectHelper.setValue( field.getName(), old, ObjectHelper.getValue( field.getName(), item ) ) ;
+                            }
+                        }
+                    }
+                }
+
+                if ( ( mergeType == MergeType.MERGE ) && ( !newTarget.isEmpty() ) )
+                {
+                     target.addAll( newTarget ) ;
+                }
+            }
+        }
+        else if ( mergeType == MergeType.SYNCHRONIZE  )
+        {
+            target.clear() ;
         }
     }
 
@@ -463,5 +511,11 @@ public class StoredProcedureResult extends HashMap<String, Object>
     public Integer getInteger( String name )
     {
         return extract( name, Integer.class ) ;
+    }
+
+
+    public String getOutput()
+    {
+        return extract( "dbms_output", String.class ) ;
     }
 }

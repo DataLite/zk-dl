@@ -42,18 +42,21 @@ public class ListboxColumnManagerController extends GenericAutowireComposer {
         java.util.Collections.sort( columnModels, new java.util.Comparator<Map<String, Object>>() {
 
             public int compare( final Map<String, Object> object1, final Map<String, Object> object2 ) {
-                return object1.get( "label" ) != null ? (( String ) object1.get( "label" ) ).compareTo((String ) object2.get( "label" )) : 0;
+                return object1.get( "label" ) != null ? ((( String ) object1.get( "label" ) ).toLowerCase()).compareTo(((String ) object2.get( "label" )).toLowerCase()) : 0;
             }
         } );
 
         for ( Map<String, Object> map : columnModels ) {
-            if (StringHelper.isNull((String) map.get( "label" ) )) {
-                // System cell without label - is not part of sorting
-                hiddenModel.add( prepareMap( map ) );
-            } else if ( ( Boolean ) map.get( "visible" ) ) {
-                usedModel.add( prepareMap( map ) );
-            } else {
-                unusedModel.add( prepareMap( map ) );
+
+            if(( Boolean ) map.get( "columnManager" ) ){
+                if (StringHelper.isNull((String) map.get( "label" ) )) {
+                    // System cell without label - is not part of sorting
+                    hiddenModel.add( prepareMap( map ) );
+                } else if ( ( Boolean ) map.get( "visible" ) ) {
+                    usedModel.add( prepareMap( map ) );
+                } else {
+                    unusedModel.add( prepareMap( map ) );
+                }
             }
         }
 

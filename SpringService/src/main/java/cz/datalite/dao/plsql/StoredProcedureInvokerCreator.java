@@ -168,4 +168,16 @@ public interface StoredProcedureInvokerCreator
      * @return spoustec ulozenych procedur
      */
     StoredProcedureInvoker create(DataSource dataSource, String name, int resultType) ;
+
+    /**
+     * @return aktuální timeout spojení
+     */
+    Integer getTimeout() ;
+
+
+    /**
+     * @param timeout novy timeout spojení
+     */
+    void setTimeout(Integer timeout) ;
+
 }

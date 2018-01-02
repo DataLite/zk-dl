@@ -1,5 +1,6 @@
 package cz.datalite.zk.components.list.window.controller;
 
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.view.DLListbox;
 import org.zkoss.bind.BindUtils;
@@ -7,6 +8,7 @@ import org.zkoss.lang.Library;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.EventQueues;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.Composer;
@@ -100,7 +102,7 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
         try {
             Map<String, Object> args = new HashMap<>();
             args.put("filename", fileName);
-            args.put("sheetname", sheetName);
+            args.put( "sheetname", StringHelper.isNull(sheetName) ? "data" : sheetName );
             args.put("model", usedModel);
             args.put("rows", rows);
             args.put("entityClass", masterController != null ? masterController.getEntityClass() : null);// not used in export - for global-command only
@@ -113,7 +115,18 @@ public class ListboxExportManagerController extends GenericAutowireComposer {
         }
     }
 
-    public void onOk() throws FileNotFoundException, IOException {
+    public void onOk() throws FileNotFoundException, IOException, WrongValueException {
+
+        if(rows == null || rows < 0){
+            Component intBox = self.getFellowIfAny("intboxRows", true);
+            throw new WrongValueException(intBox != null ? intBox : self, Labels.getLabel("listbox.exportManager.error.rows.message" , new Object[] {exportMaxRows}));
+        }
+
+        if(StringHelper.isNull(fileName)){
+            Component textBox = self.getFellowIfAny("textboxFileName", true);
+            throw new WrongValueException(textBox != null ? textBox : self, Labels.getLabel("listbox.exportManager.error.fileName.message" ));
+        }
+
         Clients.showBusy( Labels.getLabel( "listbox.exportManager.wait") );
         Events.echoEvent( "onExport", self, null);
     }

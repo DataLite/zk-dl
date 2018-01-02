@@ -1,3 +1,4 @@
+// noinspection JSUnresolvedVariable,JSUnusedGlobalSymbols
 dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     _clearButton: false,
     _lovboxReadonly: false,
@@ -14,6 +15,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
 
         watermark: function (v) {
             if (this.desktop) {
+                // noinspection JSUnresolvedFunction
                 $(this.getInputNode()).Watermark(v);
             }
         },
@@ -33,6 +35,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     bind_: function () {
+        // noinspection JSUnresolvedVariable
         this.$supers(dlzklib.Lovbox, 'bind_', arguments);
         var labelBtn = this.$n("label-btn");
         if (labelBtn) {
@@ -40,7 +43,8 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         }
 
 
-        if (!this.getLovboxReadonly()) {
+        // noinspection JSUnresolvedFunction
+        if ( (!this.getLovboxReadonly()) && ( ! this.getDisabled() ) )  {
             this.domListen_(this.$n("del"), "onClick", "_doClear");
             this.domListen_(this.getInputNode(), "onFocus", "_clearWatermark");
             this.domListen_(this.getInputNode(), "onBlur", "_doWatermark");
@@ -56,19 +60,21 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
             this.domUnlisten_(labelBtn, "onClick", "_clickOpen");
         }
 
-        if (!this.getLovboxReadonly()) {
-            this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
-            this.domUnlisten_(this.getInputNode(), "onFocus", "_clearWatermark");
-            this.domUnlisten_(this.getInputNode(), "onBlur", "_doWatermark");
-            this.domUnlisten_(this.getInputNode(), "onChange", "_doWatermark");
-        }
+        this.domUnlisten_(this.$n("del"), "onClick", "_doClear");
+        this.domUnlisten_(this.getInputNode(), "onFocus", "_clearWatermark");
+        this.domUnlisten_(this.getInputNode(), "onBlur", "_doWatermark");
+        this.domUnlisten_(this.getInputNode(), "onChange", "_doWatermark");
 
+        // noinspection JSUnresolvedVariable
         this.$supers(dlzklib.Lovbox, 'unbind_', arguments);
     },
 
     // additional open to onClick
     _clickOpen: function (evt) {
-        this.open({sendOnOpen:true});
+        // noinspection JSUnresolvedFunction
+        if ( (!this.getLovboxReadonly()) && ( ! this.getDisabled() ) )  {
+            this.open({sendOnOpen: true});
+        }
         evt.stop();
     },
 
@@ -93,7 +99,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     inImageMold: function () {
-        return this.getMold().indexOf("image") != -1;
+        return this.getMold().indexOf("image") !== -1;
     },
 
     getImageNode: function () {
@@ -103,10 +109,11 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     visibleDelNode: function ( visible ) {
         var del = this.$n("del");
         if (del) {
+            // noinspection JSUnresolvedFunction
             if (visible && this.getClearButton() && this.getText() && !this.getLovboxReadonly() )
-                del.style.display = "inline"
+                del.style.display = "inline" ;
             else
-                del.style.display = "none"
+                del.style.display = "none" ;
         }
 
     },
@@ -148,9 +155,11 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
         if (this.inRoundedMold()) {
             if (!isButtonVisible)
                 out.push(' ', zcls, '-btn-right-edge');
-            if (this._readonly)
+            // noinspection JSUnresolvedFunction
+            if (this.getLovboxReadonly())
                 out.push(' ', zcls, '-btn-readonly');
-            if (zk.ie6_ && !isButtonVisible && this._readonly)
+            // noinspection JSUnresolvedFunction
+            if (zk.ie6_ && !isButtonVisible && this.getLovboxReadonly())
                 out.push(' ', zcls, '-btn-right-edge-readonly');
         } else if (!isButtonVisible)
             out.push('" style="display:none');
@@ -169,13 +178,15 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     enterPressed_ : function () {},
 
     _doWatermark: function () {
+        // noinspection JSUnresolvedFunction
         var input = $(this.getInputNode()),
             watermark = this.getWatermark();
 
         if (!this._defaultColor)
             this._defaultColor = input.css("color");
 
-        if(watermark && !this.getLovboxReadonly() && (input.val().length==0 || input.val()==watermark)) {
+        // noinspection JSUnresolvedFunction
+        if(watermark && !this.getLovboxReadonly() && (input.val().length===0 || input.val()===watermark)) {
             input.val(watermark);
             input.css("color",this._watermarkColor);
         } else {
@@ -184,9 +195,10 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     },
 
     _clearWatermark: function() {
+        // noinspection JSUnresolvedFunction
         var input = $(this.getInputNode()),
             watermark = this.getWatermark();
-        if(input.val()==watermark)
+        if(input.val()===watermark)
             input.val("");
         input.css("color",this._defaultColor);
     },
@@ -197,4 +209,4 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
     }
 }, {
     $redraw: _zkf
-})
+}) ;

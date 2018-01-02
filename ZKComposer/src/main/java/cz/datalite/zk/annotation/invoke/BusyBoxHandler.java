@@ -25,6 +25,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Window;
 
 /**
@@ -32,6 +33,7 @@ import org.zkoss.zul.Window;
  *
  * @author Karel Cemus
  */
+@SuppressWarnings("WeakerAccess")
 public class BusyBoxHandler {
 
     /** message to be shown */
@@ -55,6 +57,9 @@ public class BusyBoxHandler {
     /** event listener */
     private EventListener listener;
 
+    /** master window **/
+    private Component master ;
+
     public BusyBoxHandler(String message, boolean i18n, boolean cancellable, String parentId) {
         this.message = i18n ? Labels.getLabel(message, message) : message;
         this.cancelable = cancellable;
@@ -76,6 +81,7 @@ public class BusyBoxHandler {
 
                 // register event listener
                 if (eventName != null && listener != null) {
+                    //noinspection unchecked
                     busybox.addEventListener(eventName, listener);
                 }
             } else { // is not cancellable, simple busy window is fine
@@ -86,6 +92,41 @@ public class BusyBoxHandler {
                 }
             }
             busy = true;
+            this.master = master ;
+        }
+    }
+
+    public void setMessage( String message )
+    {
+        this.message = message ;
+
+        if ( busy )
+        {
+            if (this.busybox != null)
+            {
+                try
+                {
+                    Component span = this.busybox.getFellow("busy-box-label");
+
+                    if ( (span != null) && ( span.getFirstChild() instanceof Label) )
+                    {
+                        ((Label)span.getFirstChild()).setValue( message ) ;
+                        span.invalidate() ;
+                    }
+                }
+                catch ( Exception e )
+                {
+                    //empty
+                }
+            }
+            else if ( (parentId == null) || ( master == null ) )
+            {
+                Clients.showBusy(message);
+            }
+            else
+            {
+                Clients.showBusy(master.getFellow(parentId), message);
+            }
         }
     }
 

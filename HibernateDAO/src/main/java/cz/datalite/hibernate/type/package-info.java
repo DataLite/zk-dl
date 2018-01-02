@@ -17,6 +17,10 @@
                 @TypeDef(
                         name="enum_char",
                         typeClass = EnumCharType.class
+                ),
+                @TypeDef(
+                        name="enum_int",
+                        typeClass = EnumIntType.class
                 )
         }
 )

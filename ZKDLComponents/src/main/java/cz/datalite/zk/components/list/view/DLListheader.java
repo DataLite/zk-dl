@@ -68,6 +68,9 @@ public class DLListheader extends Listheader {
     /** column is enabled for export */
     protected boolean exportable = true;
 
+    /** column is enabled for listing in column manager, when set to false column is not displayed in columnManager, only use on columns that are permanently hidden*/
+    protected boolean columnManager = true;
+
     /** defines operators used in normal filter for this column */
     protected List<DLFilterOperator> operators;
 
@@ -111,6 +114,7 @@ public class DLListheader extends Listheader {
         model.setQuickFilterOperator(quickFilterOperator);
         model.setFilter( filter );
         model.setExportable( exportable );
+        model.setColumnManager( columnManager );
         model.setFilterOperators( operators );
         model.setFilterComponentFactory( filterComponentFactory );
         model.setFilterCompiler( filterCompiler );
@@ -297,6 +301,10 @@ public class DLListheader extends Listheader {
     public void setExportable(boolean exportable) {
 		this.exportable = exportable;
 	}
+
+    public void setColumnManager(boolean columnManager) {
+        this.columnManager = columnManager;
+    }
     
     public void setExportColumn(String exportColumn) {
 		this.exportColumn = exportColumn;

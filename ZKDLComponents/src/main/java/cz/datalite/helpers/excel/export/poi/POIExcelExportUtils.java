@@ -1,16 +1,22 @@
 package cz.datalite.helpers.excel.export.poi;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import cz.datalite.helpers.excel.export.ExcelExportUtils;
+import cz.datalite.helpers.excel.export.ExportResult;
+import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
+import cz.datalite.zk.converter.ZkConverter;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Classes;
+import org.zkoss.lang.Strings;
+import org.zkoss.lang.reflect.Fields;
 import org.zkoss.util.media.AMedia;
 
 import java.io.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>Metoda usnadňuje exportování dat do excelu, soubor XLS. Využívá ke své práci
@@ -19,7 +25,10 @@ import java.util.List;
  *
  * @author Martin Peterka
  */
+@SuppressWarnings("Duplicates")
 public final class POIExcelExportUtils {
+
+	protected static final Logger LOGGER = LoggerFactory.getLogger(POIExcelExportUtils.class);
 
 	/**
 	 * Nelze vytvořit instanci třídy
@@ -164,4 +173,148 @@ public final class POIExcelExportUtils {
 	}
 
 
+	/**
+	 * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
+	 */
+	public static ExportResult exportWithResult( String fileName, String sheetName, List<Map<String, Object>> model, int rows, DLListboxExtController masterController ) throws IOException
+	{
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final Workbook workbook = POIExcelExportUtils.createWorkbook();
+
+		Integer[] exportedRows = new Integer[1] ;
+
+		//noinspection unchecked
+		List<List<POICell>> cells = prepareSource( model, rows, masterController, exportedRows ) ;
+
+		headerStyle(cells.get(0), workbook);
+
+		return new ExportResult( POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook), exportedRows[0] ) ;
+	}
+
+	private static void headerStyle(List<POICell> row, Workbook workbook)
+	{
+		CellStyle cellStyle = POICellStyles.headerCellStyle(workbook);
+		for (POICell cell : row)
+		{
+			cell.setStyle(cellStyle);
+		}
+	}
+
+	/**
+	 * Generovani dat pro export
+	 *
+	 * @param model                 sloupce
+	 * @param rows                  počet řádků
+	 * @param masterController      kontroler
+	 * @return data pro export
+	 */
+	private static List<List<POICell>> prepareSource(List<Map<String, Object>> model, int rows, DLListboxExtController masterController, Integer[] exportedRows  )
+	{
+
+		List<List<POICell>> result = new LinkedList<>();
+
+		final List<POICell> heads = new ArrayList<>();
+
+		// list of columns that need to be visible only for the purpose of export
+		// (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
+		final List<DLColumnUnitModel> hideOnFinish = new LinkedList<>();
+
+
+		for (Map<String, Object> unit : model)
+		{
+			//noinspection unchecked
+			heads.add(new POICell(unit.get("label")));
+		}
+
+		// load data
+		List data;
+		try
+		{
+			// ensure, that column is visible in the model (is hidden if the user has added it only for export)
+			for (Map<String, Object> unit : model)
+			{
+				DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel((Integer) unit.get("index") + 1);
+				if (!columnUnitModel.isVisible())
+				{
+					columnUnitModel.setVisible(true);
+					hideOnFinish.add(columnUnitModel);
+				}
+			}
+
+			// and load data
+			int exportMaxRows = ListboxExportManagerController.exportMaxRows;
+
+			data = masterController.loadData( Math.min(  ( (rows == 0) ?  exportMaxRows : Math.min(rows, exportMaxRows) ), 1048575 ) ).getData() ;
+		}
+		finally
+		{
+			// after processing restore previous state
+			for (DLColumnUnitModel hide : hideOnFinish)
+			{
+				hide.setVisible(false);
+			}
+		}
+
+		if ( ( exportedRows != null ) && (exportedRows.length >= 1 ) )
+		{
+			exportedRows[0] = data.size();
+		}
+
+		if ( masterController.getListbox().getAttribute("disableExcelExportHeader") == null)
+		{
+			result.add(heads);
+		}
+
+		for (Object entity : data)
+		{
+			final List<POICell> row = new LinkedList<>();
+			for (Map<String, Object> unit : model)
+			{
+				try
+				{
+					final String columnName = (String) unit.get("column");
+
+					Object value;
+
+					if (entity instanceof Map)
+					{
+						value = ((Map) entity).get(columnName);
+					}
+					else
+					{
+						value = (Strings.isEmpty(columnName)) ? entity : Fields.getByCompound(entity, columnName);
+					}
+
+					Class columnType = (Class) unit.get("columnType");
+					if (value != null && columnType != null)
+					{
+						try
+						{
+							value = Classes.coerce(columnType, value);
+						}
+						catch (ClassCastException e)
+						{
+							LOGGER.trace("Unable to convert export value {} to columnType {} - {}.", value, columnType, e);
+						}
+					}
+
+					if ((Boolean) unit.get("isConverter"))
+					{
+						ZkConverter converter = (ZkConverter) unit.get("converter");
+						value = converter.convertToView(value);
+					}
+
+					//noinspection unchecked
+					row.add(new POICell(value));
+				}
+				catch (Exception ex)
+				{ // ignore
+					LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
+				}
+			}
+			result.add(row);
+
+		}
+		return result;
+	}
 }

@@ -14,4 +14,11 @@ public interface SavepointCallerService
      */
     @SuppressWarnings("unchecked")
     void doExecute( @NotNull SavepointOperation operation ) ;
+
+    /**
+     * @param operation     spouštěná operace
+     * @return výsledek operace
+     */
+    @SuppressWarnings("unchecked")
+    void doExecuteWithDefaultTimeout( @NotNull SavepointOperation operation ) ;
 }

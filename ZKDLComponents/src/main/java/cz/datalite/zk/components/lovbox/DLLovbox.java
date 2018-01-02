@@ -920,19 +920,13 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
             throws java.io.IOException {
         super.renderProperties(renderer);
 
-        if (clearButton)
-            render(renderer, "clearButton", clearButton);
+        render(renderer, "clearButton", clearButton);
 
-        if (getWatermark() != null)
-            render(renderer, "watermark", watermark);
-
+        render(renderer, "watermark", watermark);
         // original readonly means not allow to write text
         // lovbox radonly is sent to client as new value lovboxReadonly
-        if (readonly)
-            render(renderer, "lovboxReadonly", readonly);
-
-        if (!StringHelper.isNull(imageLabel))
-            render(renderer, "imageLabel", imageLabel);
+        render(renderer, "lovboxReadonly", readonly);
+        render(renderer, "imageLabel", imageLabel);
     }
 
 

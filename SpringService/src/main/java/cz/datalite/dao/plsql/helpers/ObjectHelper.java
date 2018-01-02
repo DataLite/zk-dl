@@ -23,7 +23,7 @@ import java.util.Date;
  * Date: 6/13/13
  * Time: 8:40 AM
  */
-@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused"})
+@SuppressWarnings({"TryWithIdenticalCatches", "Duplicates", "unused", "WeakerAccess"})
 public final class ObjectHelper
 {
     private ObjectHelper()
@@ -272,6 +272,7 @@ public final class ObjectHelper
             }
             finally
             {
+                //noinspection ThrowFromFinallyBlock
                 field.setAccessible( f ) ;
             }
         }
@@ -336,6 +337,12 @@ public final class ObjectHelper
             Field field = getDeclaredField( clazz, fieldName ) ;
             Method m = getFieldSetter( field.getDeclaringClass(), field ) ;
 
+
+            if ( ( value != null ) && ( ! field.getType().isAssignableFrom( value.getClass() ) ) )
+            {
+                value = ObjectHelper.extractFromObject( value, field.getType() ) ;
+            }
+
             if ( m != null )
             {
                 m.invoke( obj, value ) ;
@@ -350,6 +357,7 @@ public final class ObjectHelper
             }
             finally
             {
+                //noinspection ThrowFromFinallyBlock
                 field.setAccessible( f ) ;
             }
         }
@@ -460,6 +468,10 @@ public final class ObjectHelper
         {
             return ((Boolean) value) ? "A" : "N";
         }
+        else if ( value instanceof Date )
+        {
+            return DateHelper.dateToString((Date) value, "MM/dd/yyyy HH:mm:ss" ) ;
+        }
 
         return (value != null) ? String.valueOf(value) : null;
     }
@@ -484,7 +496,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( (String)value ) : null ;
+            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( removeDot( (String)value ) ) : null ;
         }
         else if ( value instanceof Double )
         {
@@ -524,6 +536,7 @@ public final class ObjectHelper
      * @param value převáděná hodnota
      * @return převedená hodnota
      */
+    @SuppressWarnings("WeakerAccess")
     public static Integer extractInteger(Object value)
     {
         if (value instanceof Long)
@@ -540,7 +553,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt((String) value) : null ;
+            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt( removeDot( (String)value ) ): null ;
         }
         else if ( value instanceof Double )
         {
@@ -604,6 +617,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof Double )
         {
+            //noinspection ConstantConditions
             return new BigInteger( extractString( value ) ) ;
         }
 
@@ -765,5 +779,11 @@ public final class ObjectHelper
     public static <T> T[] asArray( T ... values )
     {
         return values ;
+    }
+
+
+    private static String removeDot( String original )
+    {
+        return ( ( original != null ) && ( original.endsWith( ".0" ) ) ) ? original.substring( 0, original.indexOf( "." )  ) : original ;
     }
 }

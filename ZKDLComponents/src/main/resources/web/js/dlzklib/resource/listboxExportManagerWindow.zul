@@ -9,7 +9,7 @@
     <window  onOK="ctl.onOk()" onCancel="ctl.onStorno()" width="680px" id="winListboxManager" closable="true"
              border="normal"  self="@{define(content)}"
              apply="cz.datalite.zk.components.list.window.controller.ListboxExportManagerController" 
-             sclass="window">
+             sclass="window manager-window">
       <div sclass="editable padding10">
 
         <hbox sclass="margin-bottom15">
@@ -18,11 +18,14 @@
         </hbox>
 
         <hbox sclass="margin-bottom15">
-            <vbox>
+            <vbox spacing="0">
                 <label value="${c:l('listbox.exportManager.hidden')}" sclass="bold" />
-                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
-                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
-                        <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}" />
+                <listbox height="250px" id="unusedListbox" model="@{ctl.selector.unusedModel}" width="250px"
+                         onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true"
+                         sclass="margin-top5 margin-bottom5">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true"
+                              onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}" visible="@{row.unusedModelItemVisible}"/>
                     </listitem>
                 </listbox>
                 <hbox align="center">
@@ -39,11 +42,14 @@
                 <button onClick="ctl.selector.onUsedToUnusedAllMove()" src="${zkdl:i('left2Arrow32x32.png')}" height="auto"/>
             </vbox>
 
-            <vbox>
+            <vbox spacing="0">
                 <label value="${c:l('listbox.exportManager.displayed')}" sclass="bold" />
-                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px" onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true">
-                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true" onDrop="ctl.selector.moveItem(event.dragged, self)">
-                        <listcell label="@{row.label}" />
+                <listbox height="250px" id="usedListbox" model="@{ctl.selector.usedModel}" width="250px"
+                         onDrop="ctl.selector.moveItem(event.dragged, self)" droppable="true" multiple="true"
+                         sclass="margin-top5 margin-bottom5">
+                    <listitem self="@{each=row}" value="@{row}" draggable="true" droppable="true"
+                              onDrop="ctl.selector.moveItem(event.dragged, self)">
+                        <listcell label="@{row.label}"/>
                     </listitem>
                 </listbox>
             </vbox>
@@ -64,7 +70,7 @@
             <rows>
                 <row>
                     <label value="@{ctl.recordCountLabel}" />
-                    <intbox value="@{ctl.rows}" width="98%" />
+                    <intbox value="@{ctl.rows}" hflex="true" sclass="margin-bottom1" id="intboxRows"/>
                 </row>
                 <row>
                     <label value="${c:l('listbox.exportManager.sheetName')}" />
@@ -72,7 +78,7 @@
                 </row>
                 <row>
                     <label value="${c:l('listbox.exportManager.fileName')}" />
-                    <textbox value="@{ctl.fileName}" width="98%" />
+                    <textbox value="@{ctl.fileName}" hflex="true" sclass="margin-bottom1" id="textboxFileName"/>
                 </row>
             </rows>
         </grid>
@@ -81,7 +87,7 @@
             <button label="${c:l('listbox.ok')}" forward="onOk" src="${zkdl:i('ok.png')}" />
             <button label="${c:l('listbox.storno')}" forward="onStorno" src="${zkdl:i('cancel.png')}" />
         </div>
-        
+
       </div>
     </window>
 </zk>

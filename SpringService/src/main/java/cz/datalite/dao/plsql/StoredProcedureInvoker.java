@@ -540,4 +540,16 @@ public interface StoredProcedureInvoker
      * @param timeout       cas v sekundach
      */
     void setQueryTimeout( int timeout ) ;
+
+    /**
+     * Povolení výpis DBMS_OUTPUT
+     *
+     * @param size  velikost DBMS_OUTPUT bufferu
+     */
+    void enableOutput( int size ) ;
+
+    /**
+     * Zakazani vypisu DBMS_OUTPUT
+     */
+    void disableOutput() ;
 }

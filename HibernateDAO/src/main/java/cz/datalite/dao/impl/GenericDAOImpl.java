@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import java.util.List;
  *
  * @author Jiri Bubnik
  */
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings({"unchecked", "InstantiatingObjectToGetClassObject"})
 public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
     private final static Logger LOGGER = LoggerFactory.getLogger(GenericDAOImpl.class);
 
@@ -43,29 +42,90 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
      * 
      * @throws IllegalStateException if no generics is found
      */
-    public GenericDAOImpl() {
-        ParameterizedType parametrizedType;
+    public GenericDAOImpl()
+    {
+        ParameterizedType parametrizedType = getParameterType( getClass() ) ;
 
-        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
-            // class
-            parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        }  else if (getClass().getGenericSuperclass() instanceof Class) {
-            // in case of CGLIB proxy
-            parametrizedType = (ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass();
-        } else {
-            throw new IllegalStateException(String.format("GenericDAOImpl - class %s is not subtype of ParametrizedType.", getClass()));
+        if ( parametrizedType.getActualTypeArguments()[0] instanceof Class )
+        {
+            this.persistentClass = (Class<T>) parametrizedType.getActualTypeArguments()[0];
         }
-
-        Type type = parametrizedType.getActualTypeArguments()[0];
-        if (type instanceof Class) {
-            this.persistentClass = (Class<T>) type;
-        } else if (type instanceof ParameterizedType) {
-            // multiple generics, eg GenericDAO<Entity<SomeType>>
-            this.persistentClass = (Class<T>) ((ParameterizedType)type).getRawType();
-        } else {
-            throw new IllegalStateException(String.format("GenericDAOImpl - type %s (%s) has unknown type.", type, type.getClass()));
+        else if (parametrizedType.getActualTypeArguments()[0] != null)
+        {
+            this.persistentClass = (Class<T>) getRawType( parametrizedType.getActualTypeArguments()[ 0 ] ) ;
         }
+        else
+        {
+            throw new IllegalStateException( "GenericDAOImpl - class " + getClass() + " - " + parametrizedType.getActualTypeArguments()[0].toString() ) ;
+        }
+    }
 
+    /**
+     * @param clazz     třída
+     * @return typ třídy
+     */
+    private ParameterizedType getParameterType( Class clazz )
+    {
+        if ( clazz.getGenericSuperclass() instanceof ParameterizedType) // class
+        {
+            return (ParameterizedType) clazz.getGenericSuperclass();
+        }
+        else if ( ( clazz.getGenericSuperclass() instanceof Class ) && ( clazz.getGenericSuperclass() != Class.class )
+                && ( clazz.getGenericSuperclass() != Object.class ) )
+        {
+            return getParameterType( (Class)clazz.getGenericSuperclass() ) ;
+        }
+        else
+        {
+            throw new IllegalStateException("GenericDAOImpl - class " + getClass() + " is not subtype of ParametrizedType - " + getClass().getGenericSuperclass() );
+        }
+    }
+
+    /**
+     * @param t  typ parametru
+     * @return trida parametru
+     */
+    private Class<?> getRawType( Type t )
+    {
+        if( t instanceof Class<?> )
+        {
+            return ( Class<?> ) t;
+        }
+        if( t instanceof WildcardType)
+        {
+            WildcardType wt = ( WildcardType ) t;
+            Type[ ] upperBounds = wt.getUpperBounds( );
+
+            if( upperBounds != null && upperBounds.length == 1 )
+            {
+                return getRawType( upperBounds[ 0 ] );
+            }
+        }
+        if( t instanceof GenericArrayType)
+        {
+            try
+            {
+                return Class.forName( "[L" + getRawType( ( ( GenericArrayType ) t ).getGenericComponentType( ) ).getName( ) + ";" );
+            }
+            catch( ClassNotFoundException e )
+            {
+                return new Object[ 0 ].getClass( );
+            }
+        }
+        if( t instanceof ParameterizedType )
+        {
+            return ( Class<?> ) ( ( ParameterizedType ) t ).getRawType( );
+        }
+        if( t instanceof TypeVariable<?>)
+        {
+            TypeVariable<?> tv = ( TypeVariable<?> ) t;
+            Type[ ] bounds = tv.getBounds( );
+            if( bounds != null && bounds.length == 1 )
+            {
+                return getRawType( bounds[ 0 ] );
+            }
+        }
+        return Object.class;
     }
 
     public GenericDAOImpl( final Class<T> persistentClass ) {
@@ -403,7 +463,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         else
             cnt = count( search );
 
-        return new DLResponse<>(result, cnt);
+        return new DLResponse<T>( result, cnt );
     }
 
     /**
@@ -418,7 +478,7 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
      */
     protected DLResponse<T> searchAndCount( final Criteria criteria, final DLSearch<T> search ) {
         addCacheMode(criteria, search);
-        return new DLResponse<>(search(criteria, search), count(criteria));
+        return new DLResponse<T>( search( criteria, search ), count( criteria ) );
     }
 
     /**

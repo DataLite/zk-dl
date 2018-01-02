@@ -2,6 +2,7 @@ package cz.datalite.helpers.excel.export;
 
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
+import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import cz.datalite.zk.converter.ZkConverter;
 import jxl.CellType;
 import jxl.Workbook;
@@ -26,6 +27,7 @@ import java.util.*;
  * @author Karel Cemus
  * @deprecated since 1.4.5.2 use {@link cz.datalite.helpers.excel.export.poi.POIExcelExportUtils}
  */
+@SuppressWarnings("Duplicates")
 @Deprecated
 public final class ExcelExportUtils {
 
@@ -384,18 +386,30 @@ public final class ExcelExportUtils {
      * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
      */
     public static AMedia exportSimple(String fileName, String sheetName, List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws IOException {
-        return exportSimple(fileName, sheetName, prepareSource(model, rows, masterController));
+        return exportSimple(fileName, sheetName, prepareSource(model, rows, masterController, null));
     }
 
     /**
      * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
      */
-    private static DataSource prepareSource(final List<Map<String, Object>> model, final int rows, final DLListboxExtController masterController) {
+    public static ExportResult exportWithResult(String fileName, String sheetName, List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws IOException {
+
+        Integer[] exportedRows = new Integer[1] ;
+
+
+        return new ExportResult( exportSimple(fileName, sheetName, prepareSource(model, rows, masterController, exportedRows )),
+                exportedRows[0] ) ;
+    }
+
+    /**
+     * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
+     */
+    private static DataSource prepareSource(final List<Map<String, Object>> model, final int rows, final DLListboxExtController masterController, final Integer[] exportedRows ) {
         return new DataSource() {
 
             public List<Cell> getCells() {
                 try {
-                    return prepareCells(model, rows, masterController);
+                    return prepareCells(model, rows, masterController, exportedRows );
                 } catch (WriteException ex) {
                     throw new UiException("Error in Excel export.", ex);
                 }
@@ -411,8 +425,8 @@ public final class ExcelExportUtils {
     /**
      * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
      */
-    private static List<Cell> prepareCells(final List<Map<String, Object>> model, int rows, DLListboxExtController masterController) throws WriteException {
-        final List<HeadCell> heads = new ArrayList<>();
+    private static List<Cell> prepareCells(final List<Map<String, Object>> model, int rows, DLListboxExtController masterController, Integer[] exportedRows ) throws WriteException {
+        final List<HeadCell> heads = new ArrayList<HeadCell>();
 
         // list of columns that need to be visible only for the purpose of export
         // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
@@ -438,9 +452,11 @@ public final class ExcelExportUtils {
                     hideOnFinish.add(columnUnitModel);
                 }
             }
+            // and load data
+            int exportMaxRows = ListboxExportManagerController.exportMaxRows;
 
             // and load data
-            data = masterController.loadData((rows == 0) ? 36000 : Math.min(rows, 36000)).getData();
+            data = masterController.loadData( Math.min(  ( (rows == 0) ?  exportMaxRows : Math.min(rows, exportMaxRows) ), 65535 ) ).getData();
         } finally {
             // after processing restore previous state
             for (DLColumnUnitModel hide : hideOnFinish) {
@@ -448,7 +464,12 @@ public final class ExcelExportUtils {
             }
         }
 
-        final List<Cell> cells = new LinkedList<>();
+        if ( ( exportedRows != null ) && ( exportedRows.length >= 1 ) )
+        {
+            exportedRows[ 0 ] = data.size() ;
+        }
+
+        final List<Cell> cells = new LinkedList<Cell>();
         if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
             cells.addAll(heads);
             row++;

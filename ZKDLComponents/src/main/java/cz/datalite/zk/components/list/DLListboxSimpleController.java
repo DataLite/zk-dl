@@ -11,7 +11,8 @@ import java.util.List;
  * @param <T> 
  * @author Karel Cemus
  */
-public abstract class DLListboxSimpleController<T> extends DLListboxGeneralController<T> {
+public abstract class DLListboxSimpleController<T> extends DLListboxGeneralController<T>
+{
 
     public DLListboxSimpleController( ) {
         this( null );
