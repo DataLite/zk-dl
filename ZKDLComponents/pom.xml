@@ -4,11 +4,11 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.5.0</version>
+        <version>1.5.1</version>
     </parent>
 
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controls - listbox, lovbox, combobox.</description>
 

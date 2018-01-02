@@ -19,6 +19,14 @@
         <netbeans.hint.deploy.server>liferay</netbeans.hint.deploy.server>
     </properties>
 
+    <licenses>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <dependencies>
         <!-- Basic spring dependency. -->
         <dependency>

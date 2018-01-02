@@ -1,11 +1,27 @@
 package cz.datalite.dao.impl;
 
-import cz.datalite.dao.*;
+import cz.datalite.dao.DLResponse;
+import cz.datalite.dao.DLSearch;
+import cz.datalite.dao.DLSort;
+import cz.datalite.dao.GenericDAO;
 import cz.datalite.dao.support.JpaEntityInformation;
 import cz.datalite.dao.support.JpaEntityInformationSupport;
 import cz.datalite.hibernate.OrderBySqlFormula;
-import org.hibernate.*;
-import org.hibernate.criterion.*;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.NonUniqueObjectException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.TransientObjectException;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +29,11 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.lang.reflect.*;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,42 +62,27 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
      * 
      * @throws IllegalStateException if no generics is found
      */
-    public GenericDAOImpl()
-    {
-        ParameterizedType parametrizedType = getParameterType( getClass() ) ;
+    public GenericDAOImpl() {
+        ParameterizedType parametrizedType;
 
-        if ( parametrizedType.getActualTypeArguments()[0] instanceof Class )
-        {
-            this.persistentClass = (Class<T>) parametrizedType.getActualTypeArguments()[0];
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            // class
+            parametrizedType = (ParameterizedType) getClass().getGenericSuperclass();
+        } else if (getClass().getGenericSuperclass() instanceof Class) {
+            // in case of CGLIB proxy
+            parametrizedType = (ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass();
+        } else {
+            throw new IllegalStateException(String.format("GenericDAOImpl - class %s is not subtype of ParametrizedType.", getClass()));
         }
-        else if (parametrizedType.getActualTypeArguments()[0] != null)
-        {
-            this.persistentClass = (Class<T>) getRawType( parametrizedType.getActualTypeArguments()[ 0 ] ) ;
-        }
-        else
-        {
-            throw new IllegalStateException( "GenericDAOImpl - class " + getClass() + " - " + parametrizedType.getActualTypeArguments()[0].toString() ) ;
-        }
-    }
 
-    /**
-     * @param clazz     třída
-     * @return typ třídy
-     */
-    private ParameterizedType getParameterType( Class clazz )
-    {
-        if ( clazz.getGenericSuperclass() instanceof ParameterizedType) // class
-        {
-            return (ParameterizedType) clazz.getGenericSuperclass();
-        }
-        else if ( ( clazz.getGenericSuperclass() instanceof Class ) && ( clazz.getGenericSuperclass() != Class.class )
-                && ( clazz.getGenericSuperclass() != Object.class ) )
-        {
-            return getParameterType( (Class)clazz.getGenericSuperclass() ) ;
-        }
-        else
-        {
-            throw new IllegalStateException("GenericDAOImpl - class " + getClass() + " is not subtype of ParametrizedType - " + getClass().getGenericSuperclass() );
+        Type type = parametrizedType.getActualTypeArguments()[0];
+        if (type instanceof Class) {
+            this.persistentClass = (Class<T>) type;
+        } else if (type instanceof ParameterizedType) {
+            // multiple generics, eg GenericDAO<Entity<SomeType>>
+            this.persistentClass = (Class<T>) ((ParameterizedType) type).getRawType();
+        } else {
+            throw new IllegalStateException(String.format("GenericDAOImpl - type %s (%s) has unknown type.", type, type.getClass()));
         }
     }
 
