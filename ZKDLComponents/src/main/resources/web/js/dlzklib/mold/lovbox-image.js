@@ -1,3 +1,4 @@
+// Tento soubor prosim NEmergovat se starsimi verzemi, duvod: upraveny kod.
 (function (out) {
     var uuid = this.uuid,
         zcls = this.getZclass();
