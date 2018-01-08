@@ -5,16 +5,15 @@
     out.push('<i', this.domAttrs_(), '><input id="',
         uuid, '-real" style="display:none"/>');
 
-    // noinspection JSUnresolvedFunction
     if (this.getImageLabel()) {
-        out.push('<div id="', uuid, '-label-btn" class="', zcls, '-label-btn z-button-dtl">');
-            // noinspection JSUnresolvedFunction
-            out.push('<span class="fl">',this.getImageLabel(),'</span>');
-            out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
+        out.push('<div id="', uuid, '-label-btn" class="', zcls, '-label-btn z-button">');
+        out.push('<span>',this.getImageLabel(),'</span>');
+
+        out.push('<i id="', uuid, '-btn" class="z-icon-three-bars"></i>');
         out.push('</div>');
 
     } else {
-        out.push('<i id="', uuid, '-btn" class="', zcls, '-image-btn"></i>');
+        out.push('<i id="', uuid, '-btn" class="z-icon-three-bars"></i>');
     }
 
 
@@ -23,4 +22,4 @@
     this.redrawpp_(out);
 
     out.push('</i>');
-}) ;
+});
