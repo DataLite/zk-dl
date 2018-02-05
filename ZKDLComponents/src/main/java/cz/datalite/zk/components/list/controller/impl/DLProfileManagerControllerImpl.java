@@ -115,7 +115,7 @@ public class DLProfileManagerControllerImpl<T> implements DLProfileManagerContro
 		final DLListboxProfile editProfile;
 
 		if (idProfile == null) {
-			editProfile = new DLListboxProfileImpl();
+			editProfile = profileService.createEmptyProfile();
 			editProfile.setPublicProfile(false);
 		} else {
 			editProfile = this.profileService.findById(idProfile);
