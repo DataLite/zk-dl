@@ -89,7 +89,7 @@ public class DLLovboxGeneralController<T> implements DLLovboxExtController<T> {
      * and also there is invoked fireChanges methods a posted select event
      * @param close close after event
      */
-    protected void onSelect( final boolean close ) {
+    public void onSelect( final boolean close ) {
         model.setSelectedItem( listboxController.getSelectedItem() );
         model.setSelectedItems( listboxController.getSelectedItems() );
         lovbox.fireChanges();
