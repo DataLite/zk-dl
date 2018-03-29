@@ -3,6 +3,7 @@ package cz.datalite.zk.components.list;
 import cz.datalite.dao.DLResponse;
 import cz.datalite.dao.DLSort;
 import cz.datalite.dao.DLSortType;
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.NormalFilterModel;
 import cz.datalite.zk.components.list.filter.NormalFilterUnitModel;
@@ -11,10 +12,12 @@ import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.compilers.FilterSimpleCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.lang.Library;
 import org.zkoss.lang.SystemException;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.mesg.MCommon;
 
+import java.text.Collator;
 import java.util.*;
 
 import static cz.datalite.zk.components.list.filter.FilterUtils.getConvertedValue;
@@ -402,7 +405,8 @@ public final class DLFilter {
 	}
 
 	/**
-	 * Comapre two objects if the forst of
+	 * Comapre two objects if the forst of.
+	 * When comparing strings collator is used. Locale for collator can be changed by setting zk-dl.dlFilter.stringSort.locale library property
 	 *
 	 * @param o1
 	 *            First object, must not be {@code null}. Must be the instance of {@link Comparable}.
@@ -415,7 +419,27 @@ public final class DLFilter {
 	 */
 	@SuppressWarnings("unchecked")
 	public static int compare(Object o1, Object o2) {
-		return ((Comparable<Object>) o1).compareTo(o2);
+
+		if(o1 instanceof String && o2 instanceof String){
+			String s1 = (String) o1;
+			String s2 = (String) o2;
+
+			String sortLocale = Library.getProperty("zk-dl.dlFilter.stringSort.locale");
+			Locale locale;
+
+			if(StringHelper.isNull(sortLocale)){
+				locale = Locale.getDefault();
+			} else {
+				locale = Locale.forLanguageTag(sortLocale);
+			}
+
+			Collator collator = Collator.getInstance(locale);
+
+			return collator.compare(s1,s2);
+
+		} else {
+			return ((Comparable<Object>) o1).compareTo(o2);
+		}
 		// this is overbloated in commons-collestions 2.1, in commons-collestions 3.0 and more may be used
 		//return ComparableComparator.getInstance().compare(o1, o2);
 	}
