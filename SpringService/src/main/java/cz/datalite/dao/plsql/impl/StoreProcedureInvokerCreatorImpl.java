@@ -22,7 +22,7 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 @DAO
-class StoreProcedureInvokerCreatorImpl
+public class StoreProcedureInvokerCreatorImpl
     implements StoredProcedureInvokerCreator
 {
     @Autowired

@@ -7,7 +7,7 @@
         <version>1.4.5.1</version>
     </parent>
     <artifactId>SpringService</artifactId>
-    <version>1.4.5.43</version>
+    <version>1.4.5.44</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
 
