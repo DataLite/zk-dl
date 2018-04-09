@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>1.5.1</version>
+        <version>1.6.0</version>
     </parent>
 
     <artifactId>SpringService</artifactId>
-    <version>1.5.1</version>
+    <version>1.6.0</version>
     <name>SpringService</name>
-    <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture
-        ZK - Spring - Hibernate.
-    </description>
+    <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
+
+    <properties>
+        <org.springframework.security.version>3.2.5.RELEASE</org.springframework.security.version>
+        <org.springframework.version>5.0.0.RELEASE</org.springframework.version>
+    </properties>
 
     <licenses>
         <license>
@@ -41,9 +43,9 @@
         </dependency>
 
         <!--
-			Bean Factory and JavaBeans utilities (depends on spring-core)
-			Define this if you use Spring Bean APIs (org.springframework.beans.*)
-		-->
+            Bean Factory and JavaBeans utilities (depends on spring-core)
+            Define this if you use Spring Bean APIs (org.springframework.beans.*)
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -51,9 +53,9 @@
         </dependency>
 
         <!--
-			Aspect Oriented Programming (AOP) Framework (depends on core, beans)
-			Define this if you use Spring AOP APIs (org.springframework.aop.*)
-		-->
+            Aspect Oriented Programming (AOP) Framework (depends on core, beans)
+            Define this if you use Spring AOP APIs (org.springframework.aop.*)
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -61,9 +63,9 @@
         </dependency>
 
         <!--
-			Application Context (depends on core, expression, aop, beans)
-			This is the central artifact for Spring's Dependency Injection Container and is generally always defined
-		-->
+            Application Context (depends on core, expression, aop, beans)
+            This is the central artifact for Spring's Dependency Injection Container and is generally always defined
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -71,10 +73,10 @@
         </dependency>
 
         <!--
-			Object-to-Relation-Mapping (ORM) integration with Hibernate, JPA, and iBatis.
-			(depends on core, beans, context, transaction)
-			Define this if you need ORM (org.springframework.orm.*)
-		-->
+            Object-to-Relation-Mapping (ORM) integration with Hibernate, JPA, and iBatis.
+            (depends on core, beans, context, transaction)
+            Define this if you need ORM (org.springframework.orm.*)
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -93,6 +95,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
