@@ -78,27 +78,27 @@ public class MethodConverter implements TypeConverter, Converter {
             try {
                 controllerObj = Fields.getByCompound(controllerObj, method);
                 method = "coerceToUi";
-            } catch ( NoSuchMethodException ex ) {
+            } catch ( Exception ex ) {
                 // ok - the method itself should be coerceToUi method
             }
 
             // load method with only value param or component + value param
             try {
                 coerceMethod = Classes.getCloseMethod( controllerObj.getClass(), method, new Class[]{ valueClass } );
-            } catch ( NoSuchMethodException ex ) {
+            } catch ( Exception ex ) {
             }
 
 
             if ( coerceMethod == null )
                 try {
                     coerceMethod = Classes.getCloseMethod( controllerObj.getClass(), method, new Class[]{ valueClass, comp == null ? Component.class : comp.getClass() } );
-                } catch ( NoSuchMethodException ex ) {
+                } catch ( Exception ex ) {
                 }
 
             if ( coerceMethod == null )
                 try {
                     coerceMethod = Classes.getCloseMethod( controllerObj.getClass(), method, new Class[]{ valueClass, comp == null ? Component.class : comp.getClass(), BindContext.class } );
-                } catch ( NoSuchMethodException ex ) {
+                } catch ( Exception ex ) {
                 }
 
             if ( coerceMethod == null )
