@@ -1,22 +1,32 @@
 package cz.datalite.helpers.excel.export.poi;
 
-import cz.datalite.helpers.excel.export.ExcelExportUtils;
-import cz.datalite.helpers.excel.export.ExportResult;
+import cz.datalite.helpers.excel.export.ExportedFile;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import cz.datalite.zk.converter.ZkConverter;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.Strings;
 import org.zkoss.lang.reflect.Fields;
-import org.zkoss.util.media.AMedia;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Metoda usnadňuje exportování dat do excelu, soubor XLS. Využívá ke své práci
@@ -46,14 +56,14 @@ public final class POIExcelExportUtils {
 	 * @return vygenerovaný AMedia připravený ke stažení
 	 * @throws java.io.IOException
 	 */
-	public static AMedia getAMediaOutput(final Workbook workbook, final ByteArrayOutputStream os, final String exportName) throws IOException {
+	public static ExportedFile getExportedFile(final Workbook workbook, final ByteArrayOutputStream os, final String exportName) throws IOException {
 		if (os == null) {
 			return null;
 		}
 
 		workbook.write(os);
 		final InputStream is = new ByteArrayInputStream(os.toByteArray());
-		return new AMedia(exportName + ".xlsx", "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", is);
+		return new ExportedFile(exportName + ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", is);
 	}
 
 
@@ -69,14 +79,14 @@ public final class POIExcelExportUtils {
 	 * @return hotový AMedia připravený ke stažení
 	 * @throws java.io.IOException
 	 */
-	public static AMedia exportSimple(final String reportName, final String sheetName, final List<List<POICell>> cells) throws IOException {
+	public static ExportedFile exportSimple(final String reportName, final String sheetName, final List<List<POICell>> cells) throws IOException {
 
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		final Workbook workbook = createWorkbook();
 		return exportSimple(reportName, sheetName, cells, os, workbook);
 	}
 
-	public static AMedia exportSimple(String reportName, String sheetName, List<List<POICell>> cells, ByteArrayOutputStream os, Workbook workbook) throws IOException {
+	public static ExportedFile exportSimple(String reportName, String sheetName, List<List<POICell>> cells, ByteArrayOutputStream os, Workbook workbook) throws IOException {
 		final Sheet sheet = insertSheet(workbook, sheetName);
 
 		for (int rowNum = 0; rowNum < cells.size(); rowNum++) {
@@ -89,7 +99,7 @@ public final class POIExcelExportUtils {
 		}
 
 		// ukončení práce se sešitem
-		return getAMediaOutput(workbook, os, reportName);
+		return getExportedFile(workbook, os, reportName);
 	}
 
 	/**
@@ -172,24 +182,6 @@ public final class POIExcelExportUtils {
 		return new XSSFWorkbook();
 	}
 
-
-	/**
-	 * Legacy implementation from DLManagerConrollerImpl for backward compatibility (xls export). Convert to POIExcelExportUtils!
-	 */
-	public static ExportResult exportWithResult( String fileName, String sheetName, List<Map<String, Object>> model, int rows, DLListboxExtController masterController ) throws IOException
-	{
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		final Workbook workbook = POIExcelExportUtils.createWorkbook();
-
-		Integer[] exportedRows = new Integer[1] ;
-
-		//noinspection unchecked
-		List<List<POICell>> cells = prepareSource( model, rows, masterController, exportedRows ) ;
-
-		headerStyle(cells.get(0), workbook);
-
-		return new ExportResult( POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook), exportedRows[0] ) ;
-	}
 
 	private static void headerStyle(List<POICell> row, Workbook workbook)
 	{
