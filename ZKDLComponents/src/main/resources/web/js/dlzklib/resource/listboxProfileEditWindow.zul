@@ -53,14 +53,14 @@
 
             <n:fieldset class="margin-bottom10 wb">
                 <div visible="@load(vm.dlProfileManager.showColumnSettings)">
-                    <checkbox id="saveColumnModelCheckbox" width="90%"
+                    <checkbox id="saveColumnModelCheckbox"
                               label="${c:l('listbox.profileManager.profile.saveColumnModel')}"
                               checked="@load(vm.dlProfileManager.showColumnSettings and empty vm.profile.id)"
                               tooltiptext="${c:l('listbox.profileManager.profile.saveColumnModel.tooltip')}"
                               disabled="@load(vm.profile.publicProfile and not vm.dlProfileManager.allowCreatePublic)"/>
                 </div>
                 <div visible="@load(vm.dlProfileManager.showFilterSettings)">
-                    <checkbox id="saveColumnFilterCheckbox" width="90%"
+                    <checkbox id="saveColumnFilterCheckbox"
                               label="${c:l('listbox.profileManager.profile.saveFilterModel')}"
                               checked="@load(vm.dlProfileManager.showFilterSettings and empty vm.profile.id)"
                               tooltiptext="${c:l('listbox.profileManager.profile.saveFilterModel.tooltip')}"
@@ -69,7 +69,7 @@
             </n:fieldset>
 
             <div sclass="fl">
-                <checkbox label="${c:l('listbox.profileManager.profile.default')}" checked="@bind(vm.profile.defaultProfile)" width="90%" />
+                <checkbox label="${c:l('listbox.profileManager.profile.default')}" checked="@bind(vm.profile.defaultProfile)" />
             </div>
             <div sclass="fr">
                 <button id="deleteButton" label="${c:l('listbox.profileManager.delete')}"
