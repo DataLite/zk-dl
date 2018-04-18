@@ -3,6 +3,7 @@ package cz.datalite.zk.components.list.controller.impl;
 import cz.datalite.helpers.DateHelper;
 import cz.datalite.helpers.ZKDLResourceResolver;
 import cz.datalite.helpers.excel.export.ExcelExportUtils;
+import cz.datalite.helpers.excel.export.ExportedFile;
 import cz.datalite.helpers.excel.export.poi.POICell;
 import cz.datalite.helpers.excel.export.poi.POICellStyles;
 import cz.datalite.helpers.excel.export.poi.POIExcelExportUtils;
@@ -32,7 +33,13 @@ import org.zkoss.zul.Messagebox;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the controller for the Listbox manager which
@@ -431,7 +438,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
             List<List<POICell>> cells = prepareSource(model, rows);
             headerStyle(cells.get(0), workbook);
-            return POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
+            final ExportedFile exportedFile = POIExcelExportUtils.exportSimple(fileName, sheetName, cells, os, workbook);
+            return new AMedia(exportedFile.getFilename(), "xlsx", exportedFile.getContentType(), exportedFile.getData());
         }
     }
 
