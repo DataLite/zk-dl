@@ -165,7 +165,7 @@ dlzklib.Lovbox = zk.$extends(zul.inp.Bandbox, {
             out.push('" style="display:none');
 
         out.push('">');
-        out.push('<div class="', zcls, '-btn-icon"></div></i>');
+        out.push('<span class="', zcls, ' z-icon-chevron-down-1"></span></i>');
 
         out.push('<span id="', uuid, '-del" class="', zcls, '-del', '"></span>');
 

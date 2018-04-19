@@ -41,6 +41,7 @@
         <mold>
             <mold-name>default</mold-name>
             <mold-uri>mold/lovbox.js</mold-uri>
+            <css-uri>css/dlzklib.css.dsp</css-uri>
         </mold>
         <mold>
             <mold-name>rounded</mold-name>

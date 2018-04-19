@@ -43,6 +43,9 @@
 .z-listcontrol-aux-content-cover .z-listcontrol-aux-content .z-textbox { margin: 1px 0 1px 0; }
 .z-listcontrol-aux-content-cover .z-listcontrol-aux-content-separator { width: 3px; }
 
+/* -- Lovbox default -- */
+.z-lovbox-btn-icon, .z-lovbox span[class^="z-icon-"], .z-lovbox span[class*=" z-icon-"] { background: url(${c:encodeURL('~./js/dlzklib/img/btn-open-list.png')}) no-repeat; display: inline-block; padding: 5px; width: 16px; }
+
 /* -- Lovbox image -- */
 .z-bandbox-label-btn { font-style: normal!important; height: 16px!important; padding: 2px 3px 1px 6px!important; }
 .z-bandbox-label-btn .z-bandbox-image-btn { float: right; }
