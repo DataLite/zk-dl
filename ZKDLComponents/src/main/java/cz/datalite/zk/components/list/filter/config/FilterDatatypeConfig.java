@@ -336,8 +336,8 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         try {
             dataTypeClass = Class.forName(dataTypeClassName);
         } catch (Throwable e) {
-            LOGGER.error("Unable to register custom listbox datatype config preference {}. DataType class '{}' not found.", e,
-                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, dataTypeClassName);
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. DataType class '{}' not found.",
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, dataTypeClassName, e);
             return;
         }
 
@@ -345,8 +345,8 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         try {
             configClass = Class.forName(configClassName);
         } catch (Throwable e) {
-            LOGGER.error("Unable to register custom listbox datatype config preference {}. Config class '{}' not found.", e,
-                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName);
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. Config class '{}' not found.",
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName, e);
             return;
         }
 
@@ -354,8 +354,8 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         try {
             customConfig = (FilterDatatypeConfig) configClass.newInstance();
         } catch (Throwable e) {
-            LOGGER.error("Unable to register custom listbox datatype config preference {}. Unable to create new instance of class '{}'.", e,
-                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName);
+            LOGGER.error("Unable to register custom listbox datatype config preference {}. Unable to create new instance of class '{}'.",
+                    ZK_DL_LISTBOX_FILTER_DATATYPE_CONFIG, configClassName, e);
             return;
         }
 
