@@ -18,6 +18,8 @@ import org.zkoss.lang.reflect.Fields;
 import org.zkoss.mesg.MCommon;
 
 import java.text.Collator;
+import java.text.ParseException;
+import java.text.RuleBasedCollator;
 import java.util.*;
 
 import static cz.datalite.zk.components.list.filter.FilterUtils.getConvertedValue;
@@ -407,6 +409,7 @@ public final class DLFilter {
 	/**
 	 * Comapre two objects if the forst of.
 	 * When comparing strings collator is used. Locale for collator can be changed by setting zk-dl.dlFilter.stringSort.locale library property
+	 * Additional collator rules can be defined in zk-dl.dlFilter.stringSort.additionalRules library property
 	 *
 	 * @param o1
 	 *            First object, must not be {@code null}. Must be the instance of {@link Comparable}.
@@ -434,6 +437,19 @@ public final class DLFilter {
 			}
 
 			Collator collator = Collator.getInstance(locale);
+
+			String additionalRules = Library.getProperty("zk-dl.dlFilter.stringSort.additionalRules");
+
+			if(!StringHelper.isNull(additionalRules)){
+				String originalRules = ((RuleBasedCollator) collator).getRules();
+				try {
+					collator = new RuleBasedCollator(originalRules+additionalRules);
+				} catch (ParseException e) {
+					LOGGER.error("Could not parse additional collator rules.",e);
+				}
+			}
+
+			collator.setStrength(Collator.SECONDARY);
 
 			return collator.compare(s1,s2);
 
