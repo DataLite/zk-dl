@@ -2,7 +2,11 @@ package cz.datalite.exception;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Obecna vyjimka pouzitelna i s {@link Problem}em.
@@ -78,8 +82,8 @@ public class ProblemException
 	 * 
 	 * @param cause
 	 * @param problem
-	 * @param message
-	 * @param parameters
+	 * @param message zpráva do logu
+	 * @param parameters parametry, do lokalizované zprávy se předávávají pomocí placeholderů {@code {0}, {1}}
 	 */
 	public ProblemException(Throwable cause, Problem problem, String message, Object... parameters) {
 		super(message, cause);
