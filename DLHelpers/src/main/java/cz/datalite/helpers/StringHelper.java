@@ -11,8 +11,51 @@ import java.util.List;
 /**
  * Funkce pro praci s retezci
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class StringHelper
 {
+    /**
+     * Standardni trim rozsireny o tvrdou mezeru a podobne divne mezery (http://www.unicode.org/charts/PDF/U2000.pdf).
+     * <p>
+     * podle Character.isWhitespace neni 160 mezera, proto pouzijeme isSpaceChar
+     * <p>
+     * \u0020 isSpaceChar=true isWhitespace=true
+     * \u00a0 isSpaceChar=true isWhitespace=false
+     * \u1680 isSpaceChar=true isWhitespace=true
+     * \u180e isSpaceChar=true isWhitespace=true
+     * \u2000 isSpaceChar=true isWhitespace=true
+     * \u2001 isSpaceChar=true isWhitespace=true
+     * \u2002 isSpaceChar=true isWhitespace=true
+     * \u2003 isSpaceChar=true isWhitespace=true
+     * \u2004 isSpaceChar=true isWhitespace=true
+     * \u2005 isSpaceChar=true isWhitespace=true
+     * \u2006 isSpaceChar=true isWhitespace=true
+     * \u2007 isSpaceChar=true isWhitespace=false
+     * \u2008 isSpaceChar=true isWhitespace=true
+     * \u2009 isSpaceChar=true isWhitespace=true
+     * \u200a isSpaceChar=true isWhitespace=true
+     * \u202f isSpaceChar=true isWhitespace=false
+     * \u205f isSpaceChar=true isWhitespace=true
+     * \u3000 isSpaceChar=true isWhitespace=true
+     * <p>
+     *
+     * @param value     hodnota
+     * @return hodnota s odstranenimy mezerami
+     */
+    public static String trim( String value ) {
+        int len = value.length();
+        int st = 0;
+        char[] val = value.toCharArray();    /* avoid getfield opcode */
+
+        // podle isWhitespace neni 160 mezera, proto isSpaceChar
+        while ((st < len) && (val[st] <= ' ' || Character.isSpaceChar(val[st]))) {
+            st++;
+        }
+        while ((st < len) && (val[len - 1] <= ' ' || Character.isSpaceChar(val[len - 1]))) {
+            len--;
+        }
+        return ((st > 0) || (len < value.length())) ? value.substring(st, len) : value;
+    }
     /**
      * Vrací true, pokud je string null nebo prázdný
      *
