@@ -10,7 +10,7 @@ public interface ProfileService<T extends DLListboxProfile, C extends DLListboxP
 	 *
 	 * @return list of all profiles in persistent storage
 	 */
-	public List<T> findAll();
+	List<T> findAll();
 
 	/**
 	 * Method returns all profiles for specified DLListbox id. List of profiles
@@ -39,7 +39,7 @@ public interface ProfileService<T extends DLListboxProfile, C extends DLListboxP
 	 * @param profileName name of profile
 	 * @return searched profile
 	 */
-	public T findByName(String profileName);
+	T findByName(String profileName);
 
 	/**
 	 * Method returns default profile for specified DLListbox id.
@@ -70,7 +70,7 @@ public interface ProfileService<T extends DLListboxProfile, C extends DLListboxP
 	 *
 	 * @param    dlListboxProfile profile to be deleted
 	 */
-	void delete(T dlListboxProfile);
+	void delete(DLListboxProfile dlListboxProfile);
 
 	/**
 	 * Returns all categories.
