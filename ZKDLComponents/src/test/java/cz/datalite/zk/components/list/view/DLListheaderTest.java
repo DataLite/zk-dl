@@ -60,7 +60,7 @@ public class DLListheaderTest {
 			header.setSort("neznamy");
 			fail("Neznámý druh řazení");
 		} catch (UnsupportedOperationException expected) {
-			// ocekavany
+			assertTrue(expected.getMessage().contains("neznamy"));
 		}
 	}
 

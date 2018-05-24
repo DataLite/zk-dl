@@ -178,7 +178,7 @@ public class DLListheader extends Listheader {
                 setSortAscending( new ListitemComparator( this, true, true ) );
                 setSortDescending( new ListitemComparator( this, false, true ) );
             } else {
-                throw new UnsupportedOperationException( "Unknown sortType." );
+                throw new UnsupportedOperationException( "Unknown sortType=" + type );
             }
         }
     }
