@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.5.12</version>
+    <version>1.5.13</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controls - listbox, lovbox, combobox.</description>
 
@@ -88,12 +88,12 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.10-FINAL</version>
+            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.10-FINAL</version>
+            <version>3.17</version>
         </dependency>
 
         <!-- Test libraries / JUnit, Spring Test for unit test and Selenium/WebDriver
