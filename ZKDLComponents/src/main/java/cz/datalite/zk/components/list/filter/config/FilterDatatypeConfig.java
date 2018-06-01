@@ -2,6 +2,7 @@ package cz.datalite.zk.components.list.filter.config;
 
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.components.*;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.zk.ui.Executions;
@@ -266,6 +267,29 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         return config;
     }
 
+	public static List<DLFilterOperator> createEnumOperators() {
+		final List<DLFilterOperator> operators = new ArrayList<>(10);
+		operators.add( DLFilterOperator.LIKE );
+		return operators;
+	}
+
+	private static FilterDatatypeConfig createEnumConfig() {
+		final List<DLFilterOperator> operators = createEnumOperators();
+		final FilterDatatypeConfig config = new FilterDatatypeConfig( operators, DLFilterOperator.EQUAL ) {
+
+			@Override
+			public FilterComponent createFilterComponent() {
+				return new StringFilterComponent();
+			}
+
+			@Override
+			public Class<? extends FilterComponent> getComponentClass() {
+				return StringFilterComponent.class;
+			}
+		};
+		return config;
+	}
+
     private static Map<Class, FilterDatatypeConfig> init() {
         final Map<Class, FilterDatatypeConfig> config = new HashMap<>();
 
@@ -311,6 +335,10 @@ public abstract class FilterDatatypeConfig extends InstanceFilterComponentFactor
         final FilterDatatypeConfig booleanConfig = createBooleanConfig();
         config.put( Boolean.class, booleanConfig );
         config.put( Boolean.TYPE, booleanConfig );
+
+        // Enum
+	    final FilterDatatypeConfig enumConfig = createEnumConfig();
+	    config.put(Enum.class, enumConfig);
 
         Configuration configuration = Executions.getCurrent().getSession().getWebApp().getConfiguration();
 

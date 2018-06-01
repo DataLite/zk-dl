@@ -255,7 +255,9 @@ public final class DLFilter {
         for (NormalFilterUnitModel unit : filterModel) {
             
             // get compiler for the value and operator to be able to evaluate the rule
-            final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();            
+            final FilterCompiler compiler = unit.getFilterCompiler() == null
+		            || (unit.getColumnModel() != null && unit.getColumnModel().getColumnType() != null && unit.getColumnModel().getColumnType().isEnum())
+		            ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
 
             // prevent compilation of rules with arity higher or equal to 1 
             // to prevent null pointer exception on value1.compareTo(value2)

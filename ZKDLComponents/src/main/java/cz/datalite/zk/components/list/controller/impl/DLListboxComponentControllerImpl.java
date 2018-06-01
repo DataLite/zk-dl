@@ -5,6 +5,8 @@ import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.zk.bind.ZKBinderHelper;
 import cz.datalite.zk.components.list.controller.DLListboxComponentController;
 import cz.datalite.zk.components.list.controller.DLListboxExtController;
+import cz.datalite.zk.components.list.enums.DLFilterOperator;
+import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.model.DLColumnModel;
 import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListbox;
@@ -504,63 +506,104 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
         }
     }
 
-    protected void initTemplate( final List<DLListheader> headers, final List<NodeInfo>  listcells ) {
-        // loading renderer templates and column name from the binding.
-        // ---------------
-        // if column name was already loaded will be now skipped.
-        // ---------------
-        // if column isn't loaded from the listheader nor from binding
-        // this column will be very handicapped
-         listheaderTemplates.clear();
+	protected void initTemplate(final List<DLListheader> headers, final List<NodeInfo> listcells) {
+		// loading renderer templates and column name from the binding.
+		// ---------------
+		// if column name was already loaded will be now skipped.
+		// ---------------
+		// if column isn't loaded from the listheader nor from binding
+		// this column will be very handicapped
+		listheaderTemplates.clear();
 
-        int i = 0;
-        for ( NodeInfo cell : listcells ) {
-            final DLListheader header = headers.get( i++ );
-            listheaderTemplates.put( columnMap.get( header ), header );
+		int i = 0;
+		for (NodeInfo cell : listcells) {
+			final DLListheader header = headers.get(i++);
+			listheaderTemplates.put(columnMap.get(header), header);
 
-            ComponentInfo info = ( ComponentInfo ) cell;
+			ComponentInfo info = (ComponentInfo) cell;
 
-            // resolve binding text to
-            String bindingText = null;
-            String bindingProperty = "label";
-            if ( info.getAnnotationMap() != null ) {
-                bindingText = getBindingText(info, bindingProperty);
-                if (bindingText == null) {
-                    bindingProperty = "checked";
-                    bindingText = getBindingText(info, bindingProperty);
-                }
-            }
+			// resolve binding text to
+			String bindingText = null;
+			String bindingProperty = "label";
+			if (info.getAnnotationMap() != null) {
+				bindingText = getBindingText(info, bindingProperty);
+				if (bindingText == null) {
+					bindingProperty = "checked";
+					bindingText = getBindingText(info, bindingProperty);
+				}
+			}
 
-            String converter = null;
-            Map<String,String> converterArgs = Collections.<String,String>emptyMap();
+			String converter = null;
+			Map<String, String> converterArgs = Collections.<String, String>emptyMap();
 
-            if ( info.getAnnotationMap() != null && info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ) != null ) {
-                converter = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ) != null
-                        ? info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttribute( "value" )
-                        : null;
-                converterArgs = new HashMap<>();
-                Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation( bindingProperty, "converter" ).getAttributes();
-                for ( String key : attrs.keySet() ) {
-                    if ( attrs.get( key ).length > 0 )
-                        // strip quotes
-                        converterArgs.put( key, attrs.get( key )[0].replaceAll( "^'(.*)'$", "$1") );
-                }
-            }
+			if (info.getAnnotationMap() != null && info.getAnnotationMap().getAnnotation(bindingProperty, "converter") != null) {
+				converter = info.getAnnotationMap().getAnnotation(bindingProperty, "converter") != null
+						? info.getAnnotationMap().getAnnotation(bindingProperty, "converter").getAttribute("value")
+						: null;
+				converterArgs = new HashMap<>();
+				Map<String, String[]> attrs = info.getAnnotationMap().getAnnotation(bindingProperty, "converter").getAttributes();
+				for (String key : attrs.keySet()) {
+					if (attrs.get(key).length > 0)
+						// strip quotes
+						converterArgs.put(key, attrs.get(key)[0].replaceAll("^'(.*)'$", "$1"));
+				}
+			}
 
-            if ( columnMap.get( header ).getColumn() == null && bindingText != null ) // set column from binding
 
-                if ( bindingText.indexOf( '.' ) == -1 ) // if there is whole entity without any property
-                    columnMap.get( header ).setColumn( null );
-                else // if there is define some property
-                    columnMap.get( header ).setColumn( bindingText.substring( bindingText.indexOf( '.' ) + 1 ) );
-            if ( !columnMap.get( header ).isConverter() && converter != null ) // set converter from binding
+			// set column from binding
+			if (columnMap.get(header).getColumn() == null && bindingText != null) {
+				// if there is whole entity without any property
+				if (bindingText.indexOf('.') == -1) {
+					columnMap.get(header).setColumn(null);
 
-                columnMap.get( header ).setConverter( converter, listbox, converterArgs );
-            if ( columnMap.get( header ).getColumnType() == null && columnMap.get( header ).isColumn() ) // set type if it is not explicitly setted
+					// if there is define some property
+				} else {
+					columnMap.get(header).setColumn(bindingText.substring(bindingText.indexOf('.') + 1));
+					String column = bindingText.substring(bindingText.indexOf('.') + 1);
+					Class<Enum> columnEnum = getFieldType(masterController.getEntityClass(), column);
+					if (columnEnum != null && columnEnum.isEnum()) {
 
-                columnMap.get( header ).setColumnType( getFieldType( masterController.getEntityClass(), columnMap.get( header ).getColumn() ) );
-        }
-    }
+						columnMap.get(header).setFilterOperators(Arrays.asList(DLFilterOperator.LIKE));
+
+						String enumCompilerClass = Library.getProperty("zk-dl.listbox.enumCompilerClass");
+						if (enumCompilerClass != null) {
+							try {
+								Class<FilterCompiler> filterCompilerClass = (Class<FilterCompiler>) getClass().getClassLoader().loadClass(enumCompilerClass);
+								if (columnMap.get(header).getColumnType() == null) {
+									columnMap.get(header).setColumnType(columnEnum);
+								}
+								if (columnMap.get(header).getFilterCompiler() == null) {
+									FilterCompiler filterCompiler = filterCompilerClass.newInstance();
+									columnMap.get(header).setFilterCompiler(filterCompiler);
+								}
+							} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+								throw new RuntimeException(e);
+							}
+						}
+					}
+				}
+			}
+			// set converter from binding
+			if (!columnMap.get(header).isConverter() && converter != null) {
+				columnMap.get(header).setConverter(converter, listbox, converterArgs);
+			}
+			// set type if it is not explicitly setted
+			if (columnMap.get(header).getColumnType() == null && columnMap.get(header).isColumn()) {
+				columnMap.get(header).setColumnType(getFieldType(masterController.getEntityClass(), columnMap.get(header).getColumn()));
+			}
+
+
+			// set column from binding
+			if (columnMap.get(header).getColumn() == null && bindingText != null) {
+				if (bindingText.indexOf('.') == -1) // if there is whole entity without any property
+					columnMap.get(header).setColumn(null);
+				else {// if there is define some property
+
+
+				}
+			}
+		}
+	}
 
     // Returns binding text of a component and property - check @load and @bind annotations
     private String getBindingText(ComponentInfo info, String property) {

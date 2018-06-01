@@ -423,6 +423,8 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
                     return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator(value);
                 else
                     return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType ).getQuickOperator();
+            } else if (columnType.isEnum()) {
+            	return DLFilterOperator.EQUAL;
             } else {
                 LOGGER.debug( "Unknown datatype was used in listbox quick filter. For type '{}' have been used EQUAL operator.", columnType.getCanonicalName() );
                 return DLFilterOperator.EQUAL;
@@ -450,7 +452,9 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
     public FilterComponentFactory getFilterComponentFactory() {
         if ( filterComponentFactory == null ) {
             // Is the default configuration known for this type?
-            if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
+	        if (columnType != null && columnType.isEnum()) {
+	        	return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get(Enum.class);
+	        } else if ( columnType != null && FilterDatatypeConfig.DEFAULT_CONFIGURATION.containsKey( columnType ) ) {
                 return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( columnType );
             } else if ( columnModel.getMaster().getFilterModel().isWysiwyg() ) {
                 return FilterDatatypeConfig.DEFAULT_CONFIGURATION.get( String.class );

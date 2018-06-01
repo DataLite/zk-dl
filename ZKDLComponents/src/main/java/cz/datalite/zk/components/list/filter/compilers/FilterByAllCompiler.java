@@ -64,7 +64,8 @@ public class FilterByAllCompiler implements FilterCompiler {
                 }
 
                 // get compiler for the value and operator to be able to evaluate the rule
-                final FilterCompiler compiler = unit.getFilterCompiler() == null ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
+	            final FilterCompiler compiler = unit.getFilterCompiler() == null || (unit.getColumnType() != null && unit.getColumnType().isEnum())
+			            ? FilterSimpleCompiler.INSTANCE : unit.getFilterCompiler();
 
                 // When the user wants to filter by ALL then he wants to use WYSIWYG search
                 // Due to his expectations the filter uses CONTAINS operator to make a STRING
