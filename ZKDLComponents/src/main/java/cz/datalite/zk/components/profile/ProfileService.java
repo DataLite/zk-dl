@@ -70,7 +70,7 @@ public interface ProfileService<T extends DLListboxProfile, C extends DLListboxP
 	 *
 	 * @param    dlListboxProfile profile to be deleted
 	 */
-	void delete(DLListboxProfile dlListboxProfile);
+	void delete(T dlListboxProfile);
 
 	/**
 	 * Returns all categories.

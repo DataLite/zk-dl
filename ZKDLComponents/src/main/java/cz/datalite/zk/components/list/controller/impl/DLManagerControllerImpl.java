@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -211,13 +210,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
             @SuppressWarnings("unchecked")
 			List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
 
-            for (Iterator<Map<String, Object>> it = columnModels.iterator(); it.hasNext();) {
-                Map<String, Object> item = it.next();
-                // remove invisible columns
-                if (!(Boolean) item.get("visible")) {
-                    it.remove();
-                }
-            }
+            // remove invisible columns
+            columnModels.removeIf(item -> !(Boolean) item.get("visible"));
             Integer rows = (Integer) args.get("rows");
 
             export("report", "data", columnModels, rows);
@@ -231,24 +225,17 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
      */
     @Override
     public AMedia directExportCurrentView() throws IOException {
-        try {
-            // grab model of current view
-            final Map<String, Object> args = takeCurrentViewSnapshoot();
+        // grab model of current view
+        final Map<String, Object> args = takeCurrentViewSnapshoot();
 
-            @SuppressWarnings("unchecked")
-			List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> columnModels = (List<Map<String, Object>>) args.get("columnModels");
 
-            for (Iterator<Map<String, Object>> it = columnModels.iterator(); it.hasNext();) {
-                Map<String, Object> item = it.next();
-                // remove invisible columns
-                if (!(Boolean) item.get("visible")) {
-                    it.remove();
-                }
-            }
-            Integer rows = (Integer) args.get("rows");
+        // remove invisible columns
+        columnModels.removeIf(item -> !(Boolean) item.get("visible"));
+        Integer rows = (Integer) args.get("rows");
 
-            return this.exportDirect("report", "data", columnModels, rows);
-        } finally { }
+        return this.exportDirect("report", "data", columnModels, rows);
     }
 
     @Override
@@ -332,7 +319,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     }
 
     @Override
-    public void onResetFilters() throws InterruptedException {
+    public void onResetFilters() {
         if ( isLocked() ) {
             return;
         }
@@ -391,7 +378,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
     public List<String> getFilters() {
         final List<String> filters = new LinkedList<>();
         for ( NormalFilterUnitModel unit : masterController.getNormalFilterModel() ) {
-            final StringBuffer filter = new StringBuffer();
+            final StringBuilder filter = new StringBuilder();
             filter.delete( 0, filter.length() );
             filter.append( masterController.getModel().getColumnModel().getByName( unit.getColumn() ).getLabel() );
             filter.append( ' ' ).append( unit.getOperator().getLabel().toLowerCase() ).append( ' ' );
@@ -462,7 +449,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
 
 		for (Map<String, Object> unit : model) {
-            heads.add(new POICell(unit.get("label")));
+            heads.add(new POICell<>(unit.get("label")));
         }
 
         // load data
@@ -519,7 +506,7 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                         value = converter.convertToView( value );
                     }
 
-                    row.add(new POICell(value));
+                    row.add(new POICell<>(value));
                 } catch (Exception ex) { // ignore
                     LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
                 }
