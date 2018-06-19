@@ -122,8 +122,8 @@ public class FilterSimpleCompiler extends AbstractFilterCompiler {
 	}
 
 	protected Boolean compileOperatorBetween(final String key, final Object... values) {
-		return DLFilter.compare(values[0], values[1]) >= 0
-				&& DLFilter.compare(values[0], values[2]) <= 0;
+		return values[0] != null &&
+				DLFilter.compare(values[0], values[1]) >= 0 && DLFilter.compare(values[0], values[2]) <= 0;
 	}
 
 }
