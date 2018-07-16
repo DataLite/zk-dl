@@ -412,6 +412,12 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
                 model.getPagingModel().getPageSize() == 0 ? 0 : model.getPagingModel().getPageSize() + 1,
                 model.getColumnModel().getSorts() );
 
+
+        // if response does not include selected item, delete it
+        if (getListboxController().getSelectedItem() != null && !response.getData().contains(getListboxController().getSelectedItem())) {
+	        getListboxController().setSelected(null);
+        }
+
         if ( model.getPagingModel().getPageSize() == DLPagingModel.NOT_PAGING ) {
             getListboxController().setListboxModel( response.getData() );
         } else {
