@@ -949,4 +949,9 @@ public class DLLovbox<T> extends Bandbox implements AfterCompose, CascadableComp
     public void addComponentToPopup(DLLovboxPopupComponentPosition position, Component comp) {
     	this.additionalComponents.put(position, comp);
     }
+
+
+	public Bandpopup getBandpopup() {
+		return popup;
+	}
 }
