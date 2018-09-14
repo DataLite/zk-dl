@@ -1270,7 +1270,9 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
             {
                 SQLException sqlException = (SQLException) e.getCause() ;
 
-                if ( sqlException.getErrorCode() == 4068 ) //Balík byl změněn
+                final int errorCode = sqlException.getErrorCode();
+                //Balík byl změněn, bude provedeno opakování volaní - třeba se již povede.
+                if (OraError.any(OraError.getRetriable(), errorCode))
                 {
                     return new StoredProcedureResult( execute( inputs ), long2shortName ) ;
                 }

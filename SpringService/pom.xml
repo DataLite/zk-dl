@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>SpringService</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture
         ZK - Spring - Hibernate.
@@ -118,6 +118,13 @@
             <artifactId>ojdbc6</artifactId>
             <version>11.2.0.4</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
