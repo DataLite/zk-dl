@@ -64,7 +64,7 @@
 .z-lovbox .z-lovbox-del:hover { background: url(${c:encodeURL('~./js/dlzklib/img/clear_huge.png')}) no-repeat; }
 
 /* -- Login -- */
-.z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #BDBBBB; font: 12px Verdana, Geneva, sans-serif; margin: 20px auto 0 auto; padding: 12px 15px 10px!important; }
+.z-login { background-image:none; background-color:#8B8B8B; border: 1px solid #BDBBBB; font: 12px Verdana, Geneva, sans-serif; margin: 20px auto 0 auto; padding: 12px 15px 10px; }
 .z-login .z-login-header { color: white; font-weight: bold; padding: 7px 5px;  }
 .z-login .z-login-lbl { display: block; margin-bottom: 3px; }
 .z-login input[type=text],
