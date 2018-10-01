@@ -79,4 +79,17 @@ public class SessionInformationManager implements SessionInformation
     {
         getSessionInformationProvider().setCurrentSessionId(id);
     }
+
+
+    @Override
+    public void setSessionInformationWithTime(String sessionId, String format, int current, int total, String... args)
+    {
+        getSessionInformationProvider().setSessionInformationWithTime( sessionId, format, current, total, args ) ;
+    }
+
+    @Override
+    public void setSessionInformationWithTime(String format, int current, int total, String... args)
+    {
+        getSessionInformationProvider().setSessionInformationWithTime( format, current, total, args ) ;
+    }
 }
