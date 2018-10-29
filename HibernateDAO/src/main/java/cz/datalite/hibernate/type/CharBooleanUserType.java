@@ -33,7 +33,7 @@ public class CharBooleanUserType extends AbstractUserType implements Parameteriz
         return Boolean.class;
     }
 
-    public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
         String stringValue = rs.getString(names[0]);
 
         if (stringValue == null || stringValue.length() == 0 || rs.wasNull())
@@ -43,7 +43,7 @@ public class CharBooleanUserType extends AbstractUserType implements Parameteriz
         return booleanValue(names[0], charValue);
     }
 
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
         if (value == null)
             st.setNull(index, Types.CHAR);
         else
