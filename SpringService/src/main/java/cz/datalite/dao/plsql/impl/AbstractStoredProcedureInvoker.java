@@ -3,7 +3,6 @@ package cz.datalite.dao.plsql.impl;
 import cz.datalite.dao.plsql.*;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
-import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -61,25 +61,45 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     private int sizeOutput = Integer.MAX_VALUE ;
 
     public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
-	{
-		super( dataSource, "" ) ;
+    {
+        super( dataSource, "" ) ;
 
         this.entityManager = entityManager ;
         this.sqlLobValueFactory = sqlLobValueFactory ;
         this.databaseSchema = databaseSchema;
-	}
-
+    }
 
     public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, sqlLobValueFactory, databaseSchema, entityManager ) ;
-
-        setName( name ) ;
+        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, null  ) ;
     }
 
     public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager ) ;
+        this( dataSource, name, resultType, sqlLobValueFactory, databaseSchema, entityManager, null ) ;
+    }
+
+    public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    {
+        super( dataSource, "" ) ;
+
+        this.entityManager = entityManager ;
+        this.sqlLobValueFactory = sqlLobValueFactory ;
+        this.databaseSchema = databaseSchema;
+
+        getJdbcTemplate().setNativeJdbcExtractor( extractor ) ;
+    }
+
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    {
+        this( dataSource, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
+
+        setName( name ) ;
+    }
+
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    {
+        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
         declareReturnParameter( resultType ) ;
     }
 
@@ -130,7 +150,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     {
         Connection con = DataSourceUtils.getConnection(getJdbcTemplate().getDataSource());
 
-        return con.unwrap(OracleConnection.class) ;
+        return ( getJdbcTemplate().getNativeJdbcExtractor() != null ) ? getJdbcTemplate().getNativeJdbcExtractor().getNativeConnection(con) : con ;
     }
 
     /**
@@ -203,17 +223,17 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
 
     @Override
- 	public SqlParameter declareReturnParameter( int type )
-	{
-		if (  isParameterFounded( RETURN_VALUE_NAME ) )
-		{
-			throw new IllegalStateException( "Návratový parametr je již definován" ) ;
-		}
+    public SqlParameter declareReturnParameter( int type )
+    {
+        if (  isParameterFounded( RETURN_VALUE_NAME ) )
+        {
+            throw new IllegalStateException( "Návratový parametr je již definován" ) ;
+        }
 
-		setFunction(true);
+        setFunction(true);
 
-		return declareOutParameter( RETURN_VALUE_NAME, type ) ;
-	}
+        return declareOutParameter( RETURN_VALUE_NAME, type ) ;
+    }
 
     @Override
     public SqlParameter declareReturnStructParameter( String typeName )
@@ -277,9 +297,9 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
     @Override
     public SqlParameter declareOutParameter(String name, int type)
-	{
-		return declareOutParameter( new SqlOutParameter( name, type ) ) ;
-	}
+    {
+        return declareOutParameter( new SqlOutParameter( name, type ) ) ;
+    }
 
     @Override
     public SqlParameter declareOutStructParameter(String name, String dbType )
@@ -456,7 +476,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
     @Override
     public <E> SqlParameter setArrayParameter( String name, String typeName, List<E> value )
-	{
+    {
         try
         {
             ARRAY array = null ;
@@ -474,7 +494,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         {
             throw new IllegalStateException( e ) ;
         }
-	}
+    }
 
     @Override
     public <T> SqlParameter setRecordParameter( String name, String dbType, Class<T> entityClass, T value )
@@ -528,14 +548,14 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
     @Override
     public <T> List<T> getResultArray( Class<T> returnType )
-	{
-		if ( ! isFunction() )
-		{
-			throw new IllegalStateException( "Volaný objekt není funkce" ) ;
-		}
+    {
+        if ( ! isFunction() )
+        {
+            throw new IllegalStateException( "Volaný objekt není funkce" ) ;
+        }
 
         return execute().extractResultArray( returnType ) ;
-	}
+    }
 
     @Override
     public <T> T getResultRecord( Class<T> returnType )
@@ -865,7 +885,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
             if ( ObjectHelper.isNumeric(field.getValue()) )
             {
-               query.append( " " ).append( getDatabaseSchema() ).append(  ".NUMBER_TABLE := " ).append( getDatabaseSchema() ).append( ".NUMBER_TABLE() " ) ;
+                query.append( " " ).append( getDatabaseSchema() ).append(  ".NUMBER_TABLE := " ).append( getDatabaseSchema() ).append( ".NUMBER_TABLE() " ) ;
             }
             else if ( ObjectHelper.isDate(field.getValue()) )
             {
@@ -958,12 +978,12 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
                 if ( ( ObjectHelper.isBoolean(field.getValue().getType()) ) && ( field.getValue().isPrimitive() ) )
                 {
                     query.append( " if " ).append( variableName ).append( " then " ).append( "\n" )
-                                  .append( "  ob := 'A' ;\n")
-                         .append( " else" ).append("\n" )
-                                  .append( "  ob := 'N' ;\n")
+                            .append( "  ob := 'A' ;\n")
+                            .append( " else" ).append("\n" )
+                            .append( "  ob := 'N' ;\n")
 
-                         .append( " end if ;\n" )
-                    .append( " ? := ob ;\n" ) ;
+                            .append( " end if ;\n" )
+                            .append( " ? := ob ;\n" ) ;
                 }
                 else
                 {
@@ -1096,9 +1116,9 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         }
 
         if( ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_BOOLEAN ) )
-           || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_DATE ) )
-           || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_STRING ) )
-           || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_NUMERIC ) )
+                || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_DATE ) )
+                || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_STRING ) )
+                || ( StringHelper.isEqualsIgnoreCase( fieldName, FIELD_NUMERIC ) )
         )
         {
             return ObjectHelper.extractFromObject( sourceValue, returnType ) ;
@@ -1197,16 +1217,16 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         return resultMap.extractResultRecord(returnType) ;
     }
 
-    public String getDatabaseSchema() 
+    public String getDatabaseSchema()
     {
-       return databaseSchema;
+        return databaseSchema;
     }
 
 
     @Override
     public StoredProcedureResult executeIndex()
     {
-       return execute( false ) ;
+        return execute( false ) ;
     }
 
     @Override

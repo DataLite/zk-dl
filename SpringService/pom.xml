@@ -15,11 +15,6 @@
         ZK - Spring - Hibernate.
     </description>
 
-    <properties>
-        <org.springframework.security.version>3.2.5.RELEASE</org.springframework.security.version>
-        <org.springframework.version>5.0.0.RELEASE</org.springframework.version>
-    </properties>
-
     <licenses>
         <license>
             <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3</name>
