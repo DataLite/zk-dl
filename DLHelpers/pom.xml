@@ -1,16 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>cz.datalite.zk-dl</groupId>
-        <artifactId>zk-dl</artifactId>
-        <version>8.5.0</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cz.datalite.zk-dl</groupId>
+		<artifactId>zk-dl</artifactId>
+		<version>8.5.0</version>
+	</parent>
 
-    <groupId>cz.datalite.zk-dl</groupId>
-    <artifactId>DLHelpers</artifactId>
-    <version>8.5.0</version>
-    <name>DLHelpers</name>
-    <description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and use anything you want.</description>
+	<artifactId>DLHelpers</artifactId>
+	<version>8.5.0</version>
+	<name>DLHelpers</name>
+	<description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and
+		use anything you want.
+	</description>
 
 	<licenses>
 		<license>

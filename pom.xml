@@ -55,34 +55,10 @@
 		<org.springframework.security.version>4.0.4.RELEASE</org.springframework.security.version>
 		<org.hibernateframework.version>4.3.11.Final</org.hibernateframework.version>
 		<cz.datalite.zk-dl.version>8.5.0</cz.datalite.zk-dl.version>
-		<org.slf4j.version>1.7.12</org.slf4j.version>
+		<org.slf4j.version>1.7.25</org.slf4j.version>
 	</properties>
 
 	<profiles>
-
-		<profile>
-			<!-- make a build in development mode -->
-			<!-- include rebel.xml to simplify hot redeploys -->
-			<id>development</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.zeroturnaround</groupId>
-						<artifactId>jrebel-maven-plugin</artifactId>
-						<version>1.1.5</version>
-						<executions>
-							<execution>
-								<id>generate-rebel-xml</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>generate</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 
 
 		<profile>
@@ -107,7 +83,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.3</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -141,7 +117,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>${java-version}</source>
 					<target>${java-version}</target>
@@ -151,7 +127,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
+				<version>3.1.0</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
@@ -160,13 +136,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.2</version>
+				<version>2.5.3</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.1.0</version>
 				<configuration>
 					<archive>
 						<manifest>

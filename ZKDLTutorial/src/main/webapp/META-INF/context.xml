@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Tomcat configuration -->
-<Context antiJARLocking="true" path="/ToDo">
-  <Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" name="jdbc/ToDoDB" password="" type="javax.sql.DataSource" url="jdbc:hsqldb:file:ToDoDb" username="sa"/>
-</Context>

@@ -4,6 +4,7 @@
 
     <parent>
         <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
         <version>8.5.0</version>
     </parent>
 

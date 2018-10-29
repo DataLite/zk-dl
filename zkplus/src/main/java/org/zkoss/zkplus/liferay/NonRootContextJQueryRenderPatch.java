@@ -20,6 +20,7 @@ import javax.portlet.PortletSession;
 
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.sys.RequestInfo;
+
 /**
  * Used to patch the rendering result of a ZK portlet for Liferay.
  * When using ZK portlets with Liferay under non root context, we have
@@ -38,15 +39,12 @@ public class NonRootContextJQueryRenderPatch extends JQueryRenderPatch {
 		return new StringWriter();
 	}
 
-	public void patchRender(RequestInfo reqInfo, Page page, Writer result,
-			Writer out) throws IOException {
+	public void patchRender(RequestInfo reqInfo, Page page, Writer result, Writer out) throws IOException {
 		if (getDelay() >= 0)
 			super.patchRender(reqInfo, page, result, out);
-		PortletSession p = (PortletSession)reqInfo.getSession().getNativeSession();
-		out.write("<script>zk.afterMount(function () {"+
-			"document.cookie = 'JSESSIONID=" + p.getId() +
-			"; path=/'" +
-			"});</script>");
+		PortletSession p = (PortletSession) reqInfo.getSession().getNativeSession();
+		out.write("<script>zk.afterMount(function () {" + "document.cookie = 'JSESSIONID=" + p.getId() + "; path=/'"
+				+ "});</script>");
 	}
 
 }

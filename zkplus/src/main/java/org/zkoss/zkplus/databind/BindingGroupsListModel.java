@@ -12,7 +12,6 @@
 Copyright (C) 2011 Potix Corporation. All Rights Reserved.
 */
 
-
 package org.zkoss.zkplus.databind;
 
 import org.zkoss.lang.Objects;
@@ -29,7 +28,7 @@ import org.zkoss.zul.impl.GroupsListModel;
  * @deprecated As of release 7.0.0, replace with new ZK binding.
  * @since 5.0.6
  */
-public class BindingGroupsListModel extends GroupsListModel<Object, Object, Object> implements BindingListModel<Object>, java.io.Serializable {
+public class BindingGroupsListModel extends GroupsListModel implements BindingListModel, java.io.Serializable {
 	@SuppressWarnings("unchecked")
 	public BindingGroupsListModel(GroupsModel model) {
 		super(model);
@@ -37,7 +36,7 @@ public class BindingGroupsListModel extends GroupsListModel<Object, Object, Obje
 
 	//--BindingListModel--//
 	public int indexOf(Object obj) {
-		for(int j = getSize(); j-- > 0;) {
+		for (int j = getSize(); j-- > 0;) {
 			if (Objects.equals(getElementAt(j), obj)) {
 				return j;
 			}

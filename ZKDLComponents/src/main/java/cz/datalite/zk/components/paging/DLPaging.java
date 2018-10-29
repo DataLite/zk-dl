@@ -256,4 +256,14 @@ public class DLPaging extends XulElement implements Pageable, Paginal {
     public boolean isShowInfoText() {
         return showInfoText;
     }
+
+    @Override
+    public boolean isDisabled() {
+        return false;
+    }
+
+    @Override
+    public void setDisabled(boolean b) {
+        // Nepoužíváno
+    }
 }

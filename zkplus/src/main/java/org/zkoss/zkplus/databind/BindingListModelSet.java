@@ -34,8 +34,7 @@ import org.zkoss.zul.ListModelSet;
  * @see org.zkoss.zul.ListModelSet
  * @deprecated As of release 7.0.0, replace with new ZK binding.
  */
-public class BindingListModelSet<E> extends ListModelSet<E>
-implements BindingListModelExt<E>, java.io.Serializable {
+public class BindingListModelSet<E> extends ListModelSet<E> implements BindingListModelExt<E>, java.io.Serializable {
 	private static final long serialVersionUID = 200808191422L;
 
 	/**
@@ -49,10 +48,9 @@ implements BindingListModelExt<E>, java.io.Serializable {
 	public boolean isDistinct() {
 		return true;
 	}
-	
+
 	public int[] indexesOf(Object elm) {
 		final int idx = indexOf(elm);
-		return idx < 0 ? new int[0] : new int[] {idx};
+		return idx < 0 ? new int[0] : new int[] { idx };
 	}
 }
-

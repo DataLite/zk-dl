@@ -5,13 +5,13 @@
 	<groupId>org.zkoss.zk</groupId>
 	<artifactId>zkbind</artifactId>
 	<packaging>jar</packaging>
-	<version>8.0.0.FL.20150504-Eval-DATALITE</version>
+	<version>8.6.0.FL.20181026-Eval-DATALITE</version>
 	<name>ZK Bind</name>
 	<url>http://www.zkoss.org/zkbind</url>
 	<description>ZK Bind</description>
 
 	<properties>
-		<project.zk.version>8.0.0.FL.20150504-Eval</project.zk.version>
+		<project.zk.version>8.6.0.FL.20181026-Eval</project.zk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -113,7 +113,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.18.2-GA</version>
+			<version>3.23.1-GA</version>
 		</dependency>
 	</dependencies>
 	<build>

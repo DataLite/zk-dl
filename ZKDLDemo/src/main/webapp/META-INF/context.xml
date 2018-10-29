@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/ZkExample-1.0-SNAPSHOT">
-  <Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" name="jdbc/ZkExampleDB" password="" type="javax.sql.DataSource" url="jdbc:hsqldb:file:ZkExampleDb" username="sa"/>
-</Context>

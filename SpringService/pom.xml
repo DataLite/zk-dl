@@ -14,7 +14,6 @@
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture
         ZK - Spring - Hibernate.
     </description>
-    <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture ZK - Spring - Hibernate.</description>
 
     <properties>
         <org.springframework.security.version>3.2.5.RELEASE</org.springframework.security.version>
