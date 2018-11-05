@@ -459,7 +459,7 @@ public class DLListboxComponentControllerImpl<T> implements DLListboxComponentCo
 
             TemplateInfo info = ReflectionHelper.getForcedFieldValue( "_tempInfo", template );
             // start from <listitem> children
-            resolveTemplateListcells(cellTemplates, info.getChildren().get(0).getChildren());
+            resolveTemplateListcells(cellTemplates, info.getChildren().get(0).getChildren().isEmpty() ? info.getChildren() : info.getChildren().get(0).getChildren());
 
             if (defaultHeaders.size() != cellTemplates.size()) {
                 throw new IllegalStateException("Listbox template parsing error: different size of " +
