@@ -43,6 +43,7 @@ public abstract class StringHelper
      * @return hodnota s odstranenimy mezerami
      */
     public static String trim( String value ) {
+        if(value == null) return null;
         int len = value.length();
         int st = 0;
         char[] val = value.toCharArray();    /* avoid getfield opcode */
