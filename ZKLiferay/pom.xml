@@ -5,7 +5,7 @@
     <parent>
         <groupId>cz.datalite.zk-dl</groupId>
         <artifactId>zk-dl</artifactId>
-        <version>1.4.5.1</version>
+        <version>1.4.6</version>
     </parent>
 
     <groupId>cz.datalite.zk-dl</groupId>
@@ -141,7 +141,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc-portlet</artifactId>
-            <version>${org.springframework.version}</version>
+            <version>${org.springframework.portlet.version}</version>
             <optional>true</optional>
         </dependency>
 

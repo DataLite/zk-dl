@@ -61,6 +61,9 @@ public abstract class AbstractDataSourceSwitcherService extends AbstractRoutingD
 
     private EntityManagerFactory entityManagerFactory ;
 
+    public AbstractDataSourceSwitcherService() {
+    }
+
     /**
      * @param userDetailsServiceName Název třídy pro získání uživatele
      */

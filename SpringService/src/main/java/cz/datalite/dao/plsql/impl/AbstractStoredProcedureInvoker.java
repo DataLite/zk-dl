@@ -1,8 +1,15 @@
 package cz.datalite.dao.plsql.impl;
 
-import cz.datalite.dao.plsql.*;
+import cz.datalite.dao.plsql.FieldInfo;
+import cz.datalite.dao.plsql.FieldMaps;
+import cz.datalite.dao.plsql.MergeType;
+import cz.datalite.dao.plsql.SqlLobValueFactory;
+import cz.datalite.dao.plsql.StoredProcedureInvoker;
+import cz.datalite.dao.plsql.StoredProcedureResult;
+import cz.datalite.dao.plsql.StructConvertable;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
+import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
@@ -17,14 +24,18 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
-import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: karny
@@ -55,6 +66,11 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
      */
     private boolean wrapNeed = false ;
 
+    /**
+     * Příznak zda je nutné rozbalit connection (nahrada za NativeJdbcExtractor)
+     */
+    private boolean unwrapConnection = false;
+
     private EntityManager entityManager ;
 
     private boolean dbmsOutput = false ;
@@ -71,15 +87,15 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
 
     public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, null  ) ;
+        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, false  ) ;
     }
 
     public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
     {
-        this( dataSource, name, resultType, sqlLobValueFactory, databaseSchema, entityManager, null ) ;
+        this( dataSource, name, resultType, sqlLobValueFactory, databaseSchema, entityManager, false ) ;
     }
 
-    public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         super( dataSource, "" ) ;
 
@@ -87,17 +103,17 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         this.sqlLobValueFactory = sqlLobValueFactory ;
         this.databaseSchema = databaseSchema;
 
-        getJdbcTemplate().setNativeJdbcExtractor( extractor ) ;
+        this.unwrapConnection = true;
     }
 
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         this( dataSource, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
 
         setName( name ) ;
     }
 
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
         declareReturnParameter( resultType ) ;
@@ -149,8 +165,10 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     private Connection getNativeConnection() throws SQLException
     {
         Connection con = DataSourceUtils.getConnection(getJdbcTemplate().getDataSource());
+        // https://stackoverflow.com/questions/8225921/unwrap-to-oracleconnection
 
-        return ( getJdbcTemplate().getNativeJdbcExtractor() != null ) ? getJdbcTemplate().getNativeJdbcExtractor().getNativeConnection(con) : con ;
+//        mozna delat unwrap vzdy
+        return ( unwrapConnection ) ? con.unwrap(OracleConnection.class) : con ;
     }
 
     /**

@@ -1,7 +1,6 @@
 package cz.datalite.dao.plsql.impl;
 
-import cz.datalite.dao.plsql.*;
-import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
+import cz.datalite.dao.plsql.SqlLobValueFactory;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -32,19 +31,19 @@ class DefaultStoredProcedureInvoker extends AbstractStoredProcedureInvoker
         declareReturnParameter( resultType ) ;
     }
 
-    public DefaultStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public DefaultStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         super( dataSource, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
     }
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         this( dataSource, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
 
         setName( name ) ;
     }
 
-    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
+    public DefaultStoredProcedureInvoker( DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, boolean extractor )
     {
         this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
         declareReturnParameter( resultType ) ;
