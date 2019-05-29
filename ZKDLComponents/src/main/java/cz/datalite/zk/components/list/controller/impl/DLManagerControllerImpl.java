@@ -17,6 +17,7 @@ import cz.datalite.zk.components.list.model.DLColumnUnitModel;
 import cz.datalite.zk.components.list.view.DLListboxManager;
 import cz.datalite.zk.components.list.window.controller.ListboxExportManagerController;
 import cz.datalite.zk.converter.ZkConverter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
@@ -481,8 +482,8 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
         for (Object entity : data) {
 			final List<POICell> row = new LinkedList<>();
             for (Map<String, Object> unit : model) {
+                final String columnName = (String) unit.get("column");
                 try {
-                    final String columnName = (String) unit.get("column");
 
                     Object value;
 
@@ -507,8 +508,9 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
                     }
 
                     row.add(new POICell<>(value));
-                } catch (Exception ex) { // ignore
-                    LOGGER.warn("Error occured during exporting column '{}'.", unit.get("column"), ex);
+                } catch (Exception ex) {
+                    row.add(new POICell<>(ExceptionUtils.getMessage(ex)));
+                    LOGGER.warn("Error occured during exporting column '{}'.", columnName, ex);
                 }
             }
 			result.add(row);
