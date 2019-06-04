@@ -1,6 +1,9 @@
 package cz.datalite.dao.impl;
 
-import cz.datalite.dao.*;
+import cz.datalite.dao.DLResponse;
+import cz.datalite.dao.DLSearch;
+import cz.datalite.dao.DLSort;
+import cz.datalite.dao.GenericDAO;
 import cz.datalite.dao.support.JpaEntityInformation;
 import cz.datalite.dao.support.JpaEntityInformationSupport;
 import cz.datalite.hibernate.OrderBySqlFormula;
@@ -507,7 +510,11 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         assert entity != null : "Invalid argument in GenericDAO refresh(). Entity is missing";
         assert !isNew( entity ) : "Invalid argument in GenericDAO refresh(). Entity is transient";
 
-        getSession().refresh(entity);
+        if(!getSession().contains(entity)){
+            getSession().refresh(reattach(entity));
+        }else{
+            getSession().refresh(entity);
+        }
     }
 
     public int updateHQL(String update, Object... values) {
