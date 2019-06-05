@@ -32,7 +32,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>HibernateDAO</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>${cz.datalite.zk-dl.version}.1</version>
             <optional>true</optional>
         </dependency>
 
