@@ -9,6 +9,8 @@ import cz.datalite.dao.support.JpaEntityInformationSupport;
 import cz.datalite.hibernate.OrderBySqlFormula;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -296,6 +298,10 @@ public class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T,
         {
             // It would be cleaner to check if the entity is in already in the persistence context
             // unfortunatelly, there is no public method that I am aware of.
+            if ( entity instanceof HibernateProxy) {
+                LazyInitializer li = ( (HibernateProxy) entity ).getHibernateLazyInitializer();
+                return (T) getSession().get(li.getImplementation().getClass(), e.getIdentifier());
+            }
             return (T) getSession().get(entity.getClass(), e.getIdentifier());
         }
     }
