@@ -444,36 +444,10 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
         final List<POICell> heads = new ArrayList<>();
 
-        // list of columns that need to be visible only for the purpose of export
-        // (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
-        final List<DLColumnUnitModel> hideOnFinish = new LinkedList<>();
-
-
 		for (Map<String, Object> unit : model) {
             heads.add(new POICell<>(unit.get("label")));
         }
-
-        // load data
-        List<T> data;
-        try {
-            // ensure, that column is visible in the model (is hidden if the user has added it only for export)
-            for (Map<String, Object> unit : model) {
-                DLColumnUnitModel columnUnitModel = masterController.getModel().getColumnModel().getColumnModel((Integer) unit.get("index") + 1);
-                if (!columnUnitModel.isVisible()) {
-                    columnUnitModel.setVisible(true);
-                    hideOnFinish.add(columnUnitModel);
-                }
-            }
-
-            // and load data
-			int exportMaxRows = ListboxExportManagerController.exportMaxRows;
-            data = masterController.loadData((rows == 0) ? exportMaxRows : Math.min(rows, exportMaxRows)).getData();
-        } finally {
-            // after processing restore previous state
-            for (DLColumnUnitModel hide : hideOnFinish) {
-                hide.setVisible(false);
-            }
-        }
+        List<T> data = loadData(model, rows);
 
         if (masterController.getListbox().getAttribute("disableExcelExportHeader") == null) {
             result.add(heads);
@@ -517,5 +491,88 @@ public class DLManagerControllerImpl<T> implements DLManagerController {
 
         }
         return result;
+    }
+
+    protected List<T> loadData(List<Map<String, Object>> model, int rows) {
+        // load data
+        HideShowColumns hideShowColumns = showHideColumns(model);
+        try {
+            // and load data
+			int exportMaxRows = ListboxExportManagerController.exportMaxRows;
+            int rowLimit = (rows == 0) ? exportMaxRows : Math.min(rows, exportMaxRows);
+            return masterController.loadData(rowLimit).getData();
+        } finally {
+            // after processing restore previous state
+            hideShowColumns.getHide().forEach(hide -> hide.setVisible(false));
+            hideShowColumns.getShow().forEach(show -> show.setVisible(true));
+        }
+    }
+
+    /**
+     * list of columns that need to be visible only for the purpose of export
+     * (listbox controller may skip hidden columns for performance reasons, so we need to make them "visible" and hide them back in the end of export)
+     * @param model
+     * @return
+     */
+    private HideShowColumns showHideColumns(List<Map<String, Object>> model) {
+        final HideShowColumns result = new HideShowColumns();
+        final List<Integer> showIndex = new LinkedList<>();// list of index of visible columns
+        for (Map<String, Object> map : model) {
+            Integer index = (Integer) map.get("index");
+            showIndex.add(index);
+        }
+        // ensure, that column is visible in the model (is hidden if the user has added it only for export)
+        List<DLColumnUnitModel> columnModels = masterController.getModel().getColumnModel().getColumnModels();
+        for (int i = 0; i < columnModels.size(); i++) {
+            DLColumnUnitModel columnUnitModel = columnModels.get(i);
+            if (showIndex.contains(i)) {
+                if (!columnUnitModel.isVisible()) {// is hidden, but user wants to export them
+                    columnUnitModel.setVisible(true);
+                    result.addHide(columnUnitModel);
+                }
+            } else {
+                if (columnUnitModel.isVisible()) {// is visible, but is useless for export - some type of optimalization (some columns can be resource expensive)
+                    columnUnitModel.setVisible(false);
+                    result.addShow(columnUnitModel);
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * DTO that holds information about how to revert columns visibility.
+     */
+    protected static class HideShowColumns {
+        /**
+         * Columns to be REVERTED to hide. (Was "showed" because of export.)
+         */
+        final List<DLColumnUnitModel> hide;
+        /**
+         * Columns to be REVERTED to show. (Was "hidden" because of export.)
+         */
+        final List<DLColumnUnitModel> show;
+
+        public HideShowColumns() {
+            hide = new LinkedList<>();
+            show  = new LinkedList<>();
+        }
+
+        public void addHide(DLColumnUnitModel unitModel) {
+            hide.add(unitModel);
+        }
+
+        public void addShow(DLColumnUnitModel unitModel) {
+            show.add(unitModel);
+        }
+
+        public List<DLColumnUnitModel> getHide() {
+            return hide;
+        }
+
+        public List<DLColumnUnitModel> getShow() {
+            return show;
+        }
     }
 }
