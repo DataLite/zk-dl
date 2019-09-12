@@ -19,7 +19,14 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.util.Composer;
 import org.zkoss.zk.ui.util.Template;
-import org.zkoss.zul.*;
+import org.zkoss.zul.Bandpopup;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Hlayout;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listitem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +121,8 @@ public class DLProfileManager<T> extends Hlayout {
 		this.profilesLovbox.setSearchProperty("name");
 		this.profilesLovbox.setMultiple(false);
 		this.profilesLovbox.setWatermark(Labels.getLabel("listbox.profileManager.profile.watermark"));
+		this.profilesLovbox.setWidth("180px");
+		this.profilesLovbox.setStyle(";white-space: no-wrap;");
 
 
 		// init bandpop and listbox inside lovbox
