@@ -1,7 +1,7 @@
 package cz.datalite.helpers.excel.export.poi;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 
 /**
  *
@@ -36,25 +36,25 @@ public class POICell<T> {
 	}
 
 	/**
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_BLANK
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_BOOLEAN
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_ERROR
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_FORMULA
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_NUMERIC
-	 * @see org.apache.poi.ss.usermodel.Cell#CELL_TYPE_STRING
+	 * @see org.apache.poi.ss.usermodel.CellType#BLANK
+	 * @see org.apache.poi.ss.usermodel.CellType#BOOLEAN
+	 * @see org.apache.poi.ss.usermodel.CellType#ERROR
+	 * @see org.apache.poi.ss.usermodel.CellType#FORMULA
+	 * @see org.apache.poi.ss.usermodel.CellType#NUMERIC
+	 * @see org.apache.poi.ss.usermodel.CellType#STRING
 	 */
-	public int getType() {
+	public CellType getType() {
 		if (value == null) {
-			return Cell.CELL_TYPE_BLANK;
+			return CellType.BLANK;
 		}
 		if (value.getClass().isAssignableFrom(Boolean.class)) {
-			return Cell.CELL_TYPE_BOOLEAN;
+			return CellType.BOOLEAN;
 		}
 		if (value.getClass().isAssignableFrom(Double.class)) {// Numeric?
-			return Cell.CELL_TYPE_NUMERIC;
+			return CellType.NUMERIC;
 		}
 
-		return Cell.CELL_TYPE_STRING;
+		return CellType.STRING;
 	}
 
 

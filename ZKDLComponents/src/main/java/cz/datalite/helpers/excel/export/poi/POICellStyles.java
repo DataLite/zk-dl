@@ -26,11 +26,12 @@ public class POICellStyles {
 	public static CellStyle headerCellStyle(Workbook workbook) {
 		CellStyle cellStyle = workbook.createCellStyle();
 		Font font = workbook.createFont();
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		font.setFontHeight((short) 700);
+		font.setBold(true);
 		font.setColor(IndexedColors.WHITE.getIndex());
 		cellStyle.setFont(font);
 		cellStyle.setFillBackgroundColor(IndexedColors.BLACK.getIndex());
-		cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		return cellStyle;
 	}
 }

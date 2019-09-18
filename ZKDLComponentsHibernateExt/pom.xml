@@ -10,7 +10,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKDLComponentsHibernateExt</artifactId>
-    <version>1.4.5</version>
+    <version>1.4.6.1</version>
     <name>ZKDLComponentsHibernateExt</name>
     <description>The actual interface between ZKComponents and HibernateDAO. It contains mainly DLListboxCriteriaController.</description>
 
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>ZKDLComponents</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>1.4.6.1</version>
         </dependency>
     </dependencies>
 </project>
