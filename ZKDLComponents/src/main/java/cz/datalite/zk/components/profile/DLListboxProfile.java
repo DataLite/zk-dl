@@ -1,5 +1,7 @@
 package cz.datalite.zk.components.profile;
 
+import com.sun.tools.jdeps.JdepsFilter;
+
 import java.util.List;
 
 /**
@@ -71,4 +73,11 @@ public interface DLListboxProfile {
      * @return list of categories.
      */
     List<DLListboxProfileCategory> getCategories();
+
+	/**
+	 * @return jméno role, kterou musí mít uživatel aby mohl editovat profil
+	 */
+	default String getPermissionName() {
+		return null ;
+	}
 }

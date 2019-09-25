@@ -367,11 +367,18 @@ public class DLProfileManager<T> extends Hlayout {
 			final Listcell typeCell = new Listcell();	
 			typeCell.setVisible(showType);
 			typeCell.setSclass("nonselectable");
-			listitem.appendChild(typeCell);			
-			ZKBinderHelper.registerAnnotation(typeCell, "label", "load", "item.publicProfile ? '" 
-				+ Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "'");
-			ZKBinderHelper.registerAnnotation(typeCell, "tooltiptext", "load", "item.publicProfile ? '"
-				+ Labels.getLabel("listbox.profileManager.profile.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.private") + "'");
+			listitem.appendChild(typeCell);
+
+			ZKBinderHelper.registerAnnotation(typeCell, "label", "load",
+					 "empty item.permissionName ? ( item.publicProfile ? '" + Labels.getLabel("listbox.profileManager.profile.short.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.short.private") + "' )"
+			     + ": '" + Labels.getLabel("listbox.profileManager.profile.short.permission") + "'"
+			) ;
+
+			ZKBinderHelper.registerAnnotation(typeCell, "tooltiptext", "load",
+					"empty item.permissionName ? ( item.publicProfile ? '" + Labels.getLabel("listbox.profileManager.profile.public") + "' : '" + Labels.getLabel("listbox.profileManager.profile.private") + "' )"
+							+ ": '" + Labels.getLabel("listbox.profileManager.profile.permission") + "'"
+			) ;
+
 			// profile name cell and click handler
 			final Listcell nameCell = new Listcell();
 			
@@ -437,23 +444,34 @@ public class DLProfileManager<T> extends Hlayout {
 			final Listcell idCell = new Listcell(profile.getId().toString());
 			item.appendChild(idCell);
 			
-			// profile type cell 
-			final Listcell typeCell = new Listcell(profile.isPublicProfile() ? Labels.getLabel("listbox.profileManager.profile.short.public")
-							: Labels.getLabel("listbox.profileManager.profile.short.private"));	
+			// profile type cell
+
+			String label = "" ;
+			String tooltip = "" ;
+
+			if ( StringHelper.isNull( profile.getPermissionName() ) ) {
+				label = profile.isPublicProfile() ? Labels.getLabel("listbox.profileManager.profile.short.public")
+						: Labels.getLabel("listbox.profileManager.profile.short.private") ;
+				tooltip = profile.isPublicProfile() ? Labels.getLabel("listbox.profileManager.profile.public")
+						: Labels.getLabel("listbox.profileManager.profile.private") ;
+			} else {
+				label = Labels.getLabel("listbox.profileManager.profile.short.permission") ;
+				tooltip = Labels.getLabel("listbox.profileManager.profile.permission") ;
+			}
+			final Listcell typeCell = new Listcell( label );
 			typeCell.setVisible(showType);
+			typeCell.setTooltiptext( tooltip ) ;
 			typeCell.setSclass("nonselectable");
 			item.appendChild(typeCell);			
 			
 			// profile name cell and click handler
 			final Listcell nameCell = new Listcell(profile.getName());
 			
-			nameCell.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-				@Override
-				public void onEvent(Event event) throws Exception {
-					Listitem selectedListitem = (Listitem) nameCell.getParent();
-					profilesLovbox.getController().setSelectedItem((DLListboxProfile) selectedListitem.getValue());
-					profilesLovbox.close();
-				}
+			nameCell.addEventListener(Events.ON_CLICK, event ->
+			{
+				Listitem selectedListitem = (Listitem) nameCell.getParent();
+				profilesLovbox.getController().setSelectedItem(selectedListitem.getValue());
+				profilesLovbox.close();
 			});
 			
 			item.appendChild(nameCell);
@@ -474,11 +492,7 @@ public class DLProfileManager<T> extends Hlayout {
 			buttonCell.setSclass("nonselectable");
 			item.appendChild(buttonCell);
 				
-			DLProfileManager.this.createEditButtonWithTooltip(buttonCell, profile.isEditable(), new EventListener<Event>() {
-				public void onEvent(final Event event) {
-					controller.onEditProfile((Long.valueOf(idCell.getLabel())));
-				}
-			});
+			DLProfileManager.this.createEditButtonWithTooltip(buttonCell, profile.isEditable(), event -> controller.onEditProfile((Long.valueOf(idCell.getLabel()))));
 		}		
 	}
 }
