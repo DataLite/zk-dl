@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>DLBind</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.6.1</version>
     <name>DLBind</name>
     <description>Binder module provides additional functionality to ZKBind.</description>
 

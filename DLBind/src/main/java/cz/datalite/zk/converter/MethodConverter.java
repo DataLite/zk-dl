@@ -1,20 +1,20 @@
 package cz.datalite.zk.converter;
 
+import org.zkoss.bind.BindContext;
 import org.zkoss.bind.Binder;
-import org.zkoss.bind.impl.*;
-import org.zkoss.bind.sys.Binding;
+import org.zkoss.bind.Converter;
+import org.zkoss.bind.impl.BindContextUtil;
+import org.zkoss.bind.impl.BinderUtil;
 import org.zkoss.lang.Classes;
 import org.zkoss.lang.reflect.Fields;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.UiException;
+import org.zkoss.zkplus.databind.TypeConverter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.zkoss.bind.BindContext;
-import org.zkoss.bind.Converter;
-import org.zkoss.zkplus.databind.TypeConverter;
 
 /**
  * Convenient converter, which is called directly from Binding.
@@ -113,25 +113,7 @@ public class MethodConverter implements TypeConverter, Converter {
     }
 
     public Object coerceToUi( Object val, Component comp ) {
-        try {
-            Method m = getCoerceMethod( comp, val == null ? null : val.getClass() );
-            if ( m.getGenericParameterTypes().length == 3 )
-                return m.invoke( controllerObj, val, comp, createDummyBindContext(comp));
-            else if ( m.getGenericParameterTypes().length == 2 )
-                return m.invoke( controllerObj, val, comp );
-            else
-            return m.invoke( controllerObj, val );
-        } catch ( IllegalAccessException ex ) {
-            throw new UiException( errorDesc + " Illegal access: " + ex.getLocalizedMessage(), ex );
-        } catch ( IllegalArgumentException ex ) {
-            throw new UiException( errorDesc + " Illegal argument: " + ex.getLocalizedMessage(), ex );
-        } catch ( InvocationTargetException ex ) {
-            throw new UiException( errorDesc + " Error while invoking method: " + ex.getLocalizedMessage()
-                    + "\n" + getStackTrace( ex ), ex );
-        } catch ( Throwable ex ) {
-            throw new UiException( errorDesc + " Unexpected exception: " + ex.getLocalizedMessage()
-                    + "\n" + getStackTrace( ex ), ex );
-        }
+        return coerceToUi(val, comp, null);
     }
 
     // dummy context to allow client code to depend on binding context (instead of just passing null)
@@ -165,6 +147,24 @@ public class MethodConverter implements TypeConverter, Converter {
     }
 
     public Object coerceToUi( Object beanProp, Component component, BindContext ctx ) {
-        return coerceToUi( beanProp, component );
+        try {
+            Method m = getCoerceMethod( component, beanProp == null ? null : beanProp.getClass() );
+            if ( m.getGenericParameterTypes().length == 3 )
+                return m.invoke( controllerObj, beanProp, component, ctx == null ? createDummyBindContext(component) : ctx);
+            else if ( m.getGenericParameterTypes().length == 2 )
+                return m.invoke( controllerObj, beanProp, component );
+            else
+                return m.invoke( controllerObj, beanProp );
+        } catch ( IllegalAccessException ex ) {
+            throw new UiException( errorDesc + " Illegal access: " + ex.getLocalizedMessage(), ex );
+        } catch ( IllegalArgumentException ex ) {
+            throw new UiException( errorDesc + " Illegal argument: " + ex.getLocalizedMessage(), ex );
+        } catch ( InvocationTargetException ex ) {
+            throw new UiException( errorDesc + " Error while invoking method: " + ex.getLocalizedMessage()
+                    + "\n" + getStackTrace( ex ), ex );
+        } catch ( Throwable ex ) {
+            throw new UiException( errorDesc + " Unexpected exception: " + ex.getLocalizedMessage()
+                    + "\n" + getStackTrace( ex ), ex );
+        }
     }
 }

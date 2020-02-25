@@ -9,7 +9,7 @@
 
     <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>ZKComposer</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.6.1</version>
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
 
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLBind</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>${cz.datalite.zk-dl.version}.1</version>
         </dependency>
 
         <dependency>

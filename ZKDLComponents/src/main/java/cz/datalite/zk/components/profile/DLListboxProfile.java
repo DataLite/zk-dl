@@ -1,6 +1,5 @@
 package cz.datalite.zk.components.profile;
 
-import com.sun.tools.jdeps.JdepsFilter;
 
 import java.util.List;
 
