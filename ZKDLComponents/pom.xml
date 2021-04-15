@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>ZKDLComponents</artifactId>
-    <version>1.4.6.3</version>
+    <version>1.4.6.4</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controlls - listbox, lovbox, combobox.</description>
 

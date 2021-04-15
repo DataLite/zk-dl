@@ -2,6 +2,7 @@ package cz.datalite.zk.components.list.model;
 
 import cz.datalite.dao.DLNullPrecedence;
 import cz.datalite.dao.DLSortType;
+import cz.datalite.helpers.StringHelper;
 import cz.datalite.zk.components.list.enums.DLFilterOperator;
 import cz.datalite.zk.components.list.filter.compilers.FilterCompiler;
 import cz.datalite.zk.components.list.filter.components.FilterComponent;
@@ -479,7 +480,20 @@ public class DLColumnUnitModel implements Comparable<DLColumnUnitModel> {
 	public int compareTo(DLColumnUnitModel o) {
 		if (o == null)
 			return 0;
-		return (getOrder() < o.getOrder()) ? -1 : getOrder() == o.getOrder() ? 0 : 1;
+
+		if ( o.isColumnManager() && isColumnManager() ) {
+            return getOrder().compareTo(o.getOrder());
+        } else if ( ! o.isColumnManager() ) {
+		    return 1 ;
+        } else if ( ! isColumnManager() ) {
+		    return -1 ;
+        } else if ( StringHelper.isNull(o.label) && ! StringHelper.isNull(label) ) {
+		    return 0 ;
+        } else if ( StringHelper.isNull(o.label) ) {
+		    return -1 ;
+        } else {
+		    return 1 ;
+        }
 	}
 
     public Composer<?> getController() {
