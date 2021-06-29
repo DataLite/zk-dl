@@ -491,7 +491,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( removeDot( (String)value ) ) : null ;
+            return ( ! StringHelper.isNull((String)value)) ? Long.parseLong( removeDot( StringHelper.trim( (String)value ) ) ) : null ;
         }
         else if ( value instanceof Double )
         {
@@ -521,7 +521,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  Double.parseDouble((String) value) : null ;
+            return ( ! StringHelper.isNull((String)value)) ?  Double.parseDouble(StringHelper.trim((String) value)) : null ;
         }
 
         return (value != null) ? Double.parseDouble(String.valueOf(value)) : null;
@@ -548,7 +548,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  Integer.parseInt( removeDot( (String)value ) ): null ;
+            return ( ! StringHelper.isNull((String)value)) ? Integer.parseInt( removeDot( StringHelper.trim( (String)value ) ) ) : null ;
         }
         else if ( value instanceof Double )
         {
@@ -578,7 +578,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  new BigDecimal((String) value) : null ;
+            return ( ! StringHelper.isNull((String)value)) ?  new BigDecimal( StringHelper.trim( (String) value ) ) : null ;
         }
         else if ( value instanceof Double )
         {
@@ -608,7 +608,7 @@ public final class ObjectHelper
         }
         else if ( value instanceof String )
         {
-            return ( ! StringHelper.isNull((String)value)) ?  new BigInteger((String) value) : null ;
+            return ( ! StringHelper.isNull((String)value)) ?  new BigInteger( StringHelper.trim( (String) value ) ) : null ;
         }
         else if ( value instanceof Double )
         {
