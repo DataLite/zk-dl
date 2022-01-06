@@ -641,6 +641,10 @@ public final class ObjectHelper
         {
             return BooleanHelper.isTrue((String) value) ;
         }
+        else if ( value instanceof Boolean )
+        {
+            return (Boolean) value ;
+        }
 
         return (value != null) ? BooleanHelper.isTrue(String.valueOf(value)) : null;
     }
