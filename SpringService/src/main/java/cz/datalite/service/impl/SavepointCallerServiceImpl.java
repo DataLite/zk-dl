@@ -3,6 +3,8 @@ package cz.datalite.service.impl;
 import cz.datalite.service.SavepointCallerService;
 import cz.datalite.service.SavepointOperation;
 import cz.datalite.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,8 @@ import javax.validation.constraints.NotNull;
 @Service
 public class SavepointCallerServiceImpl implements SavepointCallerService
 {
-    @SuppressWarnings("unchecked")
+    private final static Logger LOGGER = LoggerFactory.getLogger(SavepointCallerService.class) ;
+
     @Override
     @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class, timeout = 6000 )
     public void doExecute( @NotNull SavepointOperation operation )
@@ -20,7 +23,6 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
         checkException( operation ) ;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class )
     public void doExecuteWithDefaultTimeout(@NotNull SavepointOperation operation)
@@ -33,14 +35,13 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
      *
      * @param operation     spouštěná operace
      */
-    private void checkException( @NotNull SavepointOperation operation )
-    {
-        try
-        {
+    private void checkException( @NotNull SavepointOperation operation ) {
+        try {
             operation.doOperation() ;
-        }
-        catch ( Exception e )
-        {
+        } catch ( Exception e ) {
+            if ( LOGGER.isErrorEnabled() ) {
+                LOGGER.error( "Chyba při zpracování transakce", e ) ;
+            }
             throw new Error( e ) ;
         }
     }
