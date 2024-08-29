@@ -83,6 +83,9 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
     protected final Class<T> entityClass;
     /** automatically save model */
     protected boolean autosave = true;
+
+    /** automatically erase selected item if it is not in the model */
+    protected boolean autoErase = true;
     /** component identifier */
     protected final String identifier;
     /** list of the listeners */
@@ -414,7 +417,7 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
 
 
         // if response does not include selected item, delete it
-        if (getListboxController().getSelectedItem() != null && !response.getData().contains(getListboxController().getSelectedItem())) {
+        if (isAutoErase() && getListboxController().getSelectedItem() != null && !response.getData().contains(getListboxController().getSelectedItem())) {
 	        getListboxController().setSelected(null);
         }
 
@@ -983,6 +986,22 @@ public abstract class DLListboxGeneralController<T> implements DLListboxExtContr
         profile.setCustomJsonData(customData.toJSONString());
 
     	return profile;
+    }
+
+    /**
+     * Returns true if selected item is not in the model and should be erased.
+     * @return
+     */
+    public boolean isAutoErase() {
+        return autoErase;
+    }
+
+    /**
+     * Set true if selected item is not in the model and should be erased.
+     * @param autoErase
+     */
+    public void setAutoErase(boolean autoErase) {
+        this.autoErase = autoErase;
     }
 
     /**
