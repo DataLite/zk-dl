@@ -2,7 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.datalite.zk-dl</groupId>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>9.0.0</version>
+    </parent>
     <artifactId>SpringService</artifactId>
     <version>9.0.0</version>
     <name>SpringService</name>
@@ -17,12 +21,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-    <properties>
-        <org.springframework.version>6.1.12</org.springframework.version>
-        <cz.datalite.zk-dl.version>9.0.0</cz.datalite.zk-dl.version>
-        <org.springframework.security.version>6.3.3</org.springframework.security.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -129,27 +127,9 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

@@ -12,12 +12,6 @@
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.zkframework.version>8.5.0</org.zkframework.version>
-        <cz.datalite.zk-dl.version>8.5.0</cz.datalite.zk-dl.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
@@ -53,7 +47,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
 

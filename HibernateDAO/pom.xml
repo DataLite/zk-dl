@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>cz.datalite.zk-dl</groupId>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>9.0.0</version>
+    </parent>
     <artifactId>HibernateDAO</artifactId>
     <packaging>jar</packaging>
     <version>9.0.0</version>
     <name>Hibernate DAO</name>
     <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
-
-    <properties>
-        <org.hibernateframework.version>5.6.15.Final</org.hibernateframework.version>
-        <cz.datalite.zk-dl.version>9.0.0</cz.datalite.zk-dl.version>
-    </properties>
 
     <dependencies>
 
@@ -43,7 +41,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

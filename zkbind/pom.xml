@@ -2,19 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.zkoss.zk</groupId>
+
+	<parent>
+		<artifactId>zk-dl</artifactId>
+		<groupId>cz.datalite.zk-dl</groupId>
+		<version>9.0.0</version>
+	</parent>
+
 	<artifactId>zkbind</artifactId>
 	<packaging>jar</packaging>
 	<version>9.0.0</version>
 	<name>ZK Bind</name>
-	<url>http://www.zkoss.org/zkbind</url>
 	<description>ZK Bind</description>
-
-	<properties>
-		<java-version>21</java-version>
-		<project.zk.version>8.5.0</project.zk.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<licenses>
 		<license>
@@ -41,9 +40,6 @@
 			</properties>
 		</developer>
 	</developers>
-	<scm>
-		<url>http://svn.sourceforge.net/viewvc/zk1/releases/${project.version}/zkbind</url>
-	</scm>
 	<repositories>
 		<repository>
 			<id>zk repository</id>
@@ -89,7 +85,7 @@
 		<dependency>
 			<groupId>org.zkoss.zk</groupId>
 			<artifactId>zul</artifactId>
-			<version>${project.zk.version}</version>
+			<version>${org.zkframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
@@ -113,42 +109,5 @@
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
-		<plugins>
-			<!--<plugin>
-				<groupId>org.zkoss.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin-zk</artifactId>
-				<version>1.1.4</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>DataLite</id>
-			<name>DataLite-releases</name>
-			<url>http://zealot:8081/artifactory/libs-releases-local</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>DataLite</id>
-			<name>DataLite-snapshots</name>
-			<url>http://zealot:8081/artifactory/libs-snapshots-local</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project> 

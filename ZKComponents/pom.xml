@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.datalite.zk-dl</groupId>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>9.0.0</version>
+    </parent>
     <artifactId>ZKComponents</artifactId>
     <version>9.0.0</version>
     <name>ZKComponents</name>
     <description>Other improvements of basic ZK components - please check the documentation for each overridden component.</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.zkframework.version>8.5.0</org.zkframework.version>
-        <cz.datalite.zk-dl.version>8.5.0</cz.datalite.zk-dl.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -20,10 +18,11 @@
             <version>${org.zkframework.version}</version>
         </dependency>
 
+        <!-- TODO SPM-7575 odstranit -->
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkplus</artifactId>
-            <version>${org.zkframework.version}</version>
+            <version>8.5.0</version>
         </dependency>
 
         <dependency>

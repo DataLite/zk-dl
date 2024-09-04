@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cz.datalite.zk-dl</groupId>
+    <parent>
+        <artifactId>zk-dl</artifactId>
+        <groupId>cz.datalite.zk-dl</groupId>
+        <version>9.0.0</version>
+    </parent>
     <artifactId>ZKDLComponents</artifactId>
     <version>9.0.0</version>
     <name>ZKDLComponents</name>
     <description>Data driven components with UI controls - listbox, lovbox, combobox.</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.zkframework.version>8.5.0</org.zkframework.version>
-        <cz.datalite.zk-dl.version>8.5.0</cz.datalite.zk-dl.version>
-    </properties>
 
     <dependencies>
 
@@ -102,7 +100,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -122,22 +120,5 @@
                 </includes>
             </resource>
         </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>
