@@ -3,9 +3,9 @@ package cz.datalite.dao;
 import org.hibernate.sql.JoinType;
 import org.junit.Test;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.ManyToOne;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;

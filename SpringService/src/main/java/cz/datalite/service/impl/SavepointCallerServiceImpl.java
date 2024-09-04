@@ -6,8 +6,6 @@ import cz.datalite.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-
 @SuppressWarnings("UnusedDeclaration")
 @Service
 public class SavepointCallerServiceImpl implements SavepointCallerService
@@ -15,7 +13,7 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
     @SuppressWarnings("unchecked")
     @Override
     @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class, timeout = 6000 )
-    public void doExecute( @NotNull SavepointOperation operation )
+    public void doExecute( SavepointOperation operation )
     {
         checkException( operation ) ;
     }
@@ -23,7 +21,7 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
     @SuppressWarnings("unchecked")
     @Override
     @Transactional( propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class )
-    public void doExecuteWithDefaultTimeout(@NotNull SavepointOperation operation)
+    public void doExecuteWithDefaultTimeout(SavepointOperation operation)
     {
         checkException( operation ) ;
     }
@@ -33,7 +31,7 @@ public class SavepointCallerServiceImpl implements SavepointCallerService
      *
      * @param operation     spouštěná operace
      */
-    private void checkException( @NotNull SavepointOperation operation )
+    private void checkException( SavepointOperation operation )
     {
         try
         {

@@ -17,9 +17,9 @@ package cz.datalite.dao.support;
 
 import cz.datalite.helpers.StringHelper;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.Metamodel;
 import java.io.Serializable;
 
 /**
@@ -41,7 +41,7 @@ public abstract class JpaEntityInformationSupport<T, ID extends Serializable> ex
 	}
 
 	/**
-	 * Creates a {@link JpaEntityInformation} for the given domain class and {@link javax.persistence.EntityManager}.
+	 * Creates a {@link JpaEntityInformation} for the given domain class and {@link jakarta.persistence.EntityManager}.
 	 * 
 	 * @param domainClass must not be {@literal null}.
 	 * @param em must not be {@literal null}.

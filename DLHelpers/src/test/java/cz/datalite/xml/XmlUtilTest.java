@@ -46,14 +46,15 @@ public class XmlUtilTest {
 		// sb.append("<!DOCTYPE hibernate-mapping PUBLIC \"-//Hibernate/Hibernate Mapping DTD 3.0//EN\"\n");
 		// sb.append("  \"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd\">\n");
 		sb.append("<hibernate-mapping default-access=\"field\">\n");
-		sb.append("<subclass discriminator-value=\"H\" ");
+		sb.append("    <subclass discriminator-value=\"H\" ");
 		sb.append("extends=\"org.jbpm.context.exe.VariableInstance\" name=\"org.jbpm.context.exe.variableinstance.HibernateLongInstance\">\n");
-		sb.append("<any cascade=\"save-update\" id-type=\"long\" name=\"value\">\n");
-		sb.append("<column name=\"LONGIDCLASS_\"/>\n");
-		sb.append("<column name=\"LONGVALUE_\"/>\n");
-		sb.append("</any>\n");
-		sb.append("</subclass>  ");
-		sb.append("<test-cdata><![CDATA[\n");
+		sb.append("        <any cascade=\"save-update\" id-type=\"long\" name=\"value\">\n");
+		sb.append("            <column name=\"LONGIDCLASS_\"/>\n");
+		sb.append("            <column name=\"LONGVALUE_\"/>\n");
+		sb.append("        </any>\n");
+		sb.append("    </subclass>\n");
+		sb.append("      \n");
+		sb.append("    <test-cdata><![CDATA[\n");
 		sb.append("      do {noop(); } while (true)]]><![CDATA[\n");
 		sb.append("      //endless?]]></test-cdata>\n");
 		sb.append("</hibernate-mapping>\n");
@@ -86,22 +87,16 @@ public class XmlUtilTest {
 			// ok
 		}
 
-		// Validace encoding nefunguje
-		// try {
-		// XmlUtil.domToString(dom, "abcdef", true);
-		// fail("Invalid encoding not reported");
-		// } catch (ProblemException expected) {
-		// // ok
-		// }
-
-		assertEquals(XML_FORMATED, XmlUtil.domToString(dom, ENCODING, true).replace("\r\n", "\n"));
+		String result = XmlUtil.domToString(dom, ENCODING, true);
+		result = result.replace("\r\n", "\n");
+		assertEquals(XML_FORMATED, result);
 	}
 
 	@Test
 	public void testPrettyFormatXmlDocumentString() throws Exception {
 
 		final String EXPECTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-				+ "<root>\n<elem attr1=\"value1\" b-attr1=\"value2\">content</elem>\n</root>\n";
+				+ "<root>\n    <elem attr1=\"value1\" b-attr1=\"value2\">content</elem>\n</root>\n";
 
 		String actual = XmlUtil.domToString(DOCUMENT, ENCODING, true);
 
@@ -203,39 +198,25 @@ public class XmlUtilTest {
 		XmlTestElement testElement = new XmlTestElement();
 		testElement.setAttr("atr-hodnota");
 		testElement.setSub("sub-hodnota");
-		LOGGER.debug("Nacteno trid pred marshall:        {}", loadedClassesCount());
 		String xml = XmlUtil.marshal(testElement);
-		LOGGER.debug("Nacteno trid po prvnim marshall:   {}", loadedClassesCount());
 		LOGGER.info(xml);
 		assertNotNull(xml);
 		assertTrue("Mel by obsahovat element", xml.contains("element"));
 		for (int i = 0; i < 500; i++) {
 			XmlUtil.marshal(testElement);
 		}
-		LOGGER.debug("Nacteno trid po 500 marshall:    {}", loadedClassesCount());
 	}
 
 	@Test(timeout = 10*1000)
 	public void testUnMarshall() throws Exception {
-		LOGGER.debug("Nacteno trid pred unmarshall:        {}", loadedClassesCount());
 		String xml = IOUtils.toString(getClass().getResourceAsStream("/xmlutil-test.xml"));
 		XmlTestElement testElement = XmlUtil.unmarshal(XmlTestElement.class, xml);
-		LOGGER.debug("Nacteno trid po prvnim unmarshall:   {}", loadedClassesCount());
 		LOGGER.info("result: {}", testElement);
 		assertNotNull(testElement);
 		for (int i = 0; i < 500; i++) {
 			XmlUtil.unmarshal(XmlTestElement.class, xml);
 		}
-		LOGGER.debug("Nacteno trid po 500 unmarshall:    {}", loadedClassesCount());
-	}
 
-	private int loadedClassesCount() throws Exception {
-		Field f = ClassLoader.class.getDeclaredField("classes");
-		f.setAccessible(true);
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		Vector<Class> classes =  (Vector<Class>) f.get(classLoader);
-		return classes.size();
 	}
-
 
 }

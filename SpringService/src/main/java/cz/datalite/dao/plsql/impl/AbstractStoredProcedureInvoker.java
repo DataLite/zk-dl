@@ -17,9 +17,8 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
-import org.springframework.jdbc.support.nativejdbc.NativeJdbcExtractor;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -69,40 +68,6 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         this.databaseSchema = databaseSchema;
     }
 
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
-    {
-        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, null  ) ;
-    }
-
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
-    {
-        this( dataSource, name, resultType, sqlLobValueFactory, databaseSchema, entityManager, null ) ;
-    }
-
-    public AbstractStoredProcedureInvoker(DataSource dataSource, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
-    {
-        super( dataSource, "" ) ;
-
-        this.entityManager = entityManager ;
-        this.sqlLobValueFactory = sqlLobValueFactory ;
-        this.databaseSchema = databaseSchema;
-
-        getJdbcTemplate().setNativeJdbcExtractor( extractor ) ;
-    }
-
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
-    {
-        this( dataSource, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
-
-        setName( name ) ;
-    }
-
-    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager, NativeJdbcExtractor extractor )
-    {
-        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager, extractor ) ;
-        declareReturnParameter( resultType ) ;
-    }
-
     /**
      * @param name		Jmeno parametru
      * @return funkce pro zjisteni zda jiz existuje definice parametru
@@ -150,7 +115,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     {
         Connection con = DataSourceUtils.getConnection(getJdbcTemplate().getDataSource());
 
-        return ( getJdbcTemplate().getNativeJdbcExtractor() != null ) ? getJdbcTemplate().getNativeJdbcExtractor().getNativeConnection(con) : con ;
+        return con.unwrap(Connection.class);
     }
 
     /**

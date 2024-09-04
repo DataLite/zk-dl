@@ -1,7 +1,5 @@
 package cz.datalite.service;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Služba pro spuštění kodu v samostatné transakci
  */
@@ -13,12 +11,12 @@ public interface SavepointCallerService
      * @return výsledek operace
      */
     @SuppressWarnings("unchecked")
-    void doExecute( @NotNull SavepointOperation operation ) ;
+    void doExecute(SavepointOperation operation ) ;
 
     /**
      * @param operation     spouštěná operace
      * @return výsledek operace
      */
     @SuppressWarnings("unchecked")
-    void doExecuteWithDefaultTimeout( @NotNull SavepointOperation operation ) ;
+    void doExecuteWithDefaultTimeout( SavepointOperation operation ) ;
 }

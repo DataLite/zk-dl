@@ -8,8 +8,8 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
 import org.hibernate.sql.JoinType;
 
-import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.EmbeddedId;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;

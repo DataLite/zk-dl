@@ -3,14 +3,13 @@ package cz.datalite.dao.impl;
 import cz.datalite.dao.GenericDAO;
 import java.io.Serializable;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * Factory methods to instantiate generic DAO instances.

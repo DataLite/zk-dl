@@ -15,7 +15,7 @@
  */
 package cz.datalite.dao.support;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 
 /**

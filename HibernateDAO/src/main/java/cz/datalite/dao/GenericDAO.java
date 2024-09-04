@@ -3,7 +3,7 @@ package cz.datalite.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.hibernate.Session;
 

@@ -2,31 +2,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>zk-dl</artifactId>
-        <groupId>cz.datalite.zk-dl</groupId>
-        <version>8.5.0</version>
-    </parent>
-
+    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>HibernateDAO</artifactId>
     <packaging>jar</packaging>
-    <version>8.5.0</version>
+    <version>9.0.0</version>
     <name>Hibernate DAO</name>
     <description>Yet another Hibernate DAO, what is unique is support of our data driven components. With this DAO, you can bind components like listbox to the database with 10 lines of code :).</description>
 
+    <properties>
+        <org.hibernateframework.version>5.6.15.Final</org.hibernateframework.version>
+        <cz.datalite.zk-dl.version>9.0.0</cz.datalite.zk-dl.version>
+    </properties>
+
     <dependencies>
+
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${org.hibernateframework.version}</version>
         </dependency>
-    
+
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <!--<version>4.3.2.Final</version>-->
-            <version>5.1.3.Final</version>
+            <version>8.0.1.Final</version>
         </dependency>
     
         <dependency>
@@ -38,7 +43,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

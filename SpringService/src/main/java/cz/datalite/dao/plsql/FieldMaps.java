@@ -4,7 +4,7 @@ import cz.datalite.dao.plsql.annotations.SqlField;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.ReflectionHelper;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;

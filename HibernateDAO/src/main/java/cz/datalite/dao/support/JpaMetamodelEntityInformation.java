@@ -19,17 +19,17 @@ import cz.datalite.helpers.ReflectionHelper;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
-import javax.persistence.IdClass;
-import javax.persistence.metamodel.IdentifiableType;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.Metamodel;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.metamodel.IdentifiableType;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Implementation of {@link JpaEntityInformation} that uses JPA {@link javax.persistence.metamodel.Metamodel}
+ * Implementation of {@link JpaEntityInformation} that uses JPA {@link jakarta.persistence.metamodel.Metamodel}
  * to find the domain class' id field.
  *
  * @author Oliver Gierke
@@ -42,7 +42,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 	private final SingularAttribute<? super T, ?> versionAttribute;
 
 	/**
-	 * Creates a new  for the given domain class and {@link javax.persistence.metamodel.Metamodel}.
+	 * Creates a new  for the given domain class and {@link jakarta.persistence.metamodel.Metamodel}.
 	 *
 	 * @param domainClass must not be {@literal null}.
 	 * @param metamodel must not be {@literal null}.
@@ -67,7 +67,7 @@ public class JpaMetamodelEntityInformation<T, ID extends Serializable> extends J
 	}
 
 	/**
-	 * Returns the version attribute of the given {@link javax.persistence.metamodel.ManagedType} or {@literal null} if none available.
+	 * Returns the version attribute of the given {@link jakarta.persistence.metamodel.ManagedType} or {@literal null} if none available.
 	 * 
 	 * @param type must not be {@literal null}.
 	 * @return

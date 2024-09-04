@@ -17,27 +17,27 @@ public class NumberHelperTest {
 	@Test
 	public void testGetCzechCurrencyBigDecimal() throws Exception {
 		assertEquals("", NumberHelper.getCzechCurrency((BigDecimal) null));
-		assertEquals("1 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(1)));
-		assertEquals("1 000 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(1000)));
-		assertEquals("33,5 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(33.5)));
-		assertEquals("-33,5 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(-33.5)));
+		assertEquals("1,00 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(1)));
+		assertEquals("1 000,00 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(1000)));
+		assertEquals("33,50 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(33.5)));
+		assertEquals("-33,50 Kč", NumberHelper.getCzechCurrency(BigDecimal.valueOf(-33.5)));
 	}
 
 	@Test
 	public void testGetCzechCurrencyDouble() throws Exception {
 		assertEquals("", NumberHelper.getCzechCurrency((Double) null));
-		assertEquals("1 Kč", NumberHelper.getCzechCurrency((double) 1));
-		assertEquals("1 000 Kč", NumberHelper.getCzechCurrency((double) 1000));
-		assertEquals("33,5 Kč", NumberHelper.getCzechCurrency(33.5));
-		assertEquals("-33,5 Kč", NumberHelper.getCzechCurrency(-33.5));
+		assertEquals("1,00 Kč", NumberHelper.getCzechCurrency((double) 1));
+		assertEquals("1 000,00 Kč", NumberHelper.getCzechCurrency((double) 1000));
+		assertEquals("33,50 Kč", NumberHelper.getCzechCurrency(33.5));
+		assertEquals("-33,50 Kč", NumberHelper.getCzechCurrency(-33.5));
 	}
 
 	@Test
 	public void testGetCzechCurrencyLong() throws Exception {
 		assertEquals("", NumberHelper.getCzechCurrency((Long) null));
-		assertEquals("1 Kč", NumberHelper.getCzechCurrency((long) 1));
-		assertEquals("1 000 Kč", NumberHelper.getCzechCurrency((long) 1000));
-		assertEquals("-1 000 Kč", NumberHelper.getCzechCurrency((long) -1000));
+		assertEquals("1,00 Kč", NumberHelper.getCzechCurrency((long) 1));
+		assertEquals("1 000,00 Kč", NumberHelper.getCzechCurrency((long) 1000));
+		assertEquals("-1 000,00 Kč", NumberHelper.getCzechCurrency((long) -1000));
 	}
 
 	@Test

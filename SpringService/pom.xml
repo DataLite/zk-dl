@@ -2,14 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>zk-dl</artifactId>
-        <groupId>cz.datalite.zk-dl</groupId>
-        <version>8.5.0</version>
-    </parent>
-
+    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>SpringService</artifactId>
-    <version>8.5.0</version>
+    <version>9.0.0</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture
         ZK - Spring - Hibernate.
@@ -23,7 +18,18 @@
         </license>
     </licenses>
 
+    <properties>
+        <org.springframework.version>6.1.12</org.springframework.version>
+        <cz.datalite.zk-dl.version>9.0.0</cz.datalite.zk-dl.version>
+        <org.springframework.security.version>6.3.3</org.springframework.security.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.2.0</version>
+        </dependency>
         <!--
 			Core utilities used by other modules.
 			Define this if you use Spring Utility APIs (org.springframework.core.*/org.springframework.util.*)
@@ -123,7 +129,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 

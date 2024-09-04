@@ -3,8 +3,8 @@ package cz.datalite.helpers;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 
-import javax.persistence.Query;
-import javax.persistence.Table;
+import jakarta.persistence.Query;
+import jakarta.persistence.Table;
 import java.lang.reflect.Field;
 import java.util.Vector;
 
@@ -61,7 +61,7 @@ public abstract class JpaEqualHelper {
         String schema = null;
 
         // nejprve se pokusi najit primo anotaci TABLE
-        javax.persistence.Table table = ( Table ) clazz.getAnnotation( javax.persistence.Table.class );
+        jakarta.persistence.Table table = ( Table ) clazz.getAnnotation( jakarta.persistence.Table.class );
         if ( table != null ) {
             if ( !StringHelper.isNull( table.schema() ) ) {
                 schema = table.schema().toUpperCase();
@@ -105,7 +105,7 @@ public abstract class JpaEqualHelper {
 
         Class clazz = o.getClass();
         for ( Field f : clazz.getDeclaredFields() ) {
-            if ( f.isAnnotationPresent( javax.persistence.Id.class ) ) {
+            if ( f.isAnnotationPresent( jakarta.persistence.Id.class ) ) {
                 Object value = null;
                 f.setAccessible( true );
                 try {
