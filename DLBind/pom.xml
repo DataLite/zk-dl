@@ -1,7 +1,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>cz.datalite.zk-dl</groupId>
     <artifactId>DLBind</artifactId>
     <version>9.0.0</version>
     <name>DLBind</name>
@@ -21,15 +21,16 @@
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
             <!--<version>6.5.2.2-DATALITE</version>-->
-            <version>${org.zkframework.version}-DATALITE</version>
+            <version>8.5.0-DATALITE</version>
         </dependency>
 
+        <!-- TODO SPM-7575 odstranit-->
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>zkplus</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>8.5.0</version>
         </dependency>
-        
+
     </dependencies>
     
 </project>

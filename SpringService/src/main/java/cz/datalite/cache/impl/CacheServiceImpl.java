@@ -5,13 +5,8 @@ import cz.datalite.cache.model.ServiceResult;
 import cz.datalite.helpers.EqualsHelper;
 import cz.datalite.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import jakarta.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * Cache pro uložení vytvořených objektů
@@ -200,7 +195,7 @@ public class CacheServiceImpl implements CacheService
     }
 
     @Override
-    public <XmlType> void addServiceResultToCache(XmlType key, ServiceResult value)
+    public <XmlType> void addServiceResultToCache(@NotNull XmlType key, @NotNull ServiceResult value)
     {
         if ( isEnabled() )
         {

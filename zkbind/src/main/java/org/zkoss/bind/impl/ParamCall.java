@@ -37,7 +37,6 @@ import org.zkoss.bind.annotation.Scope;
 import org.zkoss.bind.annotation.ScopeParam;
 import org.zkoss.bind.sys.BindEvaluatorX;
 import org.zkoss.bind.sys.ReferenceBinding;
-import org.zkoss.json.JSONAware;
 import org.zkoss.lang.Classes;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
