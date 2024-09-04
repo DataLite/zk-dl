@@ -8,7 +8,9 @@ import java.lang.annotation.Target;
 /**
  * Migration to {@link org.springframework.beans.factory.annotation.Autowired} is planned.
  * @author Jiri Bubnik
+ * @deprecated use {@link org.springframework.beans.factory.annotation.Autowired} instead
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD})
 public @interface Autowired {

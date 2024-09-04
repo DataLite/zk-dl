@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
  * Pro ZK Spring aplikace se konfiguruje jako scope="prototype"
  *
  * @author Jiri Bubnik
+ * @deprecated use {@link org.springframework.stereotype.Controller} instead
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -22,5 +23,6 @@ import org.springframework.context.annotation.Scope;
 @Documented
 @Scope("prototype")
 @org.springframework.stereotype.Controller
+@Deprecated
 public @interface Controller {
 }

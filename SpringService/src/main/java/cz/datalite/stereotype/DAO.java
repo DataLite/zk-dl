@@ -13,12 +13,14 @@ import org.springframework.stereotype.Repository;
  * Odpovídá anotaci @Repository ze Springu.
  *
  * @author Jiri Bubnik
+ * @deprecated use {@link Repository} instead
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @Repository
+@Deprecated
 public @interface DAO {
 }
 
