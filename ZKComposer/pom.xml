@@ -4,13 +4,19 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>8.5.0</version>
+        <version>9.0.0</version>
     </parent>
 
     <artifactId>ZKComposer</artifactId>
-    <version>8.5.0</version>
+    <version>9.0.0</version>
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.zkframework.version>8.5.0</org.zkframework.version>
+        <cz.datalite.zk-dl.version>8.5.0</cz.datalite.zk-dl.version>
+    </properties>
 
     <dependencies>
 

@@ -98,7 +98,7 @@ public final class ExcelImportUtils {
         if ( CellType.STRING_FORMULA.equals( cell.getType() ) )
             return ( (StringFormulaCell) cell ).getString();
         if ( CellType.NUMBER_FORMULA.equals( cell.getType() ) )
-            return new Double( ((NumberFormulaCell) cell ).getValue() ).toString();
+            return Double.valueOf( ((NumberFormulaCell) cell ).getValue() ).toString();
 
         throw new ExcelImportCellTypeException( "Illegal cell type. Required type is \"Label\" but it is \"" + cell.getType() + "\" at " + cell.getColumn() + ", " + cell.getRow() + ". (Index from 0)" );
     }
