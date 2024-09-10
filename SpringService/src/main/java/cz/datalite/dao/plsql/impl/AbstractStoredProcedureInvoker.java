@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.object.StoredProcedure;
+import oracle.jdbc.OracleConnection;
 
 import jakarta.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -68,6 +69,19 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
         this.databaseSchema = databaseSchema;
     }
 
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
+    {
+        this( dataSource, sqlLobValueFactory, databaseSchema, entityManager ) ;
+
+        setName( name ) ;
+    }
+
+    public AbstractStoredProcedureInvoker(DataSource dataSource, String name, int resultType, SqlLobValueFactory sqlLobValueFactory, String databaseSchema, EntityManager entityManager )
+    {
+        this( dataSource, name, sqlLobValueFactory, databaseSchema, entityManager ) ;
+        declareReturnParameter( resultType ) ;
+    }
+
     /**
      * @param name		Jmeno parametru
      * @return funkce pro zjisteni zda jiz existuje definice parametru
@@ -114,8 +128,7 @@ class AbstractStoredProcedureInvoker extends StoredProcedure   implements Stored
     private Connection getNativeConnection() throws SQLException
     {
         Connection con = DataSourceUtils.getConnection(getJdbcTemplate().getDataSource());
-
-        return con.unwrap(Connection.class);
+        return con.unwrap(OracleConnection.class);
     }
 
     /**

@@ -11,7 +11,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
