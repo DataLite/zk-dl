@@ -137,7 +137,7 @@ public class SimpleSource
 		return null;
 	}
 
-	protected Object getObject(ConfigurationKey key) {
+	public Object getObject(ConfigurationKey key) {
 		return values.get(key.getValue());
 	}
 

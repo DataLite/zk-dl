@@ -29,7 +29,7 @@ public class PropertiesSource
 	}
 
 	@Override
-	protected Object getObject(ConfigurationKey key) {
+	public Object getObject(ConfigurationKey key) {
 		return System.getProperty(key.getValue());
 	}
 }

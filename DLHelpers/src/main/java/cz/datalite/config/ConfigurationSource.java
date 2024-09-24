@@ -67,4 +67,5 @@ public interface ConfigurationSource {
 	 */
     Date getDate(ConfigurationKey key);
 
+	Object getObject(ConfigurationKey key);
 }

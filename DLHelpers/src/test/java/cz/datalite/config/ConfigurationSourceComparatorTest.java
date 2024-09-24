@@ -72,6 +72,10 @@ public class ConfigurationSourceComparatorTest {
 				return null;
 			}
 
+			@Override
+			public Object getObject(ConfigurationKey key) {
+				return null;
+			}
 		};
 
 		ConfigurationSource s2 = new ConfigurationSource() {
@@ -126,6 +130,10 @@ public class ConfigurationSourceComparatorTest {
 				return null;
 			}
 
+			@Override
+			public Object getObject(ConfigurationKey key) {
+				return null;
+			}
 		};
 
 		List<ConfigurationSource> sources = new ArrayList<>();

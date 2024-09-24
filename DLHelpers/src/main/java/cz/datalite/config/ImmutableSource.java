@@ -114,4 +114,8 @@ public class ImmutableSource
 		return items;
 	}
 
+	@Override
+	public Object getObject(ConfigurationKey key) {
+		return compositeConfiguration.getProperty(key.getValue());
+	}
 }

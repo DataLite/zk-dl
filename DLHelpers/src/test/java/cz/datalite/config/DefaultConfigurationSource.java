@@ -62,4 +62,9 @@ public class DefaultConfigurationSource
 	public int getPrecedence() {
 		return 1;
 	}
+
+	@Override
+	public Object getObject(ConfigurationKey key) {
+		return null;
+	}
 }
