@@ -3,7 +3,7 @@ package cz.datalite.config;
 /**
  * @author <a href="mailto:mkouba@itsys.cz">Martin Kouba</a>
  */
-class VirtualConfigurationKey
+public class VirtualConfigurationKey
 		implements ConfigurationKey {
 
 	private final String key;
