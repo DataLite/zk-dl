@@ -1,5 +1,6 @@
 package cz.datalite.config;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -12,6 +13,7 @@ import java.util.Comparator;
 public class ConfigurationSourceComparator
 		implements Comparator<ConfigurationSource>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Override

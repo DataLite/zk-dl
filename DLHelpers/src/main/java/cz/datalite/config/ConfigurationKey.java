@@ -12,6 +12,6 @@ public interface ConfigurationKey {
 	 * 
 	 * @return hodnotu klice
 	 */
-	public String getValue();
+    String getValue();
 
 }

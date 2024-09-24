@@ -68,7 +68,7 @@ public class Configuration {
 		lastUpdate = DateTimeUtil.now();
 
 		sources.add(source);
-		Collections.sort(sources, new ConfigurationSourceComparator());
+		sources.sort(new ConfigurationSourceComparator());
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Configuration {
 		lastUpdate = null;
 	}
 
-	private <T> T getObject(ConfigurationKey key, Class<T> clazz, T defaultValue) {
+	public <T> T getObject(ConfigurationKey key, Class<T> clazz, T defaultValue) {
 		try {
 			return getObject(key, clazz);
 		} catch (ProblemException e) {
@@ -100,7 +100,7 @@ public class Configuration {
 	 * @return hodnota konfiguracni polozky
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T getObject(ConfigurationKey key, Class<T> clazz) {
+	public <T> T getObject(ConfigurationKey key, Class<T> clazz) {
 		if (key == null) {
 			return null;
 		}

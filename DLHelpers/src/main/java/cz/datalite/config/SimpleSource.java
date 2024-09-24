@@ -17,25 +17,20 @@ import java.util.Map;
 public class SimpleSource
 		implements ConfigurationSource {
 
-	private Map<String, Object> values = new HashMap<>();
+	private final Map<String, Object> values = new HashMap<>();
 
 	private int precedence = 0;
 
 	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
-	 */
+	 *
+     */
 	public Object putValue(ConfigurationKey key, Object value) {
 		return values.put(key.getValue(), value);
 	}
 
 	/**
-	 * 
-	 * @param key
-	 * @return
-	 */
+	 *
+     */
 	public Object removeValue(ConfigurationKey key) {
 		return values.remove(key.getValue());
 	}

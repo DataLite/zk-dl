@@ -21,7 +21,7 @@ public enum ConfigurationValueType {
 	 * Klic pro lokalizaci.
 	 */
 	public String getLocalizationKey() {
-		return String.format("%s.%s", getClass().getName(), this.toString());
+		return String.format("%s.%s", getClass().getName(), this);
 	}
 
 }

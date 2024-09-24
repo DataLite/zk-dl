@@ -6,7 +6,7 @@ package cz.datalite.config;
 class VirtualConfigurationKey
 		implements ConfigurationKey {
 
-	private String key;
+	private final String key;
 
 	public VirtualConfigurationKey(String key) {
 		this.key = key;

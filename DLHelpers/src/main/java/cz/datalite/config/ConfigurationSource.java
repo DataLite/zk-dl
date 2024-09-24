@@ -15,63 +15,56 @@ public interface ConfigurationSource {
 	/**
 	 * @return prioritu daneho zdroje - cim vyssi cislo, tim vyssi priorita
 	 */
-	public int getPrecedence();
+    int getPrecedence();
 
 	/**
 	 * @return mapu klicu a hodnot
 	 */
-	public Map<String, Object> getItems();
+    Map<String, Object> getItems();
 
 	/**
 	 * Aktualizuje zdroj (pokud to nepodporuje, nedela nic - nevyhazuje {@link UnsupportedOperationException}).
 	 */
-	public void update();
+    void update();
 
 	/**
-	 * @param key
 	 * @return {@link String} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
-	public String getString(ConfigurationKey key);
+    String getString(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return pole {@link String} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje
 	 */
-	public String[] getStringArray(ConfigurationKey key);
+    String[] getStringArray(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return {@link BigDecimal} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde
 	 *         k chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
-	public BigDecimal getBigDecimal(ConfigurationKey key);
+    BigDecimal getBigDecimal(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return {@link Integer} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
-	public Integer getInteger(ConfigurationKey key);
+    Integer getInteger(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return {@link Long} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
-	public Long getLong(ConfigurationKey key);
+    Long getLong(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return {@link Boolean} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje. Pokud dojde k
 	 *         chybe behem pretypovani/konverze, je vyhozena prislusna vyjimka
 	 */
-	public Boolean getBoolean(ConfigurationKey key);
+    Boolean getBoolean(ConfigurationKey key);
 
 	/**
-	 * @param key
 	 * @return {@link Date} pro dany klic, nebo {@code null}, pokud zdroj tento klic neobsahuje
 	 */
-	public Date getDate(ConfigurationKey key);
+    Date getDate(ConfigurationKey key);
 
 }

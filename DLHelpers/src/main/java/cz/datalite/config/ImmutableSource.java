@@ -34,7 +34,7 @@ public class ImmutableSource
 
 	private int precedence = 0;
 
-	private CompositeConfiguration compositeConfiguration = new CompositeConfiguration();
+	private final CompositeConfiguration compositeConfiguration = new CompositeConfiguration();
 
 	/**
 	 * 
@@ -44,9 +44,8 @@ public class ImmutableSource
 	}
 
 	/**
-	 * 
-	 * @param precedence
-	 */
+	 *
+     */
 	public ImmutableSource(int precedence) {
 		super();
 		this.precedence = precedence;
