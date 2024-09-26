@@ -3,9 +3,10 @@ package cz.datalite.cache.impl;
 import cz.datalite.cache.CacheService;
 import cz.datalite.cache.model.ServiceResult;
 import cz.datalite.helpers.EqualsHelper;
-import cz.datalite.stereotype.Service;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 /**

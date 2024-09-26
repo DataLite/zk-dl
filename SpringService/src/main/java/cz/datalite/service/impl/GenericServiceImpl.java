@@ -6,9 +6,9 @@ import cz.datalite.dao.GenericDAO;
 import cz.datalite.dao.impl.GenericDAOFactory;
 import cz.datalite.helpers.ReflectionHelper;
 import cz.datalite.service.GenericService;
-import cz.datalite.stereotype.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +25,16 @@ import java.util.Map;
  */
 public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericDAO<T, ID>> implements GenericService<T,ID> {
 
-    protected final static Logger LOGGER = LoggerFactory.getLogger(GenericServiceImpl.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(GenericServiceImpl.class);
 
     protected DAO defaultDAO;
 
-    private Class <T> entityClass;
-    private Class<ID> idClass;
-    private Class<DAO> daoClass;
+    private final Class <T> entityClass;
+    private final Class<ID> idClass;
+    private final Class<DAO> daoClass;
 
     public GenericServiceImpl() {
         List<Class<?>> types = ReflectionHelper.getTypeArguments(GenericServiceImpl.class, getClass());
-        //Type[] types = ( (ParameterizedType) getClass().getGenericSuperclass() ).getActualTypeArguments();
 
         if (types.size() != 3)
         {
@@ -47,8 +46,10 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
         this.idClass = (Class<ID>) types.get(1);
         this.daoClass = (Class<DAO>) types.get(2);
 
-        LOGGER.trace("Create new Service for class '{}' EntityClass = '{}', DAOClass = '{}'.", new Object[] {
-                this.getClass().getCanonicalName(), this.entityClass.getCanonicalName(),this.daoClass.getCanonicalName() } );
+        LOGGER.trace(
+                "Create new Service for class '{}' EntityClass = '{}', DAOClass = '{}'.",
+                this.getClass().getCanonicalName(), this.entityClass.getCanonicalName(),this.daoClass.getCanonicalName()
+        );
     }
     
     @Autowired
@@ -58,27 +59,24 @@ public class GenericServiceImpl<T, ID extends Serializable, DAO extends GenericD
 
         if (beans.isEmpty() || GenericDAO.class.getName().equals(daoClass.getName()))
         {
-            // autocreate generic DAO implementation according to interface
+            // auto-create generic DAO implementation according to interface
             defaultDAO = GenericDAOFactory.createDAO(applicationContext, entityClass, idClass, daoClass);
             LOGGER.trace("Default DAO created - '{}'.", defaultDAO.getClass().getCanonicalName());
-
-//            throw new InstantiationError("Error autowiring bean '" + this.getClass().getName() + "': " +
-//                    "No bean exists of DAO type '" + daoClass.getName() + "'.");
         }
         else if (beans.size() > 1)
         {
-            StringBuffer keys = new StringBuffer();
+            StringBuilder keys = new StringBuilder();
             for (String bean : beans.keySet())
             {
                 keys.append(bean);
                 keys.append(",");
             }
             throw new InstantiationError("Error autowiring bean '" + this.getClass().getName() + "': " +
-                    "Multiple bean exists of DAO type " + daoClass.getName() + "' [" + keys.toString() + "]");
+                    "Multiple bean exists of DAO type " + daoClass.getName() + "' [" + keys + "]");
         }
         else
         {
-            defaultDAO = (DAO) applicationContext.getBeansOfType(daoClass).values().iterator().next();
+            defaultDAO = applicationContext.getBeansOfType(daoClass).values().iterator().next();
             LOGGER.trace("Unique default DAO got by bean class type '{}'.", daoClass.getCanonicalName());
         }
     }

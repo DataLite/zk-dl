@@ -1,10 +1,10 @@
 package cz.datalite.dao.plsql;
 
-import cz.datalite.stereotype.Autowired;
-import cz.datalite.stereotype.DAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.DisposableSqlTypeValue;
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
+import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -18,7 +18,7 @@ import java.sql.Types;
  * Date: 11/8/12
  * Time: 2:04 PM
  */
-@DAO
+@Repository
 public class SqlLobValueFactory
 {
     @Autowired

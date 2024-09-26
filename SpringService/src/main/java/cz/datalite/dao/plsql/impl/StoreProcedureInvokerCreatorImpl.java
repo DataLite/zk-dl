@@ -4,9 +4,9 @@ package cz.datalite.dao.plsql.impl;
 import cz.datalite.dao.plsql.SqlLobValueFactory;
 import cz.datalite.dao.plsql.StoredProcedureInvoker;
 import cz.datalite.dao.plsql.StoredProcedureInvokerCreator;
-import cz.datalite.stereotype.Autowired;
-import cz.datalite.stereotype.DAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * Defaultní implementace vyvářeče spouštěčů
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-@DAO
+@Repository
 public class StoreProcedureInvokerCreatorImpl
     implements StoredProcedureInvokerCreator
 {

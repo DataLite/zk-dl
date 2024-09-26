@@ -8,7 +8,7 @@
         <version>9.0.0</version>
     </parent>
     <artifactId>SpringService</artifactId>
-    <version>9.0.1</version>
+    <version>9.0.2</version>
     <name>SpringService</name>
     <description>Generic Spring service, which talks to Generic Hibernate DAO. Use for classical 3-layered architecture
         ZK - Spring - Hibernate.
@@ -101,13 +101,13 @@
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>9.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>HibernateDAO</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>9.0.1</version>
         </dependency>
 
         <dependency>

@@ -2,7 +2,7 @@ package cz.datalite.service.impl;
 
 import cz.datalite.service.SavepointCallerService;
 import cz.datalite.service.SavepointOperation;
-import cz.datalite.stereotype.Service;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 @SuppressWarnings("UnusedDeclaration")
 @Service
+@Transactional
 public class SavepointCallerServiceImpl implements SavepointCallerService
 {
     @SuppressWarnings("unchecked")

@@ -3,9 +3,10 @@ package cz.datalite.service.impl;
 import cz.datalite.dao.plsql.helpers.ObjectHelper;
 import cz.datalite.helpers.StringHelper;
 import cz.datalite.service.LocalSessionService;
-import cz.datalite.stereotype.Service;
 import cz.datalite.time.DateTimeUtil;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,11 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Služba pro získání informace o aktuálních lokalních operací
  */
 @Service
+@Transactional
 public class LocalSessionServiceImpl implements LocalSessionService
 {
-    private final static String NULL_VALUE = "__NULL__" ;
-    private Map<String, String> information = new ConcurrentHashMap<>() ;
-    private Map<String, Long> startTime = new ConcurrentHashMap<>() ;
+    private static final String NULL_VALUE = "__NULL__" ;
+    private final Map<String, String> information = new ConcurrentHashMap<>() ;
+    private final Map<String, Long> startTime = new ConcurrentHashMap<>() ;
     private String id ;
 
     @Override
