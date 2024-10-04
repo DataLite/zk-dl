@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
-            <version>${org.zkframework.version}-DATALITE</version>
+            <version>8.5.0-DATALITE</version>   <!-- TODO JS FIX-->
         </dependency>
 
         <!-- TODO SPM-7575 odstranit, reference org.zkoss.zkplus.databind.TypeConverter -->
