@@ -4,10 +4,10 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>9.0.0</version>
+        <version>10.0.0</version>
     </parent>
     <artifactId>DLBind</artifactId>
-    <version>9.0.0</version>
+    <version>10.0.0</version>
     <name>DLBind</name>
     <description>Binder module provides additional functionality to ZKBind.</description>
 
@@ -24,16 +24,20 @@
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
-            <version>8.5.0-DATALITE</version>   <!-- TODO JS FIX-->
+            <version>10.0.0</version>   <!-- TODO JS FIX-->
         </dependency>
 
         <!-- TODO SPM-7575 odstranit, reference org.zkoss.zkplus.databind.TypeConverter -->
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>zkplus</artifactId>
-            <version>8.5.0</version>
+            <version>10.0.0-jakarta</version>
         </dependency>
+        CETIN ZIS (info od Vojty):
 
+        https://gitlab.datalite.cz/cetin/zis/zk-6.2.9-jakarta - nad tímto forkem běží CETIN ZIS (java 21)
+
+        https://gitlab.datalite.cz/cetin/zis/zk-9.6.0.2-jakarta - zkoušeli rozběhnout i pod touto verzí, ale nepodařilo se (bylo by potřeba větší množství úprav v zk knihovnách, proto nakonec upřednostnili zk-6.2.9-jakarta)
     </dependencies>
-    
+
 </project>

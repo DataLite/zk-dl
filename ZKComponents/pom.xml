@@ -4,10 +4,10 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>9.0.0</version>
+        <version>10.0.0</version>
     </parent>
     <artifactId>ZKComponents</artifactId>
-    <version>9.0.0</version>
+    <version>10.0.0</version>
     <name>ZKComponents</name>
     <description>Other improvements of basic ZK components - please check the documentation for each overridden component.</description>
 
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkplus</artifactId>
-            <version>8.5.0</version>
+            <version>10.0.0</version>
         </dependency>
 
         <dependency>

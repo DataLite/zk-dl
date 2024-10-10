@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.datalite.zk-dl</groupId>
 	<artifactId>zk-dl</artifactId>
-	<version>9.0.0</version>
+	<version>10.0.0</version>
 	<packaging>pom</packaging>
 	<name>DataLite ZKoss framework extension library</name>
 	<description>
@@ -52,7 +52,7 @@
 		<org.springframework.version>6.1.12</org.springframework.version>
 		<org.springframework.security.version>6.3.3</org.springframework.security.version>
 		<org.hibernateframework.version>5.6.15.Final</org.hibernateframework.version>
-		<org.zkframework.version>8.5.0_jakarta</org.zkframework.version>
+		<org.zkframework.version>10.0.0</org.zkframework.version>
 		<org.slf4j.version>1.7.25</org.slf4j.version>
 		<org.junit.version>4.13.1</org.junit.version>
 	</properties>

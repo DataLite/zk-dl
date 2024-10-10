@@ -6,12 +6,12 @@
 	<parent>
 		<artifactId>zk-dl</artifactId>
 		<groupId>cz.datalite.zk-dl</groupId>
-		<version>9.0.0</version>
+		<version>10.0.0</version>
 	</parent>
 
 	<artifactId>zkbind</artifactId>
 	<packaging>jar</packaging>
-	<version>9.0.0</version>
+	<version>10.0.0</version>
 	<name>ZK Bind</name>
 	<description>ZK Bind</description>
 
@@ -110,4 +110,4 @@
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 	</build>
-</project> 
+</project>

@@ -46,25 +46,25 @@ public class DLListheader extends Listheader {
 
     /** column name in the database which coresponds to this col - for sorting */
     protected String sortColumn = "";
-    
+
     /** will be used default zk sort or database sort */
     protected boolean sortZk;
-    
+
     /** is column sortable - false disables sorting */
     protected boolean sortable = false;
-    
+
     /** column name in the database which coresponds to this col */
     protected String column;
-    
+
     /** column name used to override default behavior of xls export */
     protected String exportColumn;
-    
+
     /** data type of this column */
     protected Class<?> columnType;
-    
+
     /** column is enabled for quick filter */
     protected boolean quickFilter = true;
-    
+
     /** column is enabled for export */
     protected boolean exportable = true;
 
@@ -76,25 +76,25 @@ public class DLListheader extends Listheader {
 
     /** quick filter operator - if null, default operator for data type is used. */
     protected DLFilterOperator quickFilterOperator;
-    
+
     /** defines class which generates default component for filter value in normal filter */
     protected FilterComponentFactory filterComponentFactory;
-    
+
     /** defines own filter compiler for this column */
     protected FilterCompiler filterCompiler;
-    
+
     /** is enabled for all filters */
     protected boolean filter = true;
-    
+
     /** converter */
     protected String converter;
-    
+
     /** model */
     protected DLColumnUnitModel model;
-    
+
     /** controller */
     protected DLListboxComponentController controller;
-    
+
     /** default visibility (defined in zul file) */
     private Boolean defaultVisible = null;
 
@@ -125,7 +125,7 @@ public class DLListheader extends Listheader {
 
     /**
      * Sets default sort on this column
-     * 
+     *
      * @param defaultSort the defaultSort to set
      */
     public void setDefaultSort( final String defaultSort ) {
@@ -148,7 +148,7 @@ public class DLListheader extends Listheader {
     /**
      * If header doesn't containt tooltiptext, label is default tooltip.
      * Usefull for long header names.
-     * 
+     *
      * @return tooltip text
      */
     @Override
@@ -181,16 +181,6 @@ public class DLListheader extends Listheader {
                 throw new UnsupportedOperationException( "Unknown sortType=" + type );
             }
         }
-    }
-
-    @Override
-    public void onSort() {
-        if ( isController() ) {
-            getController().onSort( this );
-        } else {
-            super.onSort();
-        }
-
     }
 
     @Override
@@ -297,7 +287,7 @@ public class DLListheader extends Listheader {
     public void setFilter( final boolean filter ) {
         this.filter = filter;
     }
-    
+
     public void setExportable(boolean exportable) {
 		this.exportable = exportable;
 	}
@@ -305,7 +295,7 @@ public class DLListheader extends Listheader {
     public void setColumnManager(boolean columnManager) {
         this.columnManager = columnManager;
     }
-    
+
     public void setExportColumn(String exportColumn) {
 		this.exportColumn = exportColumn;
 	}
@@ -350,7 +340,7 @@ public class DLListheader extends Listheader {
             this.filterCompiler = filterCompiler;
         }
     }
-    
+
     @Override
     public boolean setVisible(boolean visible) {
     	if (this.defaultVisible == null) {

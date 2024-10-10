@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>zk-dl</artifactId>
 		<groupId>cz.datalite.zk-dl</groupId>
-		<version>9.0.0</version>
+		<version>10.0.0</version>
 	</parent>
 	<artifactId>ZKStatistics</artifactId>
-	<version>9.0.0</version>
+	<version>10.0.0</version>
 	<name>ZKStatistics</name>
 	<description>Detail monitoring of your session (Timing, Events, SQL Query, Service methods).</description>
 

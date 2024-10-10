@@ -4,11 +4,11 @@
     <parent>
         <artifactId>zk-dl</artifactId>
         <groupId>cz.datalite.zk-dl</groupId>
-        <version>9.0.0</version>
+        <version>10.0.0</version>
     </parent>
 
     <artifactId>ZKComposer</artifactId>
-    <version>9.0.0</version>
+    <version>10.0.0</version>
     <name>ZK Composer</name>
     <description>DLComposer and support packages - MVC composer for ZK.</description>
 
@@ -19,19 +19,19 @@
             <artifactId>zk</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zul</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zhtml</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLBind</artifactId>
@@ -52,5 +52,5 @@
         </dependency>
 
     </dependencies>
-    
+
 </project>

@@ -4,10 +4,10 @@
 	<parent>
 		<artifactId>zk-dl</artifactId>
 		<groupId>cz.datalite.zk-dl</groupId>
-		<version>9.0.0</version>
+		<version>10.0.0</version>
 	</parent>
 	<artifactId>DLHelpers</artifactId>
-	<version>9.0.3</version>
+	<version>10.0.0</version>
 	<name>DLHelpers</name>
 	<description>Helpers - everyone needs to have some package like this, please feel free to explore it's internals and
 		use anything you want.
