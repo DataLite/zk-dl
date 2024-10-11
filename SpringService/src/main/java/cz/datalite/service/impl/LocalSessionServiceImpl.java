@@ -6,7 +6,7 @@ import cz.datalite.service.LocalSessionService;
 import cz.datalite.time.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

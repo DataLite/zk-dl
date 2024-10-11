@@ -178,48 +178,22 @@
 		<module>DLBind</module>
 	</modules>
 
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>jboss</id>
-			<name>JBoss</name>
-			<url>http://repository.jboss.com/maven2</url>
-		</repository>
+    <repositories>
+        <repository>
+            <id>datalite</id>
+            <url>https://nexus.datalite.cloud/repository/libs/</url>
+        </repository>
+    </repositories>
 
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>zkoss</id>
-			<name>ZK Repository</name>
-			<url>http://mavensync.zkoss.org/maven2</url>
-		</repository>
-
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>central</id>
-			<name>Central Maven Repository</name>
-			<url>http://repo2.maven.org/maven2</url>
-		</repository>
-
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>DataLite</id>
-			<name>DataLite-releases</name>
-			<url>http://zealot:8081/artifactory/libs-releases-local</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>DataLite</id>
-			<name>DataLite-snapshots</name>
-			<url>http://zealot:8081/artifactory/libs-snapshots-local</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>datalite</id>
+            <url>https://nexus.datalite.cloud/repository/libs-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>datalite</id>
+            <url>https://nexus.datalite.cloud/repository/libs-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

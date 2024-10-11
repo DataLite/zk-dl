@@ -26,13 +26,13 @@
 		<dependency>
 			<groupId>cz.datalite.zk-dl</groupId>
 			<artifactId>HibernateDAO</artifactId>
-			<version>${cz.datalite.zk-dl.version}</version>
+			<version>9.0.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>cz.datalite.zk-dl</groupId>
 			<artifactId>ZKDLComponents</artifactId>
-			<version>${cz.datalite.zk-dl.version}</version>
+			<version>9.0.0</version>
 		</dependency>
 	</dependencies>
 </project>

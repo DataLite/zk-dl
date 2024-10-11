@@ -22,18 +22,18 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.zkoss.zk</groupId>
+            <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>zkbind</artifactId>
-            <version>8.5.0-DATALITE</version>   <!-- TODO JS FIX-->
+            <version>9.0.0</version>
         </dependency>
 
         <!-- TODO SPM-7575 odstranit, reference org.zkoss.zkplus.databind.TypeConverter -->
         <dependency>
-            <groupId>cz.datalite.zk-dl</groupId>
+            <groupId>org.zkoss.zk</groupId>
             <artifactId>zkplus</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.0_jakarta</version>
         </dependency>
 
     </dependencies>
-    
+
 </project>

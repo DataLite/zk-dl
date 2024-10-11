@@ -19,7 +19,7 @@
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.2.0</version>
         </dependency>
-    
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core-jakarta</artifactId>
@@ -31,11 +31,11 @@
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.1.Final</version>
         </dependency>
-    
+
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>9.0.3</version>
         </dependency>
 
         <dependency>
@@ -45,4 +45,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

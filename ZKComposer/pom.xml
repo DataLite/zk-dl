@@ -19,19 +19,19 @@
             <artifactId>zk</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zul</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zhtml</artifactId>
             <version>${org.zkframework.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLBind</artifactId>
@@ -39,9 +39,15 @@
         </dependency>
 
         <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zkplus</artifactId>
+            <version>${org.zkframework.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>cz.datalite.zk-dl</groupId>
             <artifactId>DLHelpers</artifactId>
-            <version>${cz.datalite.zk-dl.version}</version>
+            <version>9.0.3</version>
         </dependency>
 
         <dependency>
@@ -52,5 +58,5 @@
         </dependency>
 
     </dependencies>
-    
+
 </project>
