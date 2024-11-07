@@ -894,9 +894,10 @@ public class BinderImpl implements Binder,BinderCtrl,Serializable{
 		final Annotation ann = AnnotationUtil.getSystemAnnotation(compCtrl, null);
 		final Map<String, String[]> attrs = ann != null ? ann.getAttributes() : null; //(tag, tagExpr)
 		
-		//only set up renderer when has model binding. (or will get error in no-model + selectedTab case
+		/* only set up renderer when has model binding or treeController that is typically declared
+		   instead of model attribute in DTL apps. (or will get error in no-model + selectedTab case */
 		final String installAttr = "model";//TODO make it configurable in lang-addon.xml
-		if (attrs!=null && installAttr.equals(attr)) {
+		if (attrs!=null && (installAttr.equals(attr) || comp.getAttribute("treeController") != null)) {
 			final String rendererName = AnnotationUtil.testString(attrs.get(Binder.RENDERER),ann); //renderer if any
 			//setup renderer
 			if (rendererName != null) { //there was system renderer
