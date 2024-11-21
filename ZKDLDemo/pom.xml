@@ -15,7 +15,7 @@
         <org.springframework.security.version>3.0.3.RELEASE</org.springframework.security.version>
         <org.zkoss.zk.version>5.0.6</org.zkoss.zk.version>
         <cz.datalite.zk-dl.version>1.3.0</cz.datalite.zk-dl.version>
-        <org.junit.version>4.8.1</org.junit.version>
+        <org.junit.version>4.13.1</org.junit.version>
         <netbeans.hint.deploy.server>liferay</netbeans.hint.deploy.server>
     </properties>
 
