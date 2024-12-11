@@ -1,8 +1,8 @@
 package cz.datalite.config;
 
 import cz.datalite.time.DateTimeUtil;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.Configuration;
 
 import java.math.BigDecimal;
 import java.util.Date;

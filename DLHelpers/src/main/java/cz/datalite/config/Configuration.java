@@ -3,8 +3,9 @@ package cz.datalite.config;
 import cz.datalite.check.Checker;
 import cz.datalite.exception.ProblemException;
 import cz.datalite.time.DateTimeUtil;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class Configuration {
 	public static ConfigurationSource loadConfigFile(String fileName, int precedence) {
 		try {
 			ImmutableSource configuration = new ImmutableSource(precedence);
-			org.apache.commons.configuration.Configuration p = new PropertiesConfiguration(fileName);
+			PropertiesConfiguration p = new Configurations().properties(fileName);
 			configuration.addConfiguration(p);
 			return configuration;
 		} catch (ConfigurationException e) {
@@ -123,7 +124,7 @@ public class Configuration {
 			} else if (Date.class.equals(clazz)) {
 				value = (T) source.getDate(key);
 			} else {
-				throw new IllegalArgumentException("Unknow datatype: " + clazz);
+				throw new IllegalArgumentException("Unknown datatype: " + clazz);
 			}
 			if (value != null) {
 				return value;

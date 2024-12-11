@@ -1,7 +1,7 @@
 package cz.datalite.config;
 
 import cz.datalite.time.DateTimeUtil;
-import org.apache.commons.configuration.PropertyConverter;
+import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
