@@ -136,4 +136,17 @@
                 </plugin>
             </plugins>
     </build>
+
+
+    <distributionManagement>
+        <repository>
+            <id>datalite</id>
+            <url>https://nexus.datalite.cloud/repository/libs-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>datalite</id>
+            <url>https://nexus.datalite.cloud/repository/libs-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
